@@ -34,66 +34,10 @@ public class Main {
                 case EXP_OLYMPE -> temp = expedition_olympe(nbj, i, f_a, f_b, f_c, f_d);
                 case DRESSER -> {
                     switch (nom[i]) {
-                        case "Joueur A" -> {
-                            if (f_a == 0) {
-                                System.out.println("Erreur : aucun familier détecté.");
-                            } else {
-                                f_a += Monstre.entrainement();
-                                if (f_a <= 0) {
-                                    System.out.println("Votre familier vous a fuit de manière définitive");
-                                    f_a = 0;
-                                }
-                                else if(f_a >= 3){
-                                    System.out.println("Vous avez atteint le niveau maximal de loyauté de la part de votre familier");
-                                    f_a = 3;
-                                }
-                            }
-                        }
-                        case "Joueur B" -> {
-                            if (f_b == 0) {
-                                System.out.println("Erreur : aucun familier détecté.");
-                            } else {
-                                f_b += Monstre.entrainement();
-                                if (f_b <= 0) {
-                                    System.out.println("Votre familier vous a fuit de manière définitive");
-                                    f_b = 0;
-                                }
-                                else if(f_b >= 3){
-                                    System.out.println("Vous avez atteint le niveau maximal de loyauté de la part de votre familier");
-                                    f_b = 3;
-                                }
-                            }
-                        }
-                        case "Joueur C" -> {
-                            if (f_c == 0) {
-                                System.out.println("Erreur : aucun familier détecté.");
-                            } else {
-                                f_c += Monstre.entrainement();
-                                if (f_c <= 0) {
-                                    System.out.println("Votre familier vous a fuit de manière définitive");
-                                    f_c = 0;
-                                }
-                                else if(f_c >= 3){
-                                    System.out.println("Vous avez atteint le niveau maximal de loyauté de la part de votre familier");
-                                    f_c = 3;
-                                }
-                            }
-                        }
-                        case "Joueur D" -> {
-                            if (f_d == 0) {
-                                System.out.println("Erreur : aucun familier détecté.");
-                            } else {
-                                f_d += Monstre.entrainement();
-                                if (f_d <= 0) {
-                                    System.out.println("Votre familier vous a fuit de manière définitive");
-                                    f_d = 0;
-                                }
-                                else if(f_d >= 3){
-                                    System.out.println("Vous avez atteint le niveau maximal de loyauté de la part de votre familier");
-                                    f_d = 3;
-                                }
-                            }
-                        }
+                        case "Joueur A" -> f_a = gere_entrainement(f_a);
+                        case "Joueur B" -> f_b = gere_entrainement(f_b);
+                        case "Joueur C" -> f_c = gere_entrainement(f_c);
+                        case "Joueur D" -> f_d = gere_entrainement(f_d);
                         default -> System.out.println("Erreur : joueur " + nom[i] + " non reconnu");
                     }
                 }
@@ -168,11 +112,28 @@ public class Main {
         System.out.print("Fin du programme");
     }
 
+    private static int gere_entrainement(int f) throws IOException {
+        if (f == 0) {
+            System.out.println("Erreur : aucun familier détecté.");
+        } else {
+            f += Monstre.entrainement();
+            if (f <= 0) {
+                System.out.println("Votre familier vous a fuit de manière définitive");
+                f = 0;
+            }
+            else if(f >= 3){
+                System.out.println("Vous avez atteint le niveau maximal de loyauté de la part de votre familier");
+                f = 3;
+            }
+        }
+        return f;
+    }
+
     static int expedition_enfer(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
         switch(input.D4()){
             case 1, 2, 3 -> {
                 Monstre monstre = Lieu.enfers();
-                System.out.println("Vous appercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
                 }
@@ -183,7 +144,7 @@ public class Main {
             }
             case 4, 5 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récuperez 1 équipement(s) I");
+                    System.out.println("Vous récupérez 1 équipement(s) I");
                 }
                 else{
                     System.out.println("Vous ne trouvez rien ni personne");
@@ -202,7 +163,7 @@ public class Main {
         switch(input.D6()){
             case 2, 3, 4 -> {
                 Monstre monstre = Lieu.prairie();
-                System.out.println("Vous appercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
                 }
@@ -213,7 +174,7 @@ public class Main {
             }
             case 5, 6, 7 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récuperez 1 équipement(s) I");
+                    System.out.println("Vous récupérez 1 équipement(s) I");
                 }
                 else{
                     System.out.println("Vous ne trouvez rien ni personne");
@@ -232,7 +193,7 @@ public class Main {
         switch(input.D6()){
             case 3, 4, 5 -> {
                 Monstre monstre = Lieu.vigne();
-                System.out.println("Vous appercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
                 }
@@ -243,7 +204,7 @@ public class Main {
             }
             case 6 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récuperez " + rand.nextInt(2) + 1 + " équipement(s) I");
+                    System.out.println("Vous récupérez " + rand.nextInt(2) + 1 + " équipement(s) I");
                 }
                 else{
                     System.out.println("Vous ne trouvez rien ni personne");
@@ -251,7 +212,7 @@ public class Main {
             }
             case 7 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récuperez 1 équipement(s) I");
+                    System.out.println("Vous récupérez 1 équipement(s) I");
                 }
                 else{
                     System.out.println("Vous trouvez une Promotion");
@@ -270,7 +231,7 @@ public class Main {
         switch(input.D8()){
             case 4, 5, 6 -> {
                 Monstre monstre = Lieu.temple();
-                System.out.println("Vous appercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
                 }
@@ -281,15 +242,15 @@ public class Main {
             }
             case 7, 8 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récuperez " + rand.nextInt(2) + 1 + " équipement(s) I");
+                    System.out.println("Vous récupérez " + rand.nextInt(2) + 1 + " équipement(s) I");
                 }
                 else{
-                    System.out.println("Vous récuperez " + rand.nextInt(2) + " équipement(s) II");
+                    System.out.println("Vous récupérez " + rand.nextInt(2) + " équipement(s) II");
                 }
             }
             case 9 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récuperez 1 équipement(s) I");
+                    System.out.println("Vous récupérez 1 équipement(s) I");
                 }
                 else{
                     System.out.println("Vous trouvez une Promotion");
@@ -308,7 +269,7 @@ public class Main {
         switch(input.D8()){
             case 5, 6 -> {
                 Monstre monstre = Lieu.mer();
-                System.out.println("Vous appercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
                 }
@@ -319,18 +280,18 @@ public class Main {
             }
             case 7, 8 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récuperez " + rand.nextInt(3) + 1 + " équipement(s) I");
+                    System.out.println("Vous récupérez " + rand.nextInt(3) + 1 + " équipement(s) I");
                 }
                 else{
-                    System.out.println("Vous récuperez " + rand.nextInt(2) + 1 + " équipement(s) II");
+                    System.out.println("Vous récupérez " + rand.nextInt(2) + 1 + " équipement(s) II");
                 }
             }
             case 9 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récuperez 1 équipement(s) II");
+                    System.out.println("Vous récupérez 1 équipement(s) II");
                 }
                 else{
-                    System.out.println("Vous récuperez 1 équipement(s) III");
+                    System.out.println("Vous récupérez 1 équipement(s) III");
                 }
             }
             default -> { // 1, 2, 3, 4
@@ -346,7 +307,7 @@ public class Main {
         switch(input.D12()){
             case 7, 8, 9, 10, 11 -> {
                 Monstre monstre = Lieu.mont();
-                System.out.println("Vous appercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
                 }
@@ -357,10 +318,10 @@ public class Main {
             }
             case 12, 13 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récuperez " + rand.nextInt(2) + 1 + " équipement(s) II");
+                    System.out.println("Vous récupérez " + rand.nextInt(2) + 1 + " équipement(s) II");
                 }
                 else{
-                    System.out.println("Vous récuperez " + rand.nextInt(1) + 1 + " équipement(s) III");
+                    System.out.println("Vous récupérez " + rand.nextInt(1) + 1 + " équipement(s) III");
                 }
             }
             default -> { // 1, 2, 3, 4, 5, 6
@@ -376,7 +337,7 @@ public class Main {
         switch(input.D20()){
             case 19, 20, 21 -> {
                 Monstre monstre = Lieu.olympe();
-                System.out.println("Vous appercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
                 }
