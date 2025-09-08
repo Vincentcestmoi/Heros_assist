@@ -1,0 +1,15 @@
+public enum Choix {
+    EXP_ENFERS,
+    EXP_PRAIRIE,
+    EXP_VIGNE,
+    EXP_TEMPLE,
+    EXP_MER,
+    EXP_MONT,
+    EXP_OLYMPE,
+    DRESSER,
+    ATTENDRE,
+    QUITTER,
+    FAMILIER_PLUS,
+    FAMILIER_MOINS,
+    RETOUR
+}
