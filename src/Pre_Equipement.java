@@ -168,7 +168,7 @@ public class Pre_Equipement {
     static Pre_Equipement bouclier0 = new Pre_Equipement("vieux bouclier", BOUCLIER, O, Effet_equip.AUCUN, false);
     static Pre_Equipement bracel0 = new Pre_Equipement("bracelet de protection cabossé", BRACELET, O, Effet_equip.RESISTANCE1, true);
     static Pre_Equipement lam_enf = new Pre_Equipement("Lame infernale", MAIN1, O, Effet_equip.ENFERS4, true);
-    static Pre_Equipement lam_herbe = new Pre_Equipement("Lame des champs", MAIN1, O, Effet_equip.PRAIRIE3, true);
+    static Pre_Equipement lam_herbe = new Pre_Equipement("Lame végétale", MAIN1, O, Effet_equip.PRAIRIE3, true);
 
     static Pre_Equipement[] rang0 = {ceint0, arc0, dag0, epee0, armure0, casque0, bouclier0, bracel0, lam_enf, lam_herbe};
     static Pre_Equipement[] rang1 = {default1};
