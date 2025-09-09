@@ -295,57 +295,15 @@ public class Monstre {
         for(int i = 0; i < q_drop; i++) {
             int temp = this.niveau_drop_min + rand.nextInt(this.niveau_drop_max - this.niveau_drop_min + 1);
             switch(temp){
-                case 0 -> drop_0();
-                case 1 -> drop_1();
-                case 2 -> drop_2();
-                case 3 -> drop_3();
-                case 4 -> drop_4();
-                case 5 -> drop_promo();
+                case 0 -> Equipement.drop_0();
+                case 1 -> Equipement.drop_1();
+                case 2 -> Equipement.drop_2();
+                case 3 -> Equipement.drop_3();
+                case 4 -> Equipement.drop_4();
+                case 5 -> Equipement.drop_promo();
                 default -> System.out.println("Vous n'avez pas la moindre idée de ce que vous venez de trouver.");
             }
         }
-    }
-
-    /**
-     * Extrait et renvoie un équipement rang 0
-     */
-    private void drop_0(){
-        System.out.println("Vous récupérez un équipement rang 0");
-    }
-
-    /**
-     * Extrait et renvoie un équipement rang I
-     */
-    private void drop_1(){
-        System.out.println("Vous récupérez un équipement rang I");
-    }
-
-    /**
-     * Extrait et renvoie un équipement rang II
-     */
-    private void drop_2(){
-        System.out.println("Vous récupérez un équipement rang II");
-    }
-
-    /**
-     * Extrait et renvoie un équipement rang III
-     */
-    private void drop_3(){
-        System.out.println("Vous récupérez un équipement rang III");
-    }
-
-    /**
-     * Extrait et renvoie un équipement rang IV
-     */
-    private void drop_4(){
-        System.out.println("Vous récupérez un équipement rang IV");
-    }
-
-    /**
-     * Extrait et renvoie une promotion
-     */
-    private void drop_promo(){
-        System.out.println("Vous récupérez une promotion");
     }
 
     /**

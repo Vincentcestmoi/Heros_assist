@@ -130,9 +130,9 @@ public class Main {
     }
 
     static int expedition_enfer(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+        Monstre monstre = Lieu.enfers();
         switch(input.D4()){
             case 1, 2, 3 -> {
-                Monstre monstre = Lieu.enfers();
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
@@ -144,14 +144,13 @@ public class Main {
             }
             case 4, 5 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récupérez 1 équipement(s) I");
+                    Equipement.drop_0();
                 }
                 else{
                     System.out.println("Vous ne trouvez rien ni personne");
                 }
             }
             default -> {
-                Monstre monstre = Lieu.enfers();
                 System.out.println(monstre.nom + " vous attaque");
                 return Combat.affrontement(nbj, meneur, f_a, f_b, f_c, f_d, monstre);
             }
@@ -160,9 +159,9 @@ public class Main {
     }
 
     static int expedition_prairie(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d)  throws IOException {
+        Monstre monstre = Lieu.prairie();
         switch(input.D6()){
             case 2, 3, 4 -> {
-                Monstre monstre = Lieu.prairie();
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
@@ -174,14 +173,13 @@ public class Main {
             }
             case 5, 6, 7 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récupérez 1 équipement(s) I");
+                    Equipement.drop_0();
                 }
                 else{
                     System.out.println("Vous ne trouvez rien ni personne");
                 }
             }
             default -> { // 1
-                Monstre monstre = Lieu.prairie();
                 System.out.println(monstre.nom + " vous attaque");
                 return Combat.affrontement(nbj, meneur, f_a, f_b, f_c, f_d, monstre);
             }
@@ -190,9 +188,9 @@ public class Main {
     }
 
     static int expedition_vigne(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+        Monstre monstre = Lieu.vigne();
         switch(input.D6()){
             case 3, 4, 5 -> {
-                Monstre monstre = Lieu.vigne();
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
@@ -204,7 +202,10 @@ public class Main {
             }
             case 6 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récupérez " + rand.nextInt(2) + 1 + " équipement(s) I");
+                    int t = rand.nextInt(2) + 1;
+                    for(int i = 0; i <= t; i++) {
+                        Equipement.drop_1();
+                    }
                 }
                 else{
                     System.out.println("Vous ne trouvez rien ni personne");
@@ -212,14 +213,13 @@ public class Main {
             }
             case 7 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récupérez 1 équipement(s) I");
+                    Equipement.drop_1();
                 }
                 else{
-                    System.out.println("Vous trouvez une Promotion");
+                    Equipement.drop_promo();
                 }
             }
             default -> { // 1, 2
-                Monstre monstre = Lieu.vigne();
                 System.out.println(monstre.nom + " vous attaque");
                 return Combat.affrontement(nbj, meneur, f_a, f_b, f_c, f_d, monstre);
             }
@@ -228,9 +228,9 @@ public class Main {
     }
 
     static int expedition_temple(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+        Monstre monstre = Lieu.temple();
         switch(input.D8()){
             case 4, 5, 6 -> {
-                Monstre monstre = Lieu.temple();
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
@@ -242,22 +242,27 @@ public class Main {
             }
             case 7, 8 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récupérez " + rand.nextInt(2) + 1 + " équipement(s) I");
+                    int t = rand.nextInt(2) + 1;
+                    for(int i = 0; i <= t; i++) {
+                        Equipement.drop_1();
+                    }
                 }
-                else{
-                    System.out.println("Vous récupérez " + rand.nextInt(2) + " équipement(s) II");
+                else {
+                    int t = rand.nextInt(2) + 1;
+                    for (int i = 0; i <= t; i++) {
+                        Equipement.drop_2();
+                    }
                 }
             }
             case 9 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récupérez 1 équipement(s) I");
+                    Equipement.drop_1();
                 }
                 else{
-                    System.out.println("Vous trouvez une Promotion");
+                    Equipement.drop_promo();
                 }
             }
             default -> { // 1, 2, 3
-                Monstre monstre = Lieu.temple();
                 System.out.println(monstre.nom + " vous attaque");
                 return Combat.affrontement(nbj, meneur, f_a, f_b, f_c, f_d, monstre);
             }
@@ -266,9 +271,9 @@ public class Main {
     }
 
     static int expedition_mer(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+        Monstre monstre = Lieu.mer();
         switch(input.D8()){
             case 5, 6 -> {
-                Monstre monstre = Lieu.mer();
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
@@ -280,22 +285,27 @@ public class Main {
             }
             case 7, 8 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récupérez " + rand.nextInt(3) + 1 + " équipement(s) I");
+                    int t = rand.nextInt(3) + 1;
+                    for(int i = 0; i <= t; i++) {
+                        Equipement.drop_1();
+                    }
                 }
                 else{
-                    System.out.println("Vous récupérez " + rand.nextInt(2) + 1 + " équipement(s) II");
+                    int t = rand.nextInt(2) + 1;
+                    for(int i = 0; i <= t; i++) {
+                        Equipement.drop_2();
+                    }
                 }
             }
             case 9 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récupérez 1 équipement(s) II");
+                    Equipement.drop_2();
                 }
                 else{
-                    System.out.println("Vous récupérez 1 équipement(s) III");
+                    Equipement.drop_3();
                 }
             }
             default -> { // 1, 2, 3, 4
-                Monstre monstre = Lieu.mer();
                 System.out.println(monstre.nom + " vous attaque");
                 return Combat.affrontement(nbj, meneur, f_a, f_b, f_c, f_d, monstre);
             }
@@ -304,9 +314,9 @@ public class Main {
     }
 
     static int expedition_mont(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+        Monstre monstre = Lieu.mont();
         switch(input.D12()){
             case 7, 8, 9, 10, 11 -> {
-                Monstre monstre = Lieu.mont();
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
@@ -318,14 +328,19 @@ public class Main {
             }
             case 12, 13 -> {
                 if(rand.nextBoolean()){
-                    System.out.println("Vous récupérez " + rand.nextInt(2) + 1 + " équipement(s) II");
+                    int t = rand.nextInt(3) + 1;
+                    for(int i = 0; i <= t; i++) {
+                        Equipement.drop_2();
+                    }
                 }
                 else{
-                    System.out.println("Vous récupérez " + rand.nextInt(1) + 1 + " équipement(s) III");
+                    int t = rand.nextInt(2) + 1;
+                    for(int i = 0; i <= t; i++) {
+                        Equipement.drop_3();
+                    }
                 }
             }
             default -> { // 1, 2, 3, 4, 5, 6
-                Monstre monstre = Lieu.mont();
                 System.out.println(monstre.nom + " vous attaque");
                 return Combat.affrontement(nbj, meneur, f_a, f_b, f_c, f_d, monstre);
             }
@@ -334,20 +349,23 @@ public class Main {
     }
 
     static int expedition_olympe(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+        Monstre monstre = Lieu.olympe();
         switch(input.D20()){
             case 19, 20, 21 -> {
-                Monstre monstre = Lieu.olympe();
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if(input.yn("Voulez vous l'attaquer ?")){
                     return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
                 }
-                else{
+                else if(rand.nextBoolean()){
                     System.out.println("Vous vous éloignez discrètement");
+                }
+                else{
+                    System.out.println(monstre.nom + " vous remarque et vous fonce dessus !");
+                    return Combat.affrontement(nbj, -1, f_a, f_b, f_c, f_d, monstre);
                 }
 
             }
             default -> { // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
-                Monstre monstre = Lieu.mont();
                 System.out.println(monstre.nom + " vous attaque");
                 return Combat.affrontement(nbj, meneur, f_a, f_b, f_c, f_d, monstre);
             }
