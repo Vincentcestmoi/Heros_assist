@@ -151,6 +151,8 @@ public class Pre_Equipement {
     static Rang III = Rang.III;
     static Rang IV = Rang.IV;
     static Rang PROMOTION = Rang.PROMOTION;
+    
+    static Effet_equip AUCUN = Effet_equip.AUCUN;
 
     //static Pre_Equipement default0 = new Pre_Equipement("pas dev", AUTRE, O, Effet_equip.PASD0, false);
     static Pre_Equipement default1 = new Pre_Equipement("pas dev", AUTRE, I, Effet_equip.PASD1, false);
@@ -159,18 +161,18 @@ public class Pre_Equipement {
     static Pre_Equipement default4 = new Pre_Equipement("pas dev", AUTRE, IV, Effet_equip.PASD4, false);
     static Pre_Equipement defaultp = new Pre_Equipement("pas dev", AUTRE, PROMOTION, Effet_equip.PASDP, false);
 
-    static Pre_Equipement ceint0 = new Pre_Equipement("vieille ceinture", CEINTURE, O, Effet_equip.AUCUN, false);
-    static Pre_Equipement arc0 = new Pre_Equipement("vieil arc", ARC, O, Effet_equip.AUCUN, false);
-    static Pre_Equipement dag0 = new Pre_Equipement("vieille dague", MAIN1, O, Effet_equip.AUCUN, false);
-    static Pre_Equipement epee0 = new Pre_Equipement("vieille épée", MAIN2, O, Effet_equip.AUCUN, false);
-    static Pre_Equipement armure0 = new Pre_Equipement("vieille armure", ARMURE, O, Effet_equip.AUCUN, false);
-    static Pre_Equipement casque0 = new Pre_Equipement("vieux casque", CASQUE, O, Effet_equip.AUCUN, false);
-    static Pre_Equipement bouclier0 = new Pre_Equipement("vieux bouclier", BOUCLIER, O, Effet_equip.AUCUN, false);
-    static Pre_Equipement bracel0 = new Pre_Equipement("bracelet de protection cabossé", BRACELET, O, Effet_equip.RESISTANCE1, true);
+    static Pre_Equipement ceinture0 = new Pre_Equipement("vieille ceinture", CEINTURE, O, AUCUN, false);
+    static Pre_Equipement arc0 = new Pre_Equipement("vieil arc", ARC, O, AUCUN, false);
+    static Pre_Equipement dague0 = new Pre_Equipement("vieille dague", MAIN1, O, AUCUN, false);
+    static Pre_Equipement epee0 = new Pre_Equipement("vieille épée", MAIN2, O, AUCUN, false);
+    static Pre_Equipement armure0 = new Pre_Equipement("vieille armure", ARMURE, O, AUCUN, false);
+    static Pre_Equipement casque0 = new Pre_Equipement("vieux casque", CASQUE, O, AUCUN, false);
+    static Pre_Equipement bouclier0 = new Pre_Equipement("vieux bouclier", BOUCLIER, O, AUCUN, false);
+    static Pre_Equipement bracelet0 = new Pre_Equipement("bracelet de protection cabossé", BRACELET, O, Effet_equip.RESISTANCE1, true);
     static Pre_Equipement lam_enf = new Pre_Equipement("Lame infernale", MAIN1, O, Effet_equip.ENFERS4, true);
     static Pre_Equipement lam_herbe = new Pre_Equipement("Lame végétale", MAIN1, O, Effet_equip.PRAIRIE3, true);
 
-    static Pre_Equipement[] rang0 = {ceint0, arc0, dag0, epee0, armure0, casque0, bouclier0, bracel0, lam_enf, lam_herbe};
+    static Pre_Equipement[] rang0 = {ceinture0, arc0, dague0, epee0, armure0, casque0, bouclier0, bracelet0, lam_enf, lam_herbe};
     static Pre_Equipement[] rang1 = {default1};
     static Pre_Equipement[] rang2 = {default2};
     static Pre_Equipement[] rang3 = {default3};
