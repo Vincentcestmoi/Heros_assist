@@ -16,8 +16,8 @@ public class Monstre {
     protected int niveau_drop_min;
     protected int niveau_drop_max;
     protected int drop_quantite_max;
-    protected float encaissement;   // quand l'adversaire utiliser "encaisser"
-    protected float part_soin;      // quand l'adveraire utiliser "premier soin" en première ligne
+    protected float encaissement;   // quand l'adversaire utilise "encaisser"
+    protected float part_soin;      // quand l'adversaire utilise "premier soin" en première ligne.
 
     Monstre(Race race) {
         this.nom = race.get_nom();
@@ -51,7 +51,7 @@ public class Monstre {
 
 
     /**
-     * Ecris la quantité de dommage infligé par le monstre à l'adversaire
+     * Écris la quantité de dommage infligé par le monstre à l'adversaire
      * @param nom le nom de l'entité attaqué
      * @implNote Calcul les effet de "encaisser", "étourdit" et "assommé"
      */
@@ -85,7 +85,7 @@ public class Monstre {
         switch (competence) {
             case EXPLOSION -> {
                 this.attaque += 6;
-                System.out.println(nom + " s'apprete à causer une explosion !");
+                System.out.println(nom + " s'apprête à causer une explosion !");
             }
             case GEL -> {
                 if(input.yn("Portez vous (pl) une armure ?")){
@@ -130,7 +130,7 @@ public class Monstre {
                 }
             }
             case ASSASSINAT -> {
-                System.out.println(this.nom + " se glisse discrètement derrière " + nom + " sans que personne ne l'apperçoive.");
+                System.out.println(this.nom + " se glisse discrètement derrière " + nom + " sans que personne ne l'aperçoive.");
                 this.attaque *= 2;
                 this.encaissement = 0F;
             }
@@ -245,7 +245,7 @@ public class Monstre {
             case A_POISON -> System.out.println("La victime du poison subit " + rand.nextInt(3) + " dommage(s).");
             case A_POISON2 -> System.out.println("La victime du poison subit " + rand.nextInt(4) + 1 + " dommage(s).");
             case BLESSE -> {
-                System.out.println(this.nom + " saigne abondemment.");
+                System.out.println(this.nom + " saigne abondamment.");
                 vie -= 3;
                 if (est_mort()) {
                     System.out.println(this.nom + " est mort(e).");
@@ -264,6 +264,7 @@ public class Monstre {
      * Renvoie la quantité et qualité des équipements obtenus à la mort du monstre
      */
     void drop(){
+        System.out.println("Vous fouillez le corp de " + this.nom);
         if(this.drop_quantite_max == 0 || competence == Competence.ARNAQUE) {
             System.out.println("Vous ne trouvez aucun équipement sur son cadavre");
             return;
@@ -278,24 +279,73 @@ public class Monstre {
             case DETESTE -> {
                 System.out.println("Vous avez tué un(e) " + this.nom + ", haïe des dieux, gloire à vous !");
                 System.out.println("Vous (tous ceux présent) gagnez définitivement 1 point de résistance.");
-                return;
+            }
+            case FOLIE_MEURTRIERE -> {
+                System.out.println("Le corp de " + this.nom + " s'agite !");
+                System.out.println(this.nom + " vous (pl) inflige" + this.attaque + " dommages.");
+            }
+            case DUO -> {
+                competence = Competence.AUCUNE;
+                System.out.println("Vous vous dirigez vers le deuxième " + nom);
+                drop();
             }
         }
         Random rand = new Random();
-        String[] loot = {"I", "II", "III", "IV", "Promotion"};
-        int temp = rand.nextInt(this.drop_quantite_max) + 1;
-        System.out.print("Vous récuperez " + temp + " équipement(s) ");
-        temp = this.niveau_drop_min + rand.nextInt(this.niveau_drop_max - this.niveau_drop_min + 1) - 1;
-        System.out.println(loot[temp] + " sur son cadavre.");
-        if(competence == Competence.DUO){
-            competence = Competence.AUCUNE;
-            System.out.println("Vous fouillez le deuxième " + nom);
-            drop();
+        int q_drop = rand.nextInt(this.drop_quantite_max) + 1;
+        for(int i = 0; i < q_drop; i++) {
+            int temp = this.niveau_drop_min + rand.nextInt(this.niveau_drop_max - this.niveau_drop_min + 1);
+            switch(temp){
+                case 0 -> drop_0();
+                case 1 -> drop_1();
+                case 2 -> drop_2();
+                case 3 -> drop_3();
+                case 4 -> drop_4();
+                case 5 -> drop_promo();
+                default -> System.out.println("Vous n'avez pas la moindre idée de ce que vous venez de trouver.");
+            }
         }
-        if(this.competence == Competence.FOLIE_MEURTRIERE){
-            System.out.println("Le corp de " + this.nom + " s'agite !");
-            System.out.println("Vous (pl) inflige" + this.attaque + " dommages.");
-        }
+    }
+
+    /**
+     * Extrait et renvoie un équipement rang 0
+     */
+    private void drop_0(){
+        System.out.println("Vous récupérez un équipement rang 0");
+    }
+
+    /**
+     * Extrait et renvoie un équipement rang I
+     */
+    private void drop_1(){
+        System.out.println("Vous récupérez un équipement rang I");
+    }
+
+    /**
+     * Extrait et renvoie un équipement rang II
+     */
+    private void drop_2(){
+        System.out.println("Vous récupérez un équipement rang II");
+    }
+
+    /**
+     * Extrait et renvoie un équipement rang III
+     */
+    private void drop_3(){
+        System.out.println("Vous récupérez un équipement rang III");
+    }
+
+    /**
+     * Extrait et renvoie un équipement rang IV
+     */
+    private void drop_4(){
+        System.out.println("Vous récupérez un équipement rang IV");
+    }
+
+    /**
+     * Extrait et renvoie une promotion
+     */
+    private void drop_promo(){
+        System.out.println("Vous récupérez une promotion");
     }
 
     /**
@@ -318,62 +368,62 @@ public class Monstre {
 
     /**
      * Applique la compétence avant de subir des dommages à distance
-     * @param degat les dommages infligés par l'attaque
-     * @return les dégats subits par le monstre
+     * @param degas les dommages infligés par l'attaque
+     * @return les dégas subits par le monstre
      */
-    private int applique_competence_tir(int degat) throws IOException {
+    private int applique_competence_tir(int degas) throws IOException {
 
         switch (competence){
-            case FRAGILE -> degat += 1;
+            case FRAGILE -> degas += 1;
             case ESPRIT -> {
                 System.out.println("Votre projectile passe au travers de " + nom + " sans l'affecter.");
                 competence = Competence.AUCUNE;
-                degat = 0;
+                degas = 0;
             }
             case RAPIDE -> {
                 System.out.println(nom + " esquive partiellement votre projectile.");
-                degat = corriger((float) degat / 2);
+                degas = corriger((float) degas / 2);
             }
             case FLAMME_DEFENSE -> {
                 System.out.println("Votre projectile brûle en s'approchant de " + nom + ".");
                 competence = Competence.AUCUNE;
-                degat = 0;
+                degas = 0;
             }
             case ESQUIVE -> {
                 if(rand.nextInt(10) == 0){
                     System.out.println(nom + " esquive votre projectile.");
-                    degat = 0;
+                    degas = 0;
                 }
             }
             case FURTIF -> {
                 System.out.println("Vous ne parvenez pas à repérer où se trouve " + nom + ".");
                 competence = Competence.AUCUNE;
-                degat = 0;
+                degas = 0;
             }
             case PEAU_DURE, GOLEM_PIERRE, CHRONOS -> {
                 System.out.println("La peau dure de " + nom + " amortie une partie de l'impact");
-                degat = corriger((float) (degat * 0.85));
+                degas = corriger((float) (degas * 0.85));
             }
             case CHANT_SIRENE -> {
                 System.out.println("Le chant de " + nom + " perturbe le tir.");
                 if(input.D8() <= 2){
-                    degat = degat > 4 ? degat - 4 : 0;
+                    degas = degas > 4 ? degas - 4 : 0;
                 }
             }
             case PEAU_DACIER, GOLEM_ACIER, GOLEM_FER -> {
                 System.out.println("La peau extrêmement dure de " + this.nom + " absorbe l'essentiel de l'impact.");
-                degat = corriger((float) degat / 20);
+                degas = corriger((float) degas / 20);
             }
             case INTANGIBLE -> {
                 System.out.println("Votre projectile passe au travers de " + nom + " sans l'affecter.");
-                degat = 0;
+                degas = 0;
             }
             case GOLEM_MITHRIL -> {
-                System.out.println("La peau particulièrement solide de " + this.nom + " reduit l'impact.");
-                degat = corriger((float) degat * 0.75F);
+                System.out.println("La peau particulièrement solide de " + this.nom + " réduit l'impact.");
+                degas = corriger((float) degas * 0.75F);
             }
         }
-        return degat;
+        return degas;
     }
 
     /**
@@ -384,8 +434,8 @@ public class Monstre {
      */
     void dommage_magique(int quantite) throws IOException {
         System.out.println("Vous utiliser votre magie sur " + this.nom);
-        int degat = applique_competence_magie(max(quantite, 1));
-        this.vie -= degat;
+        int degas = applique_competence_magie(max(quantite, 1));
+        this.vie -= degas;
         if (est_mort()) {
             System.out.println(this.nom + " est mort(e)");
             drop();
@@ -396,59 +446,59 @@ public class Monstre {
 
     /**
      * Applique la compétence avant de subir des dommages magiques
-     * @param degat les dommages infligés par l'attaque
-     * @return les dégats subits par le monstre
+     * @param degas les dommages infligés par l'attaque
+     * @return les dégas subits par le monstre
      */
-    private int applique_competence_magie(int degat) throws IOException {
+    private int applique_competence_magie(int degas) throws IOException {
         switch (competence){
-            case FRAGILE -> degat += 1;
+            case FRAGILE -> degas += 1;
             case ESPRIT -> {
                 System.out.println("Votre magie passe au travers de " + nom + " sans l'affecter.");
                 competence = Competence.AUCUNE;
-                degat = 0;
+                degas = 0;
             }
             case SPELL_IMMUNE, CHRONOS -> {
                 System.out.println("Votre magie n'a aucun effet sur " + nom + ".");
-                degat = 0;
+                degas = 0;
             }
             case PARTIELLE_SPELL_IMMUNIE -> {
                 System.out.println("Votre magie semble sans effet sur " + nom + ".");
                 competence = Competence.AUCUNE;
-                degat = 0;
+                degas = 0;
             }
             case FURTIF -> {
                 System.out.println("Vous ne parvenez plus à identifier où se trouve " + nom + " et renoncez à utiliser votre magie.");
                 competence = Competence.AUCUNE;
-                degat = 0;
+                degas = 0;
             }
             case PEAU_MAGIQUE -> {
                 System.out.println("La peau de " + nom + " diminue l'impact du sort.");
-                degat = corriger((float) degat / 2);
+                degas = corriger((float) degas / 2);
             }
             case CUIR_MAGIQUE -> {
                 System.out.println("Le cuir de " + nom + " absorbe l'essentiel de l'impact du sort.");
-                degat = corriger((float) degat / 10);
+                degas = corriger((float) degas / 10);
             }
             case CHANT_SIRENE -> {
                 System.out.println("Le chant de " + nom + " perturbe le lancement du sort.");
                 if(input.D8() <= 3){
-                    degat = degat > 4 ? degat - 4 : 0;
+                    degas = degas > 4 ? degas - 4 : 0;
                 }
             }
             case PEAU_DACIER -> {
                 System.out.println("La peau extrêmement dure de " + this.nom + " absorbe une partie de l'impact du sort.");
-                degat = corriger((float) degat / 2);
+                degas = corriger((float) degas / 2);
             }
             case GOLEM_PIERRE, GOLEM_FER, GOLEM_ACIER -> {
                 System.out.println("La constitution particulière de " + this.nom + " diminue légèrement l'impact du sort.");
-                degat = corriger((float)degat * 0.9F);
+                degas = corriger((float)degas * 0.9F);
             }
             case GOLEM_MITHRIL -> {
                 System.out.println("La matériaux particulier composant " + this.nom + " réduise immensément l'impact du sort.");
-                degat = corriger((float)degat / 20);
+                degas = corriger((float)degas / 20);
             }
         }
-        return degat;
+        return degas;
     }
 
 
@@ -460,8 +510,8 @@ public class Monstre {
      */
     void dommage(int quantite) throws IOException {
         System.out.println("Vous attaquez " + this.nom);
-        int degat = applique_competence_dommage(max(quantite - this.armure, 1));
-        this.vie -= degat;
+        int degas = applique_competence_dommage(max(quantite - this.armure, 1));
+        this.vie -= degas;
         if (est_mort()) {
             System.out.println(this.nom + " est mort(e)");
             drop();
@@ -473,60 +523,60 @@ public class Monstre {
 
     /**
      * Applique la compétence avant de subir des dommages classique
-     * @param degat les dommages infligés par l'attaque
-     * @return les dégats subits par le monstre
+     * @param degas les dommages infligés par l'attaque
+     * @return les degas subits par le monstre
      */
-    private int applique_competence_dommage(int degat) throws IOException {
+    private int applique_competence_dommage(int degas) throws IOException {
         switch (competence) {
-            case FRAGILE -> degat += 1;
+            case FRAGILE -> degas += 1;
             case VOL -> {
                 System.out.println("L'attaque n'atteint pas " + this.nom + ".");
                 competence = Competence.VOL_OFF;
                 System.out.println(this.nom + " se pose à terre.");
-                degat = 0;
+                degas = 0;
             }
             case VOLAGE -> {
                 System.out.println("L'attaque n'atteint pas " + this.nom + ".");
                 competence = Competence.AUCUNE;
                 System.out.println(this.nom + " se pose à terre.");
-                degat = 0;
+                degas = 0;
             }
             case ESPRIT -> {
                 System.out.println("Votre attaque traverse " + nom + " sans l'affecter.");
                 competence = Competence.AUCUNE;
-                degat = 0;
+                degas = 0;
             }
             case ESQUIVE -> {
                 if(rand.nextInt(15) == 0){
                     System.out.println(nom + " esquive votre attaque.");
-                    degat = 0;
+                    degas = 0;
                 }
             }
             case FURTIF -> {
                 System.out.println("Vous ne parvenez plus à identifier où se trouve " + nom + ".");
                 competence = Competence.AUCUNE;
-                degat = 0;
+                degas = 0;
             }
             case PEAU_DURE, GOLEM_PIERRE, GOLEM_FER, CHRONOS -> {
                 System.out.println("La peau dure de " + this.nom + " amortie une partie de l'assaut");
-                degat = corriger((float) degat * 0.9F);
+                degas = corriger((float) degas * 0.9F);
             }
             case CHANT_SIRENE -> {
                 System.out.println("Le chant de " + nom + " perturbe le lancement du sort.");
                 if(input.D8() <= 1){
-                    degat = degat > 4 ? degat - 4 : 0;
+                    degas = degas > 4 ? degas - 4 : 0;
                 }
             }
             case PEAU_DACIER, GOLEM_ACIER -> {
                 System.out.println("La peau extrêmement dure de " + this.nom + " absorbe l'essentiel de l'assaut.");
-                degat = corriger((float) degat / 10);
+                degas = corriger((float) degas / 10);
             }
             case GOLEM_MITHRIL -> {
-                System.out.println("La peau particulièrement solide de " + this.nom + "absorde une grande partie de l'assaut.");
-                degat = corriger((float) degat / 2);
+                System.out.println("La peau particulièrement solide de " + this.nom + " absorbe une grande partie de l'assaut.");
+                degas = corriger((float) degas / 2);
             }
         }
-        return degat;
+        return degas;
     }
 
     /**
@@ -546,7 +596,7 @@ public class Monstre {
     }
 
     /**
-     * Règle l'état du monstre sur "assomé" ou "étourdit"
+     * Règle l'état du monstre sur "assommé" ou "étourdit"
      */
     void affecte(){
         Random rand = new Random();
@@ -559,22 +609,22 @@ public class Monstre {
     }
 
     /**
-     * Règle l'état du monstre à "assomée"
+     * Règle l'état du monstre à "assommé"
      */
     void do_assomme(){
         switch (competence){
             case GOLEM_ACIER, GOLEM_MITHRIL -> {
-                System.out.println(nom + " n'a pas de conscience, et ne peut pas être assomé(e).");
+                System.out.println(nom + " n'a pas de conscience, et ne peut pas être assommé(e).");
                 return;
             }
             case GOLEM_PIERRE, GOLEM_FER -> {
-                System.out.println(nom + " n'a pas de conscience, et ne peut pas être assomé(e).");
+                System.out.println(nom + " n'a pas de conscience, et ne peut pas être assommé(e).");
                 System.out.println(nom + " cependant, est déséquilibré(e).");
                 do_etourdi();
                 return;
             }
             case CHRONOS -> {
-                System.out.println(nom + " n'a pas l'air prêt de perdre connaisance.");
+                System.out.println(nom + " n'a pas l'air prêt de perdre connaissance.");
                 return;
             }
         }
@@ -582,7 +632,7 @@ public class Monstre {
             return;
         }
         this.assomme = true;
-        System.out.println(this.nom + " est assomé(e)");
+        System.out.println(this.nom + " est assommé(e)");
     }
 
     /**
@@ -607,7 +657,7 @@ public class Monstre {
                 }
             }
             case CHRONOS -> {
-                System.out.println(nom + " n'a pas l'air prêt de perdre connaisance.");
+                System.out.println(nom + " n'a pas l'air prêt de perdre connaissance.");
                 return;
             }
         }
@@ -621,7 +671,7 @@ public class Monstre {
     }
 
     /**
-     * Retire l'état "assomé" du monstre
+     * Retire l'état "assommé" du monstre
      * Peut infliger l'état "étourdi"
      */
     void undo_assomme(){
@@ -658,7 +708,7 @@ public class Monstre {
      */
     boolean est_mort(){
         if(competence == Competence.REVENANT){
-            System.out.println("Une sombre brûme s'abbat sur vous, vous perdez (tous) 1 point d'attaque pour la duré du combat.");
+            System.out.println("Une sombre brûme s'abat sur vous, vous perdez (tous) 1 point d'attaque pour la duré du combat.");
             System.out.println(this.nom + " se relève !");
             this.vie = rand.nextInt(this.vie_max - 5) + 5;
             this.competence = Competence.AUCUNE;
@@ -849,14 +899,14 @@ public class Monstre {
             }
             case GOLEM_PIERRE, GOLEM_FER -> {
                 if(input.D8() <= this.vie * 2) {
-                    System.out.println(this.nom + " n'est pas très receptif à votre tentative.");
+                    System.out.println(this.nom + " n'est pas très réceptif à votre tentative.");
                     return false;
                 }
             }
 
             case GOLEM_ACIER -> {
                 if(input.D6() <= this.vie * 2) {
-                    System.out.println(this.nom + " n'est pas très receptif à votre tentative.");
+                    System.out.println(this.nom + " n'est pas très réceptif à votre tentative.");
                     return false;
                 }
             }
@@ -913,7 +963,7 @@ public class Monstre {
 
     /**
      * Définie si la compétence "entrainement" fonctionne ou non
-     * @return si le niveau d'obéissance du famillier a augmenté :
+     * @return si le niveau d'obéissance du familier a augmenté :
      * 2 oui ;
      * 1 oui ;
      * 0 non ;
@@ -924,7 +974,7 @@ public class Monstre {
         return switch (input.D6()) {
             case 1 -> {
                 if (input.D4() <= 2) {
-                    System.out.println("Votre familer désaprouve fortement vos méthodes d'entrainements");
+                    System.out.println("Votre familier désapprouve fortement vos méthodes d'entrainements");
                     yield -1;
                 }
                 yield 0;
@@ -933,7 +983,7 @@ public class Monstre {
             case 4, 5 -> 1;
             case 6 -> {
                 if (input.D4() >= 3) {
-                    System.out.println("Votre familier semble particulièrement apprecier votre entrainement !");
+                    System.out.println("Votre familier semble particulièrement apprécier votre entrainement !");
                     yield 2;
                 }
                 yield 1;
