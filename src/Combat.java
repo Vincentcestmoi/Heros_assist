@@ -270,6 +270,13 @@ public class Combat {
                         // la mort est donné par les méthodes de dommage
                         run = false;
                         gestion_nomme(ennemi);
+                        if(ob_a == 0){
+                            if(input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier ?")) {
+                                if (ressuciter(ennemi)) {
+                                    return 2;
+                                }
+                            }
+                        }
                         break;
                     }
                 }
@@ -671,6 +678,58 @@ public class Combat {
                 }
             }
 
+        }
+    }
+
+    /**
+     * Applique la compétence de nécromantien "nécromancie"
+     * @param ennemi le monstre à ressuciter
+     * @return si le sort a fonctionné
+     * @throws IOException pour l'input
+     * @implNote codé en dur de manière très irresponsable
+     */
+    private static boolean ressuciter(Monstre ennemi) throws IOException {
+        switch(input.D8()){
+            case 4, 5 -> { //25%
+                System.out.println(ennemi.nom + " a été partiellement ressucité.");
+
+                System.out.println("nouveau familier : zombie " + ennemi.nom);
+                System.out.println("attaque : " + ennemi.attaque / 4);
+                System.out.println("vie : " + ennemi.vie_max / 4);
+                System.out.println("defense : " + ennemi.armure / 4 + "\n");
+                return true;
+            }
+            case 6 -> { //50%
+                System.out.println(ennemi.nom + " a été suffisemment ressucité");
+
+                System.out.println("nouveau familier : zombie " + ennemi.nom);
+                System.out.println("attaque : " + ennemi.attaque / 2);
+                System.out.println("vie : " + ennemi.vie_max / 2);
+                System.out.println("defense : " + ennemi.armure / 2 + "\n");
+                return true;
+            }
+            case 7 -> { // 75%
+                System.out.println(ennemi.nom + " a été correctement ressucité" );
+
+                System.out.println("nouveau familier : " + ennemi.nom + " le ressucité");
+                System.out.println("attaque : " + ennemi.attaque * 3 / 4);
+                System.out.println("vie : " + ennemi.vie_max * 3 / 4);
+                System.out.println("defense : " + ennemi.armure * 3 / 4 + "\n");
+                return true;
+            }
+            case 8 -> {
+                System.out.println(ennemi.nom + " a été parfaitement ressucité");
+
+                System.out.println("nouveau familier : " + ennemi.nom);
+                System.out.println("attaque : " + ennemi.attaque);
+                System.out.println("vie : " + ennemi.vie_max);
+                System.out.println("defense : " + ennemi.armure + "\n");
+                return true;
+            }
+            default -> {
+                System.out.println("échec du sort.");
+                return false;
+            }
         }
     }
 }
