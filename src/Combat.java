@@ -104,11 +104,16 @@ public class Combat {
         String n;
         Action act;
         boolean run = !ennemi.est_mort();
+        boolean a_pass = false;
         while(run){
             for(int j = 0; j < 8; j++){
                 int i = tirage[j]; //on "corrige" la sélection avec notre ordre
                 if(actif[i]) { // on ne joue que les participants actifs
                     n = nom[i]; // on stocke le nom pour plus tard
+                    if(Objects.equals(n, "Joueur A") && a_pass){
+                        a_pass = false;
+                        continue;
+                    }
                     if(n.contains("familier")){
                         if(n.contains("A")){
                             ob = ob_a;
@@ -194,8 +199,26 @@ public class Combat {
                                 }
                                 case AUTRE -> System.out.println("Vous faites quelques chose.\n");
                                 case ETRE_MORT -> {
-                                    System.out.println(n + " est retiré du combat.\n");
-                                    actif[i] = false;
+                                    if(input.yn(n + " est-il mort ?")){
+                                            boolean actif_a = false;
+                                            for(int k = 0; k < 8; k++){
+                                                if (actif[k] && Objects.equals(nom[k], "Joueur A")) {
+                                                    actif_a = true;
+                                                    break;
+                                                }
+                                            }
+                                            if(actif_a && input.yn("Est-ce que le joueur A veux tenter de ressuciter " + n + " pour 2 PP ?")) {
+                                                if (!ressuciter_allie()) {
+                                                    System.out.println(n + " est retiré du combat.\n");
+                                                    actif[i] = false;
+                                                }
+                                                a_pass = true;
+                                            }
+                                    }
+                                    else {
+                                        System.out.println(n + " est retiré du combat.\n");
+                                        actif[i] = false;
+                                    }
                                 }
                                 case AVANCER -> {
                                     System.out.println(n + " passe en première ligne.\n");
@@ -273,14 +296,14 @@ public class Combat {
                         run = false;
                         gestion_nomme(ennemi);
                         if(ob_a == 0){
-                            boolean actif_b = false;
+                            boolean actif_a = false;
                             for(int k = 0; k < 8; k++){
                                 if (actif[k] && Objects.equals(nom[k], "Joueur A")) {
-                                    actif_b = true;
+                                    actif_a = true;
                                     break;
                                 }
                             }
-                            if(actif_b && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier ?")) {
+                            if(actif_a && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier pour 2PP ?")) {
                                 if (ressuciter(ennemi)) {
                                     return 1;
                                 }
@@ -740,5 +763,31 @@ public class Combat {
                 return false;
             }
         }
+    }
+
+    /**
+     * tente de ressuciter un allie
+     * @return si l'allié a été ressucité
+     * @throws IOException notre poto anti bug
+     */
+    private static boolean ressuciter_allie() throws IOException {
+        return switch (input.D8()) {
+            case 6 -> {
+                System.out.println("Résurection avec 4 points de vie");
+                yield true;
+            }
+            case 7 -> {
+                System.out.println("Résurection avec 8 (max) points de vie");
+                yield true;
+            }
+            case 8 -> {
+                System.out.println("Résurection avec 12 (max) points de vie");
+                yield true;
+            }
+            default -> {
+                System.out.println("Echec de la résurection");
+                yield false;
+            }
+        };
     }
 }
