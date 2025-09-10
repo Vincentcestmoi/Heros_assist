@@ -35,7 +35,7 @@ public class Combat {
         boolean f_d = ob_d > 0 && j_d && input.yn("Est-ce que le familier du joueur D participe au combat ?");
 
         if (!(j_a || j_b || j_c || j_d)){
-            System.out.println("Erreur : aucun joueur détecté, annulation du combat");
+            System.out.println("Erreur : aucun joueur détecté, annulation du combat.");
             return 0;
         }
 
@@ -66,7 +66,7 @@ public class Combat {
         // choisir le joueur en première ligne
         int pr_l = joueur_force;
         if(joueur_force != -1){
-            System.out.println("Le joueur " + new char[]{'A', 'B', 'C', 'D'}[joueur_force] + " est en première ligne");
+            System.out.println("Le joueur " + new char[]{'A', 'B', 'C', 'D'}[joueur_force] + " est en première ligne.\n");
         }
         else if (nbp > 1){ // demander gentimment
             for (int i = 0; i < 8; i++) {
@@ -82,7 +82,7 @@ public class Combat {
             for(int i = 0; i < 8; i++){
                 if (actif[i]){
                     pr_l = i;
-                    System.out.println(nom[i] + " se retrouve en première ligne");
+                    System.out.println(nom[i] + " se retrouve en première ligne.\n");
                     break;
                 }
             }
@@ -122,7 +122,7 @@ public class Combat {
                         }
                         else{
                             System.out.println("Erreur : " + n + " détecté comme familier, mais aucun joueur rattaché" +
-                                    "entité ignorée pour la suite du combat");
+                                    "entité ignorée pour la suite du combat.");
                             ob = -1;
                             actif[i] = false;
                         }
@@ -140,9 +140,9 @@ public class Combat {
                                 case FUIR -> {
                                     if (i != pr_l || input.D6() > 3) {
                                         actif[i] = false;
-                                        System.out.println(n + " a fuit le combat");
+                                        System.out.println(n + " a fuit le combat.\n");
                                     } else {
-                                        System.out.println(n + " n'est pas parvenu à distancer " + ennemi.nom);
+                                        System.out.println(n + " n'est pas parvenu à distancer " + ennemi.nom + "\n");
                                     }
                                 }
                                 case ASSOMER -> ennemi.assommer();
@@ -157,7 +157,7 @@ public class Combat {
                                         System.out.println("nouveau familier : " + ennemi.nom);
                                         System.out.println("attaque : " + ennemi.attaque);
                                         System.out.println("vie : " + ennemi.vie_max);
-                                        System.out.println("defense : " + ennemi.armure);
+                                        System.out.println("defense : " + ennemi.armure + "\n");
 
                                         switch (n) {
                                             case "Joueur A" -> {
@@ -179,63 +179,74 @@ public class Combat {
                                     }
                                 }
                                 case ANALYSER -> {
-                                    System.out.println("Vous analysez le monstre en face de vous");
+                                    System.out.println("Vous analysez le monstre en face de vous.");
                                     int temp = input.D8();
+                                    if(i != pr_l){
+                                        temp -= 2; //malus si en seconde ligne
+                                    }
                                     System.out.println(ennemi.nom + " :");
                                     System.out.println("vie : " + (temp >= 5 ? ennemi.vie : "???") + "/" + (temp >= 2 ? ennemi.vie_max : "???"));
                                     System.out.println("attaque : " + (temp >= 3 ? ennemi.attaque : "???"));
-                                    System.out.println("armure : " + (temp >= 7 ? ennemi.armure : "???"));
+                                    System.out.println("armure : " + (temp >= 7 ? ennemi.armure : "???\n"));
 
                                 }
-                                case AUTRE -> System.out.println("Vous faites quelques chose");
+                                case AUTRE -> System.out.println("Vous faites quelques chose.\n");
                                 case ETRE_MORT -> {
-                                    System.out.println(n + " est retiré du combat");
+                                    System.out.println(n + " est retiré du combat.\n");
                                     actif[i] = false;
                                 }
                                 case AVANCER -> {
-                                    System.out.println(n + " passe en première ligne.");
+                                    System.out.println(n + " passe en première ligne.\n");
                                     pr_l = i;
                                     ennemi.reset_encaisser();
                                     competence_avance(ennemi, nom[pr_l]);
                                 }
+                                case END -> {
+                                    return 0;
+                                }
                                 default -> ennemi.dommage(input.atk()); // ATTAQUER
                             }
                         } else { //familier
-                            switch (ob + input.D6() - 1) {
-                                case 1 -> {
-                                    System.out.println(n + " a fuit le combat");
-                                    actif[i] = false;
-                                }
-                                case 2 -> System.out.println(n + " n'écoute pas ses ordres");
-                                case 3, 4, 5 -> {
-                                    System.out.println(n + " attaque l'ennemi");
-                                    ennemi.dommage(input.atk());
-                                }
-                                default -> { // >= 6
-                                    switch (act) { //action choisie
-                                        case ATTAQUER -> ennemi.dommage(input.atk());
-                                        case FUIR -> {
-                                            if (i != pr_l || input.D6() > 3) {
-                                                actif[i] = false;
-                                                System.out.println(n + " a fuit le combat");
-                                            } else {
-                                                System.out.println(n + "n'est pas parvenu à distancer " + ennemi.nom);
+                            if(act == Action.ETRE_MORT){
+                                System.out.println(n + " est retiré du combat.\n");
+                                actif[i] = false;
+                            }
+                            else if(act == Action.END) {
+                                return 0;
+                            }
+                            else {
+                                switch (ob + input.D6() - 1) {
+                                    case 1 -> {
+                                        System.out.println(n + " a fuit le combat.\n");
+                                        actif[i] = false;
+                                    }
+                                    case 2 -> System.out.println(n + " n'écoute pas ses ordres.\n");
+                                    case 3, 4, 5 -> {
+                                        System.out.println(n + " attaque l'ennemi.\n");
+                                        ennemi.dommage(input.atk());
+                                    }
+                                    default -> { // >= 6
+                                        switch (act) { //action choisie
+                                            case ATTAQUER -> ennemi.dommage(input.atk());
+                                            case FUIR -> {
+                                                if (i != pr_l || input.D6() > 3) {
+                                                    actif[i] = false;
+                                                    System.out.println(n + " a fuit le combat.\n");
+                                                } else {
+                                                    System.out.println(n + "n'est pas parvenu à distancer " + ennemi.nom + "\n");
+                                                }
                                             }
-                                        }
-                                        case AUTRE -> System.out.println(n + " fait quelque chose");
-                                        case ETRE_MORT -> {
-                                            System.out.println(n + " est retiré du combat");
-                                            actif[i] = false;
-                                        }
-                                        case AVANCER -> {
-                                            System.out.println("Le " + n + " passe en première ligne.");
-                                            pr_l = i;
-                                            ennemi.reset_encaisser();
-                                            competence_avance(ennemi, nom[pr_l]);
-                                        }
-                                        default -> {
-                                            System.out.println(n + " attaque l'ennemi");
-                                            ennemi.dommage(input.atk());
+                                            case AUTRE -> System.out.println(n + " fait quelque chose.\n");
+                                            case AVANCER -> {
+                                                System.out.println("Le " + n + " passe en première ligne.\n");
+                                                pr_l = i;
+                                                ennemi.reset_encaisser();
+                                                competence_avance(ennemi, nom[pr_l]);
+                                            }
+                                            default -> {
+                                                System.out.println(n + " attaque l'ennemi.\n");
+                                                ennemi.dommage(input.atk());
+                                            }
                                         }
                                     }
                                 }
@@ -246,12 +257,12 @@ public class Combat {
                         for(int k = 0; k < 8; k++){
                             if(actif[k]){
                                 pr_l = k;
-                                System.out.println(nom[k] + " se retrouve en première ligne");
+                                System.out.println(nom[k] + " se retrouve en première ligne.\n");
                             }
                         }
                         if(!actif[pr_l]) { // la correction n'a pas eu lieu
                             run = false;
-                            System.out.println("Aucun joueur ou familier détecté en combat");
+                            System.out.println("Aucun joueur ou familier détecté en combat.");
                             // break inutile car if(actif[i]) toujours à false
                         }
                     }
@@ -270,7 +281,7 @@ public class Combat {
                 }
             }
         }
-        System.out.println("Fin du combat");
+        System.out.println("Fin du combat\n");
         return 0;
     }
 
@@ -606,7 +617,7 @@ public class Combat {
                         }
                     }
                 }
-                default -> { //par sécurité on run le reste quand même
+                default -> { //par sécurité
                 }
             }
             if(ennemi.nom.contains("illusioniste")) {

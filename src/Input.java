@@ -201,13 +201,19 @@ public class Input {
                     case "O", "o" -> {
                         return Action.ETRE_MORT;
                     }
+                    case "q", "Q" -> {
+                        if(yn("Confirmez ")){
+                            return Action.END;
+                        }
+                        return action(nom, false, true);
+                    }
                     default -> {
                         System.out.println("Entrée non reconnue, attaque classique appliquée");
                         return Action.ATTAQUER;
                     }
                 }
             } else {
-                System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/Premier soin(p)/Custom(C)/Off(O)/S'avancer(s) : ");
+                System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/Premier soin(p)/aNalyser(n)/Custom(C)/Off(O)/S'avancer(s) : ");
                 String input = read();
                 if (input.equals("A") || input.equals("a") || input.isEmpty()) {
                     return Action.ATTAQUER;
@@ -225,6 +231,9 @@ public class Input {
                     case "P", "p" -> {
                         return Action.SOIGNER;
                     }
+                    case "n", "N" -> {
+                        return Action.ANALYSER;
+                    }
                     case "C", "c" -> {
                         return Action.AUTRE;
                     }
@@ -233,6 +242,12 @@ public class Input {
                     }
                     case "S", "s" -> {
                         return Action.AVANCER;
+                    }
+                    case "q", "Q" -> {
+                        if(yn("Confirmez ")){
+                            return Action.END;
+                        }
+                        return action(nom, false, true);
                     }
                     default -> {
                         System.out.println("Entrée non reconnue, attaque classique appliquée");
@@ -257,6 +272,12 @@ public class Input {
                     case "O", "o" -> {
                         return Action.ETRE_MORT;
                     }
+                    case "q", "Q" -> {
+                        if(yn("Confirmez ")){
+                            return Action.END;
+                        }
+                        return action(nom, false, true);
+                    }
                     default -> {
                         System.out.println("Entrée non reconnue, attaque classique appliquée");
                         return Action.ATTAQUER;
@@ -280,6 +301,12 @@ public class Input {
                     }
                     case "S", "s" -> {
                         return Action.AVANCER;
+                    }
+                    case "q", "Q" -> {
+                        if(yn("Confirmez ")){
+                            return Action.END;
+                        }
+                        return action(nom, false, true);
                     }
                     default -> {
                         System.out.println("Entrée non reconnue, attaque classique appliquée");

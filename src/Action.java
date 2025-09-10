@@ -10,5 +10,6 @@ public enum Action {
     ANALYSER,
     AUTRE,
     ETRE_MORT,
-    AVANCER
+    AVANCER,
+    END
 }
