@@ -278,9 +278,7 @@ public class Equipement {
             case PASD3 -> this.effet = "Pas encore dev, piochez un équipement III.";
             case PASD4 -> this.effet = "Pas encore dev, piochez un équipement IV.";
             case PASDP -> this.effet = "Pas encore dev, piochez une promotion.";
-            case RESISTANCE1 -> {
-                this.resistance += 1;
-            }
+            case RESISTANCE1 -> this.resistance += 1;
             case ENFERS4 -> {
                 this.attaque = 1;
                 this.effet = "Augmente de 4 l'attaque aux enfers.";
@@ -289,9 +287,10 @@ public class Equipement {
                 this.attaque = 2;
                 this.effet = "Augmente de 3 l'attaque en prairie.";
             }
-            case CONSO_RES1 -> {
-                this.effet = "Soigne de 1.";
-            }
+            case CONSO_EXT1 -> this.effet = "Soigne de 1 et régénère 1PP.";
+            case CONSO_EXT2 -> this.effet = "Soigne de 2 et régénère 2PP.";
+            case CONSO_RES2 -> this.effet = "Soigne de 2.";
+            case CONSO_RES4 -> this.effet = "Soigne de 4.";
             default -> {} //inclus AUCUN
         }
     }

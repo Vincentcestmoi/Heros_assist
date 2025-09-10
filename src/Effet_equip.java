@@ -11,5 +11,8 @@ public enum Effet_equip {
     RESISTANCE1,
     ENFERS4,
     PRAIRIE3,
-    CONSO_RES1;
+    CONSO_EXT1,
+    CONSO_RES2,
+    CONSO_EXT2,
+    CONSO_RES4,
 }
