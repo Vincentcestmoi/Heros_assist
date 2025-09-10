@@ -75,7 +75,7 @@ public class Race {
             Competence.PARTIELLE_SPELL_IMMUNIE, Competence.ARMURE_NATURELLE};
     static Race zombie = new Race("zombie", 1, 6, 0, 0, 0, 2, zomb_comp);
     static Competence[] lich_comp = {Competence.ARMURE_GLACE, Competence.GEL};
-    static Race liche = new Race("liche", 3, 8, 0, 0, 1, 3, lich_comp);
+    static Race liche = new Race("liche", 3, 8, 0, 0, 1, 2, lich_comp);
     static Race cerbere = new Race("Cerbère", 3, 7, 1, 5, 5, 1, nomme_comp);
 
     static Race[] enfers = {dynam_damn, squelette, ch_s_v, damne, guer_ske, guer_maudit, fantome, zombie, liche, cerbere};
