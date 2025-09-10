@@ -3,6 +3,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
+import static java.lang.Math.max;
+
 public class Combat {
 
 
@@ -271,9 +273,16 @@ public class Combat {
                         run = false;
                         gestion_nomme(ennemi);
                         if(ob_a == 0){
-                            if(input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier ?")) {
+                            boolean actif_b = false;
+                            for(int k = 0; k < 8; k++){
+                                if (actif[k] && Objects.equals(nom[k], "Joueur A")) {
+                                    actif_b = true;
+                                    break;
+                                }
+                            }
+                            if(actif_b && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier ?")) {
                                 if (ressuciter(ennemi)) {
-                                    return 2;
+                                    return 1;
                                 }
                             }
                         }
@@ -694,8 +703,8 @@ public class Combat {
                 System.out.println(ennemi.nom + " a été partiellement ressucité.");
 
                 System.out.println("nouveau familier : zombie " + ennemi.nom);
-                System.out.println("attaque : " + ennemi.attaque / 4);
-                System.out.println("vie : " + ennemi.vie_max / 4);
+                System.out.println("attaque : " + max(ennemi.attaque / 4, 1));
+                System.out.println("vie : " + max(ennemi.vie_max / 4, 1));
                 System.out.println("defense : " + ennemi.armure / 4 + "\n");
                 return true;
             }
@@ -703,8 +712,8 @@ public class Combat {
                 System.out.println(ennemi.nom + " a été suffisemment ressucité");
 
                 System.out.println("nouveau familier : zombie " + ennemi.nom);
-                System.out.println("attaque : " + ennemi.attaque / 2);
-                System.out.println("vie : " + ennemi.vie_max / 2);
+                System.out.println("attaque : " + max(ennemi.attaque / 2, 1));
+                System.out.println("vie : " + max(ennemi.vie_max / 2, 1));
                 System.out.println("defense : " + ennemi.armure / 2 + "\n");
                 return true;
             }
@@ -712,8 +721,8 @@ public class Combat {
                 System.out.println(ennemi.nom + " a été correctement ressucité" );
 
                 System.out.println("nouveau familier : " + ennemi.nom + " le ressucité");
-                System.out.println("attaque : " + ennemi.attaque * 3 / 4);
-                System.out.println("vie : " + ennemi.vie_max * 3 / 4);
+                System.out.println("attaque : " + max(ennemi.attaque * 3 / 4, 1));
+                System.out.println("vie : " + max(ennemi.vie_max * 3 / 4, 1));
                 System.out.println("defense : " + ennemi.armure * 3 / 4 + "\n");
                 return true;
             }
@@ -721,8 +730,8 @@ public class Combat {
                 System.out.println(ennemi.nom + " a été parfaitement ressucité");
 
                 System.out.println("nouveau familier : " + ennemi.nom);
-                System.out.println("attaque : " + ennemi.attaque);
-                System.out.println("vie : " + ennemi.vie_max);
+                System.out.println("attaque : " + max(ennemi.attaque, 1));
+                System.out.println("vie : " + max(ennemi.vie_max, 1));
                 System.out.println("defense : " + ennemi.armure + "\n");
                 return true;
             }
