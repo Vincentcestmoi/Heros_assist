@@ -300,20 +300,7 @@ public class Equipement {
      *
      */
     public void presente(){
-        String type;
-        switch(base){
-            case CEINTURE -> type = "ceinture";
-            case MAIN_1 -> type = "une main";
-            case MAIN_2 -> type = "deux main";
-            case BOUCLIER -> type = "bouclier";
-            case ARC -> type = "arc";
-            case ARMURE -> type = "armure";
-            case CASQUE -> type = "casque";
-            case BRACELET -> type = "bracelet";
-            case CONSO_EX -> type = "consommable bonus";
-            case CONSO_MAIN -> type = "consommable";
-            default -> type = "divers";
-        }
+        String type = getString();
         System.out.println("\n" + this.nom + " (" + type + ")");
         if(this.attaque > 0){
             System.out.println("+" + this.attaque + " attaque(s)");
@@ -328,6 +315,24 @@ public class Equipement {
             System.out.println(this.effet);
         }
         System.out.println();
+    }
+
+    private String getString() {
+        String type;
+        switch(base){
+            case CEINTURE -> type = "ceinture";
+            case MAIN_1 -> type = "une main";
+            case MAIN_2 -> type = "deux main";
+            case BOUCLIER -> type = "bouclier";
+            case ARC -> type = "arc";
+            case ARMURE -> type = "armure";
+            case CASQUE -> type = "casque";
+            case BRACELET -> type = "bracelet";
+            case CONSO_EX -> type = "consommable bonus";
+            case CONSO_MAIN -> type = "consommable";
+            default -> type = "divers";
+        }
+        return type;
     }
 
     static public void drop_0() {
