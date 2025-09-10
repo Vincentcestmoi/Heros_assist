@@ -144,6 +144,8 @@ public class Pre_Equipement {
     static Base MAIN2 = Base.MAIN_2;
     static Base BRACELET = Base.BRACELET;
     static Base BOUCLIER = Base.BOUCLIER;
+    static Base CONSO_EX = Base.CONSO_EX;
+    static Base CONSO_MAIN = Base.CONSO_MAIN;
 
     static Rang O = Rang.O;
     static Rang I = Rang.I;
@@ -168,9 +170,12 @@ public class Pre_Equipement {
     static Pre_Equipement armure0 = new Pre_Equipement("vieille armure", ARMURE, O, AUCUN, false);
     static Pre_Equipement casque0 = new Pre_Equipement("vieux casque", CASQUE, O, AUCUN, false);
     static Pre_Equipement bouclier0 = new Pre_Equipement("vieux bouclier", BOUCLIER, O, AUCUN, false);
+    static Pre_Equipement heal0 = new Pre_Equipement("ration de survie", CONSO_EX, O, Effet_equip.CONSO_RES1, false);
+
     static Pre_Equipement bracelet0 = new Pre_Equipement("bracelet de protection cabossé", BRACELET, O, Effet_equip.RESISTANCE1, true);
     static Pre_Equipement lam_enf = new Pre_Equipement("Lame infernale", MAIN1, O, Effet_equip.ENFERS4, true);
     static Pre_Equipement lam_herbe = new Pre_Equipement("Lame végétale", MAIN1, O, Effet_equip.PRAIRIE3, true);
+    static Pre_Equipement fleche_plus = new Pre_Equipement("plumes d'oie", AUTRE, O, Effet_equip.ARCA, true);
 
     static Pre_Equipement[] rang0 = {ceinture0, arc0, dague0, epee0, armure0, casque0, bouclier0, bracelet0, lam_enf, lam_herbe};
     static Pre_Equipement[] rang1 = {default1};

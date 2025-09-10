@@ -261,6 +261,7 @@ public class Equipement {
      * Applique les effets spéciaux à l'équipement
      */
     private void applique_effet(Effet_equip effet){
+        this.effet = null;
         switch(effet){
             case ARCA -> {
                 switch(rang){
@@ -279,7 +280,6 @@ public class Equipement {
             case PASDP -> this.effet = "Pas encore dev, piochez une promotion.";
             case RESISTANCE1 -> {
                 this.resistance += 1;
-                this.effet = null;
             }
             case ENFERS4 -> {
                 this.attaque = 1;
@@ -289,7 +289,10 @@ public class Equipement {
                 this.attaque = 2;
                 this.effet = "Augmente de 3 l'attaque en prairie.";
             }
-            default -> this.effet = null; //inclus AUCUN
+            case CONSO_RES1 -> {
+                this.effet = "Soigne de 1.";
+            }
+            default -> {} //inclus AUCUN
         }
     }
 
@@ -307,6 +310,8 @@ public class Equipement {
             case ARMURE -> type = "armure";
             case CASQUE -> type = "casque";
             case BRACELET -> type = "bracelet";
+            case CONSO_EX -> type = "consommable bonus";
+            case CONSO_MAIN -> type = "consommable";
             default -> type = "divers";
         }
         System.out.println("\n" + this.nom + " (" + type + ")");
