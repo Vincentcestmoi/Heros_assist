@@ -14,6 +14,7 @@ public class Main {
             System.out.println("Nombre de joueur invalide : 1 à 4 joueurs seulement.");
             return;
         }
+        System.out.print("Le joueur A est nécromancien.\n");
         int f_a = 0, f_b = 0, f_c = 0, f_d = 0;
         String[] nom = {"Joueur A", "Joueur B", "Joueur C", "Joueur D"};
         boolean run = true;
