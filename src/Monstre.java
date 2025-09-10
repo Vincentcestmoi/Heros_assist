@@ -468,7 +468,7 @@ public class Monstre {
         System.out.println("Vous attaquez " + this.nom);
         int degas = applique_competence_dommage(max(quantite - this.armure, 1));
         this.vie -= degas;
-        if(check_mort()) {
+        if(!check_mort()) {
             applique_competence_post_dommage();
         }
     }
