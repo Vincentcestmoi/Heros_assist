@@ -159,8 +159,8 @@ public class Pre_Equipement {
     
     static Effet_equip AUCUN = Effet_equip.AUCUN;
 
-    //static Pre_Equipement default0 = new Pre_Equipement("pas dev", AUTRE, O, Effet_equip.PASD0, false);
-    static Pre_Equipement default1 = new Pre_Equipement("pas dev", AUTRE, I, Effet_equip.PASD1, false);
+    /*static Pre_Equipement default0 = new Pre_Equipement("pas dev", AUTRE, O, Effet_equip.PASD0, false);
+    static Pre_Equipement default1 = new Pre_Equipement("pas dev", AUTRE, I, Effet_equip.PASD1, false);*/
     static Pre_Equipement default2 = new Pre_Equipement("pas dev", AUTRE, II, Effet_equip.PASD2, false);
     static Pre_Equipement default3 = new Pre_Equipement("pas dev", AUTRE, III, Effet_equip.PASD3, false);
     static Pre_Equipement default4 = new Pre_Equipement("pas dev", AUTRE, IV, Effet_equip.PASD4, false);
@@ -199,8 +199,20 @@ public class Pre_Equipement {
 
 
     static Pre_Equipement[] rang1 = {fleche_plusI, fleche_plusI2, fleche_plusI3, ceintureI, arcI, dagueI, epeeI, armureI, casqueI, bouclierI, healPPI, healI};
-    static Pre_Equipement[] rang2 = {default2};
-    static Pre_Equipement[] rang3 = {default3};
-    static Pre_Equipement[] rang4 = {default4};
+
+    static Pre_Equipement fleche_plusII = new Pre_Equipement("poison à flèche", AUTRE, II, Effet_equip.ARCA, true);
+    static Pre_Equipement fleche_plusII2 = new Pre_Equipement("encoche renforcée", AUTRE, II, Effet_equip.ARCA, true);
+
+
+    static Pre_Equipement[] rang2 = {default2, fleche_plusII, fleche_plusII2};
+
+    static Pre_Equipement fleche_plusIII = new Pre_Equipement("pointe torsadée", AUTRE, III, Effet_equip.ARCA, true);
+    static Pre_Equipement fleche_plusIII2 = new Pre_Equipement("structure enchantée", AUTRE, III, Effet_equip.ARCA, true);
+
+    static Pre_Equipement[] rang3 = {default3, fleche_plusIII, fleche_plusIII2};
+
+    static Pre_Equipement fleche_plusIV = new Pre_Equipement("flèches divines", AUTRE, IV, Effet_equip.ARCA, true);
+
+    static Pre_Equipement[] rang4 = {default4, fleche_plusIV};
     static Pre_Equipement[] prom_list = {defaultp};
 }
