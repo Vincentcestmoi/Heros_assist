@@ -198,7 +198,7 @@ public class Race {
     static Competence[] arch_comp = {Competence.GEL, Competence.ARMURE_GLACE2, Competence.SPELL_IMMUNE};
     static Race archliche = new Race("archliche", 12, 30, 2, 3, 3, 2, arch_comp);
     static Race typhon = new Race("Typhon", 17, 38, 2, 5, 5, 1, nomme_comp);
-    static Race caucase = new Race("l'Aigle du Caucase", 16, 35, 3, 5, 5, 1, symb_comp);
+    static Race caucase = new Race("l'Aigle du Caucase", 16, 35, 3, 5, 5, 1, nomme_comp);
 
     // illusioniste
     static Competence[] illu_comp = {Competence.ILLUSION};
