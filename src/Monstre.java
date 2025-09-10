@@ -236,10 +236,7 @@ public class Monstre {
             case POURRI -> {
                 System.out.println(this.nom + " tombe en morceau.");
                 vie -= 1;
-                if (est_mort()) {
-                    System.out.println(this.nom + " est mort(e).");
-                    drop();
-                }
+                check_mort();
             }
             case PHOTOSYNTHESE -> vie = vie == vie_max ? vie + 1 : vie;
             case A_POISON -> System.out.println("La victime du poison subit " + rand.nextInt(3) + " dommage(s).");
@@ -247,10 +244,7 @@ public class Monstre {
             case BLESSE -> {
                 System.out.println(this.nom + " saigne abondamment.");
                 vie -= 3;
-                if (est_mort()) {
-                    System.out.println(this.nom + " est mort(e).");
-                    drop();
-                }
+                check_mort();
             }
             case DUO -> {
                 competence = Competence.AUCUNE; // pour éviter une boucle
@@ -316,12 +310,7 @@ public class Monstre {
         System.out.println("Vous tirez sur " + this.nom);
         int degat = applique_competence_tir(max(quantite - this.armure, 1));
         this.vie -= degat;
-        if (est_mort()) {
-            System.out.println(this.nom + " est mort(e)");
-            drop();
-            return;
-        }
-        System.out.println(this.nom + " est encore en vie");
+        check_mort();
     }
 
     /**
@@ -394,12 +383,7 @@ public class Monstre {
         System.out.println("Vous utiliser votre magie sur " + this.nom);
         int degas = applique_competence_magie(max(quantite, 1));
         this.vie -= degas;
-        if (est_mort()) {
-            System.out.println(this.nom + " est mort(e)");
-            drop();
-            return;
-        }
-        System.out.println(this.nom + " est encore en vie");
+        check_mort();
     }
 
     /**
@@ -459,6 +443,20 @@ public class Monstre {
         return degas;
     }
 
+    /**
+     * Regarde si le monstre est mort et agit en conséquence
+     * @return si le monstre est mort
+     */
+    private boolean check_mort(){
+        if (est_mort()) {
+            System.out.println(this.nom + " est mort(e).\n");
+            drop();
+            return true;
+        }
+        System.out.println(this.nom + " est encore en vie.\n");
+        return false;
+    }
+
 
     /**
      * Inflige des dommages au monstre
@@ -470,13 +468,9 @@ public class Monstre {
         System.out.println("Vous attaquez " + this.nom);
         int degas = applique_competence_dommage(max(quantite - this.armure, 1));
         this.vie -= degas;
-        if (est_mort()) {
-            System.out.println(this.nom + " est mort(e)");
-            drop();
-            return;
+        if(check_mort()) {
+            applique_competence_post_dommage();
         }
-        System.out.println(this.nom + " est encore en vie");
-        applique_competence_post_dommage();
     }
 
     /**
@@ -607,11 +601,6 @@ public class Monstre {
                 if(rand.nextBoolean()){
                     System.out.println(nom + " laisse tomber des fragments de son corps pour ne pas être désavantagé(e).");
                     this.vie -= rand.nextInt(5) + 1;
-                    if(this.est_mort()){
-                        System.out.println(this.nom + " est mort(e)");
-                        drop();
-                        return;
-                    }
                 }
             }
             case CHRONOS -> {
@@ -619,7 +608,7 @@ public class Monstre {
                 return;
             }
         }
-        if (est_mort()){
+        if (check_mort()){
             return;
         }
         if(!assomme){
