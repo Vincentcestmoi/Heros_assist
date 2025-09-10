@@ -30,7 +30,10 @@ public class Pre_Equipement {
             case III -> list = rang3;
             case IV -> list = rang4;
             case PROMOTION -> list = prom_list;
-            default -> list = null;
+            default -> {
+                System.out.println("Erreur : l'équipement " + nom + " n'a pas de liste correspondante.");
+                return;
+            }
         }
         for(int i = 0; i < list.length; i++){
             if(list[i].equals(this)){
