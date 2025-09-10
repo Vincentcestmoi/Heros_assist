@@ -45,6 +45,12 @@ public class Combat {
                 "le familier du joueur A", "le familier du joueur B", "le familier du joueur C",
                 "le familier du joueur D"};
 
+        int nbp = 0;
+        for (boolean b : actif) {
+            if (b) {
+                nbp += 1;
+            }
+        }
 
 
         // on prépare les tours en aléatoire
@@ -62,7 +68,7 @@ public class Combat {
         if(joueur_force != -1){
             System.out.println("Le joueur " + new char[]{'A', 'B', 'C', 'D'}[joueur_force] + " est en première ligne");
         }
-        else { // demander gentimment
+        else if (nbp > 1){ // demander gentimment
             for (int i = 0; i < 8; i++) {
                 if (actif[i]) {
                     if (input.yn("Est-ce que " + nom[i] + " passe au front ?")){
