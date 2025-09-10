@@ -11,10 +11,10 @@ public class Equipement {
 
     static Random rand = new Random();
 
-    Equipement(String nom, Base base, Rang rang, Effet_equip effet) {
-        this.nom = nom;
-        this.rang = rang;
-        this.base = base;
+    Equipement(Pre_Equipement pre) {
+        this.nom = pre.nom;
+        this.rang = pre.rang;
+        this.base = pre.base;
         switch(base){
             case CASQUE -> this.make_casque();
             case ARMURE -> this.make_armure();
@@ -29,7 +29,7 @@ public class Equipement {
                 this.armure = 0;
             }
         }
-        applique_effet(effet);
+        applique_effet(pre.effet);
     }
 
     /**
@@ -279,6 +279,17 @@ public class Equipement {
             case PASD4 -> this.effet = "Pas encore dev, piochez un équipement IV.";
             case PASDP -> this.effet = "Pas encore dev, piochez une promotion.";
             case RESISTANCE1 -> this.resistance += 1;
+            case RESISTANCE2 -> this.resistance += 2;
+            case ATTAQUE1 -> this.attaque += 1;
+            case ARMURE1 -> this.armure += 1;
+            case BAD_ALLONGE1 -> {
+                this.attaque += 1;
+                this.resistance -= 1;
+            }
+            case RAGE1 -> {
+                this.resistance -= 1;
+                this.attaque += 2;
+            }
             case ENFERS4 -> {
                 this.attaque = 1;
                 this.effet = "Augmente de 4 l'attaque aux enfers.";
@@ -291,6 +302,59 @@ public class Equipement {
             case CONSO_EXT2 -> this.effet = "Soigne de 2 et régénère 2PP.";
             case CONSO_RES2 -> this.effet = "Soigne de 2.";
             case CONSO_RES4 -> this.effet = "Soigne de 4.";
+            case SOUPE_MAGIQUE -> this.effet = "Soigne de 4, augmente temporairement la résistance de 3 et l'attaque de 2.";
+            case NECTAR -> this.effet = "Combinez le à l'ambroisie pour gagner.";
+            case AMBROISIE -> this.effet = "Combinez le au nectar pour gagner";
+            case SAC0 -> this.effet = "Permet de stocker 1 objet (pas d'arme).";
+            case SAC1 -> {
+                switch(rand.nextInt(4)) {
+                    case 0 -> this.effet = "Permet de stocker 1 objet (pas d'arme) et 1 arme à une main.";
+                    case 1 -> this.effet = "Permet de stocker 1 objet ou arme à une main.";
+                    case 2 -> this.effet = "Permet de stocker 2 objets (pas d'arme).";
+                    case 3 -> this.effet = "Permet de stocker l'équivalent de 2 mains en arme.";
+                }
+            }
+            case SAC2 -> {
+                switch(rand.nextInt(4)) {
+                    case 0 -> this.effet = "Permet de stocker 2 objets (pas d'armes) et 1 arme à une main.";
+                    case 1 -> this.effet = "Permet de stocker (2 objets ou armes à une main) ou 1 arme à deux mains.";
+                    case 2 -> this.effet = "Permet de stocker 2 armes sans contraintes.";
+                    case 3 -> this.effet = "Permet de stocker l'équivalent de 3 mains en arme.";
+                }
+            }
+            case GUERRE -> this.effet = "+1 attaque pour les descendant d'Ares.";
+            case LAME_VENT -> {
+                this.attaque += 1;
+                this.effet = "Votre première attaque inflige 3 dommages supplémentaires.";
+            }
+            case ARMURE_GLACE -> {
+                this.armure += 1;
+                this.effet = "Vous devez payer 2PP pour enfiler cette armure";
+            }
+            case BOUCLIER_TERRE -> {
+                this.resistance += 2;
+                this.effet = "Vous devez payer 2PP pour équiper ce bouclier";
+            }
+            case COIFFE_FEU -> {
+                this.attaque += 2;
+                this.effet = "Vous devez payer 2PP pour porter cette coiffe";
+            }
+            case LAME_DODO -> {
+                this.attaque -= 3;
+                this.effet = "+4 attaques pour les descendant d'Hypnos";
+            }
+            case RUNE_RESIDU -> this.effet = "Peut être consummé à la place de 2 PP.";
+            case PARCH_FEU -> this.effet = "Permet de lancer le sort Boule de feu : pour 2PP, inflige 5 dégats magiques.";
+            case PARCH_FORCE -> this.effet = "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement l'attaque de 1, se détruit après usage.";
+            case RUNE_CROISS -> this.effet = "Diminue de 1 le coût de la compétence Embranchement végétal.";
+            case RUNE_PLUIE -> this.effet = "Diminue de 1 le coût de la compétence Déferlante.";
+            case RUNE_HAINE -> this.effet = "Augmente de 3 points additionels l'attaque sous Berserk, mais diminue aussi la résistance de 2 points additionels.";
+            case RUNE_VIRALE -> this.effet = "Double les dommages infligés par la compétence Maladie.";
+            case RUNE_ARDENTE -> this.effet = "augmente de 3 les dommages du sort Boule de feu";
+            case RUNE_ARDENTE2 -> this.effet = "augmente de 5 les dommages du sort Boule de feu, mais augmente de 1 son coût.";
+            case RUNE_DODO -> this.effet = "Diminue de 1 le coût de la compétence Sommeil.";
+            case RUNE_MORT -> this.effet = "Double l'efficacité de la compétence Thaumaturge";
+            case RUNE_ORAGE -> this.effet = "Diminue de 1 le coût de la compétence Foudre.";
             default -> {} //inclus AUCUN
         }
     }
@@ -304,11 +368,20 @@ public class Equipement {
         if(this.attaque > 0){
             System.out.println("+" + this.attaque + " attaque(s)");
         }
+        else if(this.attaque < 0){
+            System.out.println("-" + -this.attaque + " attaque(s)");
+        }
         if(this.resistance > 0){
             System.out.println("+" + this.resistance + " resistance(s)");
         }
+        else if(this.resistance < 0){
+            System.out.println("-" + -this.resistance + " resistance(s)");
+        }
         if(this.armure > 0){
             System.out.println("+" + this.armure + " armure(s)");
+        }
+        else if(this.armure < 0){
+            System.out.println("-" + -this.armure + " armure(s)");
         }
         if(this.effet != null){
             System.out.println(this.effet);
@@ -329,44 +402,40 @@ public class Equipement {
             case BRACELET -> type = "bracelet";
             case CONSO_EX -> type = "consommable bonus";
             case CONSO_MAIN -> type = "consommable";
+            case SAC -> type = "sac";
+            case RUNE -> type = "rune";
             default -> type = "divers";
         }
         return type;
     }
 
     static public void drop_0() {
-        Pre_Equipement drop = Pre_Equipement.drop_0();
-        Equipement equipement = new Equipement(drop.nom, drop.base, drop.rang, drop.effet);
+        Equipement equipement = new Equipement(Pre_Equipement.drop_0());
         equipement.presente();
     }
 
     static public void drop_1() {
-        Pre_Equipement drop = Pre_Equipement.drop_1();
-        Equipement equipement = new Equipement(drop.nom, drop.base, drop.rang, drop.effet);
+        Equipement equipement = new Equipement(Pre_Equipement.drop_1());
         equipement.presente();
     }
 
     static public void drop_2() {
-        Pre_Equipement drop = Pre_Equipement.drop_2();
-        Equipement equipement = new Equipement(drop.nom, drop.base, drop.rang, drop.effet);
+        Equipement equipement = new Equipement(Pre_Equipement.drop_2());
         equipement.presente();
     }
 
     static public void drop_3() {
-        Pre_Equipement drop = Pre_Equipement.drop_3();
-        Equipement equipement = new Equipement(drop.nom, drop.base, drop.rang, drop.effet);
+        Equipement equipement = new Equipement(Pre_Equipement.drop_3());
         equipement.presente();
     }
 
     static public void drop_4() {
-        Pre_Equipement drop = Pre_Equipement.drop_4();
-        Equipement equipement = new Equipement(drop.nom, drop.base, drop.rang, drop.effet);
+        Equipement equipement = new Equipement(Pre_Equipement.drop_4());
         equipement.presente();
     }
 
     static public void drop_promo() {
-        Pre_Equipement drop = Pre_Equipement.drop_promo();
-        Equipement equipement = new Equipement(drop.nom, drop.base, drop.rang, drop.effet);
+        Equipement equipement = new Equipement(Pre_Equipement.drop_promo());
         equipement.presente();
     }
 

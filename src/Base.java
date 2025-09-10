@@ -7,7 +7,9 @@ public enum Base {
     MAIN_2,
     BRACELET,
     ARC,
+    SAC,
     CONSO_EX,
     CONSO_MAIN,
+    RUNE,
     AUTRE,
 }
