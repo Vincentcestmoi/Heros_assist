@@ -226,6 +226,7 @@ public class Combat {
                                     ennemi.reset_encaisser();
                                     competence_avance(ennemi, nom[pr_l]);
                                 }
+                                case MAUDIR -> maudir(ennemi);
                                 case END -> {
                                     return 0;
                                 }
@@ -789,5 +790,31 @@ public class Combat {
                 yield false;
             }
         };
+    }
+
+    private static void maudir(Monstre ennemi) throws IOException {
+        switch (input.D6()){
+            case 2 -> {
+                System.out.println("Vous maudissez faiblement " + ennemi.nom);
+                ennemi.vie_max -= 1;
+                ennemi.vie -= 1;
+            }
+            case 3, 4 -> {
+                System.out.println("Vous maudissez " + ennemi.nom);
+                ennemi.vie_max -= 2;
+                ennemi.vie -= 2;
+            }
+            case 5 -> {
+                System.out.println("Vous maudissez agressivement " + ennemi.nom);
+                ennemi.vie_max -= 3;
+                ennemi.vie -= 3;
+            }
+            case 6 -> {
+                System.out.println("Vous maudissez puissament " + ennemi.nom);
+                ennemi.vie_max -= 5;
+                ennemi.vie -= 5;
+            }
+            default -> System.out.println("vous n'arrivez pas à maudir " + ennemi.nom);
+        }
     }
 }

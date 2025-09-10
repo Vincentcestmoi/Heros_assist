@@ -11,5 +11,6 @@ public enum Action {
     AUTRE,
     ETRE_MORT,
     AVANCER,
+    MAUDIR,
     END
 }

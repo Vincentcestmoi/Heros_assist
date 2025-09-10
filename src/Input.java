@@ -165,7 +165,7 @@ public class Input {
     public Action action(String nom, Boolean est_familier, Boolean est_premiere_ligne) throws IOException {
         if (!est_familier) { // joueur
             if (est_premiere_ligne) {
-                System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/aSsomer(s)/Encaisser(e)/Premier soin(p)/Domestiquer(d)/aNalyser(n)/Custom(C)/Off(O) : ");
+                System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/aSsomer(s)/Encaisser(e)/Premier soin(p)/Domestiquer(d)/aNalyser(n)/Custom(C)/Off(O)/MAudir(ma) : ");
                 String input = read();
                 if (input.equals("A") || input.equals("a") || input.isEmpty()) {
                     return Action.ATTAQUER;
@@ -207,13 +207,19 @@ public class Input {
                         }
                         return action(nom, false, true);
                     }
+                    case "ma", "MA", "Ma", "mA" -> {
+                        if(yn("Cette action est réservé au joueur A, confirmer ? ")){
+                            return Action.MAUDIR;
+                        }
+                        return action(nom, false, true);
+                    }
                     default -> {
                         System.out.println("Entrée non reconnue, attaque classique appliquée");
                         return Action.ATTAQUER;
                     }
                 }
             } else {
-                System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/Premier soin(p)/aNalyser(n)/Custom(C)/Off(O)/S'avancer(s) : ");
+                System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/Premier soin(p)/aNalyser(n)/Custom(C)/Off(O)/S'avancer(s)/MAudir(ma) : ");
                 String input = read();
                 if (input.equals("A") || input.equals("a") || input.isEmpty()) {
                     return Action.ATTAQUER;
@@ -248,6 +254,12 @@ public class Input {
                             return Action.END;
                         }
                         return action(nom, false, true);
+                    }
+                    case "ma", "MA", "Ma", "mA" -> {
+                        if(yn("Cette action est réservé au joueur A, confirmer ? ")){
+                            return Action.MAUDIR;
+                        }
+                        return action(nom, false, false);
                     }
                     default -> {
                         System.out.println("Entrée non reconnue, attaque classique appliquée");
