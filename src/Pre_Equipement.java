@@ -177,7 +177,9 @@ public class Pre_Equipement {
     static Pre_Equipement lam_herbe = new Pre_Equipement("Lame végétale", MAIN1, O, Effet_equip.PRAIRIE3, true);
     static Pre_Equipement fleche_plus = new Pre_Equipement("plumes d'oie", AUTRE, O, Effet_equip.ARCA, true);
 
-    static Pre_Equipement[] rang0 = {ceinture0, arc0, dague0, epee0, armure0, casque0, bouclier0, bracelet0, lam_enf, lam_herbe};
+    static Pre_Equipement[] rang0 = {ceinture0, arc0, dague0, epee0, armure0, casque0, heal0, heal0, bouclier0, bracelet0, fleche_plus, lam_enf, lam_herbe};
+
+
     static Pre_Equipement[] rang1 = {default1};
     static Pre_Equipement[] rang2 = {default2};
     static Pre_Equipement[] rang3 = {default3};
