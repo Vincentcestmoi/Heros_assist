@@ -792,28 +792,28 @@ public class Monstre {
                 System.out.println("Vous soignez la cible de 9");
                 if (premiere_ligne){
                     System.out.println("Vous vous exposez légèrement");
-                    part_soin = 0.1F;
+                    part_soin += 0.1F;
                 }
                 break;
             case 5:
                 System.out.println("Vous soignez la cible de 7");
                 if (premiere_ligne){
                     System.out.println("Vous vous exposez légèrement");
-                    part_soin = 0.1F;
+                    part_soin += 0.1F;
                 }
                 break;
             case 4, 3, 2:
                 System.out.println("Vous soignez la cible de " + (2 + soin));
                 if (premiere_ligne){
                     System.out.println("Vous vous exposez");
-                    part_soin = 0.5F;
+                    part_soin += 0.5F;
                 }
                 break;
             case 1:
                 System.out.println("Vous soignez la cible de 2");
                 if (premiere_ligne){
                     System.out.println("Vous vous exposez lourdement");
-                    part_soin = 1F;
+                    part_soin += 1F;
                 }
                 break;
             default:
