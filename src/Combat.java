@@ -44,6 +44,7 @@ public class Combat {
         // stockage des participants
         boolean[] actif = {j_a, j_b, j_c, j_d, f_a, f_b, f_c, f_d};
         boolean[] assomme = {false, false, false, false, false, false, false, false};
+        boolean[] mort = {false, false, false, false, false, false, false, false};
         int[] reveil = {0, 0, 0, 0, 0, 0, 0, 0};
         String[] nom = {"Joueur A", "Joueur B", "Joueur C", "Joueur D",
                 "le familier du joueur A", "le familier du joueur B", "le familier du joueur C",
@@ -239,12 +240,18 @@ public class Combat {
                                                     break;
                                                 }
                                             }
-                                            if(actif_a  && input.yn("Est-ce que le joueur A veux tenter de ressuciter " + n + " pour 2 PP ?")) {
+                                            if(actif_a && !n.equals("Joueur A") && input.yn("Est-ce que le joueur A veux tenter de ressuciter " + n + " pour 2 PP ?")) {
                                                 if (!ressuciter_allie()) {
                                                     System.out.println(n + " est retiré du combat.\n");
                                                     actif[i] = false;
+                                                    mort[i] = true;
                                                 }
                                                 a_pass = true;
+                                            }
+                                            else{
+                                                System.out.println(n + " est mort.");
+                                                actif[i] = false;
+                                                mort[i] = true;
                                             }
                                     }
                                     else {
@@ -262,6 +269,17 @@ public class Combat {
                                 case ONDE_CHOC -> onde_choc(actif, nom, assomme, ennemi);
                                 case END -> {
                                     return 0;
+                                }
+                                case POTION_REZ -> {
+                                    int temp = input.ask_rez(nom, mort);
+                                    if(temp != -1 && popo_rez(n, nom[temp])){
+                                        mort[temp] = false;
+                                        actif[temp] = true;
+                                    }
+                                    if(i == pr_l){ //premiere ligne
+                                        System.out.println(n + "s'expose pour donner sa potion.");
+                                        ennemi.part_soin += 0.4F;
+                                    }
                                 }
                                 default -> ennemi.dommage(input.atk()); // ATTAQUER
                             }
@@ -317,6 +335,7 @@ public class Combat {
                             if(actif[k]){
                                 pr_l = k;
                                 System.out.println(nom[k] + " se retrouve en première ligne.\n");
+                                break;
                             }
                         }
                         if(!actif[pr_l]) { // la correction n'a pas eu lieu
@@ -881,5 +900,79 @@ public class Combat {
             case 5, 6 -> ennemi.do_assomme();
             default -> System.out.println(ennemi.nom + " n'a pas l'air très affecté...\n");
         }
+    }
+
+    static private boolean popo_rez(String nom_healer, String nom_mort) throws IOException {
+        if(input.yn("Utilisez vous une potion divine ?")){
+            System.out.println(nom_healer + " fait boire à " + nom_mort + " une potion gorgé de l'énergie des dieux.");
+            switch (input.D6()) {
+                case 1 -> {
+                    System.out.println(nom_mort + " se réveille avec 1 points de vie.\n");
+                    return true;
+                }
+                case 2 -> {
+                    System.out.println(nom_mort + " se réveille avec 2 points de vie.\n");
+                    return true;
+                }
+                case 3, 4 -> {
+                    System.out.println(nom_mort + " se réveille avec 4 points de vie.\n");
+                    return true;
+                }
+                case 5, 6 -> {
+                    System.out.println(nom_mort + " se réveille avec 6 points de vie.\n");
+                    return true;
+                }
+                default -> {
+                    System.out.println(nom_mort + "reste mort.\n");
+                    return false;
+                }
+            }
+        }
+        if(input.yn("Utilisez vous un élixir ?")){
+            switch (input.D20()) {
+                case 1, 2, 3 -> {
+                    System.out.println(nom_mort + " se réveille avec 2 points de vie et 3 points de résistance additionels.\n");
+                    return true;
+                }
+                case 4, 5, 6 -> {
+                    System.out.println(nom_mort + " se réveille avec 3 points de vie et 4 points de résistance additionels.\n");
+                    return true;
+                }
+                case 7, 8 -> {
+                    System.out.println(nom_mort + " se réveille avec 5 points de vie et 7 points de résistance additionels.\n");
+                    return true;
+                }
+                case 9, 10 -> {
+                    System.out.println(nom_mort + " se réveille avec 6 points de vie et 9 points de résistance additionels.\n");
+                    return true;
+                }
+                case 11, 12 -> {
+                    System.out.println(nom_mort + " se réveille avec 6 points de vie et 12 points de résistance additionels.\n");
+                    return true;
+                }
+                case 13, 14, 15 -> {
+                    System.out.println(nom_mort + " se réveille avec 7 points de vie et 13 points de résistance additionels.\n");
+                    return true;
+                }
+                case 16, 17 -> {
+                    System.out.println(nom_mort + " se réveille avec 7 points de vie et 14 points de résistance additionels.\n");
+                    return true;
+                }
+                case 18, 19 -> {
+                    System.out.println(nom_mort + " se réveille avec 8 points de vie et 14 points de résistance additionels.\n");
+                    return true;
+                }
+                case 20 -> {
+                    System.out.println(nom_mort + " se réveille avec 8 points de vie et 15 points de résistance additionels.\n");
+                    return true;
+                }
+                default -> {
+                    System.out.println(nom_mort + "reste mort.\n");
+                    return false;
+                }
+            }
+        }
+        System.out.println("Vous n'avez aucun moyen de ressuciter " + nom_mort + ".");
+        return false;
     }
 }

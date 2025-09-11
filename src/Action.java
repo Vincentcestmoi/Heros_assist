@@ -13,5 +13,6 @@ public enum Action {
     AVANCER,
     MAUDIR,
     ONDE_CHOC,
+    POTION_REZ,
     END
 }

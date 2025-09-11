@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Input {
 
@@ -166,7 +167,7 @@ public class Input {
         if (!est_familier) { // joueur
             if (est_premiere_ligne) {
                 System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/aSsomer(s)/Encaisser(e)/" +
-                        "Premier soin(p)/Domestiquer(d)/aNalyser(n)/Custom(C)/Off(O)/MAudir(ma)/Onde de choc(on) : ");
+                        "Premier soin(p)/Domestiquer(d)/aNalyser(n)/Custom(C)/Off(O)/MAudir(ma)/ONde de choc(on)/REssuciter par potion(re) : ");
                 String input = read();
                 if (input.equals("A") || input.equals("a") || input.isEmpty()) {
                     return Action.ATTAQUER;
@@ -220,13 +221,20 @@ public class Input {
                         }
                         return action(nom, false, true);
                     }
+                    case "re", "RE", "Re", "rE" -> {
+                        if(yn("Cette action est réservé au joueur C, confirmer ? ")){
+                            return Action.POTION_REZ;
+                        }
+                        return action(nom, false, true);
+                    }
                     default -> {
                         System.out.println("Entrée non reconnue, attaque classique appliquée");
                         return Action.ATTAQUER;
                     }
                 }
             } else {
-                System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/Premier soin(p)/aNalyser(n)/Custom(C)/Off(O)/S'avancer(s)/MAudir(ma) : ");
+                System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/" +
+                        "Premier soin(p)/aNalyser(n)/Custom(C)/Off(O)/S'avancer(s)/MAudir(ma)/REssuciter par potion(re) : ");
                 String input = read();
                 if (input.equals("A") || input.equals("a") || input.isEmpty()) {
                     return Action.ATTAQUER;
@@ -260,7 +268,7 @@ public class Input {
                         if(yn("Confirmez ")){
                             return Action.END;
                         }
-                        return action(nom, false, true);
+                        return action(nom, false, false);
                     }
                     case "ma", "MA", "Ma", "mA" -> {
                         if(yn("Cette action est réservé au joueur A, confirmer ? ")){
@@ -272,7 +280,13 @@ public class Input {
                         if(yn("Cette action est réservé au joueur B, confirmer ? ")){
                             return Action.ONDE_CHOC;
                         }
-                        return action(nom, false, true);
+                        return action(nom, false, false);
+                    }
+                    case "re", "RE", "Re", "rE" -> {
+                        if(yn("Cette action est réservé au joueur C, confirmer ? ")){
+                            return Action.POTION_REZ;
+                        }
+                        return action(nom, false, false);
                     }
                     default -> {
                         System.out.println("Entrée non reconnue, attaque classique appliquée");
@@ -356,8 +370,37 @@ public class Input {
                 if (yn("Voulez vous soigner " + nom[i] + " ?")) {
                     return i == premier_ligne;
                 }
-                i = i == 8 ? 0 : i + 1;
             }
+            i = i == 8 ? 0 : i + 1;
+        }
+    }
+
+    /**
+     * Demande au joueur qui il veut ressuciter
+     * @param nom la liste des noms des participants
+     * @param mort le booléen de descès des participants
+     * @return l'indice du ressucité
+     */
+    public int ask_rez(String[] nom, boolean[] mort) throws IOException {
+        boolean ok = false;
+        for(int i = 0; i < 4; i++){
+            if (mort[i]) {
+                ok = true;
+                break;
+            }
+        }
+        if(!ok){
+            System.out.println(Arrays.toString(mort));
+            return -1;
+        }
+        int i = 0;
+        while (true) {
+            if (mort[i]) {
+                if (yn("Voulez vous rescussiter " + nom[i] + " ?")) {
+                    return i;
+                }
+            }
+            i = i == 4 ? 0 : i + 1;
         }
     }
 
