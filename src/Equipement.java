@@ -405,7 +405,7 @@ public class Equipement {
                 this.armure += 1;
             }
             case DISSEC -> this.effet = "Augmente de 1 le résultat de dé de la compétence Dissection.";
-            case ALCHI -> this.effet = "Augmente de 1 le résultat de tout vos dé de concoction.";
+            case ALCHI -> this.effet = "Augmente de 2 le résultat de tout vos dé de concoction.";
             case PARCH_BERSERK -> this.effet = "Permet de lancer le sort Folie meurtrière : pour 2PP," +
                     "augmente temporairement de 5 points l'attaque et diminue de 7 la résistances.";
             case BOURDON -> {
