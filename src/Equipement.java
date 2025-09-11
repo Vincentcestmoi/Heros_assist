@@ -131,6 +131,7 @@ public class Equipement {
             case IV -> {
                 this.attaque = 10;
                 this.resistance = 15;
+                this.armure = 2;
             }
         }
     }
@@ -272,12 +273,6 @@ public class Equipement {
                 }
             }
             case ARCEXP -> this.effet = "Augmente de 6 une attaque à l'arc, se consomme à l'usage.";
-            case ARC -> this.effet = "Cet objet est un arc, il permet de tirer.";
-            case PASD0 -> this.effet = "Pas encore dev, piochez un équipement O.";
-            case PASD1 -> this.effet = "Pas encore dev, piochez un équipement I.";
-            case PASD2 -> this.effet = "Pas encore dev, piochez un équipement II.";
-            case PASD3 -> this.effet = "Pas encore dev, piochez un équipement III.";
-            case PASD4 -> this.effet = "Pas encore dev, piochez un équipement IV.";
             case PASDP -> this.effet = "Pas encore dev, piochez une promotion.";
             case RESISTANCE1 -> this.resistance += 1;
             case RESISTANCE2 -> this.resistance += 2;
@@ -285,12 +280,19 @@ public class Equipement {
             case RESISTANCE6 -> this.resistance += 6;
             case ATTAQUE1 -> this.attaque += 1;
             case ATTAQUE2 -> this.attaque += 2;
+            case ATTAQUE7 -> this.attaque += 7;
+            case ATTAQUE8 -> this.attaque += 8;
             case ARMURE1 -> this.armure += 1;
             case ARMURE2 -> this.armure += 2;
             case BRACELETMAX -> {
                 this.armure += 1;
                 this.resistance += 5;
                 this.attaque += 3;
+            }
+            case BRACELET_DIVIN -> {
+                this.armure += 3;
+                this.resistance += 9;
+                this.attaque += 6;
             }
             case BAD_ALLONGE -> {
                 this.attaque += 1;
@@ -404,12 +406,16 @@ public class Equipement {
             }
             case DISSEC -> this.effet = "Augmente de 1 le résultat de dé de la compétence Dissection.";
             case ALCHI -> this.effet = "Augmente de 1 le résultat de tout vos dé de concoction.";
-            case PARCH_BERSERK -> this.effet = "Permet de lancer le sort Folie meurtrière : pour 2PP, augmente temporairement de 5 points l'attaque et diminue de 7 la résistances.";
+            case PARCH_BERSERK -> this.effet = "Permet de lancer le sort Folie meurtrière : pour 2PP," +
+                    "augmente temporairement de 5 points l'attaque et diminue de 7 la résistances.";
             case BOURDON -> {
                 this.effet = "Quand vous lancez un sort, lancez un dé 4 : si vous faites 3 ou plus, votre sort coute 1 de moins.";
                 attaque += 2;
                 armure -= 2;
             }
+            case PARCH_VOLCAN -> this.effet = "Permet de lancer le sort Folie meurtrière : pour 6PP, infliges 55 dégats magiques";
+            case PARCH_ABSO -> this.effet = "Quand vous tuez un monstre, vous gagnez définitivement 7 points de résistances, 3 points" +
+                    "d'attaques, 1 point d'armure et 4PP. (vous ou votre familier devez porter le dernier coup).";
             default -> {} //inclus AUCUN
         }
     }

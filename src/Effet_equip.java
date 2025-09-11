@@ -1,14 +1,8 @@
 public enum Effet_equip {
     AUCUN,
-    PASD0,
-    PASD1,
-    PASD2,
-    PASD3,
-    PASD4,
     PASDP,
     ARCA,
     ARCEXP,
-    ARC,
     SAC0,
     SAC1,
     SAC2,
@@ -18,6 +12,8 @@ public enum Effet_equip {
     RESISTANCE6,
     ATTAQUE1,
     ATTAQUE2,
+    ATTAQUE7,
+    ATTAQUE8,
     ARMURE1,
     ARMURE2,
     BAD_ALLONGE,
@@ -72,5 +68,8 @@ public enum Effet_equip {
     PARCH_BERSERK,
     MONT5,
     BRACELETMAX,
+    BRACELET_DIVIN,
     BOURDON,
+    PARCH_VOLCAN,
+    PARCH_ABSO
 }

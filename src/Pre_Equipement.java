@@ -326,12 +326,22 @@ public class Pre_Equipement {
             casque_III_r, bouclierIII_r, main1III_ba, main1III_ba, main2III_ba, main2III_ga, lame_mont, armureIII_ar,
             main1III_a, bracelet_max};
 
-
     static Pre_Equipement nectar = new Pre_Equipement("nectar", AUTRE, IV, Effet_equip.NECTAR, true);
     static Pre_Equipement ambroisie = new Pre_Equipement("ambroisie", AUTRE, IV, Effet_equip.AMBROISIE, true);
+    static Pre_Equipement arcIV = new Pre_Equipement("Arc d'Apollon", ARC, IV, AUCUN, true);
+    static Pre_Equipement main1IV = new Pre_Equipement("Glaives divins", MAIN1, IV, AUCUN, true);
+    static Pre_Equipement main2IV = new Pre_Equipement("Lame divine", MAIN2, IV, AUCUN, true);
     static Pre_Equipement fleche_plusIV = new Pre_Equipement("flèches divines", AUTRE, IV, Effet_equip.ARCA, true);
+    static Pre_Equipement armureIV = new Pre_Equipement("Armure d'Achille", ARMURE, IV, Effet_equip.ATTAQUE7, true);
+    static Pre_Equipement casqueIV = new Pre_Equipement("Casque divin", CASQUE, IV, Effet_equip.ATTAQUE8, true);
+    static Pre_Equipement bouclierIV = new Pre_Equipement("Aegis", BOUCLIER, IV, AUCUN, true);
+    static Pre_Equipement ceintureIV = new Pre_Equipement("Ceinture d'Heracles", CEINTURE, IV, AUCUN, true);
+    static Pre_Equipement braceletIV = new Pre_Equipement("Bracelet divin", BRACELET, IV, Effet_equip.BRACELET_DIVIN, true);
+    static Pre_Equipement parch_volcan = new Pre_Equipement("parchemin d'éruption volcanique", AUTRE, IV, Effet_equip.PARCH_VOLCAN, true);
+    static Pre_Equipement parch_abso = new Pre_Equipement("Parchemin d'absorbtion", AUTRE, IV, Effet_equip.PARCH_ABSO, true);
 
-    static Pre_Equipement[] rang4 = {nectar, ambroisie, fleche_plusIV};
+    static Pre_Equipement[] rang4 = {nectar, ambroisie, fleche_plusIV, arcIV, main1IV, main2IV,
+        armureIV, casqueIV, bouclierIV, ceintureIV, braceletIV, parch_volcan, parch_abso};
 
     static Pre_Equipement[] prom_list = {defaultp};
 }
