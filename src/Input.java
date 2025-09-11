@@ -445,19 +445,19 @@ public class Input {
                         return Choix.QUITTER;
                     }
                 }
-                case "10" -> {
+                case "add" -> {
                     System.out.println("Confirmez l'addition");
                     if(read().equals("10")) {
                         return Choix.FAMILIER_PLUS;
                     }
                 }
-                case "11" -> {
+                case "del" -> {
                     System.out.println("Confirmez le descès");
                     if (read().equals("11")) {
                         return Choix.FAMILIER_MOINS;
                     }
                 }
-                case "12" -> {
+                case "re" -> {
                     System.out.println("Confirmez");
                     if(read().equals("12")) {
                         return Choix.RETOUR;
