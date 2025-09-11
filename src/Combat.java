@@ -43,6 +43,8 @@ public class Combat {
 
         // stockage des participants
         boolean[] actif = {j_a, j_b, j_c, j_d, f_a, f_b, f_c, f_d};
+        boolean[] assomme = {false, false, false, false, false, false, false, false};
+        int[] reveil = {0, 0, 0, 0, 0, 0, 0, 0};
         String[] nom = {"Joueur A", "Joueur B", "Joueur C", "Joueur D",
                 "le familier du joueur A", "le familier du joueur B", "le familier du joueur C",
                 "le familier du joueur D"};
@@ -110,6 +112,36 @@ public class Combat {
                 int i = tirage[j]; //on "corrige" la sélection avec notre ordre
                 if(actif[i]) { // on ne joue que les participants actifs
                     n = nom[i]; // on stocke le nom pour plus tard
+                    if(assomme[i]){
+                        System.out.println(n + " est inconscient.");
+                        if(Objects.equals(n, "Joueur B")){
+                            if(input.yn("Utiliser purge (3PP) ?")){
+                                System.out.println(n + "se réveille.\n");
+                                assomme[i] = false;
+                                reveil[i] = 0;
+                                continue;
+                            }
+                        }
+                        if(input.D4() + reveil[i] >= 3){
+                            System.out.println(n + "se réveille.\n");
+                            assomme[i] = false;
+                            reveil[i] = 0;
+                        }
+                        else{
+                            System.out.println("est toujours inconscient.\n");
+                            reveil[i] += 1;
+                            if(Objects.equals(n, "Joueur B")){
+                                System.out.println(n + " recupère 1PP.\n");
+                                if(rand.nextBoolean()){
+                                    reveil[i] -= 1;
+                                }
+                            }
+                        }
+                        if(Objects.equals(n, "Joueur A") && a_pass){
+                            a_pass = false;
+                        }
+                        continue;
+                    }
                     if(Objects.equals(n, "Joueur A") && a_pass){
                         a_pass = false;
                         continue;
@@ -164,7 +196,7 @@ public class Combat {
                                         System.out.println("nouveau familier : " + ennemi.nom);
                                         System.out.println("attaque : " + ennemi.attaque);
                                         System.out.println("vie : " + ennemi.vie_max);
-                                        System.out.println("defense : " + ennemi.armure + "\n");
+                                        System.out.println("armure : " + ennemi.armure + "\n");
 
                                         switch (n) {
                                             case "Joueur A" -> {
@@ -202,12 +234,12 @@ public class Combat {
                                     if(input.yn(n + " est-il mort ?")){
                                             boolean actif_a = false;
                                             for(int k = 0; k < 8; k++){
-                                                if (actif[k] && Objects.equals(nom[k], "Joueur A")) {
+                                                if (actif[k] && Objects.equals(nom[k], "Joueur A") && !assomme[k]) {
                                                     actif_a = true;
                                                     break;
                                                 }
                                             }
-                                            if(actif_a && input.yn("Est-ce que le joueur A veux tenter de ressuciter " + n + " pour 2 PP ?")) {
+                                            if(actif_a  && input.yn("Est-ce que le joueur A veux tenter de ressuciter " + n + " pour 2 PP ?")) {
                                                 if (!ressuciter_allie()) {
                                                     System.out.println(n + " est retiré du combat.\n");
                                                     actif[i] = false;
@@ -227,6 +259,7 @@ public class Combat {
                                     competence_avance(ennemi, nom[pr_l]);
                                 }
                                 case MAUDIR -> maudir(ennemi);
+                                case ONDE_CHOC -> onde_choc(actif, nom, assomme, ennemi);
                                 case END -> {
                                     return 0;
                                 }
@@ -296,18 +329,16 @@ public class Combat {
                         // la mort est donné par les méthodes de dommage
                         run = false;
                         gestion_nomme(ennemi);
-                        if(ob_a == 0){
-                            boolean actif_a = false;
-                            for(int k = 0; k < 8; k++){
-                                if (actif[k] && Objects.equals(nom[k], "Joueur A")) {
-                                    actif_a = true;
-                                    break;
-                                }
+                        boolean actif_a = false;
+                        for(int k = 0; k < 8; k++){
+                            if (actif[k] && Objects.equals(nom[k], "Joueur A")) {
+                                actif_a = true;
+                                break;
                             }
-                            if(actif_a && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier pour 2PP ?")) {
-                                if (ressuciter(ennemi)) {
-                                    return 1;
-                                }
+                        }
+                        if(actif_a && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier pour 2PP ?")) {
+                            if (ressuciter(ennemi)) {
+                                return 1;
                             }
                         }
                         break;
@@ -729,7 +760,7 @@ public class Combat {
                 System.out.println("nouveau familier : zombie " + ennemi.nom);
                 System.out.println("attaque : " + max(ennemi.attaque / 4, 1));
                 System.out.println("vie : " + max(ennemi.vie_max / 4, 1));
-                System.out.println("defense : " + ennemi.armure / 4 + "\n");
+                System.out.println("armure : " + ennemi.armure / 4 + "\n");
                 return true;
             }
             case 6 -> { //50%
@@ -738,7 +769,7 @@ public class Combat {
                 System.out.println("nouveau familier : zombie " + ennemi.nom);
                 System.out.println("attaque : " + max(ennemi.attaque / 2, 1));
                 System.out.println("vie : " + max(ennemi.vie_max / 2, 1));
-                System.out.println("defense : " + ennemi.armure / 2 + "\n");
+                System.out.println("armure : " + ennemi.armure / 2 + "\n");
                 return true;
             }
             case 7 -> { // 75%
@@ -747,7 +778,7 @@ public class Combat {
                 System.out.println("nouveau familier : " + ennemi.nom + " le ressucité");
                 System.out.println("attaque : " + max(ennemi.attaque * 3 / 4, 1));
                 System.out.println("vie : " + max(ennemi.vie_max * 3 / 4, 1));
-                System.out.println("defense : " + ennemi.armure * 3 / 4 + "\n");
+                System.out.println("armure : " + ennemi.armure * 3 / 4 + "\n");
                 return true;
             }
             case 8, 9 -> {
@@ -756,7 +787,7 @@ public class Combat {
                 System.out.println("nouveau familier : " + ennemi.nom);
                 System.out.println("attaque : " + max(ennemi.attaque, 1));
                 System.out.println("vie : " + max(ennemi.vie_max, 1));
-                System.out.println("defense : " + ennemi.armure + "\n");
+                System.out.println("armure : " + ennemi.armure + "\n");
                 return true;
             }
             default -> {
@@ -815,6 +846,40 @@ public class Combat {
                 ennemi.vie -= 5;
             }
             default -> System.out.println("vous n'arrivez pas à maudir " + ennemi.nom);
+        }
+    }
+
+    static private void onde_choc(boolean[] actif, String[] nom, boolean[] assomme, Monstre ennemi) throws IOException {
+        for(int i = 0; i < nom.length; i++){
+            if(!nom[i].equals("joueur B") && actif[i]){
+                System.out.println(nom[i] + " est frappé par l'onde de choc.");
+                if(i <= 4){
+                    if(input.D6() <= 3){
+                        System.out.println(nom[i] + " perd connaissance.\n");
+                        assomme[i] = true;
+                    }
+                    else{
+                        System.out.println(nom[i] + " parvient à rester conscient.\n");
+                    }
+                }
+                else{
+                    if(input.D4() <= 3){
+                        System.out.println(nom[i] + " perd connaissance.\n");
+                        assomme[i] = true;
+                    }
+                    else{
+                        System.out.println(nom[i] + " parvient à rester conscient.\n");
+                    }
+                }
+            }
+        }
+        System.out.println(ennemi.nom + " est frappé par l'onde de choc.");
+        System.out.print("(joueur B)");
+        switch (input.D6()){
+            case 2 -> ennemi.do_etourdi();
+            case 3, 4 -> ennemi.affecte();
+            case 5, 6 -> ennemi.do_assomme();
+            default -> System.out.println(ennemi.nom + " n'a pas l'air très affecté...\n");
         }
     }
 }

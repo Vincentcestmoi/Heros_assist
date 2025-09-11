@@ -15,6 +15,7 @@ public class Main {
             return;
         }
         System.out.print("Le joueur A est nécromancien.\n");
+        System.out.print("Le joueur B est archimage.\n");
         int f_a = 0, f_b = 0, f_c = 0, f_d = 0;
         String[] nom = {"Joueur A", "Joueur B", "Joueur C", "Joueur D"};
         boolean run = true;

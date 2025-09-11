@@ -165,7 +165,8 @@ public class Input {
     public Action action(String nom, Boolean est_familier, Boolean est_premiere_ligne) throws IOException {
         if (!est_familier) { // joueur
             if (est_premiere_ligne) {
-                System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/aSsomer(s)/Encaisser(e)/Premier soin(p)/Domestiquer(d)/aNalyser(n)/Custom(C)/Off(O)/MAudir(ma) : ");
+                System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/aSsomer(s)/Encaisser(e)/" +
+                        "Premier soin(p)/Domestiquer(d)/aNalyser(n)/Custom(C)/Off(O)/MAudir(ma)/Onde de choc(on) : ");
                 String input = read();
                 if (input.equals("A") || input.equals("a") || input.isEmpty()) {
                     return Action.ATTAQUER;
@@ -210,6 +211,12 @@ public class Input {
                     case "ma", "MA", "Ma", "mA" -> {
                         if(yn("Cette action est réservé au joueur A, confirmer ? ")){
                             return Action.MAUDIR;
+                        }
+                        return action(nom, false, true);
+                    }
+                    case "on", "ON", "On", "oN" -> {
+                        if(yn("Cette action est réservé au joueur B, confirmer ? ")){
+                            return Action.ONDE_CHOC;
                         }
                         return action(nom, false, true);
                     }
@@ -260,6 +267,12 @@ public class Input {
                             return Action.MAUDIR;
                         }
                         return action(nom, false, false);
+                    }
+                    case "on", "ON", "On", "oN" -> {
+                        if(yn("Cette action est réservé au joueur B, confirmer ? ")){
+                            return Action.ONDE_CHOC;
+                        }
+                        return action(nom, false, true);
                     }
                     default -> {
                         System.out.println("Entrée non reconnue, attaque classique appliquée");
