@@ -287,6 +287,11 @@ public class Equipement {
             case ATTAQUE2 -> this.attaque += 2;
             case ARMURE1 -> this.armure += 1;
             case ARMURE2 -> this.armure += 2;
+            case BRACELETMAX -> {
+                this.armure += 1;
+                this.resistance += 5;
+                this.attaque += 3;
+            }
             case BAD_ALLONGE -> {
                 this.attaque += 1;
                 this.resistance -= 2;
@@ -318,6 +323,10 @@ public class Equipement {
             case TRIDENT -> {
                 this.attaque -= 2;
                 this.effet = "Augmente de 4 l'attaque en mer.";
+            }
+            case MONT5 -> {
+                this.attaque -= 2;
+                this.effet = "Augmente de 5 l'attaque en montagne.";
             }
             case CONSO_EXT1 -> this.effet = "Soigne de 1 et régénère 1PP.";
             case CONSO_EXT2 -> this.effet = "Soigne de 2 et régénère 2PP.";
@@ -396,6 +405,11 @@ public class Equipement {
             case DISSEC -> this.effet = "Augmente de 1 le résultat de dé de la compétence Dissection.";
             case ALCHI -> this.effet = "Augmente de 1 le résultat de tout vos dé de concoction.";
             case PARCH_BERSERK -> this.effet = "Permet de lancer le sort Folie meurtrière : pour 2PP, augmente temporairement de 5 points l'attaque et diminue de 7 la résistances.";
+            case BOURDON -> {
+                this.effet = "Quand vous lancez un sort, lancez un dé 4 : si vous faites 3 ou plus, votre sort coute 1 de moins.";
+                attaque += 2;
+                armure -= 2;
+            }
             default -> {} //inclus AUCUN
         }
     }

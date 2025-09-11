@@ -70,4 +70,7 @@ public enum Effet_equip {
     DISSEC,
     ALCHI,
     PARCH_BERSERK,
+    MONT5,
+    BRACELETMAX,
+    BOURDON,
 }
