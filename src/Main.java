@@ -14,8 +14,9 @@ public class Main {
             System.out.println("Nombre de joueur invalide : 1 à 4 joueurs seulement.");
             return;
         }
-        System.out.print("Le joueur A est nécromancien.\n");
-        System.out.print("Le joueur B est archimage.\n");
+        System.out.println("Le joueur A est nécromancien.\n");
+        System.out.println("Le joueur B est archimage.\n");
+        System.out.println("Le joueur C est alchimiste.\n");
         int f_a = 0, f_b = 0, f_c = 0, f_d = 0;
         String[] nom = {"Joueur A", "Joueur B", "Joueur C", "Joueur D"};
         boolean run = true;
@@ -90,22 +91,10 @@ public class Main {
                 case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
             }
             switch(temp) {
-                case 1 -> {
-                    f_a = 1;
-                    System.out.println("Le joueur A a un nouveau familier");
-                }
-                case 2 -> {
-                    f_b = 1;
-                    System.out.println("Le joueur B a un nouveau familier");
-                }
-                case 3 -> {
-                    f_c = 1;
-                    System.out.println("Le joueur C a un nouveau familier");
-                }
-                case 4 -> {
-                    f_d = 1;
-                    System.out.println("Le joueur D a un nouveau familier");
-                }
+                case 1 -> f_a = new_fam("Joueur A", f_a);
+                case 2 -> f_b = new_fam("Joueur B", f_b);
+                case 3 -> f_c = new_fam("Joueur C", f_c);
+                case 4 -> f_d = new_fam("Joueur D", f_d);
                 default -> { // dont 0
                 }
             }
@@ -373,5 +362,29 @@ public class Main {
             }
         }
         return 0;
+    }
+
+    /**
+     * Traite la venue d'un nouveau familier, traite le cas de double familier
+     * @param nom le nom du joueur qui obtient ce familier
+     * @param obe l'obéissance du familier actuel
+     * @return l'obéissance du familier conservé
+     * @throws IOException mon vieux pote en input
+     */
+    static private int new_fam(String nom, int obe) throws IOException {
+        if(obe != 0){
+            if(input.yn(nom + " possède déjà un familier, le remplacer ? ")){
+                obe = 1;
+                System.out.println("Nouveau familier enregistré.\n");
+            }
+            else{
+                System.out.println("Ancien familier conservé.\n");
+            }
+        }
+        else {
+            obe = 1;
+            System.out.println(nom + " a un nouveau familier.\n");
+        }
+        return obe;
     }
 }
