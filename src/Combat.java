@@ -750,7 +750,7 @@ public class Combat {
                 System.out.println("defense : " + ennemi.armure * 3 / 4 + "\n");
                 return true;
             }
-            case 8 -> {
+            case 8, 9 -> {
                 System.out.println(ennemi.nom + " a été parfaitement ressucité");
 
                 System.out.println("nouveau familier : " + ennemi.nom);
@@ -781,7 +781,7 @@ public class Combat {
                 System.out.println("Résurection avec 8 (max) points de vie");
                 yield true;
             }
-            case 8 -> {
+            case 8, 9 -> {
                 System.out.println("Résurection avec 12 (max) points de vie");
                 yield true;
             }

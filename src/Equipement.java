@@ -271,6 +271,7 @@ public class Equipement {
                     case IV -> this.effet = "Augmente de 10 l'attaque des arcs.";
                 }
             }
+            case ARCEXP -> this.effet = "Augmente de 6 une attaque à l'arc, se consomme à l'usage.";
             case ARC -> this.effet = "Cet objet est un arc, il permet de tirer.";
             case PASD0 -> this.effet = "Pas encore dev, piochez un équipement O.";
             case PASD1 -> this.effet = "Pas encore dev, piochez un équipement I.";
@@ -280,28 +281,54 @@ public class Equipement {
             case PASDP -> this.effet = "Pas encore dev, piochez une promotion.";
             case RESISTANCE1 -> this.resistance += 1;
             case RESISTANCE2 -> this.resistance += 2;
+            case RESISTANCE4 -> this.resistance += 4;
+            case RESISTANCE6 -> this.resistance += 6;
             case ATTAQUE1 -> this.attaque += 1;
+            case ATTAQUE2 -> this.attaque += 2;
             case ARMURE1 -> this.armure += 1;
-            case BAD_ALLONGE1 -> {
+            case ARMURE2 -> this.armure += 2;
+            case BAD_ALLONGE -> {
                 this.attaque += 1;
-                this.resistance -= 1;
+                this.resistance -= 2;
+            }
+            case BONNE_ALLONGE -> {
+                this.attaque -= 2;
+                this.resistance += 3;
             }
             case RAGE1 -> {
                 this.resistance -= 1;
                 this.attaque += 2;
             }
+            case RAGE2 -> {
+                this.resistance -= 3;
+                this.attaque += 4;
+            }
+            case RAGE3 -> {
+                this.resistance -= 6;
+                this.attaque += 6;
+            }
             case ENFERS4 -> {
-                this.attaque = 1;
+                this.attaque -= 2;
                 this.effet = "Augmente de 4 l'attaque aux enfers.";
             }
             case PRAIRIE3 -> {
-                this.attaque = 2;
+                this.attaque -= 1;
                 this.effet = "Augmente de 3 l'attaque en prairie.";
+            }
+            case TRIDENT -> {
+                this.attaque -= 2;
+                this.effet = "Augmente de 4 l'attaque en mer.";
             }
             case CONSO_EXT1 -> this.effet = "Soigne de 1 et régénère 1PP.";
             case CONSO_EXT2 -> this.effet = "Soigne de 2 et régénère 2PP.";
+            case CONSO_EXT3 -> this.effet = "Soigne de 3 et régénère 3PP.";
             case CONSO_RES2 -> this.effet = "Soigne de 2.";
             case CONSO_RES4 -> this.effet = "Soigne de 4.";
+            case CONSO_RES6 -> this.effet = "Soigne de 6.";
+            case CONSO_RES8 -> this.effet = "Soigne de 8.";
+            case PP4 -> this.effet = "Régénère 4 PP.";
+            case PP6 -> this.effet = "Régénère 6 PP.";
+            case PPMAX -> this.effet = "Pour ce combat, vous avez un nombre infini de PP ; à la fin du combat, mettez vos PP à 0.";
             case SOUPE_MAGIQUE -> this.effet = "Soigne de 4, augmente temporairement la résistance de 3 et l'attaque de 2.";
             case NECTAR -> this.effet = "Combinez le à l'ambroisie pour gagner.";
             case AMBROISIE -> this.effet = "Combinez le au nectar pour gagner";
@@ -345,6 +372,7 @@ public class Equipement {
             }
             case RUNE_RESIDU -> this.effet = "Peut être consummé à la place de 2 PP.";
             case PARCH_FEU -> this.effet = "Permet de lancer le sort Boule de feu : pour 2PP, inflige 5 dégats magiques.";
+            case PARCH_DODO -> this.effet = "Permet de lancer le sort Sommeil : pour 2PP, arrête un combat.";
             case PARCH_FORCE -> this.effet = "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement l'attaque de 1, se détruit après usage.";
             case RUNE_CROISS -> this.effet = "Diminue de 1 le coût de la compétence Embranchement végétal.";
             case RUNE_PLUIE -> this.effet = "Diminue de 1 le coût de la compétence Déferlante.";
@@ -355,6 +383,19 @@ public class Equipement {
             case RUNE_DODO -> this.effet = "Diminue de 1 le coût de la compétence Sommeil.";
             case RUNE_MORT -> this.effet = "Double l'efficacité de la compétence Thaumaturge";
             case RUNE_ORAGE -> this.effet = "Diminue de 1 le coût de la compétence Foudre.";
+            case SOIN -> this.effet = "Vous pouvez, une fois par combat, utiliser votre action pour soigner une cible de 6.";
+            case PROTECTION -> this.effet = "Peut être sacrifié pour ignorer une fois des dommages (avant de les calculer).";
+            case RUNE_VENGEANCE -> this.effet = "Récuperez 2PP chaque fois qu'un familier ou joueur allié est tué par un monstre.";
+            case RUNE_INTERDITE -> this.effet = "Augmente de 1 le coût de la compétence Nécromancie, mais augmente de 1 le résultat du jet de dé.";
+            case BRACELET_ABSO -> this.effet = "Gagnez 1 PP chaque fois qe vous tuez un monstre (vous ou votre familier doit porter le dernier coup).";
+            case LUNETTE -> this.effet = "Vous êtes immunisé à l'altération cécité";
+            case BRACELET_MAUDIT -> {
+                this.resistance -= 3;
+                this.armure += 1;
+            }
+            case DISSEC -> this.effet = "Augmente de 1 le résultat de dé de la compétence Dissection.";
+            case ALCHI -> this.effet = "Augmente de 1 le résultat de tout vos dé de concoction.";
+            case PARCH_BERSERK -> this.effet = "Permet de lancer le sort Folie meurtrière : pour 2PP, augmente temporairement de 5 points l'attaque et diminue de 7 la résistances.";
             default -> {} //inclus AUCUN
         }
     }
