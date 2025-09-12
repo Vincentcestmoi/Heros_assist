@@ -234,7 +234,8 @@ public class Input {
                 }
             } else {
                 System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/" +
-                        "Premier soin(p)/aNalyser(n)/Custom(C)/Off(O)/S'avancer(s)/MAudir(ma)/REssuciter par potion(re) : ");
+                        "Premier soin(p)/aNalyser(n)/Custom(C)/Off(O)/S'avancer(s)/MAudir(ma)/" +
+                        "ONde de choc(on)/REssuciter par potion(re) : ");
                 String input = read();
                 if (input.equals("A") || input.equals("a") || input.isEmpty()) {
                     return Action.ATTAQUER;
@@ -322,7 +323,8 @@ public class Input {
                         return Action.ATTAQUER;
                     }
                 }
-            } else {
+            }
+            else {
                 System.out.println("Donnez un ordre au " + nom + " Attaquer(A)/Fuir(f)/Custom(C)/Off(O)/S'avancer(s) : ");
                 String input = read();
                 if (input.equals("A") || input.equals("a") || input.isEmpty()) {
