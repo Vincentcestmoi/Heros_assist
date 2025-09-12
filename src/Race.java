@@ -117,7 +117,7 @@ public class Race {
     static Competence[] bacc_comp = {Competence.ESQUIVE, Competence.FOLIE_MEURTRIERE,
             Competence.VITALITE_NATURELLE, Competence.HATE_DYONISOS, Competence.FEAR_DYONISOS};
     static Race bacchante = new Race("bacchante", 5, 14, 0, 1, 1, 1, bacc_comp);
-    static Competence[] saty_comp = {Competence.RAPIDE, Competence.ARNAQUE, Competence.ASSAUT};
+    static Competence[] saty_comp = {Competence.RAPIDE, Competence.ARNAQUE, Competence.ASSAUT, Competence.FEAR_DYONISOS, Competence.HATE_DYONISOS};
     static Race satyre = new Race("satyre", 5, 13, 0, 1, 1, 1, saty_comp);
     static Competence[] mena_comp = {Competence.ESQUIVE, Competence.FOLIE_MEURTRIERE,
             Competence.VIOLENT, Competence.POISON, Competence.ARNAQUE, Competence.HATE_DYONISOS, Competence.FEAR_DYONISOS};
@@ -197,22 +197,13 @@ public class Race {
     static Race golem = new Race("golem", 6, 20, 1, 2, 2, 1, gole_comp);
     static Competence[] arch_comp = {Competence.GEL, Competence.ARMURE_GLACE2, Competence.SPELL_IMMUNE};
     static Race archliche = new Race("archliche", 12, 30, 2, 3, 3, 2, arch_comp);
+    static Competence[] illu_comp = {Competence.ILLU_VENTI, Competence.ILLU_SIRENE, Competence.ILLU_CYCLOPE, Competence.ILLU_AURAI,
+            Competence.ILLU_ROCHE, Competence.ILLU_DULLA, Competence.ILLU_TRITON, Competence.ILLU_GOLEM};
+    static Race illusioniste = new Race("illusioniste", 8, 30, 2, 2, 3, 2, illu_comp);
     static Race typhon = new Race("Typhon", 17, 38, 2, 5, 5, 1, nomme_comp);
     static Race caucase = new Race("l'Aigle du Caucase", 16, 35, 3, 5, 5, 1, nomme_comp);
 
-    // illusioniste
-    static Competence[] illu_comp = {Competence.ILLUSION};
-    static Race illusion_venti = new Race("venti", 9, 28, 1, 2, 3, 1, illu_comp);
-    static Race illusion_cyclope = new Race("cyclope", 12, 35, 3, 2, 3, 1, illu_comp);
-    static Race illusion_aurai = new Race("aurai maléfique", 10, 29, 1, 2, 3, 1, illu_comp);
-    static Race illusion_roche = new Race("roche maudite", 0, 38, 8, 2, 3, 1, illu_comp);
-    static Race illusion_dullahan = new Race("dullahan", 11, 31, 3, 2, 3, 1, illu_comp);
-    static Race illusion_sirene = new Race("sirène", 7, 23, 1, 2, 2, 1, illu_comp);
-    static Race illusion_golem = new Race("golem", 6, 20, 1, 2, 3, 1, illu_comp);
-    static Race illusion_triton = new Race("triton", 9, 25, 1, 2, 3, 1, illu_comp);
-
-    static Race[] mont = {venti, cyclope, aurai_malefique, roche_maudite, dullahan, golem, archliche, typhon, caucase, illusion_venti,
-            illusion_cyclope, illusion_aurai, illusion_roche, illusion_dullahan, illusion_sirene, illusion_golem, illusion_triton};
+    static Race[] mont = {venti, cyclope, aurai_malefique, roche_maudite, dullahan, golem, archliche, illusioniste, typhon, caucase};
 
     static Competence[] tita_comp = {Competence.CUIR_MAGIQUE, Competence.SPELL_IMMUNE, Competence.GEANT, Competence.FORCE_NATURELLE3,
         Competence.VITALITE_NATURELLE3, Competence.ARMURE_NATURELLE3};

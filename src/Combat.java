@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
@@ -218,18 +217,7 @@ public class Combat {
                                         }
                                     }
                                 }
-                                case ANALYSER -> {
-                                    System.out.println("Vous analysez le monstre en face de vous.");
-                                    int temp = input.D8();
-                                    if(i != pr_l){
-                                        temp -= 2; //malus si en seconde ligne
-                                    }
-                                    System.out.println(ennemi.nom + " :");
-                                    System.out.println("vie : " + (temp >= 5 ? ennemi.vie : "???") + "/" + (temp >= 2 ? ennemi.vie_max : "???"));
-                                    System.out.println("attaque : " + (temp >= 3 ? ennemi.attaque : "???"));
-                                    System.out.println("armure : " + (temp >= 7 ? ennemi.armure : "???\n"));
-
-                                }
+                                case ANALYSER -> analyser(i == pr_l, ennemi);
                                 case AUTRE -> System.out.println("Vous faites quelques chose.\n");
                                 case ETRE_MORT -> a_pass = act_mort(actif, assomme, mort, nom, n, a_pass, i);
                                 case AVANCER -> {
@@ -623,7 +611,7 @@ public class Combat {
      */
     static void gestion_nomme(Monstre ennemi){
         if(ennemi.competence == Competence.PRUDENT || ennemi.competence == Competence.MEFIANT || ennemi.competence== Competence.SUSPICIEUX ||
-                ennemi.competence == Competence.ILLUSION_OFF || ennemi.competence == Competence.CHRONOS) {
+                ennemi.competence == Competence.CHRONOS) {
             switch (ennemi.nom) {
                 case "Cerbère" -> {
                     for (int i = 0; i < Race.enfers.length; i++) {
@@ -722,14 +710,6 @@ public class Combat {
                     }
                 }
                 default -> { //par sécurité
-                }
-            }
-            if(ennemi.nom.contains("illusioniste")) {
-                for (int i = 0; i < Race.mont.length; i++) {
-                    if (ennemi.nom.contains(Race.mont[i].nom) && Arrays.equals(Race.mont[i].competence_possible, new Competence[]{Competence.ILLUSION})) {
-                        Race.mont[i] = null;
-                        return;
-                    }
                 }
             }
             for (int i = 0; i < Race.enfers.length; i++) {
@@ -988,5 +968,80 @@ public class Combat {
         }
         System.out.println("Vous n'avez aucun moyen de ressuciter " + nom_mort + ".");
         return false;
+    }
+
+    /**
+     * Analyse le monstre ennemi et écrit ses stats aux joueurs
+     * @param is_prl booléan indiquant si l'analyste est en première ligne
+     * @param ennemi le monstre analysé
+     * @throws IOException ce bon vieux throws
+     */
+    static private void analyser(boolean is_prl, Monstre ennemi) throws IOException {
+        System.out.println("Vous analysez le monstre en face de vous.");
+        int temp = input.D8();
+        if(!is_prl){
+            temp -= 2; //malus si en seconde ligne
+        }
+        int pv, pvm, arm, atk;
+        switch(ennemi.competence) {
+            case ILLU_AURAI -> {
+                pvm = Race.aurai_malefique.get_vie();
+                pv = pvm - (ennemi.vie_max - ennemi.vie);
+                arm = Race.aurai_malefique.get_armure();
+                atk = Race.aurai_malefique.get_attaque();
+            }
+            case ILLU_CYCLOPE -> {
+                pvm = Race.cyclope.get_vie();
+                pv = pvm - (ennemi.vie_max - ennemi.vie);
+                arm = Race.cyclope.get_armure();
+                atk = Race.cyclope.get_attaque();
+            }
+            case ILLU_DULLA -> {
+                pvm = Race.dullahan.get_vie();
+                pv = pvm - (ennemi.vie_max - ennemi.vie);
+                arm = Race.dullahan.get_armure();
+                atk = Race.dullahan.get_attaque();
+            }
+            case ILLU_GOLEM -> {
+                pvm = Race.golem.get_vie();
+                pv = pvm - (ennemi.vie_max - ennemi.vie);
+                arm = Race.golem.get_armure();
+                atk = Race.golem.get_attaque();
+            }
+            case ILLU_ROCHE -> {
+                pvm = Race.roche_maudite.get_vie();
+                pv = pvm - (ennemi.vie_max - ennemi.vie);
+                arm = Race.roche_maudite.get_armure();
+                atk = Race.roche_maudite.get_attaque();
+            }
+            case ILLU_SIRENE -> {
+                pvm = Race.sirene.get_vie();
+                pv = pvm - (ennemi.vie_max - ennemi.vie);
+                arm = Race.sirene.get_armure();
+                atk = Race.sirene.get_attaque();
+            }
+            case ILLU_TRITON -> {
+                pvm = Race.triton.get_vie();
+                pv = pvm - (ennemi.vie_max - ennemi.vie);
+                arm = Race.triton.get_armure();
+                atk = Race.triton.get_attaque();
+            }
+            case ILLU_VENTI -> {
+                pvm = Race.venti.get_vie();
+                pv = pvm - (ennemi.vie_max - ennemi.vie);
+                arm = Race.venti.get_armure();
+                atk = Race.venti.get_attaque();
+            }
+            default -> {
+                pvm = ennemi.vie_max;
+                pv = ennemi.vie;
+                arm = ennemi.armure;
+                atk = ennemi.attaque;
+            }
+        }
+        System.out.println(ennemi.nom + " :");
+        System.out.println("vie : " + (temp >= 5 ? pv : "???") + "/" + (temp >= 2 ? pvm : "???"));
+        System.out.println("attaque : " + (temp >= 3 ? atk : "???"));
+        System.out.println("armure : " + (temp >= 7 ? arm : "???\n"));
     }
 }

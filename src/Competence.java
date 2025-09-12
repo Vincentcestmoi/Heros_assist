@@ -97,7 +97,13 @@ public enum Competence {
     GOLEM_FER,      //done
     GOLEM_ACIER,    //done
     GOLEM_MITHRIL,  //done
-    ILLUSION,   //done
-    ILLUSION_OFF,    //done
     CHRONOS,    //done
+    ILLU_VENTI,
+    ILLU_SIRENE,
+    ILLU_CYCLOPE,
+    ILLU_AURAI,
+    ILLU_ROCHE,
+    ILLU_DULLA,
+    ILLU_TRITON,
+    ILLU_GOLEM,
 }

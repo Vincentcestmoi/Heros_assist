@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Random;
 
 import static java.lang.Math.max;
@@ -33,6 +34,27 @@ public class Monstre {
         this.assomme = false;
         this.encaissement = 0F;
         this.part_soin = 0F;
+
+        if(Objects.equals(this.nom, "illusioniste")){
+            illu_check();
+        }
+    }
+
+    /**
+     * Maquille l'illusioniste en lui donnant le nom de l'illusion
+     */
+    private void illu_check(){
+        this.nom = switch (this.competence){
+            case ILLU_AURAI -> "aurai maléfique";
+            case ILLU_CYCLOPE -> "cyclope";
+            case ILLU_DULLA -> "dullahan";
+            case ILLU_GOLEM -> "golem";
+            case ILLU_ROCHE -> "roche maudite";
+            case ILLU_SIRENE -> "sirène";
+            case ILLU_TRITON -> "triton";
+            case ILLU_VENTI -> "venti";
+            default -> this.nom;
+        };
     }
 
     static Input input = new Input();
@@ -449,7 +471,15 @@ public class Monstre {
      */
     private boolean check_mort(){
         if (est_mort()) {
-            System.out.println(this.nom + " est mort(e).\n");
+            switch(competence) {
+                case ILLU_AURAI, ILLU_CYCLOPE, ILLU_DULLA, ILLU_GOLEM, ILLU_ROCHE, ILLU_SIRENE, ILLU_TRITON,
+                     ILLU_VENTI -> {
+                    System.out.println(this.nom + " se dissipe ! Tout celà n'était qu'une illusion !");
+                    this.nom = "illusioniste";
+                    this.competence = Competence.AUCUNE;
+                }
+                default -> System.out.println(this.nom + " est mort(e).\n");
+            }
             drop();
             return true;
         }
@@ -543,6 +573,14 @@ public class Monstre {
             case ARMURE_GLACE2 -> System.out.println("L'armure de glace de " + this.nom + " vous inflige 3 dommages.");
             case ARMURE_FEU -> System.out.println("Les flammes de " + nom + " vous inflige 1 dommage.");
             case ARMURE_FOUDRE -> System.out.println("La foudre entourant " + nom + " vous inflige 3 dommages.");
+            case ILLU_AURAI, ILLU_CYCLOPE, ILLU_DULLA, ILLU_GOLEM, ILLU_ROCHE, ILLU_SIRENE, ILLU_TRITON,
+                 ILLU_VENTI -> {
+                if (this.vie <= 4){
+                    this.nom = "illusioniste";
+                    System.out.println(this.nom + " se révèle ! Tout celà n'était qu'une illusion !");
+                    this.competence = Competence.AUCUNE;
+                }
+            }
         }
     }
 
@@ -658,19 +696,6 @@ public class Monstre {
             System.out.println(this.nom + " se relève !");
             this.vie = rand.nextInt(this.vie_max - 5) + 5;
             this.competence = Competence.AUCUNE;
-            return false;
-        }
-        if(competence == Competence.ILLUSION){
-            if (vie_max - vie >= 20){
-                System.out.println(nom + " se transforme !");
-                this.nom = "illusioniste (" + nom + ")";
-                System.out.println(this.nom + " est démasqué !");
-                this.vie_max = 7;
-                this.vie = 7;
-                this.armure = 2;
-                this.attaque = 9;
-                this.competence = Competence.ILLUSION_OFF;
-            }
             return false;
         }
         return vie <= 0;
@@ -872,7 +897,8 @@ public class Monstre {
                     }
                 }
             }
-            case ILLUSION -> {
+            case ILLU_AURAI, ILLU_CYCLOPE, ILLU_DULLA, ILLU_GOLEM, ILLU_ROCHE, ILLU_SIRENE, ILLU_TRITON,
+                 ILLU_VENTI -> {
                 System.out.println(this.nom + " réagit très étrangement à votre tentative.");
                 return false;
             }
