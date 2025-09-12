@@ -66,7 +66,7 @@ public class Race {
     static Competence[] damn_comp = {Competence.AUCUNE, Competence.DAMNATION_RES, Competence.DAMNATION_ATK};
     static Race damne = new Race("Damné", 1, 4, 0, 0, 0, 1, damn_comp);
     static Competence[] guerske_comp = {Competence.AUCUNE, Competence.FRAGILE, Competence.DAMN_ARES};
-    static Race guer_ske = new Race("guerrier squelette", 5, 1, 0, 0, 0, 1, guerske_comp);
+    static Race guer_ske = new Race("guerrier squelette", 1, 5, 0, 0, 0, 1, guerske_comp);
     static Competence[] guermau_comp = {Competence.FEAR_POSEIDON, Competence.FEAR_DEMETER, Competence.FEAR_HYPNOS};
     static Race guer_maudit = new Race("Guerrier maudit", 2, 4, 0, 0, 0, 1, guermau_comp);
     static Competence[] fant_comp = {Competence.ESPRIT, Competence.SPELL_IMMUNE};
@@ -92,7 +92,7 @@ public class Race {
     static Competence[] serpg_comp = {Competence.RAPIDE, Competence.POISON, Competence.ARMURE_NATURELLE, Competence.VITALITE_NATURELLE, Competence.GEANT};
     static Race serpent_geant = new Race("serpent géant", 4, 10, 0, 0, 1, 2, serpg_comp);
     static Competence[] sang_comp = {Competence.VITALITE_NATURELLE, Competence.ARMURE_NATURELLE, Competence.AUCUNE, Competence.CHARGE};
-    static Race sanglier = new Race("sanglier", 3, 10, 0, 1, 0, 0, sang_comp);
+    static Race sanglier = new Race("sanglier", 3, 10, 0, 0, 0, 1, sang_comp);
     static Competence[] sangf_comp = {Competence.ARMURE_FEU, Competence.FLAMME_ATTAQUE, Competence.FLAMME_DEFENSE};
     static Race sanglier_feu = new Race("sanglier de feu", 4, 10, 0, 1, 1, 1, sangf_comp);
     static Competence[] corn_comp = {Competence.VOL, Competence.VOL_OFF, Competence.VOLAGE, Competence.RAPIDE};
@@ -105,7 +105,7 @@ public class Race {
     static Race[] prairie = {loup, karpoi, basilic, serpent, serpent_geant, sanglier, sanglier_feu, corneille, ours_agonisant, lycaon, mormo};
 
     static Competence[] herf_comp = {Competence.ARNAQUE, Competence.VOLEUR_CASQUE, Competence.BENEDICTION};
-    static Race herbe_folle = new Race("herbe_folle", 1, 6, 0, 1, 1, 0, herf_comp);
+    static Race herbe_folle = new Race("herbe_folle", 1, 6, 0, 0, 0, 0, herf_comp);
     static Competence[] ours_comp = {Competence.VITALITE_NATURELLE, Competence.ARMURE_NATURELLE, Competence.SAUVAGE, Competence.VIOLENT};
     static Race ours = new Race("ours", 5, 19, 1, 1, 1, 2, ours_comp);
     static Competence[] mant_comp = {Competence.POISON, Competence.CIBLE_CASQUE, Competence.POISON_CECITE, Competence.ARMURE_NATURELLE};
