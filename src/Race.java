@@ -96,7 +96,7 @@ public class Race {
     static Competence[] sangf_comp = {Competence.ARMURE_FEU, Competence.FLAMME_ATTAQUE, Competence.FLAMME_DEFENSE};
     static Race sanglier_feu = new Race("sanglier de feu", 4, 10, 0, 1, 1, 1, sangf_comp);
     static Competence[] corn_comp = {Competence.VOL, Competence.VOL_OFF, Competence.VOLAGE, Competence.RAPIDE};
-    static Race corneille = new Race("corneille", 2, 8, 0, 1, 0, 1, corn_comp);
+    static Race corneille = new Race("corneille", 2, 8, 0, 0, 1, 1, corn_comp);
     static Competence[] oursa_comp = {Competence.AUCUNE, Competence.FRAGILE, Competence.BLESSE, Competence.FAIBLE};
     static Race ours_agonisant = new Race("ours agonisant", 5, 15, 1, 1, 1, 2, oursa_comp);
     static Race lycaon = new Race("Lycaon", 5, 12, 1, 5, 5, 1, nomme_comp);
