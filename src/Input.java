@@ -414,25 +414,25 @@ public class Input {
         while (true) {
             System.out.println("Que voulez-vous faire ?");
             switch (read()) {
-                case "prairie", "prairi", "Prairi", "Prairie" -> {
+                case "prairie", "prairi", "Prairi", "Prairie", "1" -> {
                     return Choix.EXP_PRAIRIE;
                 }
-                case "enfer", "Enfer", "Enfers", "enfers" -> {
+                case "enfer", "Enfer", "Enfers", "enfers", "0" -> {
                     return Choix.EXP_ENFERS;
                 }
-                case "vigne", "Vigne", "Vignes", "vignes" -> {
+                case "vigne", "Vigne", "Vignes", "vignes", "2" -> {
                     return Choix.EXP_VIGNE;
                 }
-                case "Temple", "temple" -> {
+                case "Temple", "temple", "3" -> {
                     return Choix.EXP_TEMPLE;
                 }
-                case "mer", "Mer" -> {
+                case "mer", "Mer", "4" -> {
                     return Choix.EXP_MER;
                 }
-                case "Mont", "mont" -> {
+                case "Mont", "mont", "5" -> {
                     return Choix.EXP_MONT;
                 }
-                case "Olympe", "olympe" -> {
+                case "Olympe", "olympe", "6" -> {
                     return Choix.EXP_OLYMPE;
                 }
                 case "domestiquer", "Domestiquer", "Dompter", "dompter", "Dresser", "dresser" -> {
@@ -449,19 +449,19 @@ public class Input {
                 }
                 case "add" -> {
                     System.out.println("Confirmez l'addition");
-                    if(read().equals("10")) {
+                    if(read().equals("add")) {
                         return Choix.FAMILIER_PLUS;
                     }
                 }
                 case "del" -> {
                     System.out.println("Confirmez le descès");
-                    if (read().equals("11")) {
+                    if (read().equals("del")) {
                         return Choix.FAMILIER_MOINS;
                     }
                 }
                 case "re" -> {
                     System.out.println("Confirmez");
-                    if(read().equals("12")) {
+                    if(read().equals("re")) {
                         return Choix.RETOUR;
                     }
                 }
