@@ -453,7 +453,6 @@ public class Monstre {
             drop();
             return true;
         }
-        System.out.println(this.nom + " est encore en vie.\n");
         return false;
     }
 
