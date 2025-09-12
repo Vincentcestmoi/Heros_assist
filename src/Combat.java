@@ -117,19 +117,19 @@ public class Combat {
                         System.out.println(n + " est inconscient.");
                         if(Objects.equals(n, Main.Joueur_B)){
                             if(input.yn("Utiliser purge (3PP) ?")){
-                                System.out.println(n + "se réveille.\n");
+                                System.out.println(n + " se réveille.\n");
                                 assomme[i] = false;
                                 reveil[i] = 0;
                                 continue;
                             }
                         }
                         if(input.D4() + reveil[i] >= 3){
-                            System.out.println(n + "se réveille.\n");
+                            System.out.println(n + " se réveille.\n");
                             assomme[i] = false;
                             reveil[i] = 0;
                         }
                         else{
-                            System.out.println("est toujours inconscient.\n");
+                            System.out.println(n + " est toujours inconscient.\n");
                             reveil[i] += 1;
                             if(Objects.equals(n, Main.Joueur_B)){
                                 System.out.println(n + " recupère 1PP.\n");
@@ -231,34 +231,7 @@ public class Combat {
 
                                 }
                                 case AUTRE -> System.out.println("Vous faites quelques chose.\n");
-                                case ETRE_MORT -> {
-                                    if(input.yn(n + " est-il mort ?")){
-                                            boolean actif_a = false;
-                                            for(int k = 0; k < 8; k++){
-                                                if (actif[k] && Objects.equals(nom[k], Main.Joueur_A) && !assomme[k]) {
-                                                    actif_a = true;
-                                                    break;
-                                                }
-                                            }
-                                            if(actif_a && !n.equals(Main.Joueur_A) && input.yn("Est-ce que " + Main.Joueur_A + " veux tenter de ressuciter " + n + " pour 2 PP ?")) {
-                                                if (!ressuciter_allie()) {
-                                                    System.out.println(n + " est retiré du combat.\n");
-                                                    actif[i] = false;
-                                                    mort[i] = true;
-                                                }
-                                                a_pass = true;
-                                            }
-                                            else{
-                                                System.out.println(n + " est mort.");
-                                                actif[i] = false;
-                                                mort[i] = true;
-                                            }
-                                    }
-                                    else {
-                                        System.out.println(n + " est retiré du combat.\n");
-                                        actif[i] = false;
-                                    }
-                                }
+                                case ETRE_MORT -> a_pass = act_mort(actif, assomme, mort, nom, n, a_pass, i);
                                 case AVANCER -> {
                                     System.out.println(n + " passe en première ligne.\n");
                                     pr_l = i;
@@ -284,9 +257,8 @@ public class Combat {
                                 default -> ennemi.dommage(input.atk()); // ATTAQUER
                             }
                         } else { //familier
-                            if(act == Action.ETRE_MORT){
-                                System.out.println(n + " est retiré du combat.\n");
-                                actif[i] = false;
+                            if (act == Action.ETRE_MORT) {
+                                a_pass = act_mort(actif, assomme, mort, nom, n, a_pass, i);
                             }
                             else if(act == Action.END) {
                                 return 0;
@@ -373,6 +345,48 @@ public class Combat {
         }
         System.out.println("Fin du combat\n");
         return 0;
+    }
+
+    /**
+     * Gère le retour OFF de l'action
+     * @param actif booléens indiquants quels participants sont actifs
+     * @param assomme booléens indiquants quels participants sont assommés
+     * @param mort booléens indiquants quels participants sont morts
+     * @param nom liste des noms des participants
+     * @param n le nom du participant actuel (supposemment off)
+     * @param a_pass si le joueur A (nécro) passera son prochain tour
+     * @param i l'indice du joueur actuel
+     * @return si le joueur A tente une résurection
+     * @throws IOException mon poto
+     */
+    private static boolean act_mort(boolean[] actif, boolean[] assomme, boolean[] mort, String[] nom, String n, boolean a_pass, int i) throws IOException {
+        if(input.yn(n + " est-il mort ?")){
+            boolean actif_a = false;
+            for(int k = 0; k < 8; k++){
+                if (actif[k] && Objects.equals(nom[k], Main.Joueur_A) && !assomme[k]) {
+                    actif_a = true;
+                    break;
+                }
+            }
+            if(actif_a && !n.equals(Main.Joueur_A) && input.yn("Est-ce que " + Main.Joueur_A + " veux tenter de ressuciter " + n + " pour 2 PP ?")) {
+                if (!ressuciter_allie()) {
+                    System.out.println(n + " est mort.\n");
+                    actif[i] = false;
+                    mort[i] = true;
+                }
+                a_pass = true;
+            }
+            else{
+                System.out.println(n + " est mort.");
+                actif[i] = false;
+                mort[i] = true;
+            }
+        }
+        else {
+            System.out.println(n + " est retiré du combat.\n");
+            actif[i] = false;
+        }
+        return a_pass;
     }
 
     /**
@@ -893,7 +907,7 @@ public class Combat {
             }
         }
         System.out.println(ennemi.nom + " est frappé par l'onde de choc.");
-        System.out.print(Main.Joueur_B);
+        System.out.print(Main.Joueur_B + " : ");
         switch (input.D6()){
             case 2 -> ennemi.do_etourdi();
             case 3, 4 -> ennemi.affecte();
