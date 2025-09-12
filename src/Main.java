@@ -14,11 +14,11 @@ public class Main {
             System.out.println("Nombre de joueur invalide : 1 à 4 joueurs seulement.");
             return;
         }
-        System.out.println("Le joueur A est nécromancien.\n");
-        System.out.println("Le joueur B est archimage.\n");
-        System.out.println("Le joueur C est alchimiste.\n");
+        System.out.println("Micky est nécromancien.\n");
+        System.out.println("Lucien est archimage.\n");
+        System.out.println("Vincent est alchimiste.\n");
         int f_a = 0, f_b = 0, f_c = 0, f_d = 0;
-        String[] nom = {"Joueur A", "Joueur B", "Joueur C", "Joueur D"};
+        String[] nom = {"Micky", "Lucien", "Vincent", "Joueur D"};
         boolean run = true;
         int i = 0;
         while(run){
@@ -37,9 +37,9 @@ public class Main {
                 case EXP_OLYMPE -> temp = expedition_olympe(nbj, i, f_a, f_b, f_c, f_d);
                 case DRESSER -> {
                     switch (nom[i]) {
-                        case "Joueur A" -> f_a = gere_entrainement(f_a);
-                        case "Joueur B" -> f_b = gere_entrainement(f_b);
-                        case "Joueur C" -> f_c = gere_entrainement(f_c);
+                        case "Micky" -> f_a = gere_entrainement(f_a);
+                        case "Lucien" -> f_b = gere_entrainement(f_b);
+                        case "Vincent" -> f_c = gere_entrainement(f_c);
                         case "Joueur D" -> f_d = gere_entrainement(f_d);
                         default -> System.out.println("Erreur : joueur " + nom[i] + " non reconnu");
                     }
@@ -48,17 +48,17 @@ public class Main {
                 case QUITTER -> run = false;
                 case FAMILIER_PLUS -> {
                     switch (nom[i]) {
-                        case "Joueur A" -> {
+                        case "Micky" -> {
                             f_a = 1;
-                            System.out.println("Joueur A a bien reçu son nouveau familier");
+                            System.out.println("Micky a bien reçu son nouveau familier");
                         }
-                        case "Joueur B" -> {
+                        case "Lucien" -> {
                             f_b = 1;
-                            System.out.println("Joueur B a bien reçu son nouveau familier");
+                            System.out.println("Lucien a bien reçu son nouveau familier");
                         }
-                        case "Joueur C" -> {
+                        case "Vincent" -> {
                             f_c = 1;
-                            System.out.println("Joueur C a bien reçu son nouveau familier");
+                            System.out.println("Vincent a bien reçu son nouveau familier");
                         }
                         case "Joueur D" -> {
                             f_d = 1;
@@ -69,17 +69,17 @@ public class Main {
                 }
                 case FAMILIER_MOINS -> {
                     switch (nom[i]) {
-                        case "Joueur A" -> {
+                        case "Micky" -> {
                             f_a = 0;
-                            System.out.println("Le familier du Joueur A a bien été supprimé");
+                            System.out.println("Le familier de Micky a bien été supprimé");
                         }
-                        case "Joueur B" -> {
+                        case "Lucien" -> {
                             f_b = 0;
-                            System.out.println("Le familier du Joueur B a bien été supprimé");
+                            System.out.println("Le familier de Lucien a bien été supprimé");
                         }
-                        case "Joueur C" -> {
+                        case "Vincent" -> {
                             f_c = 0;
-                            System.out.println("Le familier du Joueur C a bien été supprimé");
+                            System.out.println("Le familier de Vincent a bien été supprimé");
                         }
                         case "Joueur D" -> {
                             f_d = 0;
@@ -91,9 +91,9 @@ public class Main {
                 case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
             }
             switch(temp) {
-                case 1 -> f_a = new_fam("Joueur A", f_a);
-                case 2 -> f_b = new_fam("Joueur B", f_b);
-                case 3 -> f_c = new_fam("Joueur C", f_c);
+                case 1 -> f_a = new_fam("Micky", f_a);
+                case 2 -> f_b = new_fam("Lucien", f_b);
+                case 3 -> f_c = new_fam("Vincent", f_c);
                 case 4 -> f_d = new_fam("Joueur D", f_d);
                 default -> { // dont 0
                 }
