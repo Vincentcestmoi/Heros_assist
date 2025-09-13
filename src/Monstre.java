@@ -163,12 +163,12 @@ public class Monstre {
             }
             case AQUAJET -> {
                 System.out.println(this.nom + " prépare quelque chose...");
-                this.attaque += 15;
+                this.attaque += 18;
             }
 
             case VOLEUR_CASQUE -> {
                 if (input.yn(nom + " porte-iel un casque ?") && input.D6() <= 4){
-                    System.out.println(this.nom + " vole votre question et part avec.");
+                    System.out.println(this.nom + " vole votre casque et part avec.");
                     this.competence = Competence.CASQUE_VOLE;
                     return false;
                 }
@@ -237,7 +237,7 @@ public class Monstre {
             case AQUAJET1 -> this.competence = Competence.AQUAJET;
             case AQUAJET -> {
                 this.competence = Competence.AQUAJET3;
-                this.attaque -= 15;
+                this.attaque -= 18;
             }
             case FRAPPE_SPECTRALE -> System.out.println("L'attaque traverse partiellement l'armure de " + nom + " et ignore " + rand.nextInt(4) + " point(s) de défense.");
             case KAMICASE, CASQUE_VOLE -> this.vie = 0;
@@ -507,6 +507,7 @@ public class Monstre {
         if(!check_mort()) {
             applique_competence_post_dommage();
         }
+        System.out.println();
     }
 
     /**
@@ -585,7 +586,6 @@ public class Monstre {
                 }
             }
         }
-        System.out.println();
     }
 
     /**
@@ -684,7 +684,7 @@ public class Monstre {
             return;
         }
         this.etourdi = false;
-        System.out.println(this.nom + "n'est plus étourdi(e).\n");
+        System.out.println(this.nom + " n'est plus étourdi(e).\n");
     }
 
     /**
@@ -699,7 +699,6 @@ public class Monstre {
             this.competence = Competence.AUCUNE;
             return false;
         }
-        System.out.println();
         return vie <= 0;
     }
 
