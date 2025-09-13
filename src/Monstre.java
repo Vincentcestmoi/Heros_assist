@@ -95,8 +95,8 @@ public class Monstre {
                 applique_competence_post(nom);
             }
         }
-        System.out.println();
         fin_combat(nom);
+        System.out.println();
     }
 
     /**
@@ -280,7 +280,6 @@ public class Monstre {
                 System.out.println(this.nom + " s'envole !");
             }
         }
-        System.out.println();
     }
 
     /**
@@ -486,12 +485,11 @@ public class Monstre {
                     this.nom = "illusioniste";
                     this.competence = Competence.AUCUNE;
                 }
-                default -> System.out.println(this.nom + " est mort(e).\n");
+                default -> System.out.println(this.nom + " est mort(e).");
             }
             drop();
             return true;
         }
-        System.out.println();
         return false;
     }
 
@@ -623,9 +621,6 @@ public class Monstre {
                 return;
             }
         }
-        if (est_mort()){
-            return;
-        }
         this.assomme = true;
         System.out.println(this.nom + " est assommé(e).\n");
     }
@@ -644,6 +639,9 @@ public class Monstre {
                 if(rand.nextBoolean()){
                     System.out.println(nom + " laisse tomber des fragments de son corps pour ne pas être désavantagé(e).\n");
                     this.vie -= rand.nextInt(5) + 1;
+                    if (check_mort()){
+                        return;
+                    }
                 }
             }
             case CHRONOS -> {
@@ -651,14 +649,10 @@ public class Monstre {
                 return;
             }
         }
-        if (check_mort()){
-            return;
-        }
         if(!assomme){
             this.etourdi = true;
             System.out.println(this.nom + " est étourdi(e).\n");
         }
-        System.out.println();
     }
 
     /**
@@ -694,8 +688,8 @@ public class Monstre {
     }
 
     /**
-     * Renvoie si le monstre est vivant
-     * @return si le monstre est vivant
+     * Renvoie si le monstre est mort
+     * @return si le monstre est mort
      */
     boolean est_mort(){
         if(competence == Competence.REVENANT){
