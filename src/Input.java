@@ -164,197 +164,124 @@ public class Input {
      * @throws IOException en cas de problème ?
      */
     public Action action(String nom, Boolean est_familier, Boolean est_premiere_ligne) throws IOException {
+        String text;
         if (!est_familier) { // joueur
+            text = nom + " entrez votre action : (A)ttaquer/(t)irer/(m)agie/(f)uir";
             if (est_premiere_ligne) {
-                System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/aSsomer(s)/Encaisser(e)/" +
-                        "Premier soin(p)/Domestiquer(d)/aNalyser(n)/Custom(C)/Off(O)/MAudir(ma)/ONde de choc(on)/REssuciter par potion(re) : ");
-                String input = read();
-                if (input.equals("A") || input.equals("a") || input.isEmpty()) {
-                    return Action.ATTAQUER;
-                }
-                switch (input) {
-                    case "T", "t" -> {
-                        return Action.TIRER;
-                    }
-                    case "M", "m" -> {
-                        return Action.MAGIE;
-                    }
-                    case "F", "f" -> {
-                        return Action.FUIR;
-                    }
-                    case "S", "s" -> {
-                        return Action.ASSOMER;
-                    }
-                    case "E", "e" -> {
-                        return Action.ENCAISSER;
-                    }
-                    case "P", "p" -> {
-                        return Action.SOIGNER;
-                    }
-                    case "D", "d" -> {
-                        return Action.DOMESTIQUER;
-                    }
-                    case "n", "N" -> {
-                        return Action.ANALYSER;
-                    }
-                    case "C", "c" -> {
-                        return Action.AUTRE;
-                    }
-                    case "O", "o" -> {
-                        return Action.ETRE_MORT;
-                    }
-                    case "q", "Q" -> {
-                        if(yn("Confirmez ")){
-                            return Action.END;
-                        }
-                        return action(nom, false, true);
-                    }
-                    case "ma", "MA", "Ma", "mA" -> {
-                        if(yn("Cette action est réservé au joueur A, confirmer ? ")){
-                            return Action.MAUDIR;
-                        }
-                        return action(nom, false, true);
-                    }
-                    case "on", "ON", "On", "oN" -> {
-                        if(yn("Cette action est réservé au joueur B, confirmer ? ")){
-                            return Action.ONDE_CHOC;
-                        }
-                        return action(nom, false, true);
-                    }
-                    case "re", "RE", "Re", "rE" -> {
-                        if(yn("Cette action est réservé au joueur C, confirmer ? ")){
-                            return Action.POTION_REZ;
-                        }
-                        return action(nom, false, true);
-                    }
-                    default -> {
-                        System.out.println("Entrée non reconnue, attaque classique appliquée");
-                        return Action.ATTAQUER;
-                    }
-                }
-            } else {
-                System.out.println(nom + " entrez votre action : Attaquer(A)/Tirer(t)/Magie(m)/Fuir(f)/" +
-                        "Premier soin(p)/aNalyser(n)/Custom(C)/Off(O)/S'avancer(s)/MAudir(ma)/" +
-                        "ONde de choc(on)/REssuciter par potion(re) : ");
-                String input = read();
-                if (input.equals("A") || input.equals("a") || input.isEmpty()) {
-                    return Action.ATTAQUER;
-                }
-                switch (input) {
-                    case "T", "t" -> {
-                        return Action.TIRER;
-                    }
-                    case "M", "m" -> {
-                        return Action.MAGIE;
-                    }
-                    case "F", "f" -> {
-                        return Action.FUIR;
-                    }
-                    case "P", "p" -> {
-                        return Action.SOIGNER;
-                    }
-                    case "n", "N" -> {
-                        return Action.ANALYSER;
-                    }
-                    case "C", "c" -> {
-                        return Action.AUTRE;
-                    }
-                    case "O", "o" -> {
-                        return Action.ETRE_MORT;
-                    }
-                    case "S", "s" -> {
-                        return Action.AVANCER;
-                    }
-                    case "q", "Q" -> {
-                        if(yn("Confirmez ")){
-                            return Action.END;
-                        }
-                        return action(nom, false, false);
-                    }
-                    case "ma", "MA", "Ma", "mA" -> {
-                        if(yn("Cette action est réservé au joueur A, confirmer ? ")){
-                            return Action.MAUDIR;
-                        }
-                        return action(nom, false, false);
-                    }
-                    case "on", "ON", "On", "oN" -> {
-                        if(yn("Cette action est réservé au joueur B, confirmer ? ")){
-                            return Action.ONDE_CHOC;
-                        }
-                        return action(nom, false, false);
-                    }
-                    case "re", "RE", "Re", "rE" -> {
-                        if(yn("Cette action est réservé au joueur C, confirmer ? ")){
-                            return Action.POTION_REZ;
-                        }
-                        return action(nom, false, false);
-                    }
-                    default -> {
-                        System.out.println("Entrée non reconnue, attaque classique appliquée");
-                        return Action.ATTAQUER;
-                    }
-                }
+                text += "/a(s)somer/(e)ncaisser/(d)omestiquer";
             }
-        } else { // familier
-            if (est_premiere_ligne) {
-                System.out.println("Donnez un ordre au " + nom + " Attaquer(A)/Fuir(f)/Custom(C)/Off(O) : ");
-                String input = read();
-                if (input.equals("A") || input.equals("a") || input.isEmpty()) {
-                    return Action.ATTAQUER;
-                }
-                switch (input) {
-                    case "F", "f" -> {
-                        return Action.FUIR;
-                    }
-                    case "C", "c" -> {
-                        return Action.AUTRE;
-                    }
-                    case "O", "o" -> {
-                        return Action.ETRE_MORT;
-                    }
-                    case "q", "Q" -> {
-                        if(yn("Confirmez ")){
-                            return Action.END;
-                        }
-                        return action(nom, false, true);
-                    }
-                    default -> {
-                        System.out.println("Entrée non reconnue, attaque classique appliquée");
-                        return Action.ATTAQUER;
-                    }
-                }
+            else{
+                text += "/(s)'avancer";
             }
-            else {
-                System.out.println("Donnez un ordre au " + nom + " Attaquer(A)/Fuir(f)/Custom(C)/Off(O)/S'avancer(s) : ");
-                String input = read();
-                if (input.equals("A") || input.equals("a") || input.isEmpty()) {
-                    return Action.ATTAQUER;
-                }
-                switch (input) {
-                    case "F", "f" -> {
-                        return Action.FUIR;
-                    }
-                    case "C", "c" -> {
-                        return Action.AUTRE;
-                    }
-                    case "O", "o" -> {
-                        return Action.ETRE_MORT;
-                    }
-                    case "S", "s" -> {
-                        return Action.AVANCER;
-                    }
-                    case "q", "Q" -> {
-                        if(yn("Confirmez ")){
-                            return Action.END;
-                        }
-                        return action(nom, false, true);
-                    }
-                    default -> {
-                        System.out.println("Entrée non reconnue, attaque classique appliquée");
-                        return Action.ATTAQUER;
-                    }
-                }
+            text += "/(p)remier soin/a(n)alyser/(c)ustom/(o)ff";
+            switch (nom) {
+                case Main.Joueur_A -> text += "/(ma)udir";
+                case Main.Joueur_B -> text += "/(on)de de choc";
+                case Main.Joueur_C -> text += "/(re)ssuciter par potion";
             }
+            text += " : ";
+            System.out.println(text);
+            String input = read();
+            if (input.equals("A") || input.equals("a") || input.isEmpty()) {
+                return Action.ATTAQUER;
+            }
+            return switch (input) {
+                case "T", "t" -> Action.TIRER;
+                case "M", "m" -> Action.MAGIE;
+                case "F", "f" -> Action.FUIR;
+                case "P", "p" -> Action.SOIGNER;
+                case "n", "N" -> Action.ANALYSER;
+                case "C", "c" -> Action.AUTRE;
+                case "O", "o" -> Action.ETRE_MORT;
+                case "S", "s" -> {
+                    if (est_premiere_ligne) {
+                        yield Action.ASSOMER;
+                    }
+                    else{
+                        yield Action.AVANCER;
+                    }
+                }
+                case "E", "e" -> {
+                    if (est_premiere_ligne) {
+                        yield Action.ENCAISSER;
+                    }
+                    System.out.println("Action non reconnue.");
+                    yield action(nom, false, false);
+                }
+                case "D", "d" -> {
+                    if (est_premiere_ligne) {
+                        yield Action.DOMESTIQUER;
+                    }
+                    System.out.println("Action non reconnue.");
+                    yield action(nom, false, false);
+                }
+                case "q", "Q" -> {
+                    if (yn("Confirmez ")) {
+                        yield Action.END;
+                    }
+                    yield action(nom, false, est_premiere_ligne);
+                }
+                case "ma", "MA", "Ma", "mA" -> {
+                    if (nom.equals(Main.Joueur_A)) {
+                        yield Action.MAUDIR;
+                    }
+                    System.out.println("Action non reconnue.");
+                    yield action(nom, false, est_premiere_ligne);
+                }
+                case "on", "ON", "On", "oN" -> {
+                    if (nom.equals(Main.Joueur_B)) {
+                        yield Action.ONDE_CHOC;
+                    }
+                    System.out.println("Action non reconnue.");
+                    yield action(nom, false, est_premiere_ligne);
+                }
+                case "re", "RE", "Re", "rE" -> {
+                    if (nom.equals(Main.Joueur_C)) {
+                        yield Action.POTION_REZ;
+                    }
+                    System.out.println("Action non reconnue.");
+                    yield action(nom, false, est_premiere_ligne);
+                }
+                default -> {
+                    System.out.println("Action non reconnue.");
+                    yield action(nom, false, est_premiere_ligne);
+                }
+            };
+        }
+        else { // familier
+            text = "Donnez un ordre au " + nom + " (A)ttaquer/(f)uir/(c)ustom/(o)ff";
+            if(!est_premiere_ligne){
+                text += "/(s)'avancer";
+            }
+            text += " : ";
+            System.out.println(text);
+
+            String input = read();
+            if (input.equals("A") || input.equals("a") || input.isEmpty()) {
+                return Action.ATTAQUER;
+            }
+            return switch (input) {
+                case "F", "f" -> Action.FUIR;
+                case "C", "c" -> Action.AUTRE;
+                case "O", "o" -> Action.ETRE_MORT;
+                case "s", "S" -> {
+                    if(!est_premiere_ligne) {
+                        yield Action.AVANCER;
+                    }
+                    System.out.println("Action non reconnue.");
+                    yield action(nom, true, true);
+                }
+                case "q", "Q" -> {
+                    if(yn("Confirmez ")){
+                        yield Action.END;
+                    }
+                    yield action(nom, true, est_premiere_ligne);
+                }
+                default -> {
+                    System.out.println("Action non reconnue.");
+                    yield action(nom, true, est_premiere_ligne);
+                }
+            };
         }
     }
 
@@ -410,35 +337,39 @@ public class Input {
      * Demande au joueur ce qu'il fait de son tour
      * @return : un choix correspondant
      */
-    Choix tour() throws IOException {
+    Choix tour(Position position) throws IOException {
         while (true) {
-            System.out.println("Que voulez-vous faire ?");
+            String text = "Que voulez-vous faire : (E)xplorer";
+            boolean peut_descendre =  position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
+            boolean peut_monter = position != Position.OLYMPE;
+            if(peut_descendre){
+                text += "/(d)escendre";
+            }
+            if(peut_monter){
+                text += "/(m)onter";
+            }
+            text += "/(en)trainer son familier/(c)ustom ?";
+            System.out.println(text);
             switch (read()) {
-                case "prairie", "prairi", "Prairi", "Prairie", "1" -> {
-                    return Choix.EXP_PRAIRIE;
+                case "E", "e", "explorer", "Explorer", "" -> {
+                    return Choix.EXPLORER;
                 }
-                case "enfer", "Enfer", "Enfers", "enfers", "0" -> {
-                    return Choix.EXP_ENFERS;
+                case "d", "D", "Descendre", "descendre" -> {
+                    if(peut_descendre){
+                        return Choix.DESCENDRE;
+                    }
+                    System.out.println("Input unknow");
                 }
-                case "vigne", "Vigne", "Vignes", "vignes", "2" -> {
-                    return Choix.EXP_VIGNE;
+                case "m", "M", "monter", "Monter" ->{
+                    if(peut_monter){
+                        return Choix.MONTER;
+                    }
+                    System.out.println("Input unknow");
                 }
-                case "Temple", "temple", "3" -> {
-                    return Choix.EXP_TEMPLE;
-                }
-                case "mer", "Mer", "4" -> {
-                    return Choix.EXP_MER;
-                }
-                case "Mont", "mont", "5" -> {
-                    return Choix.EXP_MONT;
-                }
-                case "Olympe", "olympe", "6" -> {
-                    return Choix.EXP_OLYMPE;
-                }
-                case "domestiquer", "Domestiquer", "Dompter", "dompter", "Dresser", "dresser" -> {
+                case "entrainer son familier", "Entrainer son familier", "en", "En", "EN", "eN" -> {
                     return Choix.DRESSER;
                 }
-                case "Passer", "passer" , "pass", "Pass", "skip", "Skip" -> {
+                case "c", "C", "Custom", "custom" -> {
                     return Choix.ATTENDRE;
                 }
                 case "q" -> {
@@ -463,6 +394,12 @@ public class Input {
                     System.out.println("Confirmez");
                     if(read().equals("re")) {
                         return Choix.RETOUR;
+                    }
+                }
+                case "sui" -> {
+                    System.out.println("Confirmez");
+                    if(read().equals("sui")) {
+                        return Choix.SUICIDE;
                     }
                 }
                 default -> System.out.println("Input unknow");
