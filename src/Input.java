@@ -160,11 +160,19 @@ public class Input {
      * @param nom                le nom du joueur ou de son familier
      * @param est_familier       s'il s'agit d'un familier
      * @param est_premiere_ligne si la cible est en première ligne
+     * @param mort la liste des morts
      * @return un int correspondant à l'action
      * @throws IOException en cas de problème ?
      */
-    public Action action(String nom, Boolean est_familier, Boolean est_premiere_ligne) throws IOException {
+    public Action action(String nom, Boolean est_familier, Boolean est_premiere_ligne, boolean[] mort) throws IOException {
         String text;
+        boolean ya_mort = false;
+        for(int i = 0; i < 4; i++){
+            if(mort[i]){
+                ya_mort = true;
+                break;
+            }
+        }
         if (!est_familier) { // joueur
             text = nom + " entrez votre action : (A)ttaquer/(t)irer/(m)agie/(f)uir";
             if (est_premiere_ligne) {
@@ -177,7 +185,11 @@ public class Input {
             switch (nom) {
                 case Main.Joueur_A -> text += "/(ma)udir";
                 case Main.Joueur_B -> text += "/(on)de de choc";
-                case Main.Joueur_C -> text += "/(re)ssuciter par potion";
+                case Main.Joueur_C -> {
+                    if (ya_mort) {
+                        text += "/(re)ssuciter par potion";
+                    }
+                }
             }
             text += " : ";
             System.out.println(text);
@@ -206,45 +218,45 @@ public class Input {
                         yield Action.ENCAISSER;
                     }
                     System.out.println("Action non reconnue.");
-                    yield action(nom, false, false);
+                    yield action(nom, false, false, mort);
                 }
                 case "D", "d" -> {
                     if (est_premiere_ligne) {
                         yield Action.DOMESTIQUER;
                     }
                     System.out.println("Action non reconnue.");
-                    yield action(nom, false, false);
+                    yield action(nom, false, false, mort);
                 }
                 case "q", "Q" -> {
                     if (yn("Confirmez ")) {
                         yield Action.END;
                     }
-                    yield action(nom, false, est_premiere_ligne);
+                    yield action(nom, false, est_premiere_ligne, mort);
                 }
                 case "ma", "MA", "Ma", "mA" -> {
                     if (nom.equals(Main.Joueur_A)) {
                         yield Action.MAUDIR;
                     }
                     System.out.println("Action non reconnue.");
-                    yield action(nom, false, est_premiere_ligne);
+                    yield action(nom, false, est_premiere_ligne, mort);
                 }
                 case "on", "ON", "On", "oN" -> {
                     if (nom.equals(Main.Joueur_B)) {
                         yield Action.ONDE_CHOC;
                     }
                     System.out.println("Action non reconnue.");
-                    yield action(nom, false, est_premiere_ligne);
+                    yield action(nom, false, est_premiere_ligne, mort);
                 }
                 case "re", "RE", "Re", "rE" -> {
-                    if (nom.equals(Main.Joueur_C)) {
+                    if (ya_mort && nom.equals(Main.Joueur_C)) {
                         yield Action.POTION_REZ;
                     }
                     System.out.println("Action non reconnue.");
-                    yield action(nom, false, est_premiere_ligne);
+                    yield action(nom, false, est_premiere_ligne, mort);
                 }
                 default -> {
                     System.out.println("Action non reconnue.");
-                    yield action(nom, false, est_premiere_ligne);
+                    yield action(nom, false, est_premiere_ligne, mort);
                 }
             };
         }
@@ -269,17 +281,17 @@ public class Input {
                         yield Action.AVANCER;
                     }
                     System.out.println("Action non reconnue.");
-                    yield action(nom, true, true);
+                    yield action(nom, true, true, mort);
                 }
                 case "q", "Q" -> {
                     if(yn("Confirmez ")){
                         yield Action.END;
                     }
-                    yield action(nom, true, est_premiere_ligne);
+                    yield action(nom, true, est_premiere_ligne, mort);
                 }
                 default -> {
                     System.out.println("Action non reconnue.");
-                    yield action(nom, true, est_premiere_ligne);
+                    yield action(nom, true, est_premiere_ligne, mort);
                 }
             };
         }
@@ -306,11 +318,10 @@ public class Input {
 
     /**
      * Demande au joueur qui il veut ressuciter
-     * @param nom la liste des noms des participants
      * @param mort le booléen de descès des participants
      * @return l'indice du ressucité
      */
-    public int ask_rez(String[] nom, boolean[] mort) throws IOException {
+    public int ask_rez(boolean[] mort) throws IOException {
         boolean ok = false;
         for(int i = 0; i < 4; i++){
             if (mort[i]) {
@@ -325,7 +336,7 @@ public class Input {
         int i = 0;
         while (true) {
             if (mort[i]) {
-                if (yn("Voulez vous rescussiter " + nom[i] + " ?")) {
+                if (yn("Voulez vous rescussiter " + Main.nom[i] + " ?")) {
                     return i;
                 }
             }
