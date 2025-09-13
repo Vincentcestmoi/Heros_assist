@@ -4,6 +4,7 @@ public enum Competence {
     FRAGILE,    //done
     VOL,        //done
     VOL_OFF,    //done
+    VOL_OFF2,   //done
     VAMPIRISME, //done
     VAMPIRISME4,    //done
     VOLAGE,     //done

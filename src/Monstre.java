@@ -95,6 +95,7 @@ public class Monstre {
                 applique_competence_post(nom);
             }
         }
+        System.out.println();
         fin_combat(nom);
     }
 
@@ -272,6 +273,11 @@ public class Monstre {
                 competence = Competence.AUCUNE; // pour éviter une boucle
                 attaque(nom);
                 competence = Competence.DUO;
+            }
+            case VOL_OFF -> competence = Competence.VOL_OFF2;
+            case VOL_OFF2 -> {
+                competence = Competence.VOL;
+                System.out.println(this.nom + " s'envole !");
             }
         }
     }
@@ -565,10 +571,6 @@ public class Monstre {
      */
     private void applique_competence_post_dommage() {
         switch (competence) {
-            case VOL_OFF -> {
-                competence = Competence.VOL;
-                System.out.println(this.nom + " s'envole !");
-            }
             case ARMURE_GLACE -> System.out.println("L'armure de glace de " + this.nom + " vous inflige 1 dommage.");
             case ARMURE_GLACE2 -> System.out.println("L'armure de glace de " + this.nom + " vous inflige 3 dommages.");
             case ARMURE_FEU -> System.out.println("Les flammes de " + nom + " vous inflige 1 dommage.");
