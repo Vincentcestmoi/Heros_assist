@@ -36,7 +36,7 @@ public class Combat {
         boolean f_c = ob_c > 0 && j_c && input.yn("Est-ce que le familier de " + Main.Joueur_C + " participe au combat ?");
         boolean f_d = ob_d > 0 && j_d && input.yn("Est-ce que le familier de " + Main.Joueur_D + " participe au combat ?");
 
-        if (!(j_a || j_b || j_c || j_d)){
+        if (!(j_a || j_b || j_c || j_d)) {
             System.out.println("Erreur : aucun joueur détecté, annulation du combat.");
             return 0;
         }
@@ -58,275 +58,296 @@ public class Combat {
         }
 
 
-        // on prépare les tours en aléatoire
-        int[] tirage = {-1, -1, -1, -1, -1, -1, -1, -1};
-        for(int i = 0; i < 8;){
+        // on prépare une bijection aléatoire pour l'ordre de jeu
+        int[] t = {-1, -1, -1, -1, -1, -1, -1, -1};
+        for (int i = 0; i < 8; ) {
             int temp = rand.nextInt(8);
-            if(tirage[temp] == -1){
-                tirage[temp] = i;
+            if (t[temp] == -1) {
+                t[temp] = i;
                 i++;
             }
         }
 
         // choisir le joueur en première ligne
         int pr_l = joueur_force;
-        if(joueur_force != -1){
-            System.out.println("Le joueur " + new char[]{'A', 'B', 'C', 'D'}[joueur_force] + " est en première ligne.\n");
+
+        // contraint
+        if (pr_l != -1) {
+            System.out.println(nom[pr_l] + " est en première ligne.\n");
         }
-        else if (nbp > 1){ // demander gentimment
+
+        // demander gentimment
+        else if (nbp > 1) {
             for (int i = 0; i < 8; i++) {
                 if (actif[i]) {
-                    if (input.yn("Est-ce que " + nom[i] + " passe au front ?")){
+                    if (input.yn("Est-ce que " + nom[i] + " passe au front ?")) {
                         pr_l = i;
                         break;
                     }
                 }
             }
         }
-        if(pr_l == -1){ // z'avez plus le choix
-            for(int i = 0; i < 8; i++){
-                if (actif[i]){
-                    pr_l = i;
-                    System.out.println(nom[i] + " se retrouve en première ligne.\n");
-                    break;
-                }
-            }
+
+        // z'avez plus le choix
+        if (pr_l == -1) {
+            int i;
+            do {
+                i = rand.nextInt(8);
+            } while (!actif[i]);
+            pr_l = i;
+            System.out.println(nom[i] + " se retrouve en première ligne.\n");
         }
 
-        if(competence(ennemi, nom, pr_l, actif)){
+        if (competence(ennemi, nom, pr_l, actif)) {
             gestion_mort_end(mort, nom);
             return 0;
         }
 
         // si l'ennemi à l'avantage de la surprise
-        if (joueur_force != -1){
+        if (joueur_force != -1) {
             ennemi.attaque(nom[pr_l]);
         }
 
         // combat
-        int ob;
+        int ob, i;
         String n;
         Action act;
         boolean run = !ennemi.est_mort();
         boolean a_pass = false;
-        while(run){
-            for(int j = 0; j < 8; j++){
-                int i = tirage[j]; //on "corrige" la sélection avec notre ordre
-                if(actif[i]) { // on ne joue que les participants actifs
-                    n = nom[i]; // on stocke le nom pour plus tard
-                    if(assomme[i]){
-                        System.out.println(n + " est inconscient.");
-                        if(Objects.equals(n, Main.Joueur_B)){
-                            if(input.yn("Utiliser purge (3PP) ?")){
-                                System.out.println(n + " se réveille.\n");
-                                assomme[i] = false;
-                                reveil[i] = 0;
-                                continue;
-                            }
-                        }
-                        if(input.D4() + reveil[i] >= 3){
-                            System.out.println(n + " se réveille.\n");
-                            assomme[i] = false;
-                            reveil[i] = 0;
-                        }
-                        else{
-                            System.out.println(n + " est toujours inconscient.\n");
-                            reveil[i] += 1;
-                            if(Objects.equals(n, Main.Joueur_B)){
-                                System.out.println(n + " recupère 1PP.\n");
-                                if(rand.nextBoolean()){
-                                    reveil[i] -= 1;
-                                }
-                            }
-                        }
-                        if(Objects.equals(n, Main.Joueur_A) && a_pass){
-                            a_pass = false;
-                        }
-                        continue;
-                    }
-                    if(Objects.equals(n, Main.Joueur_A) && a_pass){
-                        a_pass = false;
-                        continue;
-                    }
-                    if(n.contains("familier")){
-                        if(n.contains(Main.Joueur_A)){
-                            ob = ob_a;
-                        }
-                        else if(n.contains(Main.Joueur_B)){
-                            ob = ob_b;
-                        }
-                        else if(n.contains(Main.Joueur_C)){
-                            ob = ob_c;
-                        }
-                        else if(n.contains(Main.Joueur_D)){
-                            ob = ob_d;
-                        }
-                        else{
-                            System.out.println("Erreur : " + n + " détecté comme familier, mais aucun joueur rattaché" +
-                                    "entité ignorée pour la suite du combat.");
-                            ob = -1;
-                            actif[i] = false;
-                        }
-                    }
-                    else{
-                        ob = 0; // joueur
-                    }
-                    if(ob != -1) {
-                        // action
-                        act = input.action(n, ob != 0, i == pr_l);
-                        if (ob == 0) { //joueur
-                            switch (act) {
-                                case TIRER -> ennemi.tir(input.atk());
-                                case MAGIE -> ennemi.dommage_magique(input.magie());
-                                case FUIR -> {
-                                    if (i != pr_l || input.D6() > 3) {
-                                        actif[i] = false;
-                                        System.out.println(n + " a fuit le combat.\n");
-                                    } else {
-                                        System.out.println(n + " n'est pas parvenu à distancer " + ennemi.nom + "\n");
-                                    }
-                                }
-                                case ASSOMER -> ennemi.assommer();
-                                case ENCAISSER -> ennemi.encaisser();
-                                case SOIGNER -> {
-                                    boolean temp = i == pr_l ||
-                                            input.ask_heal(nom, actif, pr_l);
-                                    ennemi.soigner(temp);
-                                }
-                                case DOMESTIQUER -> {
-                                    if (ennemi.domestiquer()) {
-                                        System.out.println("nouveau familier : " + ennemi.nom);
-                                        System.out.println("attaque : " + ennemi.attaque);
-                                        System.out.println("vie : " + ennemi.vie_max);
-                                        System.out.println("armure : " + ennemi.armure + "\n");
+        while (run) {
 
-                                        gestion_mort_end(mort, nom);
-                                        return switch (n) {
-                                            case Main.Joueur_A -> 1;
-                                            case Main.Joueur_B -> 2;
-                                            case Main.Joueur_C -> 3;
-                                            case Main.Joueur_D -> 4;
-                                            default -> 0;
-                                        };
-                                    }
-                                }
-                                case ANALYSER -> analyser(i == pr_l, ennemi);
-                                case AUTRE -> System.out.println("Vous faites quelques chose.\n");
-                                case ETRE_MORT -> a_pass = act_mort(actif, assomme, mort, nom, n, a_pass, i);
-                                case AVANCER -> {
-                                    System.out.println(n + " passe en première ligne.\n");
-                                    pr_l = i;
-                                    ennemi.reset_encaisser();
-                                    competence_avance(ennemi, nom[pr_l]);
-                                }
-                                case MAUDIR -> maudir(ennemi);
-                                case ONDE_CHOC -> onde_choc(actif, nom, assomme, ennemi);
-                                case END -> {
-                                    gestion_mort_end(mort, nom);
-                                    return 0;
-                                }
-                                case POTION_REZ -> {
-                                    int temp = input.ask_rez(nom, mort);
-                                    if(temp != -1 && popo_rez(n, nom[temp])){
-                                        mort[temp] = false;
-                                        actif[temp] = true;
-                                    }
-                                    if(i == pr_l){ //premiere ligne
-                                        System.out.println(n + "s'expose pour donner sa potion.");
-                                        ennemi.part_soin += 0.4F;
-                                    }
-                                }
-                                default -> ennemi.dommage(input.atk()); // ATTAQUER
+            //chaque joueur
+            for (int j = 0; j < 8; j++) {
+                i = t[j];
+                // on ne joue que les participants actifs
+                if (!actif[i]) {
+                    continue;
+                }
+                n = nom[i]; // on stocke le nom pour plus tard
+
+                // si le joueur est assommé, ce bloc remplace son tour
+                if (assomme[i]) {
+                    System.out.println(n + " est inconscient.");
+                    if (Objects.equals(n, Main.Joueur_B) && input.yn("Utiliser purge (3PP) ?")) {
+                        System.out.println(n + " se réveille.\n");
+                        assomme[i] = false;
+                        reveil[i] = 0;
+                    }
+                    else if (input.D4() + reveil[i] >= 3) {
+                        System.out.println(n + " se réveille.\n");
+                        assomme[i] = false;
+                        reveil[i] = 0;
+                    }
+                    else {
+                        System.out.println(n + " est toujours inconscient.\n");
+                        if (Objects.equals(n, Main.Joueur_B)) {
+                            System.out.println(n + " recupère 1PP.\n");
+                            if (rand.nextBoolean()) {
+                                reveil[i] += 1;
                             }
-                        } else { //familier
-                            if (act == Action.ETRE_MORT) {
-                                a_pass = act_mort(actif, assomme, mort, nom, n, a_pass, i);
+                        }
+                        else{
+                            reveil[i] += 1;
+                        }
+                    }
+                    if (Objects.equals(n, Main.Joueur_A) && a_pass) {
+                        a_pass = false;
+                    }
+                    continue;
+                }
+
+                // si le nécromancien à ressucité, il a déjà utilisé son tour
+                if (Objects.equals(n, Main.Joueur_A) && a_pass) {
+                    a_pass = false;
+                    continue;
+                }
+
+                // on différencie les familiers et joueurs
+                if (n.contains("familier")) {
+                    if (n.contains(Main.Joueur_A)) {
+                        ob = ob_a;
+                    } else if (n.contains(Main.Joueur_B)) {
+                        ob = ob_b;
+                    } else if (n.contains(Main.Joueur_C)) {
+                        ob = ob_c;
+                    } else if (n.contains(Main.Joueur_D)) {
+                        ob = ob_d;
+                    } else {
+                        System.out.println("Erreur : " + n + " détecté comme familier, mais aucun joueur rattaché" +
+                                "entité ignorée pour la suite du combat.");
+                        actif[i] = false;
+                        continue;
+                    }
+                } else {
+                    ob = 0;
+                }
+
+                // action
+                act = input.action(n, ob != 0, i == pr_l, mort);
+
+                //joueur
+                if (ob == 0) {
+                    switch (act) {
+                        case TIRER -> ennemi.tir(input.atk());
+                        case MAGIE -> ennemi.dommage_magique(input.magie());
+                        case FUIR -> {
+                            if (i != pr_l || input.D6() > 3) {
+                                actif[i] = false;
+                                System.out.println(n + " a fuit le combat.\n");
+                            } else {
+                                System.out.println(n + " n'est pas parvenu à distancer " + ennemi.nom + "\n");
                             }
-                            else if(act == Action.END) {
+                        }
+                        case ASSOMER -> ennemi.assommer();
+                        case ENCAISSER -> ennemi.encaisser();
+                        case SOIGNER -> {
+                            boolean temp = i == pr_l ||
+                                    input.ask_heal(nom, actif, pr_l);
+                            ennemi.soigner(temp);
+                        }
+                        case DOMESTIQUER -> {
+                            if (ennemi.domestiquer()) {
+                                System.out.println("nouveau familier : " + ennemi.nom);
+                                System.out.println("attaque : " + ennemi.attaque);
+                                System.out.println("vie : " + ennemi.vie_max);
+                                System.out.println("armure : " + ennemi.armure + "\n");
+
                                 gestion_mort_end(mort, nom);
-                                return 0;
+                                return switch (n) {
+                                    case Main.Joueur_A -> 1;
+                                    case Main.Joueur_B -> 2;
+                                    case Main.Joueur_C -> 3;
+                                    case Main.Joueur_D -> 4;
+                                    default -> 0;
+                                };
                             }
-                            else {
-                                switch (ob + input.D6() - 1) {
-                                    case 1 -> {
-                                        System.out.println(n + " a fuit le combat.\n");
-                                        actif[i] = false;
+                        }
+                        case ANALYSER -> analyser(i == pr_l, ennemi);
+                        case AUTRE -> System.out.println("Vous faites quelques chose.\n");
+                        case ETRE_MORT -> a_pass = act_mort(actif, assomme, mort, nom, n, a_pass, i);
+                        case AVANCER -> {
+                            System.out.println(n + " passe en première ligne.\n");
+                            pr_l = i;
+                            ennemi.reset_encaisser();
+                            competence_avance(ennemi, nom[pr_l]);
+                        }
+                        case MAUDIR -> maudir(ennemi);
+                        case ONDE_CHOC -> onde_choc(actif, nom, assomme, ennemi);
+                        case POTION_REZ -> {
+                            int temp = input.ask_rez(mort);
+                            if (temp != -1 && popo_rez(n, nom[temp])) {
+                                mort[temp] = false;
+                                actif[temp] = true;
+                            }
+                            if (i == pr_l) { //premiere ligne
+                                System.out.println(n + "s'expose pour donner sa potion.");
+                                ennemi.part_soin += 0.4F;
+                            }
+                        }
+                        case END -> {
+                            gestion_mort_end(mort, nom);
+                            return 0;
+                        }
+                        default -> ennemi.dommage(input.atk()); // ATTAQUER
+                    }
+                }
+
+                //familier
+                else {
+                    if (act == Action.ETRE_MORT) {
+                        a_pass = act_mort(actif, assomme, mort, nom, n, a_pass, i);
+                    }
+                    else if (act == Action.END) {
+                        gestion_mort_end(mort, nom);
+                        return 0;
+                    }
+                    else {
+                        switch (ob + input.D6() - 1) {
+                            case 1 -> {
+                                System.out.println(n + " a fuit le combat.\n");
+                                actif[i] = false;
+                            }
+                            case 2 -> System.out.println(n + " n'écoute pas ses ordres.\n");
+                            case 3, 4, 5 -> {
+                                System.out.println(n + " attaque l'ennemi.\n");
+                                ennemi.dommage(input.atk());
+                            }
+                            default -> { // >= 6
+                                switch (act) { //action choisie
+                                    case FUIR -> {
+                                        if (i != pr_l || input.D6() > 3) {
+                                            actif[i] = false;
+                                            System.out.println(n + " a fuit le combat.\n");
+                                        } else {
+                                            System.out.println(n + "n'est pas parvenu à distancer " + ennemi.nom + "\n");
+                                        }
                                     }
-                                    case 2 -> System.out.println(n + " n'écoute pas ses ordres.\n");
-                                    case 3, 4, 5 -> {
+                                    case AUTRE -> System.out.println(n + " fait quelque chose.\n");
+                                    case AVANCER -> {
+                                        System.out.println("Le " + n + " passe en première ligne.\n");
+                                        pr_l = i;
+                                        ennemi.reset_encaisser();
+                                        competence_avance(ennemi, nom[pr_l]);
+                                    }
+                                    default -> { //ATTAQUER
                                         System.out.println(n + " attaque l'ennemi.\n");
                                         ennemi.dommage(input.atk());
                                     }
-                                    default -> { // >= 6
-                                        switch (act) { //action choisie
-                                            case ATTAQUER -> ennemi.dommage(input.atk());
-                                            case FUIR -> {
-                                                if (i != pr_l || input.D6() > 3) {
-                                                    actif[i] = false;
-                                                    System.out.println(n + " a fuit le combat.\n");
-                                                } else {
-                                                    System.out.println(n + "n'est pas parvenu à distancer " + ennemi.nom + "\n");
-                                                }
-                                            }
-                                            case AUTRE -> System.out.println(n + " fait quelque chose.\n");
-                                            case AVANCER -> {
-                                                System.out.println("Le " + n + " passe en première ligne.\n");
-                                                pr_l = i;
-                                                ennemi.reset_encaisser();
-                                                competence_avance(ennemi, nom[pr_l]);
-                                            }
-                                            default -> {
-                                                System.out.println(n + " attaque l'ennemi.\n");
-                                                ennemi.dommage(input.atk());
-                                            }
-                                        }
-                                    }
                                 }
                             }
                         }
                     }
-                    if(!actif[pr_l]){ // il faut toujours une unité en première ligne
-                        for(int k = 0; k < 8; k++){
-                            if(actif[k]){
-                                pr_l = k;
-                                System.out.println(nom[k] + " se retrouve en première ligne.\n");
-                                break;
-                            }
-                        }
-                        if(!actif[pr_l]) { // la correction n'a pas eu lieu
-                            run = false;
-                            System.out.println("Aucun joueur ou familier détecté en combat.");
-                            // break inutile car if(actif[i]) toujours à false
+                }
+
+                // s'assure qu'un participant est toujours en première ligne
+                if (!actif[pr_l]) {
+                    for (int k = 0; k < 8; k++) {
+                        if (actif[k]) {
+                            pr_l = k;
+                            System.out.println(nom[k] + " se retrouve en première ligne.\n");
+                            break;
                         }
                     }
-                    if(ennemi.est_mort()) {
-                        // la mort est donné par les méthodes de dommage
+                    if (!actif[pr_l]) { // la correction n'a pas eu lieu
                         run = false;
-                        gestion_nomme(ennemi);
-                        boolean actif_a = false;
-                        for(int k = 0; k < 8; k++){
-                            if (actif[k] && Objects.equals(nom[k], Main.Joueur_A)) {
-                                actif_a = true;
-                                break;
-                            }
-                        }
-                        if(actif_a && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier pour 2PP ?")) {
-                            if (ressuciter(ennemi)) {
-                                gestion_mort_end(mort, nom);
-                                return 1;
-                            }
-                        }
-                        break;
+                        System.out.println("Aucun joueur ou familier détecté en combat.");
+                        // break inutile, car actif[i] toujours à false
                     }
                 }
+
+                if (ennemi.est_mort()) {
+                    // la mort est donné par les méthodes de dommage
+                    run = false;
+                    gestion_nomme(ennemi);
+
+                    //le nécromancien peut tenter de ressuciter le monstre
+                    boolean actif_a = false;
+                    for (int k = 0; k < 8; k++) {
+                        if (actif[k] && Objects.equals(nom[k], Main.Joueur_A)) {
+                            actif_a = true;
+                            break;
+                        }
+                    }
+                    if (actif_a && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier pour 2PP ?")) {
+                        if (ressuciter(ennemi)) {
+                            gestion_mort_end(mort, nom);
+                            return 1;
+                        }
+                    }
+                    break;
+                }
             }
-            if(run) {
+
+            // tour de l'adversaire
+            if (run) {
                 ennemi.attaque(nom[pr_l]);
-                if(ennemi.est_mort()){
+                if (ennemi.est_mort()) {
                     run = false;
                 }
             }
+
         }
+
         System.out.println("Fin du combat\n");
         gestion_mort_end(mort, nom);
         return 0;
