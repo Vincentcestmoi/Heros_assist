@@ -14,26 +14,27 @@ public class Combat {
      * Lance un combat entre les joueur et un monstres
      *
      * @param nb_joueurs   le nombre de joueurs dans la partie
+     * @param position le lieu où a lieu l'affrontement
      * @param joueur_force l'indice du joueur qui est attaqué en cas d'embuscade (de 1 à 4) ou -1 sinon
      * @param ob_a l'obéissance du familier de Joueur_A (de 1 à 3) ou 0 s'il n'existe pas
      * @param ob_b l'obéissance du familier de Joueur_B (de 1 à 3) ou 0 s'il n'existe pas
      * @param ob_c l'obéissance du familier de Joueur_C (de 1 à 3) ou 0 s'il n'existe pas
-     * @param ob_d l'obéissance du familier du joueur D (de 1 à 3) ou 0 s'il n'existe pas
-     * @param ennemi       le monstre que les joueurs affronte
+     * @param ob_d l'obéissance du familier de joueur_D (de 1 à 3) ou 0 s'il n'existe pas
+     * @param ennemi le monstre que les joueurs affronte
      * @return un int lié au joueur qui obtient un familier
      * @throws IOException lecture de terminal
      */
-    public static int affrontement(int nb_joueurs, int joueur_force, int ob_a, int ob_b, int ob_c, int ob_d, Monstre ennemi) throws IOException {
+    public static int affrontement(int nb_joueurs, Position position, int joueur_force, int ob_a, int ob_b, int ob_c, int ob_d, Monstre ennemi) throws IOException {
 
         // repérer les participants
-        boolean j_a = joueur_force == 0 || input.yn("Est-ce que " + Main.Joueur_A + " participe au combat ?");
-        boolean j_b = joueur_force == 1 || (nb_joueurs > 1 && input.yn("Est-ce que " + Main.Joueur_B + " participe au combat ?"));
-        boolean j_c = joueur_force == 2 || (nb_joueurs > 2 && input.yn("Est-ce que " + Main.Joueur_C + " participe au combat ?"));
-        boolean j_d = joueur_force == 3 || (nb_joueurs > 3 && input.yn("Est-ce que le joueur D participe au combat ?"));
+        boolean j_a = joueur_force == 0 || (Main.positions[0] == position && input.yn("Est-ce que " + Main.Joueur_A + " participe au combat ?"));
+        boolean j_b = joueur_force == 1 || (nb_joueurs > 1 && Main.positions[1] == position && input.yn("Est-ce que " + Main.Joueur_B + " participe au combat ?"));
+        boolean j_c = joueur_force == 2 || (nb_joueurs > 2 && Main.positions[2] == position && input.yn("Est-ce que " + Main.Joueur_C + " participe au combat ?"));
+        boolean j_d = joueur_force == 3 || (nb_joueurs > 3 && Main.positions[3] == position && input.yn("Est-ce que " + Main.Joueur_D + " participe au combat ?"));
         boolean f_a = ob_a > 0 && j_a && input.yn("Est-ce que le familier de " + Main.Joueur_A + " participe au combat ?");
         boolean f_b = ob_b > 0 && j_b && input.yn("Est-ce que le familier de " + Main.Joueur_B + " participe au combat ?");
         boolean f_c = ob_c > 0 && j_c && input.yn("Est-ce que le familier de " + Main.Joueur_C + " participe au combat ?");
-        boolean f_d = ob_d > 0 && j_d && input.yn("Est-ce que le familier du joueur D participe au combat ?");
+        boolean f_d = ob_d > 0 && j_d && input.yn("Est-ce que le familier de " + Main.Joueur_D + " participe au combat ?");
 
         if (!(j_a || j_b || j_c || j_d)){
             System.out.println("Erreur : aucun joueur détecté, annulation du combat.");
@@ -45,9 +46,9 @@ public class Combat {
         boolean[] assomme = {false, false, false, false, false, false, false, false};
         boolean[] mort = {false, false, false, false, false, false, false, false};
         int[] reveil = {0, 0, 0, 0, 0, 0, 0, 0};
-        String[] nom = {Main.Joueur_A, Main.Joueur_B, Main.Joueur_C, "Joueur D",
+        String[] nom = {Main.Joueur_A, Main.Joueur_B, Main.Joueur_C, Main.Joueur_D,
                 "le familier de " + Main.Joueur_A, "le familier de " + Main.Joueur_B, "le familier de " + Main.Joueur_C,
-                "le familier du joueur D"};
+                "le familier de " + Main.Joueur_D};
 
         int nbp = 0;
         for (boolean b : actif) {
@@ -93,6 +94,7 @@ public class Combat {
         }
 
         if(competence(ennemi, nom, pr_l, actif)){
+            gestion_mort_end(mort, nom);
             return 0;
         }
 
@@ -156,7 +158,7 @@ public class Combat {
                         else if(n.contains(Main.Joueur_C)){
                             ob = ob_c;
                         }
-                        else if(n.contains("D")){
+                        else if(n.contains(Main.Joueur_D)){
                             ob = ob_d;
                         }
                         else{
@@ -198,23 +200,14 @@ public class Combat {
                                         System.out.println("vie : " + ennemi.vie_max);
                                         System.out.println("armure : " + ennemi.armure + "\n");
 
-                                        switch (n) {
-                                            case Main.Joueur_A -> {
-                                                return 1;
-                                            }
-                                            case Main.Joueur_B -> {
-                                                return 2;
-                                            }
-                                            case Main.Joueur_C -> {
-                                                return 3;
-                                            }
-                                            case "Joueur D" -> {
-                                                return 4;
-                                            }
-                                            default -> {
-                                                return 0;
-                                            }
-                                        }
+                                        gestion_mort_end(mort, nom);
+                                        return switch (n) {
+                                            case Main.Joueur_A -> 1;
+                                            case Main.Joueur_B -> 2;
+                                            case Main.Joueur_C -> 3;
+                                            case Main.Joueur_D -> 4;
+                                            default -> 0;
+                                        };
                                     }
                                 }
                                 case ANALYSER -> analyser(i == pr_l, ennemi);
@@ -229,6 +222,7 @@ public class Combat {
                                 case MAUDIR -> maudir(ennemi);
                                 case ONDE_CHOC -> onde_choc(actif, nom, assomme, ennemi);
                                 case END -> {
+                                    gestion_mort_end(mort, nom);
                                     return 0;
                                 }
                                 case POTION_REZ -> {
@@ -249,6 +243,7 @@ public class Combat {
                                 a_pass = act_mort(actif, assomme, mort, nom, n, a_pass, i);
                             }
                             else if(act == Action.END) {
+                                gestion_mort_end(mort, nom);
                                 return 0;
                             }
                             else {
@@ -317,6 +312,7 @@ public class Combat {
                         }
                         if(actif_a && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier pour 2PP ?")) {
                             if (ressuciter(ennemi)) {
+                                gestion_mort_end(mort, nom);
                                 return 1;
                             }
                         }
@@ -332,6 +328,7 @@ public class Combat {
             }
         }
         System.out.println("Fin du combat\n");
+        gestion_mort_end(mort, nom);
         return 0;
     }
 
@@ -348,6 +345,9 @@ public class Combat {
      * @throws IOException mon poto
      */
     private static boolean act_mort(boolean[] actif, boolean[] assomme, boolean[] mort, String[] nom, String n, boolean a_pass, int i) throws IOException {
+        if(a_pass){
+            return true;
+        }
         if(input.yn(n + " est-il mort ?")){
             boolean actif_a = false;
             for(int k = 0; k < 8; k++){
@@ -1043,5 +1043,14 @@ public class Combat {
         System.out.println("vie : " + (temp >= 5 ? pv : "???") + "/" + (temp >= 2 ? pvm : "???"));
         System.out.println("attaque : " + (temp >= 3 ? atk : "???"));
         System.out.println("armure : " + (temp >= 7 ? arm : "???\n"));
+    }
+
+    static private void gestion_mort_end(boolean[] morts, String[] nom) throws IOException {
+        for(int i = 0; i < 4; i++){
+            if(morts[i] && input.yn(nom[i] + " est mort durant le combat, le reste-t-il ?")){
+                System.out.println(nom[i] + " se retrouve aux enfers.\n");
+                Main.positions[i] = Position.ENFERS;
+            }
+        }
     }
 }
