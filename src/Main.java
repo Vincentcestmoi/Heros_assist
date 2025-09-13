@@ -192,7 +192,7 @@ public class Main {
         }
         System.out.println(text);
         int temp = Combat.affrontement(4, Position.ASCENDANT, lead, f_a, f_b, f_c, f_d, m);
-        if (input.yn(nom[index] + "a-t-il vaincu le monstre ?")) {
+        if (input.yn(nom[index] + " a-t-il vaincu le monstre ?")) {
             System.out.println(nom[index] + " arrive " + texte_pos(next_pos));
             positions[index] = next_pos;
         } else if (input.yn(nom[index] + " est-il mort ?")) {
