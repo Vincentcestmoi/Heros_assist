@@ -78,7 +78,7 @@ public class Monstre {
      * @implNote Calcul les effet de "encaisser", "étourdit" et "assommé"
      */
     void attaque(String nom) throws IOException {
-        float modificateur = ((1 - encaissement) + (1 + part_soin)) / 2; // réduction de "encaisser" et pénalité de "premier soin"
+        float modificateur = 1 - encaissement + part_soin;
         if (assomme) {
             undo_assomme();
         }
