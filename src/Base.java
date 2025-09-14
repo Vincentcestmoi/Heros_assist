@@ -11,5 +11,6 @@ public enum Base {
     CONSO_EX,
     CONSO_MAIN,
     RUNE,
+    MONTURE,
     AUTRE,
 }
