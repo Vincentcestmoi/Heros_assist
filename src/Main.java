@@ -108,7 +108,65 @@ public class Main {
             }
             i++;
         }
-        System.out.print("Fin du programme");
+        System.out.println("Fin du programme");
+        System.out.println("Rang 0 :");
+        pseudoLog(Pre_Equipement.rang0);
+        System.out.println("Rang I :");
+        pseudoLog(Pre_Equipement.rang1);
+        System.out.println("Rang II :");
+        pseudoLog(Pre_Equipement.rang2);
+        System.out.println("Rang III :");
+        pseudoLog(Pre_Equipement.rang3);
+        System.out.println("Rang IV :");
+        pseudoLog(Pre_Equipement.rang4);
+        System.out.println("Promotion Monture :");
+        pseudoLog(Pre_Equipement.prom_list_mont);
+        System.out.println("Promotion amélioration :");
+        pseudoLog(Pre_Equipement.prom_list_boost);
+        System.out.println("Promotion artéfact :");
+        pseudoLog(Pre_Equipement.prom_list_arte);
+        System.out.println("Enfers :");
+        pseudoLog(Race.enfers);
+        System.out.println("Prairie :");
+        pseudoLog(Race.prairie);
+        System.out.println("Vigne :");
+        pseudoLog(Race.vigne);
+        System.out.println("Temple :");
+        pseudoLog(Race.temple);
+        System.out.println("Mer :");
+        pseudoLog(Race.mer);
+        System.out.println("Monts :");
+        pseudoLog(Race.mont);
+        System.out.println("Olympe :");
+        pseudoLog(Race.olympe);
+    }
+
+    private static void pseudoLog(Race[] list) {
+        int i;
+        for(i = 0; i < list.length; i++){
+            Race temp = list[i];
+            if(temp == null){
+                System.out.print("dismiss, ");
+            }
+            else{
+                System.out.print(temp.nom + ", ");
+            }
+        }
+        System.out.println("\n");
+    }
+
+    private static void pseudoLog(Pre_Equipement[] list) {
+        int i;
+        for(i = 0; i < list.length; i++){
+            Pre_Equipement temp = list[i];
+            if(temp == null){
+                System.out.print("dismiss, ");
+            }
+            else{
+                System.out.print(temp.nom + ", ");
+            }
+        }
+        System.out.println("\n");
     }
 
     /**
