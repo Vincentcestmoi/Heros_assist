@@ -564,7 +564,7 @@ public class Equipement {
     //Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix, String effet)
 
     static Equipement lotterie = new Equipement("ticket de lotterie", Rang.O, Base.AUTRE, 0, 0, 0, 3,
-            "Lancez un dé à 6 face, si vous faite 6, gagnez 17PO. Jetez ce ticket.");
+            "Lancez un dé à 6 face, si vous faite 6, gagnez 15PO. Jetez ce ticket.");
 
     static Equipement main1_0 = new Equipement("branche solide", Rang.O, Base.MAIN_1, 1, 0, 0, 5);
     static Equipement main2_0 = new Equipement("pavé", Rang.O, Base.MAIN_2, 3, 0, 0, 7);
