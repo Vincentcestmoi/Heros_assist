@@ -418,14 +418,17 @@ public class Input {
 
     /**
      * Demande au joueur ce qu'il fait de son tour
+     * @param position la position du joueur
+     * @param obe l'obéissance du familier du joueur
      * @return : un choix correspondant
      */
-    Choix tour(Position position) throws IOException {
+    Choix tour(Position position, int obe) throws IOException {
         while (true) {
             String text = "Que voulez-vous faire : (E)xplorer";
             boolean peut_descendre =  position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
             boolean peut_monter = position != Position.OLYMPE;
             boolean market = position != Position.OLYMPE && position != Position.ENFERS;
+            boolean peut_entrainer = obe > 0 && obe < 3;
             if(peut_descendre){
                 text += "/(d)escendre";
             }
@@ -435,7 +438,10 @@ public class Input {
             if(market){
                 text += "/(a)ller au marché";
             }
-            text += "/(en)trainer son familier/(c)ustom ?";
+            if(peut_entrainer){
+                text += "/(en)trainer son familier";
+            }
+            text += "/(c)ustom ?";
             System.out.println(text);
             switch (read()) {
                 case "E", "e", "explorer", "Explorer", "" -> {
@@ -461,7 +467,10 @@ public class Input {
                     System.out.println("Input unknow");
                 }
                 case "entrainer son familier", "Entrainer son familier", "en", "En", "EN", "eN" -> {
-                    return Choix.DRESSER;
+                    if(peut_entrainer) {
+                        return Choix.DRESSER;
+                    }
+                    System.out.println("Input unknow");
                 }
                 case "c", "C", "Custom", "custom" -> {
                     return Choix.ATTENDRE;

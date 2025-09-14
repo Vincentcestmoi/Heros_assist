@@ -29,7 +29,7 @@ public class Main {
             }
             System.out.println(nom[i] + " c'est votre tour, vous êtes " + texte_pos(positions[i]) + ".");
             int temp = 0;
-            switch (input.tour(positions[i])) {
+            switch (input.tour(positions[i], new int[]{f_a, f_b, f_c, f_d}[i])) {
                 case SUICIDE -> {
                     System.out.println(nom[i] + " est mort.");
                     positions[i] = Position.ENFERS;
