@@ -71,6 +71,7 @@ public class Main {
                         }
                         default -> System.out.println("Erreur : joueur " + nom[i] + " non reconnu");
                     }
+                    i -= 1; //n'utilise pas le tour
                 }
                 case FAMILIER_MOINS -> {
                     switch (nom[i]) {
@@ -92,6 +93,7 @@ public class Main {
                         }
                         default -> System.out.println("Erreur : joueur " + nom[i] + " non reconnu");
                     }
+                    i -= 1; //n'utilise pas le tour
                 }
                 case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
             }
@@ -180,12 +182,12 @@ public class Main {
                 m = true_monstre(pos);
             }
             case 4, 5 -> {
-                System.out.println(text + " parvient sans encombre " + texte_pos(next_pos) + ".");
+                System.out.println(text + " parvient sans encombre " + texte_pos(next_pos) + ".\n");
                 positions[index] = next_pos;
                 return 0;
             }
             default -> {
-                System.out.println("Erreur : résultat inatendu. Action annulée.");
+                System.out.println("Erreur : résultat inatendu. Action annulée.\n");
                 positions[index] = pos;
                 return 0;
             }
@@ -201,6 +203,7 @@ public class Main {
             System.out.println(nom[index] + " est resté " + texte_pos(pos));
             positions[index] = pos;
         }
+        System.out.println();
         return temp;
     }
 
@@ -217,13 +220,14 @@ public class Main {
         } else {
             f += Monstre.entrainement();
             if (f <= 0) {
-                System.out.println("Votre familier vous a fuit de manière définitive");
+                System.out.println("Votre familier vous a fuit de manière définitive.");
                 f = 0;
             } else if (f >= 3) {
-                System.out.println("Vous avez atteint le niveau maximal de loyauté de la part de votre familier");
+                System.out.println("Vous avez atteint le niveau maximal de loyauté de la part de votre familier.");
                 f = 3;
             }
         }
+        System.out.println();
         return f;
     }
 
