@@ -425,11 +425,15 @@ public class Input {
             String text = "Que voulez-vous faire : (E)xplorer";
             boolean peut_descendre =  position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
             boolean peut_monter = position != Position.OLYMPE;
+            boolean market = position != Position.OLYMPE && position != Position.ENFERS;
             if(peut_descendre){
                 text += "/(d)escendre";
             }
             if(peut_monter){
                 text += "/(m)onter";
+            }
+            if(market){
+                text += "/(a)ller au marché";
             }
             text += "/(en)trainer son familier/(c)ustom ?";
             System.out.println(text);
@@ -446,6 +450,13 @@ public class Input {
                 case "m", "M", "monter", "Monter" ->{
                     if(peut_monter){
                         return Choix.MONTER;
+                    }
+                    System.out.println("Input unknow");
+                }
+                case "a", "A", "Aller au marche", "aller au marche", "Aller au marché", "aller au marché", "Aller",
+                     "aller", "marche", "Marche", "Marché", "marché" -> {
+                    if(market){
+                        return Choix.MARCHE;
                     }
                     System.out.println("Input unknow");
                 }

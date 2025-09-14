@@ -12,13 +12,6 @@ public class Main {
     static final String[] nom = {Joueur_A, Joueur_B, Joueur_C, Joueur_D};
 
     public static void main(String[] args) throws IOException {
-        Equipement.drop_promo();
-        Equipement.drop_promo();
-        Equipement.drop_promo();
-        Equipement.drop_promo();
-        Equipement.drop_promo();
-        Equipement.drop_promo();
-        Equipement.drop_promo();
         System.out.print("Entrez le nombre de joueur : ");
         int nbj = input.readInt();
         if (nbj < 1 || nbj > 4) {
@@ -47,6 +40,7 @@ public class Main {
                     System.out.println(nom[i] + " retourne en des terres moins inhospitalières.");
                     positions[i] = reduire_pos(positions[i]);
                 }
+                case MARCHE -> marche(positions[i]);
                 case DRESSER -> {
                     switch (nom[i]) {
                         case Joueur_A -> f_a = gere_entrainement(f_a);
@@ -115,6 +109,22 @@ public class Main {
             i++;
         }
         System.out.print("Fin du programme");
+    }
+
+    /**
+     * Redirige vers le bon marché selon la position
+     * @param position la position du joueur
+     */
+    private static void marche(Position position) {
+        switch (position){
+            case PRAIRIE -> Equipement.marche_prairie();
+            case VIGNES -> Equipement.marche_vigne();
+            case TEMPLE -> Equipement.marche_temple();
+            case MER -> Equipement.marche_mer();
+            case MONTS -> Equipement.marche_monts();
+            case ENFERS, OLYMPE -> System.out.println("Erreur : Il n'y a pas de marché ici.");
+            case ASCENDANT -> System.out.println("ERROR : DONOT");
+        }
     }
 
     /**

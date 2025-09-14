@@ -3,6 +3,7 @@ public enum Choix {
     MONTER,
     DESCENDRE,
     DRESSER,
+    MARCHE,
     ATTENDRE,
     QUITTER,
     FAMILIER_PLUS,

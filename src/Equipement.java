@@ -33,6 +33,26 @@ public class Equipement {
         applique_effet(pre.effet);
     }
 
+    Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix) {
+        this.nom = nom;
+        this.attaque = attaque;
+        this.resistance = resistance;
+        this.armure = armure;
+        this.rang = rang;
+        this.base = base;
+        this.effet = "prix : " + prix;
+    }
+
+    Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix, String effet) {
+        this.nom = nom;
+        this.attaque = attaque;
+        this.resistance = resistance;
+        this.armure = armure;
+        this.rang = rang;
+        this.base = base;
+        this.effet = effet + "\nprix : " + prix;
+    }
+
     /**
      * Crée un casque standard en fonction de son rang
      */
@@ -271,7 +291,7 @@ public class Equipement {
                     case II -> this.effet = "Augmente de 3 l'attaque des arcs.";
                     case III -> this.effet = "Augmente de 4 l'attaque des arcs.";
                     case IV -> this.effet = "Augmente de 10 l'attaque des arcs.";
-                    case PROMOTION -> this.effet = "Augmente de " + rand.nextInt(4) + 1 + " l'attaque des arcs.";
+                    case PROMOTION -> this.effet = "Augmente de " + (rand.nextInt(4) + 1) + " l'attaque des arcs.";
                 }
             }
             case ARCEXP -> this.effet = "Augmente de 6 une attaque à l'arc, se consomme à l'usage.";
@@ -541,5 +561,200 @@ public class Equipement {
         Equipement equipement = new Equipement(Pre_Equipement.drop_promo());
         equipement.presente();
     }
+    //Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix, String effet)
 
+    static Equipement lotterie = new Equipement("ticket de lotterie", Rang.O, Base.AUTRE, 0, 0, 0, 3,
+            "Lancez un dé à 6 face, si vous faite 6, gagnez 17PO. Jetez ce ticket.");
+
+    static Equipement main1_0 = new Equipement("branche solide", Rang.O, Base.MAIN_1, 1, 0, 0, 5);
+    static Equipement main2_0 = new Equipement("pavé", Rang.O, Base.MAIN_2, 3, 0, 0, 7);
+    static Equipement arc_0 = new Equipement("vieil arc", Rang.O, Base.ARC, 0, 0, 0, 3);
+    static Equipement bouclier_0 = new Equipement("planche en bois", Rang.O, Base.BOUCLIER, 0, 2, 0, 8);
+    static Equipement armure_0 = new Equipement("vieille armure", Rang.O, Base.ARMURE, 0, 1, 0, 3);
+    static Equipement casque_0 = new Equipement("seau", Rang.O, Base.CASQUE, 0, 1, 0, 3);
+    static Equipement ingredients_0 = new Equipement("ingrédient", Rang.O, Base.AUTRE, 0, 0, 0, 3);
+    static Equipement ingredients2_0 = new Equipement("2 ingrédients", Rang.O, Base.AUTRE, 0, 0, 0, 7);
+
+    static Equipement[] marche0 = {arc_0, main1_0, main2_0, armure_0, bouclier_0, casque_0, ingredients_0, ingredients2_0};
+
+    static Equipement arc_I = new Equipement("arc", Rang.I, Base.ARC, 1, 0, 0, 4);
+    static Equipement bouclier_I = new Equipement("petit bouclier", Rang.I, Base.BOUCLIER, 1, 2, 0, 7);
+    static Equipement main1_I = new Equipement("couteau", Rang.I, Base.MAIN_1, 2, 0, 0, 6);
+    static Equipement main2_I = new Equipement("grande épée", Rang.I, Base.MAIN_2, 5, 0, 0, 9);
+    static Equipement armure_I = new Equipement("armure", Rang.I, Base.ARMURE, 0, 2, 0, 5);
+    static Equipement casque_I = new Equipement("mauvais casque", Rang.I, Base.CASQUE, 0, 2, 0, 5);
+    static Equipement ingredients_I = new Equipement("ingrédient", Rang.O, Base.AUTRE, 0, 0, 0, 4);
+    static Equipement ingredients2_I = new Equipement("2 ingrédients", Rang.O, Base.AUTRE, 0, 0, 0, 8);
+
+    static Equipement[] marcheI = {arc_I, main1_I, main2_I, armure_I, bouclier_I, casque_I, ingredients_I, ingredients2_I, lotterie};
+
+    static Equipement arc_II = new Equipement("grand arc", Rang.II, Base.ARC, 3, 0, 0, 5);
+    static Equipement bouclier_II = new Equipement("bouclier", Rang.II, Base.BOUCLIER, 2, 3, 0, 9);
+    static Equipement main1_II = new Equipement("hachette", Rang.II, Base.MAIN_1, 4, 0, 0, 8);
+    static Equipement main2_II = new Equipement("grande hache", Rang.II, Base.MAIN_2, 9, 0, 0, 12);
+    static Equipement armure_II = new Equipement("bonne armure", Rang.II, Base.ARMURE, 0, 6, 1, 11);
+    static Equipement casque_II = new Equipement("casque", Rang.II, Base.CASQUE, 0, 3, 0, 6);
+
+    static Equipement[] marcheII = {arc_II, main1_II, main2_II, armure_II, bouclier_II, casque_II, ingredients_0, ingredients2_0, lotterie};
+
+    static Equipement arc_III = new Equipement("arc à poulie", Rang.III, Base.ARC, 5, 0, 0, 7);
+    static Equipement bouclier_III = new Equipement("bon bouclier", Rang.III, Base.BOUCLIER, 4, 5, 0, 13);
+    static Equipement main1_III = new Equipement("bon glaive", Rang.III, Base.MAIN_1, 6, 0, 0, 12);
+    static Equipement main2_III = new Equipement("grosse épée", Rang.III, Base.MAIN_2, 13, 0, 0, 16);
+    static Equipement armure_III = new Equipement("excellente armure", Rang.III, Base.ARMURE, 0, 11, 2, 21);
+    static Equipement casque_III = new Equipement("bon casque", Rang.III, Base.CASQUE, 0, 5, 1, 18);
+    static Equipement ingredients_III = new Equipement("ingrédient", Rang.O, Base.AUTRE, 0, 0, 0, 5);
+    static Equipement ingredients2_III = new Equipement("2 ingrédients", Rang.O, Base.AUTRE, 0, 0, 0, 11);
+
+    static Equipement[] marcheIII = {arc_III, main1_III, main2_III, armure_III, bouclier_III, casque_III, ingredients_III, ingredients2_III};
+
+    @SuppressWarnings("DuplicatedCode")
+    public static void marche_prairie() {
+        System.out.println("Vous êtes dans le marché des prairies et 3 objets vous sont proposés :");
+        int i;
+        Equipement a, b;
+        Equipement[] list;
+
+        if(rand.nextBoolean()){
+            list = marche0;
+        }
+        else{
+            list = marcheI;
+        }
+        a = list[rand.nextInt(list.length)];
+
+        if(rand.nextBoolean()){
+            list = marche0;
+        }
+        else{
+            list = marcheI;
+        }
+        do{
+            i = rand.nextInt(list.length);
+        }while(a == list[i]);
+        b = list[i];
+
+        if(rand.nextBoolean()){
+            list = marche0;
+        }
+        else{
+            list = marcheI;
+        }
+        do{
+            i = rand.nextInt(list.length);
+        }while(list[i] == b || list[i] == a);
+
+        a.presente();
+        b.presente();
+        list[i].presente();
+    }
+
+    public static void marche_vigne() {
+        System.out.println("Vous êtes dans le marché des vignes et 3 objets vous sont proposés :");
+        int i;
+        Equipement a, b;
+        Equipement[] list = marcheI;
+
+        a = list[rand.nextInt(list.length)];
+
+        do {
+            i = rand.nextInt(list.length);
+        } while (a == list[i]);
+        b = list[i];
+
+        do {
+            i = rand.nextInt(list.length);
+        } while (list[i] == b || list[i] == a);
+
+        a.presente();
+        b.presente();
+        list[i].presente();
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    public static void marche_temple() {
+        int nbo = rand.nextInt(3) + 2;
+        System.out.println("Vous trouvez un marchant dans le temple, qui vous propose " + nbo + " objets :");
+        int i;
+        Equipement a, b, c = null;
+        Equipement[] list;
+
+        if (rand.nextBoolean()) {
+            list = marcheI;
+        } else {
+            list = marcheII;
+        }
+        a = list[rand.nextInt(list.length)];
+
+        if (rand.nextBoolean()) {
+            list = marcheI;
+        } else {
+            list = marcheII;
+        }
+        do {
+            i = rand.nextInt(list.length);
+        } while (a == list[i]);
+        b = list[i];
+
+        if(nbo > 2) {
+            if (rand.nextBoolean()) {
+                list = marcheI;
+            } else {
+                list = marcheII;
+            }
+            do {
+                i = rand.nextInt(list.length);
+            } while (list[i] == b || list[i] == a);
+            c = list[i];
+        }
+
+        if(nbo > 3){
+            if (rand.nextBoolean()) {
+                list = marcheI;
+            } else {
+                list = marcheII;
+            }
+            do {
+                i = rand.nextInt(list.length);
+            } while (list[i] == b || list[i] == a || list[i] == c);
+        }
+
+        a.presente();
+        b.presente();
+        if(nbo > 2){
+            c.presente();
+        }
+        if(nbo > 3) {
+            list[i].presente();
+        }
+    }
+
+    public static void marche_mer() {
+        System.out.println("Vous croisez un navire marchand qui vous propose 2 objets :");
+        Equipement[] list;
+        if(rand.nextBoolean()){
+            list = marcheII;
+        }
+        else{
+            list = marcheIII;
+        }
+        int i = rand.nextInt(list.length);
+        Equipement a = list[i];
+        if(rand.nextBoolean()){
+            list = marcheII;
+        }
+        else{
+            list = marcheIII;
+        }
+        do{
+            i = rand.nextInt(list.length);
+        }while(list[i] == a);
+        a.presente();
+        list[i].presente();
+    }
+
+    public static void marche_monts() {
+        System.out.println("Vous croisez un pelerin qui vous propose de vous vendre un objet :");
+        marcheIII[rand.nextInt(marcheIII.length)].presente();
+    }
 }
