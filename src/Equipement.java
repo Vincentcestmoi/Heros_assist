@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Random;
 
 public class Equipement {
@@ -23,7 +24,7 @@ public class Equipement {
             case BOUCLIER -> this.make_bouclier();
             case ARC -> this.make_arc();
             case CEINTURE -> this.make_ceinture();
-            default -> {
+            default -> { //AUTRE, BRACELET, MONTURE, SAC, CONSO_EX, CONSO_MAIN, RUNE
                 this.attaque = 0;
                 this.resistance = 0;
                 this.armure = 0;
@@ -270,12 +271,14 @@ public class Equipement {
                     case II -> this.effet = "Augmente de 3 l'attaque des arcs.";
                     case III -> this.effet = "Augmente de 4 l'attaque des arcs.";
                     case IV -> this.effet = "Augmente de 10 l'attaque des arcs.";
+                    case PROMOTION -> this.effet = "Augmente de " + rand.nextInt(4) + 1 + " l'attaque des arcs.";
                 }
             }
             case ARCEXP -> this.effet = "Augmente de 6 une attaque à l'arc, se consomme à l'usage.";
             case PASDP -> this.effet = "Pas encore dev, piochez une promotion.";
             case RESISTANCE1 -> this.resistance += 1;
             case RESISTANCE2 -> this.resistance += 2;
+            case RESISTANCE3 -> this.resistance += 3;
             case RESISTANCE4 -> this.resistance += 4;
             case RESISTANCE6 -> this.resistance += 6;
             case ATTAQUE1 -> this.attaque += 1;
@@ -339,6 +342,7 @@ public class Equipement {
             case CONSO_RES8 -> this.effet = "Soigne de 8.";
             case PP4 -> this.effet = "Régénère 4 PP.";
             case PP6 -> this.effet = "Régénère 6 PP.";
+            case PPL -> this.effet = "Pour ce combat, récupérez 1PP à chacun de vos débuts de tour.";
             case PPMAX -> this.effet = "Pour ce combat, vous avez un nombre infini de PP ; à la fin du combat, mettez vos PP à 0.";
             case SOUPE_MAGIQUE -> this.effet = "Soigne de 4, augmente temporairement la résistance de 3 et l'attaque de 2.";
             case NECTAR -> this.effet = "Combinez le à l'ambroisie pour gagner.";
@@ -385,6 +389,7 @@ public class Equipement {
             case PARCH_FEU -> this.effet = "Permet de lancer le sort Boule de feu : pour 2PP, inflige 5 dégats magiques.";
             case PARCH_DODO -> this.effet = "Permet de lancer le sort Sommeil : pour 2PP, arrête un combat.";
             case PARCH_FORCE -> this.effet = "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement l'attaque de 1, se détruit après usage.";
+            case PARCH_LUMIERE -> this.effet = "Permet de lancer le sort Lumière : pour 2PP, diminue de 2 points l'attaque de l'ennemie (augmentez tous de 2 votre armure pour le code).";
             case RUNE_CROISS -> this.effet = "Diminue de 1 le coût de la compétence Embranchement végétal.";
             case RUNE_PLUIE -> this.effet = "Diminue de 1 le coût de la compétence Déferlante.";
             case RUNE_HAINE -> this.effet = "Augmente de 3 points additionels l'attaque sous Berserk, mais diminue aussi la résistance de 2 points additionels.";
@@ -395,7 +400,7 @@ public class Equipement {
             case RUNE_MORT -> this.effet = "Double l'efficacité de la compétence Thaumaturge";
             case RUNE_ORAGE -> this.effet = "Diminue de 1 le coût de la compétence Foudre.";
             case SOIN -> this.effet = "Vous pouvez, une fois par combat, utiliser votre action pour soigner une cible de 6.";
-            case PROTECTION -> this.effet = "Peut être sacrifié pour ignorer une fois des dommages (avant de les calculer).";
+            case PROTECTION -> this.effet = "Peut être utilisé pour ignorer des dommages (avant de les calculer). Une seule utilisation.";
             case RUNE_VENGEANCE -> this.effet = "Récuperez 2PP chaque fois qu'un familier ou joueur allié est tué par un monstre.";
             case RUNE_INTERDITE -> this.effet = "Augmente de 1 le coût de la compétence Nécromancie, mais augmente de 1 le résultat du jet de dé.";
             case BRACELET_ABSO -> this.effet = "Gagnez 1 PP chaque fois qe vous tuez un monstre (vous ou votre familier doit porter le dernier coup).";
@@ -416,6 +421,41 @@ public class Equipement {
             case PARCH_VOLCAN -> this.effet = "Permet de lancer le sort Folie meurtrière : pour 6PP, infliges 55 dégats magiques";
             case PARCH_ABSO -> this.effet = "Quand vous tuez un monstre, vous gagnez définitivement 7 points de résistances, 3 points" +
                     "d'attaques, 1 point d'armure et 4PP. (vous ou votre familier devez porter le dernier coup).";
+            case PEGASE -> {
+                this.resistance += 3;
+                this.effet = "Ajoutez 1 à tout vos dés d'exploration et d'ascension.";
+            }
+            case CHEVAL -> {
+                this.resistance += 5;
+                this.effet = "Vos dés de fuites sont automatiquement maximaux.";
+            }
+            case MOLOSSE -> {
+                this.resistance += 4;
+                this.attaque += 3;
+            }
+            case PIE -> {
+                this.attaque += 1;
+                this.effet = "A la fin de chaque combat auquel vous participez, gagnez 1PO, ne s'active pas si vous avez fuit. Gagnez 1 sur vos dés de fuite.";
+            }
+            case SPHINX -> {
+                this.attaque += 1;
+                this.resistance += 2;
+                this.effet = "Pour 1PP, augmente temporairement votre résistance de 3 points.";
+            }
+            case ALTRUISME -> this.effet = "Au début de chaque combat, répartissez 5 points temporaires de résistance entre vos alliés (familiers inclus)." +
+                    "Vous ne pouvez les attribuer à vous même.";
+            case RUNE_ARCA -> this.effet = "Diminue de 1 la coût de tout vos sort";
+            case ANTIDODE -> this.effet = "Le consommer fournit une immunité définitive au poison et à la cécité.";
+            case ANNIHILITON -> this.effet = "En sacrifiant une rune, vous pouvez lancer un attaque magique de puissance le triple de votre attaque classique.";
+            case REZ -> this.effet = "Si vous êtes mort à la fin d'un combat, vous ramène à la vie. S'efface après utilisation. Ne peut être échangé.";
+            case FUITE -> this.effet = "A tout moment, vous pouvez utiliser cet objet pour fuir un combat. Se détruit après usage. Ne peut être utilisé si vous êtes mort.";
+            case GRENADE -> this.effet = "Inflige 4 dommages additionels. Utilisable 3 fois au total.";
+            case MER_EXP -> this.effet = "Si vous vous trouvez en mer, vous pouvez choisir n'importe quel résultat entre 1 et 7 au lieu de lancer le dé." +
+                    "Un résultat choisi ignore le bonus de dé.";
+            case ITEM_IMMUN -> this.effet = "Qu'importe la cause et le contexte, chaque fois que vous perdez un équipement, récuperez le." +
+                    "(ne fonctionne pas si vous mourrez, vendez, échangez ou dépensez un équipement)";
+            case SAC_TEMP -> this.effet = "Lorsque vous utilisez un objet à usage limité pour la dernière fois," +
+                    "vous pouvez choisir de détruire cette sacoche à la place et récuperer tous les utilisations de votre objet.";
             default -> {} //inclus AUCUN
         }
     }
@@ -465,7 +505,9 @@ public class Equipement {
             case CONSO_MAIN -> type = "consommable";
             case SAC -> type = "sac";
             case RUNE -> type = "rune";
-            default -> type = "divers";
+            case MONTURE -> type = "monture";
+            case AUTRE -> type = "divers";
+            default -> type = "Erreur : type non reconnu.";
         }
         return type;
     }
@@ -495,7 +537,7 @@ public class Equipement {
         equipement.presente();
     }
 
-    static public void drop_promo() {
+    static public void drop_promo() throws IOException {
         Equipement equipement = new Equipement(Pre_Equipement.drop_promo());
         equipement.presente();
     }

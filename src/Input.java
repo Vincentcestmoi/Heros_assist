@@ -5,6 +5,12 @@ import javax.sound.sampled.*;
 
 public class Input {
 
+
+    // sons
+
+    /**
+     * Joue un son de dés pendant 2,3 secondes (bloque le terminal durant ce temp)
+     */
     private void jouerSonDe() {
         try {
             File fichierAudio = new File("son_des.wav");
@@ -22,6 +28,7 @@ public class Input {
         }
     }
 
+    //visuel (terminal)
     /**
      * Lit le texte en terminal
      *
@@ -130,7 +137,7 @@ public class Input {
             if (reponse.equals("n") || reponse.equals("N")) {
                 return false;
             }
-            System.out.print("Réponse non comprise");
+            System.out.println("Réponse non comprise.");
         }
     }
 
@@ -176,6 +183,47 @@ public class Input {
     public int magie() throws IOException {
         System.out.print("entrez votre puissance d'attaque magique : ");
         return readInt();
+    }
+
+    /**
+     * Laisse le joueur choisir sa promotion
+     * @return un indice sur le type de promotion que le joueur veut
+     */
+    public Promo_Type promo() throws IOException {
+        String texte = "Choississez votre type de récompense : ";
+        if(Pre_Equipement.nb_monture > 0){
+            texte += "(m)onture ";
+        }
+        if(Pre_Equipement.nb_boost > 0){
+            texte += "(r)enforcement ";
+        }
+        if(Pre_Equipement.nb_arte > 0){
+            texte += "(a)rtéfact ";
+        }
+        System.out.println(texte);
+        switch(read()){
+            case "m", "M", "monture", "Monture" -> {
+                if(Pre_Equipement.nb_monture > 0) {
+                    return Promo_Type.MONTURE;
+                }
+            }
+            case "r", "R", "renforcement", "Renforcement" -> {
+                if(Pre_Equipement.nb_boost > 0) {
+                    return Promo_Type.AMELIORATION;
+                }
+            }
+            case "a", "A", "Artefact", "artefact", "Artéfact", "artéfact" -> {
+                if(Pre_Equipement.nb_arte > 0) {
+                    return Promo_Type.ARTEFACT;
+                }
+            }
+            case "q", "Q" -> {
+                if(yn("Confirmez : ")){
+                    return Promo_Type.QUIT;
+                }
+            }
+        }
+        return promo();
     }
 
     /**

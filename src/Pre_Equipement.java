@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Random;
 
 public class Pre_Equipement {
@@ -15,10 +16,13 @@ public class Pre_Equipement {
         this.is_unique = is_unique;
     }
 
+    static Input input = new Input();
+    static Random rand = new Random();
+
     /**
      * S'assure que les équipements uniques ne peuvent être tiré plusieurs fois
      */
-    private void safe_delete(){
+    private void safe_delete() {
         if(!is_unique){
             return;
         }
@@ -29,14 +33,13 @@ public class Pre_Equipement {
             case II -> list = rang2;
             case III -> list = rang3;
             case IV -> list = rang4;
-            case PROMOTION -> list = prom_list;
             default -> {
                 System.out.println("Erreur : l'équipement " + nom + " n'a pas de liste correspondante.");
                 return;
             }
         }
         for(int i = 0; i < list.length; i++){
-            if(list[i].equals(this)){
+            if(list[i] != null && list[i].equals(this)){
                 list[i] = null;
                 return;
             }
@@ -44,12 +47,42 @@ public class Pre_Equipement {
         System.out.println("Erreur : l'équipement " + nom + " n'existe pas dans la liste donnée.");
     }
 
-    static Random rand = new Random();
+    /**
+     * La méthode safe_delete mais pour les promotions
+     * @param type le type spécifique de promotion
+     */
+    private void safe_delete(Promo_Type type) {
+        Pre_Equipement[] list;
+        switch (type) {
+            case MONTURE -> {
+                list = prom_list_mont;
+                nb_monture -= 1;
+            }
+            case AMELIORATION -> {
+                list = prom_list_boost;
+                nb_boost -= 1;
+            }
+            case ARTEFACT -> {
+                list = prom_list_arte;
+                nb_arte -= 1;
+            }
+            default -> {
+                return;
+            }
+        }
+        for(int i = 0; i < list.length; i++) {
+            if (list[i] != null && list[i].equals(this)) {
+                list[i] = null;
+                return;
+            }
+        }
+        System.out.println("Erreur : Element " + nom + " introuvable dans la liste correspondante.");
+    }
 
     /**
      * Extrait et renvoie un équipement rang 0
      */
-    public static Pre_Equipement drop_0(){
+    public static Pre_Equipement drop_0() {
         System.out.println("Vous récupérez un équipement rang 0 :");
         int t;
         Pre_Equipement equip;
@@ -64,7 +97,7 @@ public class Pre_Equipement {
     /**
      * Extrait et renvoie un équipement rang I
      */
-    public static Pre_Equipement drop_1(){
+    public static Pre_Equipement drop_1() {
         System.out.println("Vous récupérez un équipement rang I :");
         int t;
         Pre_Equipement equip;
@@ -79,7 +112,7 @@ public class Pre_Equipement {
     /**
      * Extrait et renvoie un équipement rang II
      */
-    public static Pre_Equipement drop_2(){
+    public static Pre_Equipement drop_2() {
         System.out.println("Vous récupérez un équipement rang II :");
         int t;
         Pre_Equipement equip;
@@ -94,7 +127,7 @@ public class Pre_Equipement {
     /**
      * Extrait et renvoie un équipement rang III
      */
-    public static Pre_Equipement drop_3(){
+    public static Pre_Equipement drop_3() {
         System.out.println("Vous récupérez un équipement rang III :");
         int t;
         Pre_Equipement equip;
@@ -109,7 +142,7 @@ public class Pre_Equipement {
     /**
      * Extrait et renvoie un équipement rang IV
      */
-    public static Pre_Equipement drop_4(){
+    public static Pre_Equipement drop_4() {
         System.out.println("Vous récupérez un équipement rang IV :");
         int t;
         Pre_Equipement equip;
@@ -126,15 +159,26 @@ public class Pre_Equipement {
      *
      * @return un pre-équipement de rang promotion
      */
-    public static Pre_Equipement drop_promo(){
-        System.out.println("Vous récupérez une promotion");
+    public static Pre_Equipement drop_promo() throws IOException {
+        System.out.println("Vous récupérez une promotion.");
+        Pre_Equipement[] list;
+        Promo_Type type = input.promo();
+        switch (type){
+            case MONTURE -> list = prom_list_mont;
+            case AMELIORATION -> list = prom_list_boost;
+            case ARTEFACT -> list = prom_list_arte;
+            default -> {
+                System.out.println("Erreur : Equipement non reconnu.");
+                return new Pre_Equipement("Erreur", AUTRE, PROMOTION, AUCUN, false);
+            }
+        }
         int t;
         Pre_Equipement equip;
         do{
-            t = rand.nextInt(prom_list.length);
-            equip = prom_list[t];
+            t = rand.nextInt(list.length);
+            equip = list[t];
         }while(equip == null);
-        equip.safe_delete();
+        equip.safe_delete(type);
         return equip;
     }
 
@@ -151,6 +195,7 @@ public class Pre_Equipement {
     static Base CONSO_MAIN = Base.CONSO_MAIN;
     static Base SAC = Base.SAC;
     static Base RUNE = Base.RUNE;
+    static Base MONTURE = Base.MONTURE;
 
     static Rang O = Rang.O;
     static Rang I = Rang.I;
@@ -160,8 +205,6 @@ public class Pre_Equipement {
     static Rang PROMOTION = Rang.PROMOTION;
     
     static Effet_equip AUCUN = Effet_equip.AUCUN;
-
-    static Pre_Equipement defaultp = new Pre_Equipement("pas dev", AUTRE, PROMOTION, Effet_equip.PASDP, false);
 
     static Pre_Equipement ceinture0 = new Pre_Equipement("vieille ceinture", CEINTURE, O, AUCUN, false);
     static Pre_Equipement arc0 = new Pre_Equipement("vieil arc", ARC, O, AUCUN, false);
@@ -343,5 +386,42 @@ public class Pre_Equipement {
     static Pre_Equipement[] rang4 = {nectar, ambroisie, fleche_plusIV, arcIV, main1IV, main2IV,
         armureIV, casqueIV, bouclierIV, ceintureIV, braceletIV, parch_volcan, parch_abso};
 
-    static Pre_Equipement[] prom_list = {defaultp};
+    static Pre_Equipement pegase = new Pre_Equipement("Pégase", MONTURE, PROMOTION, Effet_equip.PEGASE, true);
+    static Pre_Equipement cheval = new Pre_Equipement("Cheval", MONTURE, PROMOTION, Effet_equip.CHEVAL, true);
+    static Pre_Equipement molosse = new Pre_Equipement("Molosse infernal", MONTURE, PROMOTION, Effet_equip.MOLOSSE, true);
+    static Pre_Equipement pie = new Pre_Equipement("Pie voleuse", MONTURE, PROMOTION, Effet_equip.PIE, true);
+    static Pre_Equipement sphinx = new Pre_Equipement("Sphinx", MONTURE, PROMOTION, Effet_equip.SPHINX, true);
+
+    static Pre_Equipement[] prom_list_mont = {pegase, cheval, molosse, pie, sphinx};
+    static public int nb_monture = prom_list_mont.length;
+
+    static Pre_Equipement broches = new Pre_Equipement("Broche souverraine", AUTRE, PROMOTION, Effet_equip.ALTRUISME, true);
+    static Pre_Equipement tal_ar = new Pre_Equipement("Talisman d'acier", AUTRE, PROMOTION, Effet_equip.ARMURE1, true);
+    static Pre_Equipement tal_a = new Pre_Equipement("Talisman offensif", AUTRE, PROMOTION, Effet_equip.ATTAQUE2, true);
+    static Pre_Equipement tal_r = new Pre_Equipement("Talisman défensif", AUTRE, PROMOTION, Effet_equip.RESISTANCE3, true);
+    static Pre_Equipement fleche_plusP = new Pre_Equipement("Tir assisté", AUTRE, PROMOTION, Effet_equip.ARCA, true);
+    static Pre_Equipement fleche_plusP2 = new Pre_Equipement("Bénédiction magique", AUTRE, PROMOTION, Effet_equip.ARCA, true);
+    static Pre_Equipement fleche_plusP3 = new Pre_Equipement("Flèches chamaniques", AUTRE, PROMOTION, Effet_equip.ARCA, true);
+    static Pre_Equipement rune_arca = new Pre_Equipement("Rune arcanique", RUNE, PROMOTION, Effet_equip.RUNE_ARCA, true);
+    static Pre_Equipement antidote = new Pre_Equipement("Vin d'Asclépios", CONSO_MAIN, PROMOTION,  Effet_equip.ANTIDODE, true);
+
+    static Pre_Equipement[] prom_list_boost = {broches, tal_ar, tal_a, tal_r, fleche_plusP, fleche_plusP2, fleche_plusP3,
+            rune_arca, antidote};
+    static public int nb_boost = prom_list_boost.length;
+
+
+    static Pre_Equipement rune_anni = new Pre_Equipement("Inverteur de fision", AUTRE, PROMOTION, Effet_equip.ANNIHILITON, true);
+    static Pre_Equipement rez = new Pre_Equipement("Tatouage de Résurection", AUTRE, PROMOTION, Effet_equip.REZ, true);
+    static Pre_Equipement fuite = new Pre_Equipement("Téleporteur courte porté", AUTRE, PROMOTION, Effet_equip.FUITE, true);
+    static Pre_Equipement parch_lum = new Pre_Equipement("Parchemin de lumière", AUTRE, PROMOTION, Effet_equip.PARCH_LUMIERE, true);
+    static Pre_Equipement grenade = new Pre_Equipement("Grenades", CONSO_EX, PROMOTION, Effet_equip.GRENADE, true);
+    static Pre_Equipement popo_vitesse = new Pre_Equipement("Potion de vitesse", AUTRE, PROMOTION, Effet_equip.PROTECTION, true);
+    static Pre_Equipement popo_PP = new Pre_Equipement("Potion lente", CONSO_MAIN, PROMOTION, Effet_equip.PPL, true);
+    static Pre_Equipement barque = new Pre_Equipement("Navire magique", AUTRE, PROMOTION, Effet_equip.MER_EXP, true);
+    static Pre_Equipement barriere = new Pre_Equipement("Protection absolue", AUTRE, PROMOTION, Effet_equip.ITEM_IMMUN, true);
+    static Pre_Equipement seconde_chance = new Pre_Equipement("Sacoche temporelle", AUTRE, PROMOTION, Effet_equip.SAC_TEMP, true);
+
+    static Pre_Equipement[] prom_list_arte = {rune_anni, rez, fuite, parch_lum, grenade, fuite, popo_vitesse, popo_PP,
+            barque, barriere, seconde_chance};
+    static public int nb_arte = prom_list_arte.length;
 }

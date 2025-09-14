@@ -285,7 +285,7 @@ public class Monstre {
     /**
      * Renvoie la quantité et qualité des équipements obtenus à la mort du monstre
      */
-    void drop(){
+    void drop() throws IOException {
         System.out.println("Vous fouillez le corp de " + this.nom);
         if(this.drop_quantite_max == 0 || competence == Competence.ARNAQUE) {
             System.out.println("Vous ne trouvez aucun équipement sur son cadavre");
@@ -476,7 +476,7 @@ public class Monstre {
      * Regarde si le monstre est mort et agit en conséquence
      * @return si le monstre est mort
      */
-    private boolean check_mort(){
+    private boolean check_mort() throws IOException {
         if (est_mort()) {
             switch(competence) {
                 case ILLU_AURAI, ILLU_CYCLOPE, ILLU_DULLA, ILLU_GOLEM, ILLU_ROCHE, ILLU_SIRENE, ILLU_TRITON,
@@ -591,7 +591,7 @@ public class Monstre {
     /**
      * Règle l'état du monstre sur "assommé" ou "étourdit"
      */
-    void affecte(){
+    void affecte() throws IOException {
         Random rand = new Random();
         if (rand.nextBoolean()){
             do_assomme();
@@ -604,7 +604,7 @@ public class Monstre {
     /**
      * Règle l'état du monstre à "assommé"
      */
-    void do_assomme(){
+    void do_assomme() throws IOException {
         switch (competence){
             case GOLEM_ACIER, GOLEM_MITHRIL -> {
                 System.out.println(nom + " n'a pas de conscience, et ne peut pas être assommé(e).\n");
@@ -628,7 +628,7 @@ public class Monstre {
     /**
      * Règle l'état du monstre à "étourdi"
      */
-    void do_etourdi(){
+    void do_etourdi() throws IOException {
 
         switch (competence) {
             case GOLEM_ACIER, GOLEM_MITHRIL -> {

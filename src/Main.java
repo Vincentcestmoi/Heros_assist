@@ -12,6 +12,13 @@ public class Main {
     static final String[] nom = {Joueur_A, Joueur_B, Joueur_C, Joueur_D};
 
     public static void main(String[] args) throws IOException {
+        Equipement.drop_promo();
+        Equipement.drop_promo();
+        Equipement.drop_promo();
+        Equipement.drop_promo();
+        Equipement.drop_promo();
+        Equipement.drop_promo();
+        Equipement.drop_promo();
         System.out.print("Entrez le nombre de joueur : ");
         int nbj = input.readInt();
         if (nbj < 1 || nbj > 4) {
