@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.util.Random;
 
 public class Equipement {
-    private final String nom;
+    public final String nom;
     private int resistance;
     private int armure;
     private int attaque;

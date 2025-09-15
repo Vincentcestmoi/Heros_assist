@@ -2,9 +2,225 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.sound.sampled.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 public class Input {
 
+
+    // sauvegarde
+
+    /**
+     * Sauvegarde les données enregistrées, ne touche rien si les données sont innaccessibles
+     */
+    public int load() throws IOException {
+        File fichier = new File("Save/Joueur A.txt");
+        int nbj = 0;
+        if (!fichier.exists() || read_log("Joueur A.txt").equals(";")) {
+            return -1;
+        }
+        if (!yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la suppression")) {
+            String[] nomFichier = {"Joueur A", "Joueur B", "Joueur C", "Joueur D", "enfers", "prairie", "vigne",
+                    "temple", "mer", "mont", "olympe", "rangO", "rangI", "rangII", "rangIII", "rangIV",
+                    "promo_monture", "promo_artefact", "promo_renforcement"};
+            for(String s : nomFichier) {
+                Output.delete_fichier(s + ".txt");
+            }
+            System.out.println("lancement du jeu.\n\n");
+            return -1;
+        } else {
+            //joueur
+            if (load_ja()) {
+                nbj++;
+            }
+            if(load_jb()){
+                nbj++;
+            }
+            if(load_jc()){
+                nbj++;
+            }
+            if(load_jd()){
+                nbj++;
+            }
+            //monstre nommé
+            corrige_nomme();
+            //item unique
+            corrige_item();
+        }
+        System.out.println("lancement du jeu.\n\n");
+        return nbj;
+    }
+
+    /**
+     * Supprime les objets uniques déjà tirés
+     */
+    private void corrige_item() {
+        String[] nomFichier = {"rangO", "rangI", "rangII", "rangIII", "rangIV", "promo_monture", "promo_artefact", "promo_renforcement"};
+        Rang[] rang = {Rang.O, Rang.I, Rang.II, Rang.III, Rang.IV, Rang.PROMOTION, Rang.PROMOTION, Rang.PROMOTION};
+        Promo_Type[] promo = {Promo_Type.QUIT, Promo_Type.QUIT, Promo_Type.QUIT, Promo_Type.QUIT, Promo_Type.QUIT,
+                Promo_Type.MONTURE, Promo_Type.ARTEFACT, Promo_Type.AMELIORATION};
+        String log;
+        for (int i = 0; i < promo.length; i++) {
+            log = read_log(nomFichier[i] + ".txt");
+            if(log.equals(";") || log.isEmpty()) {
+                continue;
+            }
+            StringBuilder temp = new StringBuilder();
+            for (int j = 0; j < log.length(); j++) {
+                if (log.charAt(j) == ',') {
+                    Pre_Equipement.safe_delete(temp.toString(), rang[i], promo[i]);
+                    temp = new StringBuilder();
+                } else if (log.charAt(j) == ';' || log.charAt(j) == '\n') {
+                    Pre_Equipement.safe_delete(temp.toString(), rang[i], promo[i]);
+                    j = log.length() + 1;
+                } else {
+                    temp.append(log.charAt(j));
+                }
+            }
+        }
+    }
+
+    /**
+     * Supprime les monstres nommés enregistrés comme abscent
+     */
+    private void corrige_nomme() {
+        String[] nomFichier = {"enfers", "prairie", "vigne", "temple", "mer", "mont", "olympe"};
+        String log;
+        for (String s : nomFichier) {
+            log = read_log(s + ".txt");
+            if(log.equals(";") || log.isEmpty()) {
+                continue;
+            }
+            StringBuilder temp = new StringBuilder();
+            for (int j = 0; j < log.length(); j++) {
+                if (log.charAt(j) == ',') {
+                    Combat.delete_monstre(temp.toString());
+                    temp = new StringBuilder();
+                } else if (log.charAt(j) == ';' || log.charAt(j) == '\n') {
+                    Combat.delete_monstre(temp.toString());
+                    j = log.length() + 1;
+                } else {
+                    temp.append(log.charAt(j));
+                }
+            }
+        }
+    }
+
+    private boolean load_ja() {
+        if(load_j("Joueur A.txt", Main.Joueur_A, 0)){
+            System.out.println(Main.Joueur_A + " chargé(e).");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean load_jb() {
+        if(load_j("Joueur B.txt", Main.Joueur_B, 1)){
+            System.out.println(Main.Joueur_B + " chargé(e).");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean load_jc() {
+        if(load_j("Joueur C.txt", Main.Joueur_C, 2)){
+            System.out.println(Main.Joueur_C + " chargé(e).");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean load_jd() {
+        if(load_j("Joueur D.txt", Main.Joueur_D, 3)){
+            System.out.println(Main.Joueur_D + " chargé(e).");
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Charge les données d'un joueur
+     * @param nomFichier le chemin de la sauvegarde
+     * @param joueur le joueur à charger
+     * @param index l'index correspondant au joueur
+     * @return si le chargement a eu lieu
+     * @implNote suppose que le fichier est correctement formaté, le cas contraire cause des crashs
+     */
+    private boolean load_j(String nomFichier, String joueur, int index) {
+        String log = read_log(nomFichier);
+        if(log.isEmpty() || log.equals(";")) {
+            return false;
+        }
+        StringBuilder temp = new StringBuilder();
+        int i = 0;
+        while (log.charAt(i) != ',') {
+            temp.append(log.charAt(i));
+            i++;
+        }
+        if(!joueur.contentEquals(temp)){
+            System.out.println("Mauvais joueur : attendu : " + joueur + ", obtenue : " + temp + ", lien impossible");
+            System.exit(0);
+        }
+        temp = new StringBuilder();
+        i++;
+        while (log.charAt(i) != ',') {
+            temp.append(log.charAt(i));
+            i++;
+        }
+        switch (temp.toString()) {
+            case "ENFERS" -> Main.positions[index] = Position.ENFERS;
+            case "PRAIRIE" -> Main.positions[index] = Position.PRAIRIE;
+            case "VIGNES" -> Main.positions[index] = Position.VIGNES;
+            case "TEMPLE" -> Main.positions[index] = Position.TEMPLE;
+            case "MER" -> Main.positions[index] = Position.MER;
+            case "MONTS" -> Main.positions[index] = Position.MONTS;
+            case "OLYMPE" -> Main.positions[index] = Position.OLYMPE;
+            case "ASCENDANT" -> {
+                System.out.println("ERROR : DONOT");
+                Main.positions[index] = Position.PRAIRIE;
+            }
+        }
+        switch (index){
+            case 0 -> Main.f_a = (int)log.charAt(i + 1) - 48;
+            case 1 -> Main.f_b = (int)log.charAt(i + 1) - 48;
+            case 2 -> Main.f_c = (int)log.charAt(i + 1) - 48;
+            case 3 -> Main.f_d = (int)log.charAt(i + 1) - 48;
+        }
+        return true;
+    }
+
+    /**
+     * Lis un fichoer
+     * @param cheminFichier le chemin du fichier
+     * @return le contenu du fichier
+     */
+    public static String read_log(String cheminFichier) {
+        File fichier = new File("Save/" + cheminFichier);
+        StringBuilder text = new StringBuilder();
+
+        if (!fichier.exists()) {
+            System.out.println("Le fichier '" + cheminFichier + "' n'existe pas.");
+            try {
+                if (fichier.createNewFile()) {
+                    System.out.println("✅ Fichier '" + cheminFichier + "' créé avec succès !");
+                    return text.toString();
+                }
+            }
+            catch (IOException e) {
+                System.out.println("Erreur : " + e.getMessage());
+            }
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(fichier))) {
+            String ligne;
+            while ((ligne = br.readLine()) != null) {
+                text.append(ligne);
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
+        }
+        return text.toString();
+    }
 
     // sons
 
@@ -29,6 +245,7 @@ public class Input {
     }
 
     //visuel (terminal)
+
     /**
      * Lit le texte en terminal
      *

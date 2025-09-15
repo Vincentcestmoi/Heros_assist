@@ -20,6 +20,43 @@ public class Pre_Equipement {
     static Random rand = new Random();
 
     /**
+     * Suprimme les équipements donnés
+     * @param nom le nom de l'équipement à supprimer
+     * @param rang le rang de l'équipement à supprimer
+     * @param promo le type de promotion, significatif uniquement si le rang est PROMOTION
+     */
+    public static void safe_delete(String nom, Rang rang, Promo_Type promo) {
+        Pre_Equipement[] list = switch(rang){
+            case O -> rang0;
+            case I -> rang1;
+            case II -> rang2;
+            case III -> rang3;
+            case IV -> rang4;
+            case PROMOTION -> getPromo(promo);
+        };
+        if(list == null) {
+            System.out.println(promo + " n'existe pas.");
+            return;
+        }
+        for(int i = 0; i < list.length; i++){
+            if(list[i] != null && nom.equals(list[i].nom)){
+                System.out.println(nom + " supprimé(e) avec succès.");
+                list[i] = null;
+                return;
+            }
+        }
+    }
+
+    private static Pre_Equipement[] getPromo(Promo_Type promo) {
+        return switch(promo){
+            case MONTURE -> prom_list_mont;
+            case ARTEFACT -> prom_list_arte;
+            case AMELIORATION -> prom_list_boost;
+            case QUIT -> null;
+        };
+    }
+
+/**
      * S'assure que les équipements uniques ne peuvent être tiré plusieurs fois
      */
     private void safe_delete() {
@@ -27,19 +64,36 @@ public class Pre_Equipement {
             return;
         }
         Pre_Equipement[] list;
+        String nom;
         switch(rang){
-            case O -> list = rang0;
-            case I -> list = rang1;
-            case II -> list = rang2;
-            case III -> list = rang3;
-            case IV -> list = rang4;
+            case O -> {
+                list = rang0;
+                nom = "rangO";
+            }
+            case I -> {
+                list = rang1;
+                nom = "rangI";
+            }
+            case II -> {
+                list = rang2;
+                nom = "rangII";
+            }
+            case III -> {
+                list = rang3;
+                nom = "rangIII";
+            }
+            case IV -> {
+                list = rang4;
+                nom = "rangIV";
+            }
             default -> {
-                System.out.println("Erreur : l'équipement " + nom + " n'a pas de liste correspondante.");
+                System.out.println("Erreur : l'équipement " + this.nom + " n'a pas de liste correspondante.");
                 return;
             }
         }
         for(int i = 0; i < list.length; i++){
             if(list[i] != null && list[i].equals(this)){
+                Output.dismiss_item(nom, list[i]);
                 list[i] = null;
                 return;
             }
@@ -53,18 +107,22 @@ public class Pre_Equipement {
      */
     private void safe_delete(Promo_Type type) {
         Pre_Equipement[] list;
+        String nom;
         switch (type) {
             case MONTURE -> {
                 list = prom_list_mont;
                 nb_monture -= 1;
+                nom = "promo_monture";
             }
             case AMELIORATION -> {
                 list = prom_list_boost;
                 nb_boost -= 1;
+                nom = "promo_renforcement";
             }
             case ARTEFACT -> {
                 list = prom_list_arte;
                 nb_arte -= 1;
+                nom = "promo_artefact";
             }
             default -> {
                 return;
@@ -72,6 +130,7 @@ public class Pre_Equipement {
         }
         for(int i = 0; i < list.length; i++) {
             if (list[i] != null && list[i].equals(this)) {
+                Output.dismiss_item(nom, list[i]);
                 list[i] = null;
                 return;
             }

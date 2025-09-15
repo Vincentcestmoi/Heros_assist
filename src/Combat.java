@@ -628,121 +628,94 @@ public class Combat {
     /**
      * Suprimme le monstre de sa zone après sa mort s'il est nommé
      * @param ennemi le monstre ennemi
-     * @implNote couvre les illusions
+     * @implNote ne couvre que les monstres nommés
      */
-    static void gestion_nomme(Monstre ennemi){
-        if(ennemi.competence == Competence.PRUDENT || ennemi.competence == Competence.MEFIANT || ennemi.competence== Competence.SUSPICIEUX ||
+    static void gestion_nomme(Monstre ennemi) {
+        if (ennemi.competence == Competence.PRUDENT || ennemi.competence == Competence.MEFIANT || ennemi.competence == Competence.SUSPICIEUX ||
                 ennemi.competence == Competence.CHRONOS) {
-            switch (ennemi.nom) {
-                case "Cerbère" -> {
-                    for (int i = 0; i < Race.enfers.length; i++) {
-                        if (Race.enfers[i] != null && Objects.equals(Race.enfers[i].nom, "Cerbère")) {
-                            Race.enfers[i] = null;
-                            return;
-                        }
-                    }
-                }
-                case "Lycaon" -> {
-                    for (int i = 0; i < Race.prairie.length; i++) {
-                        if (Race.prairie[i] != null && Objects.equals(Race.prairie[i].nom, "Lycaon")) {
-                            Race.prairie[i] = null;
-                            return;
-                        }
-                    }
-                }
-                case "Mormo" -> {
-                    for (int i = 0; i < Race.prairie.length; i++) {
-                        if (Race.prairie[i] != null && Objects.equals(Race.prairie[i].nom, "Mormo")) {
-                            Race.prairie[i] = null;
-                            return;
-                        }
-                    }
-                }
-                case "Laton" -> {
-                    for (int i = 0; i < Race.vigne.length; i++) {
-                        if (Race.vigne[i] != null && Objects.equals(Race.vigne[i].nom, "Laton")) {
-                            Race.vigne[i] = null;
-                            return;
-                        }
-                    }
-                }
-                case "Empousa" -> {
-                    for (int i = 0; i < Race.vigne.length; i++) {
-                        if (Race.vigne[i] != null && Objects.equals(Race.vigne[i].nom, "Empousa")) {
-                            Race.vigne[i] = null;
-                            return;
-                        }
-                    }
-                }
-                case "Python" -> {
-                    for (int i = 0; i < Race.temple.length; i++) {
-                        if (Race.temple[i] != null && Objects.equals(Race.temple[i].nom, "Python")) {
-                            Race.temple[i] = null;
-                            return;
-                        }
-                    }
-                }
-                case "Echidna" -> {
-                    for (int i = 0; i < Race.temple.length; i++) {
-                        if (Race.temple[i] != null && Objects.equals(Race.temple[i].nom, "Echidna")) {
-                            Race.temple[i] = null;
-                            return;
-                        }
-                    }
-                }
-                case "Scylla" -> {
-                    for (int i = 0; i < Race.mer.length; i++) {
-                        if (Race.mer[i] != null && Objects.equals(Race.mer[i].nom, "Scylla")) {
-                            Race.mer[i] = null;
-                            return;
-                        }
-                    }
-                }
-                case "Charibe" -> {
-                    for (int i = 0; i < Race.mer.length; i++) {
-                        if (Race.mer[i] != null && Objects.equals(Race.mer[i].nom, "Charibe")) {
-                            Race.mer[i] = null;
-                            return;
-                        }
-                    }
-                }
-                case "Typhon" -> {
-                    for (int i = 0; i < Race.mont.length; i++) {
-                        if (Race.mont[i] != null && Objects.equals(Race.mont[i].nom, "Typhon")) {
-                            Race.mont[i] = null;
-                            return;
-                        }
-                    }
-                }
-                case "l'Aigle du Caucase" -> {
-                    for (int i = 0; i < Race.mont.length; i++) {
-                        if (Race.mont[i] != null && Objects.equals(Race.mont[i].nom, "l'Aigle du Caucase")) {
-                            Race.mont[i] = null;
-                            return;
-                        }
-                    }
-                }
-                case "Chronos" -> {
-                    for (int i = 0; i < Race.olympe.length; i++) {
-                        if (Race.olympe[i] != null && Objects.equals(Race.olympe[i].nom, "Chronos")) {
-                            Race.olympe[i] = null;
-                            return;
-                        }
-                    }
-                }
-                default -> { //par sécurité
-                }
-            }
-            Race[][] lists = {Race.enfers, Race.prairie, Race.vigne, Race.temple, Race.mer, Race.mont, Race.olympe};
-            for (Race[] list : lists) {
-                for (int i = 0; i < list.length; i++) {
-                    if (list[i] != null && Objects.equals(list[i].nom, ennemi.nom)) {
-                        list[i] = null;
-                        return;
-                    }
+            delete_monstre_nomme(ennemi.nom);
+        }
+    }
+
+    /**
+     *
+     * Supprime le monstre nommé donné de sa liste
+     * @param monstre le nom du monstre à supprimer
+     * @implNote ne couvre que les monstres nommés, utiliser delete_montre sinon
+     */
+    static void delete_monstre_nomme(String monstre) {
+        Race[] list = getList(monstre);
+        if (list != null) {
+            for (int i = 0; i < list.length; i++) {
+                if (list[i] != null && Objects.equals(list[i].nom, monstre)) {
+                    list[i] = null;
+                    Output.dismiss_race(getListnom(monstre), monstre);
+                    return;
                 }
             }
         }
+        System.out.println(monstre + " non reconnu comme monstre nommé, utilisez delete_montre pour supprimer.");
+    }
+
+    /**
+     * Supprime le monstre donné de sa liste
+     * @param monstre le nom du monstre à supprimer
+     * @implNote n'enregistre pas la suppression dans les fichiers de sauvegarde
+     */
+    static void delete_monstre(String monstre) {
+        Race[][] lists = {Race.enfers, Race.prairie, Race.vigne, Race.temple, Race.mer, Race.mont, Race.olympe};
+        for (Race[] l : lists) {
+            for (int i = 0; i < l.length; i++) {
+                if (l[i] != null && Objects.equals(l[i].nom, monstre)) {
+                    System.out.println(monstre + " supprimé(e).");
+                    l[i] = null;
+                    return;
+                }
+            }
+        }
+        System.out.println(monstre + " abscent(e) des bases de données, suppression impossible.");
+    }
+
+    /**
+     * Fournie la liste à laquelle appartient le monstre
+     * @param ennemi le nom du monstre à identifier
+     * @return sa liste de référence
+     * @implNote ne regarde que les monstres nommés
+     */
+    private static Race[] getList(String ennemi) {
+        Race[] list = null;
+        switch (ennemi) {
+            case "Cerbère" -> list = Race.enfers;
+            case "Lycaon", "Mormo" -> list = Race.prairie;
+            case "Laton", "Empousa" -> list = Race.vigne;
+            case "Python", "Echidna" -> list =  Race.temple;
+            case "Scylla", "Charibe" -> list =  Race.mer;
+            case "Typhon", "l'Aigle du Caucase" -> list =  Race.mont;
+            case "Chronos" -> list =  Race.olympe;
+        }
+        return list;
+    }
+
+    /**
+     * Fournie le nom de la liste à laquelle appartient le monstre
+     * @param ennemi le nom du monstre à identifier
+     * @return le nom de sa liste de référence
+     * @implNote ne regarde que les monstres nommés
+     */
+    private static String getListnom(String ennemi) {
+        return switch (ennemi) {
+            case "Cerbère" -> "enfers";
+            case "Lycaon", "Mormo" -> "prairie";
+            case "Laton", "Empousa" -> "vigne";
+            case "Python", "Echidna" -> "temple";
+            case "Scylla", "Charibe" -> "mer";
+            case "Typhon", "l'Aigle du Caucase" -> "mont";
+            case "Chronos" -> "olympe";
+            default -> {
+                System.out.println(ennemi + " non reconnu.");
+                yield "erreur";
+            }
+        };
     }
 
     /**
@@ -1037,6 +1010,12 @@ public class Combat {
             if(morts[i] && input.yn(nom[i] + " est mort durant le combat, le reste-t-il ?")){
                 System.out.println(nom[i] + " se retrouve aux enfers.\n");
                 Main.positions[i] = Position.ENFERS;
+                switch (i){
+                    case 0 -> Main.f_a = 0;
+                    case 1 -> Main.f_b = 0;
+                    case 2 -> Main.f_c = 0;
+                    case 3 -> Main.f_d = 0;
+                }
             }
         }
     }

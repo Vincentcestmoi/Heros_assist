@@ -7,13 +7,19 @@ public class Main {
     static Input input = new Input();
     static Random rand = new Random();
     static Position[] positions = {Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE};
-    static final String Joueur_A = "Micky", Joueur_B = "Lucien", Joueur_C = "Vincent", Joueur_D = "Joueur D";
-    private static int f_a = 0, f_b = 0, f_c = 0, f_d = 0;
+    static final String Joueur_A = "Micky";
+    static final String Joueur_B = "Lucien";
+    static final String Joueur_C = "Vincent";
+    static final String Joueur_D = "Joueur D";
+    public static int f_a = 0, f_b = 0, f_c = 0, f_d = 0;
     static final String[] nom = {Joueur_A, Joueur_B, Joueur_C, Joueur_D};
 
     public static void main(String[] args) throws IOException {
-        System.out.print("Entrez le nombre de joueur : ");
-        int nbj = input.readInt();
+        int nbj = input.load();
+        if(nbj == -1) {
+            System.out.print("Entrez le nombre de joueur : ");
+            nbj = input.readInt();
+        }
         if (nbj < 1 || nbj > 4) {
             System.out.println("Nombre de joueur invalide : 1 à 4 joueurs seulement.");
             return;
@@ -33,6 +39,12 @@ public class Main {
                 case SUICIDE -> {
                     System.out.println(nom[i] + " est mort.");
                     positions[i] = Position.ENFERS;
+                    switch (i){
+                        case 0 -> f_a = 0;
+                        case 1 -> f_b = 0;
+                        case 2 -> f_c = 0;
+                        case 3 -> f_d = 0;
+                    }
                 }
                 case EXPLORER -> temp = expedition(nbj, i, f_a, f_b, f_c, f_d);
                 case MONTER -> temp = ascension(i);
@@ -106,67 +118,12 @@ public class Main {
                 default -> { // dont 0
                 }
             }
+            for(int j = 0; j < nbj; j++) {
+                Output.write_data(nom[j]);
+            }
             i++;
         }
         System.out.println("Fin du programme");
-        System.out.println("Rang 0 :");
-        pseudoLog(Pre_Equipement.rang0);
-        System.out.println("Rang I :");
-        pseudoLog(Pre_Equipement.rang1);
-        System.out.println("Rang II :");
-        pseudoLog(Pre_Equipement.rang2);
-        System.out.println("Rang III :");
-        pseudoLog(Pre_Equipement.rang3);
-        System.out.println("Rang IV :");
-        pseudoLog(Pre_Equipement.rang4);
-        System.out.println("Promotion Monture :");
-        pseudoLog(Pre_Equipement.prom_list_mont);
-        System.out.println("Promotion amélioration :");
-        pseudoLog(Pre_Equipement.prom_list_boost);
-        System.out.println("Promotion artéfact :");
-        pseudoLog(Pre_Equipement.prom_list_arte);
-        System.out.println("Enfers :");
-        pseudoLog(Race.enfers);
-        System.out.println("Prairie :");
-        pseudoLog(Race.prairie);
-        System.out.println("Vigne :");
-        pseudoLog(Race.vigne);
-        System.out.println("Temple :");
-        pseudoLog(Race.temple);
-        System.out.println("Mer :");
-        pseudoLog(Race.mer);
-        System.out.println("Monts :");
-        pseudoLog(Race.mont);
-        System.out.println("Olympe :");
-        pseudoLog(Race.olympe);
-    }
-
-    private static void pseudoLog(Race[] list) {
-        int i;
-        for(i = 0; i < list.length; i++){
-            Race temp = list[i];
-            if(temp == null){
-                System.out.print("dismiss, ");
-            }
-            else{
-                System.out.print(temp.nom + ", ");
-            }
-        }
-        System.out.println("\n");
-    }
-
-    private static void pseudoLog(Pre_Equipement[] list) {
-        int i;
-        for(i = 0; i < list.length; i++){
-            Pre_Equipement temp = list[i];
-            if(temp == null){
-                System.out.print("dismiss, ");
-            }
-            else{
-                System.out.print(temp.nom + ", ");
-            }
-        }
-        System.out.println("\n");
     }
 
     /**
