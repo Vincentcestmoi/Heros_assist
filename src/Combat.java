@@ -636,7 +636,7 @@ public class Combat {
             switch (ennemi.nom) {
                 case "Cerbère" -> {
                     for (int i = 0; i < Race.enfers.length; i++) {
-                        if (Objects.equals(Race.enfers[i].nom, "Cerbère")) {
+                        if (Race.enfers[i] != null && Objects.equals(Race.enfers[i].nom, "Cerbère")) {
                             Race.enfers[i] = null;
                             return;
                         }
@@ -644,7 +644,7 @@ public class Combat {
                 }
                 case "Lycaon" -> {
                     for (int i = 0; i < Race.prairie.length; i++) {
-                        if (Objects.equals(Race.prairie[i].nom, "Lycaon")) {
+                        if (Race.prairie[i] != null && Objects.equals(Race.prairie[i].nom, "Lycaon")) {
                             Race.prairie[i] = null;
                             return;
                         }
@@ -652,7 +652,7 @@ public class Combat {
                 }
                 case "Mormo" -> {
                     for (int i = 0; i < Race.prairie.length; i++) {
-                        if (Objects.equals(Race.prairie[i].nom, "Mormo")) {
+                        if (Race.prairie[i] != null && Objects.equals(Race.prairie[i].nom, "Mormo")) {
                             Race.prairie[i] = null;
                             return;
                         }
@@ -660,7 +660,7 @@ public class Combat {
                 }
                 case "Laton" -> {
                     for (int i = 0; i < Race.vigne.length; i++) {
-                        if (Objects.equals(Race.vigne[i].nom, "Laton")) {
+                        if (Race.vigne[i] != null && Objects.equals(Race.vigne[i].nom, "Laton")) {
                             Race.vigne[i] = null;
                             return;
                         }
@@ -668,7 +668,7 @@ public class Combat {
                 }
                 case "Empousa" -> {
                     for (int i = 0; i < Race.vigne.length; i++) {
-                        if (Objects.equals(Race.vigne[i].nom, "Empousa")) {
+                        if (Race.vigne[i] != null && Objects.equals(Race.vigne[i].nom, "Empousa")) {
                             Race.vigne[i] = null;
                             return;
                         }
@@ -676,7 +676,7 @@ public class Combat {
                 }
                 case "Python" -> {
                     for (int i = 0; i < Race.temple.length; i++) {
-                        if (Objects.equals(Race.temple[i].nom, "Python")) {
+                        if (Race.temple[i] != null && Objects.equals(Race.temple[i].nom, "Python")) {
                             Race.temple[i] = null;
                             return;
                         }
@@ -684,7 +684,7 @@ public class Combat {
                 }
                 case "Echidna" -> {
                     for (int i = 0; i < Race.temple.length; i++) {
-                        if (Objects.equals(Race.temple[i].nom, "Echidna")) {
+                        if (Race.temple[i] != null && Objects.equals(Race.temple[i].nom, "Echidna")) {
                             Race.temple[i] = null;
                             return;
                         }
@@ -692,7 +692,7 @@ public class Combat {
                 }
                 case "Scylla" -> {
                     for (int i = 0; i < Race.mer.length; i++) {
-                        if (Objects.equals(Race.mer[i].nom, "Scylla")) {
+                        if (Race.mer[i] != null && Objects.equals(Race.mer[i].nom, "Scylla")) {
                             Race.mer[i] = null;
                             return;
                         }
@@ -700,7 +700,7 @@ public class Combat {
                 }
                 case "Charibe" -> {
                     for (int i = 0; i < Race.mer.length; i++) {
-                        if (Objects.equals(Race.mer[i].nom, "Charibe")) {
+                        if (Race.mer[i] != null && Objects.equals(Race.mer[i].nom, "Charibe")) {
                             Race.mer[i] = null;
                             return;
                         }
@@ -708,7 +708,7 @@ public class Combat {
                 }
                 case "Typhon" -> {
                     for (int i = 0; i < Race.mont.length; i++) {
-                        if (Objects.equals(Race.mont[i].nom, "Typhon")) {
+                        if (Race.mont[i] != null && Objects.equals(Race.mont[i].nom, "Typhon")) {
                             Race.mont[i] = null;
                             return;
                         }
@@ -716,7 +716,7 @@ public class Combat {
                 }
                 case "l'Aigle du Caucase" -> {
                     for (int i = 0; i < Race.mont.length; i++) {
-                        if (Objects.equals(Race.mont[i].nom, "l'Aigle du Caucase")) {
+                        if (Race.mont[i] != null && Objects.equals(Race.mont[i].nom, "l'Aigle du Caucase")) {
                             Race.mont[i] = null;
                             return;
                         }
@@ -724,7 +724,7 @@ public class Combat {
                 }
                 case "Chronos" -> {
                     for (int i = 0; i < Race.olympe.length; i++) {
-                        if (Objects.equals(Race.olympe[i].nom, "Chronos")) {
+                        if (Race.olympe[i] != null && Objects.equals(Race.olympe[i].nom, "Chronos")) {
                             Race.olympe[i] = null;
                             return;
                         }
@@ -733,49 +733,15 @@ public class Combat {
                 default -> { //par sécurité
                 }
             }
-            for (int i = 0; i < Race.enfers.length; i++) {
-                if (Objects.equals(Race.enfers[i].nom, ennemi.nom)) {
-                    Race.enfers[i] = null;
-                    return;
+            Race[][] lists = {Race.enfers, Race.prairie, Race.vigne, Race.temple, Race.mer, Race.mont, Race.olympe};
+            for (Race[] list : lists) {
+                for (int i = 0; i < list.length; i++) {
+                    if (list[i] != null && Objects.equals(list[i].nom, ennemi.nom)) {
+                        list[i] = null;
+                        return;
+                    }
                 }
             }
-            for (int i = 0; i < Race.prairie.length; i++) {
-                if (Objects.equals(Race.prairie[i].nom, ennemi.nom)) {
-                    Race.prairie[i] = null;
-                    return;
-                }
-            }
-            for (int i = 0; i < Race.vigne.length; i++) {
-                if (Objects.equals(Race.vigne[i].nom, ennemi.nom)) {
-                    Race.vigne[i] = null;
-                    return;
-                }
-            }
-            for (int i = 0; i < Race.temple.length; i++) {
-                if (Objects.equals(Race.temple[i].nom, ennemi.nom)) {
-                    Race.temple[i] = null;
-                    return;
-                }
-            }
-            for (int i = 0; i < Race.mer.length; i++) {
-                if (Objects.equals(Race.mer[i].nom, ennemi.nom)) {
-                    Race.mer[i] = null;
-                    return;
-                }
-            }
-            for (int i = 0; i < Race.mont.length; i++) {
-                if (Objects.equals(Race.mont[i].nom, ennemi.nom)) {
-                    Race.mont[i] = null;
-                    return;
-                }
-            }
-            for (int i = 0; i < Race.olympe.length; i++) {
-                if (Objects.equals(Race.olympe[i].nom, ennemi.nom)) {
-                    Race.olympe[i] = null;
-                    return;
-                }
-            }
-
         }
     }
 
