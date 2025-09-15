@@ -123,6 +123,9 @@ public class Main {
             }
             i++;
         }
+        for(int j = 0; j < nbj; j++) {
+            Output.write_data(nom[j]);
+        }
         System.out.println("Fin du programme");
     }
 
