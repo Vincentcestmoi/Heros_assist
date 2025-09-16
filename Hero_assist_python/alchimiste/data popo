@@ -1,0 +1,43 @@
+REBUS :
+popo insipide EXTRA HEAL1                                                   1
+popo douteuse EXTRA dommage + 1 (cac/sur soi)                               1
+
+PP+ :
+popo énergétique MAIN 2PP                                                   10
+popo d'énergie MAIN PP4                                                     13
+popo de mana  MAIN PP6                                                      18
+popo ancestrale MAIN PPMAX                                                  20
+
+HEAL :
+popo de vie EXTRA HEAL4                                                     6
+popo de santé EXTRA HEAL6                                                   11
+fortifiant EXTRA HEAL8                                                      16
+popo de regénération MAIN HEAL10                                            20
+
+RES+ :
+
+popo vigeur EXTRA RES3                                                      11
+popo résistance EXTRA RES4                                                  14
+popo solidification MAIN RES4 ARM1                                          19
+
+ATK+ :
+
+popo force EXTRA ATK2                                                       9
+popo puissance EXTRA ATK3                                                   14
+popo colosse EXTRA ATK4                                                     16
+
+DMG+ (cac):
+popo toxique EXTRA dommage + 2 (cac/sur soi)                                5
+popo poison EXTRA dommage + 3 (cac/sur soi)                                 8
+popo nécrose EXTRA dommage + 4 (cac/sur soi)                                11
+popo nécrotyque EXTRA dommage + 5 (cac/sur soi)                             14
+
+DMG+ :
+popo instable Extra dommage + D4 - 2                                        4
+popo feu EXTRA dommage + 2 + D4                                             9
+popo explo EXTRA dommage + 3 + D6                                           15
+bombe EXTRA dommage +4 + D6                                                 18
+
+REZ:
+popo divine ALCH si mort : rez + HEAL4 ; si vivant : HEAL5 + RES7 + ATK3    15
+elixir ALCH rez + soigne état + healD8 + 5 + RES15                          21
