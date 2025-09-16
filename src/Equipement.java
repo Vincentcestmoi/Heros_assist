@@ -427,7 +427,7 @@ public class Equipement {
             case PARCH_LUMIERE -> this.effet = "Permet de lancer le sort Lumière : pour 2PP, diminue de 2 points l'attaque de l'ennemie (augmentez tous de 2 votre armure pour le code).";
             case RUNE_CROISS -> this.effet = "Diminue de 1 le coût de la compétence Embranchement végétal.";
             case RUNE_PLUIE -> this.effet = "Diminue de 1 le coût de la compétence Déferlante.";
-            case RUNE_HAINE -> this.effet = "Augmente de 3 points additionels l'attaque sous Berserk, mais diminue aussi la résistance de 2 points additionels.";
+            case RUNE_HAINE -> this.effet = "Augmente le bonus d'attaque sous Berserk, mais aussi le malus de résistance.";
             case RUNE_VIRALE -> this.effet = "Double les dommages infligés par la compétence Maladie.";
             case RUNE_ARDENTE -> this.effet = "augmente de 3 les dommages du sort Boule de feu";
             case RUNE_ARDENTE2 -> this.effet = "augmente de 5 les dommages du sort Boule de feu, mais augmente de 1 son coût.";
