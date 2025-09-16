@@ -14,9 +14,9 @@ public class Input {
      * Sauvegarde les données enregistrées, ne touche rien si les données sont innaccessibles
      */
     public int load() throws IOException {
-        File fichier = new File("Save/Joueur A.txt");
+        File fichier = new File(Main.Path + "Joueur A" + Main.Ext);
         int nbj = 0;
-        if (!fichier.exists() || read_log("Joueur A.txt").equals(";")) {
+        if (!fichier.exists() || read_log("Joueur A").equals(";")) {
             return -1;
         }
         if (!yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la suppression")) {
@@ -24,7 +24,7 @@ public class Input {
                     "temple", "mer", "mont", "olympe", "rangO", "rangI", "rangII", "rangIII", "rangIV",
                     "promo_monture", "promo_artefact", "promo_renforcement"};
             for(String s : nomFichier) {
-                Output.delete_fichier(s + ".txt");
+                Output.delete_fichier(s);
             }
             System.out.println("lancement du jeu.\n\n");
             return -1;
@@ -61,7 +61,7 @@ public class Input {
                 Promo_Type.MONTURE, Promo_Type.ARTEFACT, Promo_Type.AMELIORATION};
         String log;
         for (int i = 0; i < promo.length; i++) {
-            log = read_log(nomFichier[i] + ".txt");
+            log = read_log(nomFichier[i]);
             if(log.equals(";") || log.isEmpty()) {
                 continue;
             }
@@ -87,7 +87,7 @@ public class Input {
         String[] nomFichier = {"enfers", "prairie", "vigne", "temple", "mer", "mont", "olympe"};
         String log;
         for (String s : nomFichier) {
-            log = read_log(s + ".txt");
+            log = read_log(s);
             if(log.equals(";") || log.isEmpty()) {
                 continue;
             }
@@ -107,7 +107,7 @@ public class Input {
     }
 
     private boolean load_ja() {
-        if(load_j("Joueur A.txt", Main.Joueur_A, 0)){
+        if(load_j("Joueur A", Main.Joueur_A, 0)){
             System.out.println(Main.Joueur_A + " chargé(e).");
             return true;
         }
@@ -115,7 +115,7 @@ public class Input {
     }
 
     private boolean load_jb() {
-        if(load_j("Joueur B.txt", Main.Joueur_B, 1)){
+        if(load_j("Joueur B", Main.Joueur_B, 1)){
             System.out.println(Main.Joueur_B + " chargé(e).");
             return true;
         }
@@ -123,7 +123,7 @@ public class Input {
     }
 
     private boolean load_jc() {
-        if(load_j("Joueur C.txt", Main.Joueur_C, 2)){
+        if(load_j("Joueur C", Main.Joueur_C, 2)){
             System.out.println(Main.Joueur_C + " chargé(e).");
             return true;
         }
@@ -131,7 +131,7 @@ public class Input {
     }
 
     private boolean load_jd() {
-        if(load_j("Joueur D.txt", Main.Joueur_D, 3)){
+        if(load_j("Joueur D", Main.Joueur_D, 3)){
             System.out.println(Main.Joueur_D + " chargé(e).");
             return true;
         }
@@ -195,7 +195,7 @@ public class Input {
      * @return le contenu du fichier
      */
     public static String read_log(String cheminFichier) {
-        File fichier = new File("Save/" + cheminFichier);
+        File fichier = new File(Main.Path + cheminFichier + Main.Ext);
         StringBuilder text = new StringBuilder();
 
         if (!fichier.exists()) {

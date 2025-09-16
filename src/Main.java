@@ -6,6 +6,8 @@ public class Main {
 
     static Input input = new Input();
     static Random rand = new Random();
+    static String Path = "../Save/";
+    static String Ext = ".txt";
     static Position[] positions = {Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE};
     static final String Joueur_A = "Micky";
     static final String Joueur_B = "Lucien";
