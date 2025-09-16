@@ -24,13 +24,28 @@ public class Equipement {
             case BOUCLIER -> this.make_bouclier();
             case ARC -> this.make_arc();
             case CEINTURE -> this.make_ceinture();
-            default -> { //AUTRE, BRACELET, MONTURE, SAC, CONSO_EX, CONSO_MAIN, RUNE
+            case SAC -> this.make_sac();
+            default -> { //AUTRE, BRACELET, MONTURE, CONSO_EX, CONSO_MAIN, RUNE
                 this.attaque = 0;
                 this.resistance = 0;
                 this.armure = 0;
             }
         }
         applique_effet(pre.effet);
+    }
+
+    private void make_sac() {
+        this.attaque = 0;
+        this.armure = 0;
+        switch(rang){
+            case O, I -> this.resistance = 0;
+            case II -> this.resistance = 1;
+            case III -> this.resistance = 2;
+            case IV -> {
+                this.resistance = 5;
+                this.armure = 1;
+            }
+        }
     }
 
     Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix) {

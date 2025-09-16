@@ -409,6 +409,7 @@ public class Pre_Equipement {
     static Pre_Equipement armureIII = new Pre_Equipement("excellente armure", ARMURE, III, AUCUN, false);
     static Pre_Equipement casqueIII = new Pre_Equipement("casque de qualité", CASQUE, III, AUCUN, false);
     static Pre_Equipement bouclierIII = new Pre_Equipement("bon bouclier", BOUCLIER, III, AUCUN, false);
+    static Pre_Equipement sacIII = new Pre_Equipement("sac de voyage renforcé", SAC, III, Effet_equip.SAC2, false);
     static Pre_Equipement popoIII = new Pre_Equipement("potion de mana", Base.CONSO_MAIN, III, Effet_equip.PP6, false);
     static Pre_Equipement healIII = new Pre_Equipement("fortifiant", CONSO_EX, III, Effet_equip.CONSO_RES8, false);
     static Pre_Equipement healPPIII = new Pre_Equipement("drogue de guerre", CONSO_EX, III, Effet_equip.CONSO_EXT3, false);
@@ -435,7 +436,7 @@ public class Pre_Equipement {
 
 
     static Pre_Equipement[] rang3 = {fleche_plusIII, fleche_plusIII2, ceintureIII, arcIII,
-            dagueIII, epeeIII, armureIII, casqueIII, bouclierIII, bracelet_ar3, bracelet_r3, bracelet_ra3,
+            dagueIII, epeeIII, armureIII, casqueIII, bouclierIII, sacIII, bracelet_ar3, bracelet_r3, bracelet_ra3,
             parchemin_folie, popo_max, popoIII, healIII, healPPIII, casque_III_ar, bouclierIII_ar, armureIII_r,
             casque_III_r, bouclierIII_r, main1III_ba, main1III_ba, main2III_ba, main2III_ga, lame_mont, armureIII_ar,
             main1III_a, bracelet_max};
