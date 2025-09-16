@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import javax.sound.sampled.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
@@ -222,28 +221,6 @@ public class Input {
         return text.toString();
     }
 
-    // sons
-
-    /**
-     * Joue un son de dés pendant 2,3 secondes (bloque le terminal durant ce temp)
-     */
-    private void jouerSonDe() {
-        try {
-            File fichierAudio = new File("son_des.wav");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(fichierAudio);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.start();
-
-            // Attendre la durée souhaitée, puis arrêter le son
-            Thread.sleep(2300);
-            clip.stop();
-            clip.close();
-        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException | InterruptedException e) {
-            System.err.println("Erreur lors de la lecture du son : " + e.getMessage());
-        }
-    }
-
     //visuel (terminal)
 
     /**
@@ -288,7 +265,7 @@ public class Input {
      */
     public int D4() throws IOException {
         System.out.print("D4 : ");
-        jouerSonDe();
+        Output.jouerSonDe();
         return readInt();
     }
 
@@ -300,7 +277,7 @@ public class Input {
      */
     public int D6() throws IOException {
         System.out.print("D6 : ");
-        jouerSonDe();
+        Output.jouerSonDe();
         return readInt();
     }
 
@@ -312,7 +289,7 @@ public class Input {
      */
     public int D8() throws IOException {
         System.out.print("D8 : ");
-        jouerSonDe();
+        Output.jouerSonDe();
         return readInt();
     }
 
@@ -324,7 +301,7 @@ public class Input {
      */
     public int D12() throws IOException {
         System.out.print("D12 : ");
-        jouerSonDe();
+        Output.jouerSonDe();
         return readInt();
     }
 
@@ -336,7 +313,7 @@ public class Input {
      */
     public int D20() throws IOException {
         System.out.print("D20 : ");
-        jouerSonDe();
+        Output.jouerSonDe();
         return readInt();
     }
 

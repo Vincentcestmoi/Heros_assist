@@ -1,3 +1,5 @@
+import javax.sound.sampled.*;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -40,6 +42,26 @@ public class Output {
     public static void delete_fichier(String nomFichier) {
         if(write(nomFichier, ";")) {
             System.out.println(nomFichier + " écrasé avec succès");
+        }
+    }
+
+    /**
+     * Joue un son de dés pendant 2,3 secondes (bloque le terminal durant ce temp)
+     */
+    static void jouerSonDe() {
+        try {
+            File fichierAudio = new File(Main.Path + "../son_des.wav");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(fichierAudio);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+
+            // Attendre la durée souhaitée, puis arrêter le son
+            Thread.sleep(2300);
+            clip.stop();
+            clip.close();
+        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException | InterruptedException e) {
+            System.err.println("Erreur lors de la lecture du son : " + e.getMessage());
         }
     }
 }
