@@ -26,25 +26,37 @@ public class Pre_Equipement {
      * @param promo le type de promotion, significatif uniquement si le rang est PROMOTION
      */
     public static void safe_delete(String nom, Rang rang, Promo_Type promo) {
+        boolean corect = false;
         Pre_Equipement[] list = switch(rang){
             case O -> rang0;
             case I -> rang1;
             case II -> rang2;
             case III -> rang3;
             case IV -> rang4;
-            case PROMOTION -> getPromo(promo);
+            case PROMOTION -> {
+                corect = true;
+                yield getPromo(promo);
+            }
         };
         if(list == null) {
-            System.out.println(promo + " n'existe pas.");
+            System.out.println(promo + " ou " + rang + " n'existe pas.");
             return;
         }
         for(int i = 0; i < list.length; i++){
             if(list[i] != null && nom.equals(list[i].nom)){
                 System.out.println(nom + " supprimé(e) avec succès.");
                 list[i] = null;
+                if(corect){
+                    switch(promo){
+                        case MONTURE -> nb_monture--;
+                        case AMELIORATION -> nb_boost--;
+                        case ARTEFACT -> nb_arte--;
+                    }
+                }
                 return;
             }
         }
+        System.out.println(nom + " n'existe pas.");
     }
 
     private static Pre_Equipement[] getPromo(Promo_Type promo) {
