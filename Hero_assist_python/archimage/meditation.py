@@ -5,7 +5,7 @@ if jet <= 2:
     print("Vous récupérez 2PP.")
 elif jet <= 4:
     print("Vous récupérez 3PP.")
-elif jet <= 6:
+elif jet <= 7:
     print("Vous récupérez 4PP.")
 else:
     print("Vous récupérez 5PP.")

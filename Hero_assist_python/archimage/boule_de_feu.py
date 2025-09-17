@@ -2,7 +2,7 @@
 
 mana = int(input("Combien de PP mettez vous dans le sort ? (min 2)"))
 jet = int(input("D4 : ")) + mana
-if jet <= 4 or mana < 2:
+if jet <= 3 or mana < 2:
     print("Le sort ne fonctionne pas")
 elif jet <= 6:
     print("Le sort inflige 4 dommages magiques.")

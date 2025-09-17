@@ -2,7 +2,7 @@
 
 mana = int(input("Combien de PP mettez vous dans le sort ? (min 3): "))
 jet = int(input("D8 : ")) + mana
-if jet <= 5 or mana < 3:
+if jet <= 4 or mana < 3:
     print("Le sort ne fonctionne pas.")
 elif jet <= 9:
     print("La cible gagne 3 points de résistance.")
