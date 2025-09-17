@@ -294,6 +294,18 @@ public class Input {
     }
 
     /**
+     * Demande au joueur le résultat d'un jet 10 et le renvoie
+     *
+     * @return le chiffre donné par le joueur
+     * @throws IOException en cas de problème ?
+     */
+    public int D10() throws IOException {
+        System.out.print("D10 : ");
+        Output.jouerSonDe();
+        return readInt();
+    }
+
+    /**
      * Demande au joueur le résultat d'un jet 12 et le renvoie
      *
      * @return le chiffre donné par le joueur
@@ -353,7 +365,7 @@ public class Input {
      * @throws IOException en cas de problème ?
      */
     public int vie() throws IOException {
-        System.out.print("entrez votre vie actuelle : ");
+        System.out.print("entrez votre résistance actuelle : ");
         return readInt();
     }
 
@@ -364,7 +376,7 @@ public class Input {
      * @throws IOException en cas de problème ?
      */
     public int def() throws IOException {
-        System.out.print("entrez votre défense actuelle : ");
+        System.out.print("entrez votre armure actuelle : ");
         return readInt();
     }
 
@@ -456,6 +468,7 @@ public class Input {
                         text += "/(re)ssuciter par potion";
                     }
                 }
+                case Main.guerriere -> text += "/(be)rserker/(la)me d'aura";
             }
             text += " : ";
             System.out.println(text);
@@ -516,6 +529,20 @@ public class Input {
                 case "re", "RE", "Re", "rE" -> {
                     if (ya_mort && nom.equals(Main.alchimiste)) {
                         yield Action.POTION_REZ;
+                    }
+                    System.out.println("Action non reconnue.");
+                    yield action(nom, false, est_premiere_ligne, mort);
+                }
+                case "be", "BE", "Be", "bE" -> {
+                    if (nom.equals(Main.guerriere)) {
+                        yield Action.BERSERK;
+                    }
+                    System.out.println("Action non reconnue.");
+                    yield action(nom, false, est_premiere_ligne, mort);
+                }
+                case "la", "LA", "La", "lA" -> {
+                    if (nom.equals(Main.guerriere)) {
+                        yield Action.LAME_DAURA;
                     }
                     System.out.println("Action non reconnue.");
                     yield action(nom, false, est_premiere_ligne, mort);

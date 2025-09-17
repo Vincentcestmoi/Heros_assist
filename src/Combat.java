@@ -113,7 +113,7 @@ public class Combat {
         String n;
         Action act;
         boolean run = !ennemi.est_mort();
-        boolean a_pass = false;
+        boolean a_pass = false, berserk = false;
         while (run) {
 
             //chaque joueur
@@ -244,11 +244,45 @@ public class Combat {
                                 ennemi.part_soin += 0.4F;
                             }
                         }
+                        case BERSERK -> {
+                            System.out.println(Main.guerriere + " est prit d'une folie meurtrière !");
+                            berserk = true;
+                            ennemi.dommage(input.atk() + 3);
+                        }
+                        case LAME_DAURA -> {
+                            if (berserk && input.D6() < 4) {
+                                int l;
+                                do {
+                                    l = rand.nextInt(8);
+                                } while (!actif[l]);
+                                System.out.println("Prise de folie, " + Main.guerriere + " attaque " + nom[i] + "  !");
+                            }
+                            else {
+                                ennemi.dommage(input.atk(), 2);
+                                System.out.println("L'arme principale de " + Main.guerriere + " se brise !");
+                            }
+                        }
                         case END -> {
                             gestion_mort_end(mort, nom);
                             return 0;
                         }
-                        default -> ennemi.dommage(input.atk()); // ATTAQUER
+                        default -> { // ATTAQUER
+                            if(berserk && n.equals(Main.guerriere)){
+                                if(input.D6() < 4){
+                                    int l;
+                                    do{
+                                        l = rand.nextInt(8);
+                                    }while(!actif[l]);
+                                    System.out.println("Prise de folie, " + Main.guerriere + " attaque " + nom[i] + "  !");
+                                }
+                                else {
+                                    ennemi.dommage(input.atk() + 3);
+                                }
+                            }
+                            else{
+                                ennemi.dommage(input.atk());
+                            }
+                        }
                     }
                 }
 
@@ -1008,13 +1042,18 @@ public class Combat {
     static private void gestion_mort_end(boolean[] morts, String[] nom) throws IOException {
         for(int i = 0; i < 4; i++){
             if(morts[i] && input.yn(nom[i] + " est mort durant le combat, le reste-t-il ?")){
-                System.out.println(nom[i] + " se retrouve aux enfers.\n");
-                Main.positions[i] = Position.ENFERS;
-                switch (i){
-                    case 0 -> Main.f_a = 0;
-                    case 1 -> Main.f_b = 0;
-                    case 2 -> Main.f_c = 0;
-                    case 3 -> Main.f_d = 0;
+                if(nom[i].equals(Main.guerriere) && input.D10() > 6){
+                    System.out.println(nom[i] + " résiste à la mort.\n");
+                }
+                else {
+                    System.out.println(nom[i] + " se retrouve aux enfers.\n");
+                    Main.positions[i] = Position.ENFERS;
+                    switch (i) {
+                        case 0 -> Main.f_a = 0;
+                        case 1 -> Main.f_b = 0;
+                        case 2 -> Main.f_c = 0;
+                        case 3 -> Main.f_d = 0;
+                    }
                 }
             }
         }

@@ -14,5 +14,7 @@ public enum Action {
     MAUDIR,
     ONDE_CHOC,
     POTION_REZ,
+    BERSERK,
+    LAME_DAURA,
     END
 }

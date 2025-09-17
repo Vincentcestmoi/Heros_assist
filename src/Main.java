@@ -12,13 +12,15 @@ public class Main {
     static final String Joueur_A = "Micky";
     static final String Joueur_C = "Lucien";
     static final String Joueur_B = "Vincent";
-    static final String Joueur_D = "Joueur D";
+    static final String Joueur_D = "Aloyse";
     static final String necromancien = Joueur_A;
     static final String archimage = Joueur_C;
     static final String alchimiste = Joueur_B;
+    static final String guerriere = Joueur_D;
     public static int f_a = 0, f_b = 0, f_c = 0, f_d = 0;
     static final String[] nom = {Joueur_A, Joueur_B, Joueur_C, Joueur_D};
 
+    @SuppressWarnings("ConstantValue")
     public static void main(String[] args) throws IOException {
         int nbj = input.load();
         if(nbj == -1) {
@@ -29,9 +31,18 @@ public class Main {
             System.out.println("Nombre de joueur invalide : 1 à 4 joueurs seulement.");
             return;
         }
-        System.out.println(Main.Joueur_A + " est nécromancien.\n");
-        System.out.println(Main.Joueur_B + " est archimage.\n");
-        System.out.println(Main.Joueur_C + " est alchimiste.\n");
+        if(!necromancien.isEmpty()) {
+            System.out.println(necromancien + " est nécromancien.\n");
+        }
+        if(!archimage.isEmpty()) {
+            System.out.println(archimage + " est archimage.\n");
+        }
+        if(!alchimiste.isEmpty()) {
+            System.out.println(alchimiste + " est alchimiste.\n");
+        }
+        if(!guerriere.isEmpty()) {
+            System.out.println(guerriere + " est guerriere.\n");
+        }
         boolean run = true;
         int i = 0;
         while (run) {

@@ -511,6 +511,22 @@ public class Monstre {
     }
 
     /**
+     * Inflige des dommages au monstre
+     * @param quantite la puissance d'attaque
+     * @implNote Considère l'armure et la compétence du monstre
+     * gère le cas de mort du monstre
+     */
+    void dommage(int quantite, int mult) throws IOException {
+        System.out.println("Vous attaquez " + this.nom);
+        int degas = applique_competence_dommage(max(quantite * mult - this.armure, 1));
+        this.vie -= degas;
+        if(!check_mort()) {
+            applique_competence_post_dommage();
+        }
+        System.out.println();
+    }
+
+    /**
      * Applique la compétence avant de subir des dommages classique
      * @param degas les dommages infligés par l'attaque
      * @return les degas subits par le monstre
