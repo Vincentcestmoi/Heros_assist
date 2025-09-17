@@ -20,8 +20,9 @@ public class Main {
     public static int f_a = 0, f_b = 0, f_c = 0, f_d = 0;
     static final String[] nom = {Joueur_A, Joueur_B, Joueur_C, Joueur_D};
 
-    @SuppressWarnings("ConstantValue")
+    @SuppressWarnings({"ConstantValue", "DataFlowIssue"})
     public static void main(String[] args) throws IOException {
+
         int nbj = input.load();
         if(nbj == -1) {
             System.out.print("Entrez le nombre de joueur : ");
@@ -31,18 +32,89 @@ public class Main {
             System.out.println("Nombre de joueur invalide : 1 à 4 joueurs seulement.");
             return;
         }
+
+        // rappel des classes
         if(!necromancien.isEmpty()) {
-            System.out.println(necromancien + " est nécromancien.\n");
+            switch(necromancien){
+                case Joueur_A -> System.out.println(necromancien + " est nécromancien.\n");
+                case Joueur_B -> {
+                    if(nbj >= 2){
+                        System.out.println(necromancien + " est nécromancien.\n");
+                    }
+                }
+                case Joueur_C -> {
+                    if(nbj >= 3){
+                        System.out.println(necromancien + " est nécromancien.\n");
+                    }
+                }
+                case Joueur_D -> {
+                    if(nbj == 4){
+                        System.out.println(necromancien + " est nécromancien.\n");
+                    }
+                }
+            }
         }
         if(!archimage.isEmpty()) {
-            System.out.println(archimage + " est archimage.\n");
+            switch(archimage){
+                case Joueur_A -> System.out.println(archimage + " est archimage.\n");
+                case Joueur_B -> {
+                    if(nbj >= 2) {
+                        System.out.println(archimage + " est archimage.\n");
+                    }
+                }
+                case Joueur_C -> {
+                    if(nbj >= 3) {
+                        System.out.println(archimage + " est archimage.\n");
+                    }
+                }
+                case Joueur_D -> {
+                    if(nbj == 4) {
+                        System.out.println(archimage + " est archimage.\n");
+                    }
+                }
+            }
         }
         if(!alchimiste.isEmpty()) {
-            System.out.println(alchimiste + " est alchimiste.\n");
+            switch (alchimiste) {
+                case Joueur_A -> System.out.println(alchimiste + " est alchimiste.\n");
+                case Joueur_B -> {
+                    if (nbj >= 2) {
+                        System.out.println(alchimiste + " est alchimiste.\n");
+                    }
+                }
+                case Joueur_C -> {
+                    if (nbj >= 3) {
+                        System.out.println(alchimiste + " est alchimiste.\n");
+                    }
+                }
+                case Joueur_D -> {
+                    if (nbj == 4) {
+                        System.out.println(alchimiste + " est alchimiste.\n");
+                    }
+                }
+            }
         }
         if(!guerriere.isEmpty()) {
-            System.out.println(guerriere + " est guerriere.\n");
+            switch (guerriere) {
+                case Joueur_A -> System.out.println(guerriere + " est guerrière.\n");
+                case Joueur_B -> {
+                    if (nbj >= 2) {
+                        System.out.println(guerriere + " est guerrière.\n");
+                    }
+                }
+                case Joueur_C -> {
+                    if (nbj >= 3) {
+                        System.out.println(guerriere + " est guerrière.\n");
+                    }
+                }
+                case Joueur_D -> {
+                    if (nbj == 4) {
+                        System.out.println(guerriere + " est guerrière.\n");
+                    }
+                }
+            }
         }
+
         boolean run = true;
         int i = 0;
         while (run) {
@@ -224,7 +296,7 @@ public class Main {
                 m = true_monstre(next_pos);
             }
             case 2 -> {
-                text += " est attaqué par un monstre à peine partie.";
+                text += " est attaqué par un monstre à peine parti(e).";
                 lead = index;
                 m = true_monstre(pos);
             }
