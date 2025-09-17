@@ -10,9 +10,12 @@ public class Main {
     static String Ext = ".txt";
     static Position[] positions = {Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE};
     static final String Joueur_A = "Micky";
-    static final String Joueur_B = "Lucien";
-    static final String Joueur_C = "Vincent";
+    static final String Joueur_C = "Lucien";
+    static final String Joueur_B = "Vincent";
     static final String Joueur_D = "Joueur D";
+    static final String necromancien = Joueur_A;
+    static final String archimage = Joueur_C;
+    static final String alchimiste = Joueur_B;
     public static int f_a = 0, f_b = 0, f_c = 0, f_d = 0;
     static final String[] nom = {Joueur_A, Joueur_B, Joueur_C, Joueur_D};
 

@@ -128,7 +128,7 @@ public class Combat {
                 // si le joueur est assommé, ce bloc remplace son tour
                 if (assomme[i]) {
                     System.out.println(n + " est inconscient.");
-                    if (Objects.equals(n, Main.Joueur_B) && input.yn("Utiliser purge (3PP) ?")) {
+                    if (Objects.equals(n, Main.archimage) && input.yn("Utiliser purge (3PP) ?")) {
                         System.out.println(n + " se réveille.\n");
                         assomme[i] = false;
                         reveil[i] = 0;
@@ -140,7 +140,7 @@ public class Combat {
                     }
                     else {
                         System.out.println(n + " est toujours inconscient.\n");
-                        if (Objects.equals(n, Main.Joueur_B)) {
+                        if (Objects.equals(n, Main.archimage)) {
                             System.out.println(n + " recupère 1PP.\n");
                             if (rand.nextBoolean()) {
                                 reveil[i] += 1;
@@ -150,14 +150,14 @@ public class Combat {
                             reveil[i] += 1;
                         }
                     }
-                    if (Objects.equals(n, Main.Joueur_A) && a_pass) {
+                    if (Objects.equals(n, Main.necromancien) && a_pass) {
                         a_pass = false;
                     }
                     continue;
                 }
 
                 // si le nécromancien à ressucité, il a déjà utilisé son tour
-                if (Objects.equals(n, Main.Joueur_A) && a_pass) {
+                if (Objects.equals(n, Main.necromancien) && a_pass) {
                     a_pass = false;
                     continue;
                 }
@@ -323,7 +323,7 @@ public class Combat {
                     //le nécromancien peut tenter de ressuciter le monstre
                     boolean actif_a = false;
                     for (int k = 0; k < 8; k++) {
-                        if (actif[k] && Objects.equals(nom[k], Main.Joueur_A)) {
+                        if (actif[k] && Objects.equals(nom[k], Main.necromancien)) {
                             actif_a = true;
                             break;
                         }
@@ -372,12 +372,12 @@ public class Combat {
         if(input.yn(n + " est-il mort ?")){
             boolean actif_a = false;
             for(int k = 0; k < 8; k++){
-                if (actif[k] && Objects.equals(nom[k], Main.Joueur_A) && !assomme[k]) {
+                if (actif[k] && Objects.equals(nom[k], Main.necromancien) && !assomme[k]) {
                     actif_a = true;
                     break;
                 }
             }
-            if(actif_a && !n.equals(Main.Joueur_A) && input.yn("Est-ce que " + Main.Joueur_A + " veux tenter de ressuciter " + n + " pour 2 PP ?")) {
+            if(actif_a && !n.equals(Main.necromancien) && input.yn("Est-ce que " + Main.necromancien + " veux tenter de ressuciter " + n + " pour 2 PP ?")) {
                 if (!ressuciter_allie()) {
                     System.out.println(n + " est mort.\n");
                     actif[i] = false;
@@ -824,7 +824,7 @@ public class Combat {
 
     static private void onde_choc(boolean[] actif, String[] nom, boolean[] assomme, Monstre ennemi) throws IOException {
         for(int i = 0; i < nom.length; i++){
-            if(!nom[i].equals(Main.Joueur_B) && actif[i]){
+            if(!nom[i].equals(Main.archimage) && actif[i]){
                 System.out.println(nom[i] + " est frappé par l'onde de choc.");
                 if(i <= 4){
                     if(input.D6() <= 3){
@@ -847,7 +847,7 @@ public class Combat {
             }
         }
         System.out.println(ennemi.nom + " est frappé par l'onde de choc.");
-        System.out.print(Main.Joueur_B + " : ");
+        System.out.print(Main.archimage + " : ");
         switch (input.D6()){
             case 2 -> ennemi.do_etourdi();
             case 3, 4 -> ennemi.affecte();

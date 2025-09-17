@@ -449,9 +449,9 @@ public class Input {
             }
             text += "/(p)remier soin/a(n)alyser/(c)ustom/(o)ff";
             switch (nom) {
-                case Main.Joueur_A -> text += "/(ma)udir";
-                case Main.Joueur_B -> text += "/(on)de de choc";
-                case Main.Joueur_C -> {
+                case Main.necromancien -> text += "/(ma)udir";
+                case Main.archimage -> text += "/(on)de de choc";
+                case Main.alchimiste -> {
                     if (ya_mort) {
                         text += "/(re)ssuciter par potion";
                     }
@@ -500,21 +500,21 @@ public class Input {
                     yield action(nom, false, est_premiere_ligne, mort);
                 }
                 case "ma", "MA", "Ma", "mA" -> {
-                    if (nom.equals(Main.Joueur_A)) {
+                    if (nom.equals(Main.necromancien)) {
                         yield Action.MAUDIR;
                     }
                     System.out.println("Action non reconnue.");
                     yield action(nom, false, est_premiere_ligne, mort);
                 }
                 case "on", "ON", "On", "oN" -> {
-                    if (nom.equals(Main.Joueur_B)) {
+                    if (nom.equals(Main.archimage)) {
                         yield Action.ONDE_CHOC;
                     }
                     System.out.println("Action non reconnue.");
                     yield action(nom, false, est_premiere_ligne, mort);
                 }
                 case "re", "RE", "Re", "rE" -> {
-                    if (ya_mort && nom.equals(Main.Joueur_C)) {
+                    if (ya_mort && nom.equals(Main.alchimiste)) {
                         yield Action.POTION_REZ;
                     }
                     System.out.println("Action non reconnue.");
