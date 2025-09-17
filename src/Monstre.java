@@ -336,6 +336,9 @@ public class Monstre {
      * gère le cas de mort du monstre
      */
     void tir(int quantite) throws IOException {
+        if(quantite == 0){
+            return;
+        }
         System.out.println("Vous tirez sur " + this.nom);
         int degat = applique_competence_tir(max(quantite - this.armure, 1));
         this.vie -= degat;
@@ -409,6 +412,9 @@ public class Monstre {
      * gère le cas de mort du monstre
      */
     void dommage_magique(int quantite) throws IOException {
+        if(quantite == 0){
+            return;
+        }
         System.out.println("Vous utilisez votre magie sur " + this.nom);
         int degas = applique_competence_magie(max(quantite, 1));
         this.vie -= degas;
@@ -501,6 +507,9 @@ public class Monstre {
      * gère le cas de mort du monstre
      */
     void dommage(int quantite) throws IOException {
+        if(quantite == 0){
+            return;
+        }
         System.out.println("Vous attaquez " + this.nom);
         int degas = applique_competence_dommage(max(quantite - this.armure, 1));
         this.vie -= degas;
@@ -517,6 +526,9 @@ public class Monstre {
      * gère le cas de mort du monstre
      */
     void dommage(int quantite, int mult) throws IOException {
+        if(quantite == 0){
+            return;
+        }
         System.out.println("Vous attaquez " + this.nom);
         int degas = applique_competence_dommage(max(quantite * mult - this.armure, 1));
         this.vie -= degas;
