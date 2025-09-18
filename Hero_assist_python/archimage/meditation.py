@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-jet = int(input("D8 :"))
+from random import randint
+jet = int(input("D8 :")) + randint(-1, 1)
 if jet <= 2:
     print("Vous récupérez 2PP.")
 elif jet <= 4:

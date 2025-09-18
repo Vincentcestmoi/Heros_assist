@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
+from random import randint
 mana = int(input("Combien de PP mettez vous dans le sort ? (min 3): "))
-jet = int(input("D8 : ")) + mana
-if jet <= 4 or mana < 3:
+jet = int(input("D8 : ")) + mana + randint(-1, 1)
+if jet <= 3 or mana < 3:
     print("Le sort ne fonctionne pas.")
 elif jet <= 9:
     print("La cible gagne 3 points de résistance.")
