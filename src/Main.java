@@ -18,6 +18,7 @@ public class Main {
     static final String alchimiste = Joueur_B;
     static final String guerriere = Joueur_D;
     public static int f_a = 0, f_b = 0, f_c = 0, f_d = 0;
+    static final int f_max = 7;
     static final String[] nom = {Joueur_A, Joueur_B, Joueur_C, Joueur_D};
 
     @SuppressWarnings({"ConstantValue", "DataFlowIssue"})
@@ -154,22 +155,10 @@ public class Main {
                 case QUITTER -> run = false;
                 case FAMILIER_PLUS -> {
                     switch (nom[i]) {
-                        case Joueur_A -> {
-                            f_a = 1;
-                            System.out.println(Main.Joueur_A + " a bien reçu son nouveau familier");
-                        }
-                        case Joueur_B -> {
-                            f_b = 1;
-                            System.out.println(Main.Joueur_C + " a bien reçu son nouveau familier");
-                        }
-                        case Joueur_C -> {
-                            f_c = 1;
-                            System.out.println(Main.Joueur_C + " a bien reçu son nouveau familier");
-                        }
-                        case Joueur_D -> {
-                            f_d = 1;
-                            System.out.println("Joueur D a bien reçu son nouveau familier");
-                        }
+                        case Joueur_A -> f_a = new_fam(Joueur_A, f_a);
+                        case Joueur_B -> f_b = new_fam(Joueur_B, f_b);
+                        case Joueur_C -> f_c = new_fam(Joueur_C, f_c);
+                        case Joueur_D -> f_d = new_fam(Joueur_D, f_d);
                         default -> System.out.println("Erreur : joueur " + nom[i] + " non reconnu");
                     }
                     i -= 1; //n'utilise pas le tour
@@ -199,11 +188,11 @@ public class Main {
                 case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
             }
             switch (temp) {
-                case 1 -> f_a = new_fam(Joueur_A, f_a);
-                case 2 -> f_b = new_fam(Joueur_B, f_b);
-                case 3 -> f_c = new_fam(Joueur_C, f_c);
-                case 4 -> f_d = new_fam(Joueur_D, f_d);
-                default -> { // dont 0
+                case 0 -> f_a = new_fam(Joueur_A, f_a);
+                case 1 -> f_b = new_fam(Joueur_B, f_b);
+                case 2 -> f_c = new_fam(Joueur_C, f_c);
+                case 3 -> f_d = new_fam(Joueur_D, f_d);
+                default -> { // dont -1
                 }
             }
             for(int j = 0; j < nbj; j++) {
@@ -345,9 +334,9 @@ public class Main {
             if (f <= 0) {
                 System.out.println("Votre familier vous a fuit de manière définitive.");
                 f = 0;
-            } else if (f >= 3) {
+            } else if (f >= f_max) {
                 System.out.println("Vous avez atteint le niveau maximal de loyauté de la part de votre familier.");
-                f = 3;
+                f = f_max;
             }
         }
         System.out.println();
