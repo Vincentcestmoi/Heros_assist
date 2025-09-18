@@ -20,7 +20,7 @@ public class Combat {
      * @param ob_c l'obéissance du familier de Joueur_C (de 1 à 3) ou 0 s'il n'existe pas
      * @param ob_d l'obéissance du familier de joueur_D (de 1 à 3) ou 0 s'il n'existe pas
      * @param ennemi le monstre que les joueurs affronte
-     * @return un int lié au joueur qui obtient un familier (ou -1 si ucn n'en obtient)
+     * @return un int lié au joueur qui obtient un familier (ou -1 si aucun n'en obtient).
      * @throws IOException lecture de terminal
      */
     public static int affrontement(int nb_joueurs, Position position, int joueur_force, int ob_a, int ob_b, int ob_c, int ob_d, Monstre ennemi) throws IOException {
@@ -107,10 +107,10 @@ public class Combat {
 
     /**
      * Gère le combat en appliquant les actions
-     * @param ob_a l'obéissance du familier du joueur A (0 s'in n'en a pas)
-     * @param ob_b l'obéissance du familier du joueur B (0 s'in n'en a pas)
-     * @param ob_c l'obéissance du familier du joueur C (0 s'in n'en a pas)
-     * @param ob_d l'obéissance du familier du joueur D (0 s'in n'en a pas)
+     * @param ob_a l'obéissance du familier du joueur A (0 s'il n'en a pas).
+     * @param ob_b l'obéissance du familier du joueur B (0 s'il n'en a pas).
+     * @param ob_c l'obéissance du familier du joueur C (0 s'il n'en a pas).
+     * @param ob_d l'obéissance du familier du joueur D (0 s'il n'en a pas).
      * @param ennemi le monstre adverse
      * @param actif liste de boolean indiquant si un participant est actif
      * @param nom liste des noms des participants
