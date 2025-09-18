@@ -61,7 +61,7 @@ public class Monstre {
     static Random rand = new Random();
 
     /**
-     * Renvoie l'arrondit par excès minoré par 1 de la valeur donnée
+     * Renvoie l'arrondit minoré par 1 de la valeur donnée
      * @param valeur le float à corriger
      */
     static int corriger(float valeur) {
@@ -525,12 +525,12 @@ public class Monstre {
      * @implNote Considère l'armure et la compétence du monstre
      * gère le cas de mort du monstre
      */
-    void dommage(int quantite, int mult) throws IOException {
+    void dommage(int quantite, float mult) throws IOException {
         if(quantite == 0){
             return;
         }
         System.out.println("Vous attaquez " + this.nom);
-        int degas = applique_competence_dommage(max(quantite * mult - this.armure, 1));
+        int degas = applique_competence_dommage((corriger(quantite * mult) - this.armure));
         this.vie -= degas;
         if(!check_mort()) {
             applique_competence_post_dommage();

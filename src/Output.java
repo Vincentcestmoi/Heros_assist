@@ -25,6 +25,10 @@ public class Output {
         write((fichier), pre_equipement.nom + "," + Input.read_log(fichier));
     }
 
+    /**
+     * Mets à jour les sauvegarde des joueurs
+     * @param joueur le joueur donc on doit mettre à jour les données
+     */
     public static void write_data(String joueur) {
         switch (joueur) {
             case Main.Joueur_A -> write("Joueur A", joueur + "," + Main.positions[0].toString() + "," + Main.f_a + ";");
