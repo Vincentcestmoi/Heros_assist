@@ -28,8 +28,8 @@ public class Output {
     public static void write_data(String joueur) {
         switch (joueur) {
             case Main.Joueur_A -> write("Joueur A", joueur + "," + Main.positions[0].toString() + "," + Main.f_a + ";");
-            case Main.Joueur_C -> write("Joueur C", joueur + "," + Main.positions[1].toString() + ","  + Main.f_b + ";");
-            case Main.Joueur_B -> write("Joueur B", joueur + "," + Main.positions[2].toString() + ","  + Main.f_c + ";");
+            case Main.Joueur_B -> write("Joueur B", joueur + "," + Main.positions[1].toString() + ","  + Main.f_b + ";");
+            case Main.Joueur_C -> write("Joueur C", joueur + "," + Main.positions[2].toString() + ","  + Main.f_c + ";");
             case Main.Joueur_D -> write("Joueur D", joueur + "," + Main.positions[3].toString() + ","  + Main.f_d + ";");
             default -> System.out.println("Joueur non reconnu");
         }
