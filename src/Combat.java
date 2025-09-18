@@ -6,7 +6,6 @@ import static java.lang.Math.max;
 
 public class Combat {
 
-
     static Input input = new Input();
     static Random rand = new Random();
 
@@ -459,8 +458,8 @@ public class Combat {
                 }
             }
             if(actif_a && input.yn("Est-ce que " + Main.necromancien + " veux tenter de ressuciter " + n + " pour 2 PP ?")) {
-                if (!ressuciter_allie()) {
-                    System.out.println(n + " est mort(e).\n");
+                if (!ressuciter()) {
+                    System.out.println(n + " est mort(e).");
                     actif[i] = false;
                     mort[i] = true;
                 }
@@ -472,13 +471,14 @@ public class Combat {
                 mort[i] = true;
             }
         }
-        else if (input.yn(n + " est-il/elle inconscient ?")) {
+        else if (input.yn(n + " est-il/elle inconscient(e) ?")) {
             assomme[i] = true;
         }
         else if (!input.yn(n + " est-il/elle toujours en combat ?")) {
-            System.out.println(n + " est retiré(e) du combat.\n");
+            System.out.println(n + " est retiré(e) du combat.");
             actif[i] = false;
         }
+        System.out.println();
         return a_pass;
     }
 
@@ -803,7 +803,7 @@ public class Combat {
     }
 
     /**
-     * Applique la compétence de nécromantien "nécromancie"
+     * Tente de ressuciter un ennemi par nécromancie
      * @param ennemi le monstre à ressuciter
      * @return si le sort a fonctionné
      * @throws IOException pour l'input
@@ -855,11 +855,11 @@ public class Combat {
     }
 
     /**
-     * tente de ressuciter un allie
+     * Tente de ressuciter un allié par nécromancie
      * @return si l'allié a été ressucité
      * @throws IOException notre poto anti bug
      */
-    private static boolean ressuciter_allie() throws IOException {
+    private static boolean ressuciter() throws IOException {
         return switch (input.D8()) {
             case 6 -> {
                 System.out.println("Résurection avec 4 points de vie");
@@ -881,7 +881,7 @@ public class Combat {
     }
 
     private static void maudir(Monstre ennemi) throws IOException {
-        int boost = rand.nextInt(2);
+        int boost = rand.nextInt(3);
         switch (input.D6()){
             case 2 -> {
                 System.out.println("Vous maudissez faiblement " + ennemi.nom);
@@ -1098,30 +1098,26 @@ public class Combat {
 
     static private void gestion_mort_end(boolean[] morts, String[] nom) throws IOException {
         for(int i = 0; i < 8; i++){
-            if(morts[i] && input.yn(nom[i] + " est mort durant le combat, le reste-t-il/elle ?")){
-                if(nom[i].equals(Main.guerriere) && input.D10() > 6){
+            if(morts[i] && input.yn(nom[i] + " est mort durant le combat, le reste-t-il/elle ?")) {
+                if (nom[i].equals(Main.guerriere) && input.D10() > 6) {
                     System.out.println(nom[i] + " résiste à la mort.\n");
+                    return;
+                }
+                int t;
+                if (i < 4) {
+                    System.out.println(nom[i] + " se retrouve aux enfers.\n");
+                    Main.positions[i] = Position.ENFERS;
+                    t = i;
                 }
                 else {
-                    if (i < 4) {
-                        System.out.println(nom[i] + " se retrouve aux enfers.\n");
-                        Main.positions[i] = Position.ENFERS;
-                        switch (i) {
-                            case 0 -> Main.f_a = 0;
-                            case 1 -> Main.f_b = 0;
-                            case 2 -> Main.f_c = 0;
-                            case 3 -> Main.f_d = 0;
-                        }
-                    }
-                    else{
-                        System.out.println(nom[i] + " a rendu l'âme.\n");
-                        switch (i - 4) {
-                            case 0 -> Main.f_a = 0;
-                            case 1 -> Main.f_b = 0;
-                            case 2 -> Main.f_c = 0;
-                            case 3 -> Main.f_d = 0;
-                        }
-                    }
+                    System.out.println(nom[i] + " a rendu l'âme.\n");
+                    t = i - 4;
+                }
+                switch (t) {
+                    case 0 -> Main.f_a = 0;
+                    case 1 -> Main.f_b = 0;
+                    case 2 -> Main.f_c = 0;
+                    case 3 -> Main.f_d = 0;
                 }
             }
         }
