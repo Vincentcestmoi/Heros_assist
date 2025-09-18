@@ -224,7 +224,13 @@ public class Combat {
                         }
                         case ANALYSER -> analyser(i == pr_l, ennemi);
                         case AUTRE -> System.out.println("Vous faites quelques chose.\n");
-                        case ETRE_MORT -> a_pass = act_mort(actif, assomme, mort, nom, n, a_pass, i);
+                        case ETRE_MORT -> {
+                            a_pass = act_mort(actif, assomme, mort, nom, n, a_pass, i);
+                            a_pass = act_mort(actif, assomme, mort, nom, nom[pr_l], a_pass, pr_l);
+                            if(actif[i]){
+                                j--;
+                            }
+                        }
                         case AVANCER -> {
                             System.out.println(n + " passe en première ligne.\n");
                             pr_l = i;
@@ -290,6 +296,10 @@ public class Combat {
                 else {
                     if (act == Action.ETRE_MORT) {
                         a_pass = act_mort(actif, assomme, mort, nom, n, a_pass, i);
+                        a_pass = act_mort(actif, assomme, mort, nom, nom[pr_l], a_pass, pr_l);
+                        if(actif[i]){
+                            j--;
+                        }
                     }
                     else if (act == Action.END) {
                         gestion_mort_end(mort, nom);
@@ -388,7 +398,7 @@ public class Combat {
     }
 
     /**
-     * Gère le retour OFF de l'action
+     * Gère le retour OFF de l'action, càd la mort ou le retrait du joueur actif ou de celui de première ligne
      * @param actif booléens indiquants quels participants sont actifs
      * @param assomme booléens indiquants quels participants sont assommés
      * @param mort booléens indiquants quels participants sont morts
@@ -400,33 +410,32 @@ public class Combat {
      * @throws IOException mon poto
      */
     private static boolean act_mort(boolean[] actif, boolean[] assomme, boolean[] mort, String[] nom, String n, boolean a_pass, int i) throws IOException {
-        if(a_pass){
-            return true;
-        }
-        if(input.yn(n + " est-il mort ?")){
+        if(input.yn(n + " est-il/elle mort(e) ?")){
+
+            //on regarde si on peut le ressuciter immédiatement
             boolean actif_a = false;
             for(int k = 0; k < 8; k++){
-                if (actif[k] && Objects.equals(nom[k], Main.necromancien) && !assomme[k]) {
+                if (actif[k] && Objects.equals(nom[k], Main.necromancien) && !n.equals(nom[k]) && !assomme[k] && !a_pass) { //le joueur est necromancien et disponible
                     actif_a = true;
                     break;
                 }
             }
-            if(actif_a && !n.equals(Main.necromancien) && input.yn("Est-ce que " + Main.necromancien + " veux tenter de ressuciter " + n + " pour 2 PP ?")) {
+            if(actif_a && input.yn("Est-ce que " + Main.necromancien + " veux tenter de ressuciter " + n + " pour 2 PP ?")) {
                 if (!ressuciter_allie()) {
-                    System.out.println(n + " est mort.\n");
+                    System.out.println(n + " est mort(e).\n");
                     actif[i] = false;
                     mort[i] = true;
                 }
                 a_pass = true;
             }
             else{
-                System.out.println(n + " est mort.");
+                System.out.println(n + " est mort(e).");
                 actif[i] = false;
                 mort[i] = true;
             }
         }
-        else {
-            System.out.println(n + " est retiré du combat.\n");
+        else if (!input.yn(n + " est-il/elle toujours en combat ?")){
+            System.out.println(n + " est retiré(e) du combat.\n");
             actif[i] = false;
         }
         return a_pass;
@@ -505,7 +514,7 @@ public class Combat {
                 }
             }
             case CIBLE_CASQUE -> {
-                if (input.yn(nom[pr_l] + " porte-il un casque ?") && input.D6() <= 4){
+                if (input.yn(nom[pr_l] + " porte-il/elle un casque ?") && input.D6() <= 4){
                     System.out.println(ennemi.nom + " fait tomber votre casque pour le combat.");
                 }
             }
@@ -1040,19 +1049,30 @@ public class Combat {
     }
 
     static private void gestion_mort_end(boolean[] morts, String[] nom) throws IOException {
-        for(int i = 0; i < 4; i++){
-            if(morts[i] && input.yn(nom[i] + " est mort durant le combat, le reste-t-il ?")){
+        for(int i = 0; i < 8; i++){
+            if(morts[i] && input.yn(nom[i] + " est mort durant le combat, le reste-t-il/elle ?")){
                 if(nom[i].equals(Main.guerriere) && input.D10() > 6){
                     System.out.println(nom[i] + " résiste à la mort.\n");
                 }
                 else {
-                    System.out.println(nom[i] + " se retrouve aux enfers.\n");
-                    Main.positions[i] = Position.ENFERS;
-                    switch (i) {
-                        case 0 -> Main.f_a = 0;
-                        case 1 -> Main.f_b = 0;
-                        case 2 -> Main.f_c = 0;
-                        case 3 -> Main.f_d = 0;
+                    if (i < 4) {
+                        System.out.println(nom[i] + " se retrouve aux enfers.\n");
+                        Main.positions[i] = Position.ENFERS;
+                        switch (i) {
+                            case 0 -> Main.f_a = 0;
+                            case 1 -> Main.f_b = 0;
+                            case 2 -> Main.f_c = 0;
+                            case 3 -> Main.f_d = 0;
+                        }
+                    }
+                    else{
+                        System.out.println(nom[i] + " a rendu l'âme.\n");
+                        switch (i - 4) {
+                            case 0 -> Main.f_a = 0;
+                            case 1 -> Main.f_b = 0;
+                            case 2 -> Main.f_c = 0;
+                            case 3 -> Main.f_d = 0;
+                        }
                     }
                 }
             }
