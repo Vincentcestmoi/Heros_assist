@@ -259,7 +259,6 @@ public class Monstre {
             case POURRI -> {
                 System.out.println(this.nom + " tombe en morceau.");
                 vie -= 1;
-                check_mort();
             }
             case PHOTOSYNTHESE -> vie = vie == vie_max ? vie + 1 : vie;
             case A_POISON -> System.out.println("La victime du poison subit " + rand.nextInt(3) + " dommage(s).");
@@ -267,7 +266,6 @@ public class Monstre {
             case BLESSE -> {
                 System.out.println(this.nom + " saigne abondamment.");
                 vie -= 3;
-                check_mort();
             }
             case DUO -> {
                 competence = Competence.AUCUNE; // pour éviter une boucle
@@ -285,7 +283,7 @@ public class Monstre {
     /**
      * Renvoie la quantité et qualité des équipements obtenus à la mort du monstre
      */
-    void drop() throws IOException {
+    private void drop() throws IOException {
         System.out.println("Vous fouillez le corp de " + this.nom);
         if(this.drop_quantite_max == 0 || competence == Competence.ARNAQUE) {
             System.out.println("Vous ne trouvez aucun équipement sur son cadavre");
@@ -342,7 +340,6 @@ public class Monstre {
         System.out.println("Vous tirez sur " + this.nom);
         int degat = applique_competence_tir(max(quantite - this.armure, 1));
         this.vie -= degat;
-        check_mort();
     }
 
     /**
@@ -418,7 +415,6 @@ public class Monstre {
         System.out.println("Vous utilisez votre magie sur " + this.nom);
         int degas = applique_competence_magie(max(quantite, 1));
         this.vie -= degas;
-        check_mort();
     }
 
     /**
@@ -482,7 +478,7 @@ public class Monstre {
      * Regarde si le monstre est mort et agit en conséquence
      * @return si le monstre est mort
      */
-    private boolean check_mort() throws IOException {
+    public boolean check_mort() throws IOException {
         if (est_mort()) {
             switch(competence) {
                 case ILLU_AURAI, ILLU_CYCLOPE, ILLU_DULLA, ILLU_GOLEM, ILLU_ROCHE, ILLU_SIRENE, ILLU_TRITON,
@@ -513,7 +509,7 @@ public class Monstre {
         System.out.println("Vous attaquez " + this.nom);
         int degas = applique_competence_dommage(max(quantite - this.armure, 1));
         this.vie -= degas;
-        if(!check_mort()) {
+        if(!est_mort()) {
             applique_competence_post_dommage();
         }
         System.out.println();
@@ -532,7 +528,7 @@ public class Monstre {
         System.out.println("Vous attaquez " + this.nom);
         int degas = applique_competence_dommage((corriger(quantite * mult) - this.armure));
         this.vie -= degas;
-        if(!check_mort()) {
+        if(!est_mort()) {
             applique_competence_post_dommage();
         }
         System.out.println();
@@ -667,7 +663,7 @@ public class Monstre {
                 if(rand.nextBoolean()){
                     System.out.println(nom + " laisse tomber des fragments de son corps pour ne pas être désavantagé(e).\n");
                     this.vie -= rand.nextInt(5) + 1;
-                    if (check_mort()){
+                    if (est_mort()){
                         return;
                     }
                 }
@@ -719,7 +715,7 @@ public class Monstre {
      * Renvoie si le monstre est mort
      * @return si le monstre est mort
      */
-    boolean est_mort(){
+    private boolean est_mort(){
         if(competence == Competence.REVENANT){
             System.out.println("Une sombre brûme s'abat sur vous, vous perdez (tous) 1 point d'attaque pour la durée du combat.");
             System.out.println(this.nom + " se relève !\n");
