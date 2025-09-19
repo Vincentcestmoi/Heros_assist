@@ -396,6 +396,16 @@ public class Combat {
                             };
                         }
                     }
+                    actif_a = false;
+                    for(int k = 0; k < 8; k++){
+                        if (actif[k] && Objects.equals(nom[k], Main.alchimiste)) {
+                            actif_a = true;
+                            break;
+                        }
+                    }
+                    if(actif_a && input.yn("Voulez vous dissequer " + ennemi.nom + " ?")){
+                        Sort.dissection();
+                    }
                     break;
                 }
             }
@@ -427,6 +437,16 @@ public class Combat {
                                 default -> -1;
                             };
                         }
+                    }
+                    actif_a = false;
+                    for(int k = 0; k < 8; k++){
+                        if (actif[k] && Objects.equals(nom[k], Main.alchimiste)) {
+                            actif_a = true;
+                            break;
+                        }
+                    }
+                    if(actif_a && input.yn("Voulez vous dissequer " + ennemi.nom + " ?")){
+                        Sort.dissection();
                     }
                 }
             }

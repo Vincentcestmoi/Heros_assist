@@ -408,4 +408,20 @@ public class Sort {
         }
         return true;
     }
+
+    /**
+     * Indique le résultat de la compétence "dissection"
+     * @throws IOException toujours
+     */
+    public static void dissection() throws IOException {
+        int temp = input.D6();
+        if (temp <= 1 + rand.nextInt(2) - 1) {
+            System.out.println("Vous n'extrayez rien d'utile.");
+        } else if (temp <= 5 + rand.nextInt(2) - 1) {
+            System.out.println("Vous trouvez 1 ingrédient.");
+        }
+        else{
+            System.out.println("Vous récoltez 2 ingrédients.");
+        }
+    }
 }
