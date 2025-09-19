@@ -652,7 +652,7 @@ public class Monstre {
     /**
      * Règle l'état du monstre à "étourdi"
      */
-    void do_etourdi() throws IOException {
+    void do_etourdi() {
 
         switch (competence) {
             case GOLEM_ACIER, GOLEM_MITHRIL -> {
