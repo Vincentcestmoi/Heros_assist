@@ -412,7 +412,6 @@ public class Monstre {
         if(quantite == 0){
             return;
         }
-        System.out.println("Vous utilisez votre magie sur " + this.nom);
         int degas = applique_competence_magie(max(quantite, 1));
         this.vie -= degas;
     }
@@ -615,7 +614,7 @@ public class Monstre {
     /**
      * Règle l'état du monstre sur "assommé" ou "étourdit"
      */
-    void affecte() throws IOException {
+    void affecte() {
         Random rand = new Random();
         if (rand.nextBoolean()){
             do_assomme();
@@ -628,7 +627,7 @@ public class Monstre {
     /**
      * Règle l'état du monstre à "assommé"
      */
-    void do_assomme() throws IOException {
+    void do_assomme() {
         switch (competence){
             case GOLEM_ACIER, GOLEM_MITHRIL -> {
                 System.out.println(nom + " n'a pas de conscience, et ne peut pas être assommé(e).\n");

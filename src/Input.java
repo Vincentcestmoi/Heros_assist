@@ -247,15 +247,35 @@ public class Input {
      * @throws IOException en cas de problème ?
      */
     public int readInt() throws IOException {
-        int number = 0;
-        int temp = System.in.read();
-        while (temp != 10) {
-            number = number * 10 + (temp - 48);
-            temp = System.in.read();
+        int number;
+        while (true) {
+            number = 0;
+            int temp = System.in.read();
+
+            if (temp == '\n') {
+                continue;
+            }
+
+            boolean valid = true;
+            while (temp != '\n' && temp != -1) {
+                int digit = temp - '0';
+                if (digit < 0 || digit > 9) {
+                    valid = false;
+                } else {
+                    number = number * 10 + digit;
+                }
+                temp = System.in.read();
+            }
+
+            if (valid) {
+                System.out.println();
+                return number;
+            }
+
+            System.out.println("\nErreur détectée : saisie non numérique. Veuillez réécrire votre nombre.");
         }
-        System.out.println();
-        return number;
     }
+
 
     /**
      * Demande au joueur le résultat d'un jet 4 et le renvoie
@@ -461,7 +481,9 @@ public class Input {
             text += "/(p)remier soin/a(n)alyser/(c)ustom/(o)ff";
             switch (nom) {
                 case Main.necromancien -> text += "/(ma)udir";
-                case Main.archimage -> text += "/(on)de de choc";
+                case Main.archimage -> text += "/(me)ditation/(on)de de choc/(bo)ule de feu/(fo)udre/(ar)mure de glace/double boule de feu (bobo)/" +
+                        "armure de glace et boule de feu (arbo)/armure de glace et foudre(arfo)/boule de feu et foudre(bofo)/armure de glace" +
+                        " et onde de choc(aron)/boule de feu et onde de choc(boon)/double armure de glace(arar)";
                 case Main.alchimiste -> {
                     if (ya_mort) {
                         text += "/(re)ssuciter par potion";
@@ -549,6 +571,14 @@ public class Input {
                 System.out.println("Action non reconnue.");
                 yield action(nom, est_familier, est_premiere_ligne, mort);
             }
+
+            case "me", "ME", "Me", "eM" -> {
+                if (nom.equals(Main.archimage)) {
+                    yield Action.MEDITATION;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
             case "on", "ON", "On", "oN" -> {
                 if (nom.equals(Main.archimage)) {
                     yield Action.ONDE_CHOC;
@@ -556,6 +586,79 @@ public class Input {
                 System.out.println("Action non reconnue.");
                 yield action(nom, est_familier, est_premiere_ligne, mort);
             }
+            case "bo", "BO", "Bo", "bO" -> {
+                if (nom.equals(Main.archimage)) {
+                    yield Action.BDF;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "ar", "AR", "Ar", "aR" -> {
+                if (nom.equals(Main.archimage)) {
+                    yield Action.ADG;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "fo", "FO", "Fo", "fO" -> {
+                if (nom.equals(Main.archimage)) {
+                    yield Action.FOUDRE;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "bobo", "BOBO", "Bobo", "bOBO" -> {
+                if (nom.equals(Main.archimage)) {
+                    yield Action.BDF2;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "arbo", "ARBO", "Arbo", "aRBO", "boar", "BOAR", "Boar", "bOAR" -> {
+                if (nom.equals(Main.archimage)) {
+                    yield Action.BDF_ADG;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "arfo", "ARFO", "Arfo", "aRFO", "foar", "FOAR", "Foar", "fOAR" -> {
+                if (nom.equals(Main.archimage)) {
+                    yield Action.FOUDRE_ADG;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "bofo", "BOFO", "Bofo", "bOFO", "fobo", "FOBO", "Fobo", "fOBO" -> {
+                if (nom.equals(Main.archimage)) {
+                    yield Action.FOUDRE_BDF;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "aron", "ARON", "Aron", "aRON", "roan", "ROAN", "Roan", "rOAN" -> {
+                if (nom.equals(Main.archimage)) {
+                    yield Action.ONDE_ADG;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "boon", "BOON", "Boon", "bOON", "onbo", "ONBO", "Onbo", "oNBO" -> {
+                if (nom.equals(Main.archimage)) {
+                    yield Action.ONDE_BDF;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "arar", "ARAR", "Arar", "aRAR"-> {
+                if (nom.equals(Main.archimage)) {
+                    yield Action.ADG2;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+
+
+
             case "re", "RE", "Re", "rE" -> {
                 if (ya_mort && nom.equals(Main.alchimiste)) {
                     yield Action.POTION_REZ;
@@ -563,6 +666,7 @@ public class Input {
                 System.out.println("Action non reconnue.");
                 yield action(nom, est_familier, est_premiere_ligne, mort);
             }
+
             case "be", "BE", "Be", "bE" -> {
                 if (nom.equals(Main.guerriere)) {
                     yield Action.BERSERK;

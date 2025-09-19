@@ -203,7 +203,10 @@ public class Combat {
                         return -1;
                     }
                     case TIRER -> ennemi.tir(input.atk());
-                    case MAGIE -> ennemi.dommage_magique(input.magie());
+                    case MAGIE -> {
+                        System.out.println("Vous utilisez votre magie sur " + ennemi.nom);
+                        ennemi.dommage_magique(input.magie());
+                    }
                     case FUIR -> {
                         if(familier_act(ob, actif, i, n, ennemi)) {
                             fuir(ennemi.nom, i, i == pr_l, actif, n);
@@ -246,8 +249,49 @@ public class Combat {
                             competence_avance(ennemi, nom[pr_l]);
                         }
                     }
-                    case MAUDIR -> maudir(ennemi);
-                    case ONDE_CHOC -> onde_choc(actif, nom, assomme, ennemi);
+
+                    //compétence de classe
+                    case MAUDIR -> {
+                        if(input.yn("Ciblez vous le monstre annemi ?")) {
+                            Sort.maudir(ennemi);
+                        }
+                        else{
+                            Sort.maudir();
+                        }
+                    }
+                    case ONDE_CHOC -> Sort.onde_choc(actif, nom, assomme, ennemi);
+                    case MEDITATION -> Sort.meditation();
+                    case BDF -> Sort.boule_de_feu(ennemi);
+                    case ADG -> Sort.armure_de_glace();
+                    case BDF2 -> {
+                        Sort.boule_de_feu(ennemi);
+                        Sort.boule_de_feu(ennemi);
+                    }
+                    case ADG2 -> {
+                        Sort.armure_de_glace();
+                        Sort.armure_de_glace();
+                    }
+                    case FOUDRE -> Sort.foudre(ennemi);
+                    case BDF_ADG -> {
+                        Sort.armure_de_glace();
+                        Sort.boule_de_feu(ennemi);
+                    }
+                    case ONDE_ADG -> {
+                        Sort.onde_choc(actif, nom, assomme, ennemi);
+                        Sort.armure_de_glace();
+                    }
+                    case ONDE_BDF -> {
+                        Sort.onde_choc(actif, nom, assomme, ennemi);
+                        Sort.boule_de_feu(ennemi);
+                    }
+                    case FOUDRE_ADG -> {
+                        Sort.armure_de_glace();
+                        Sort.foudre(ennemi);
+                    }
+                    case FOUDRE_BDF -> {
+                        Sort.boule_de_feu(ennemi);
+                        Sort.foudre(ennemi);
+                    }
                     case POTION_REZ -> {
                         int temp = input.ask_rez(mort);
                         if (temp != -1 && popo_rez(nom[temp])) {
@@ -372,7 +416,7 @@ public class Combat {
      * @param assomme tableau de boolean indiquant les participants assommés
      * @param n nom du participant
      * @param index indix du participant
-     * @param reveil tableau de valeur indiquant a quel point les participants sont proches de se reveiller
+     * @param reveil tableau de valeur indiquant à quel point les participants sont proches de se reveiller
      * @return si la participant perd son tour
      * @throws IOException toujours
      */
@@ -905,67 +949,6 @@ public class Combat {
                 yield false;
             }
         };
-    }
-
-    private static void maudir(Monstre ennemi) throws IOException {
-        int boost = rand.nextInt(3);
-        switch (input.D6()){
-            case 2 -> {
-                System.out.println("Vous maudissez faiblement " + ennemi.nom);
-                ennemi.vie_max -= 1 + boost;
-                ennemi.vie -= 1 + boost;
-            }
-            case 3, 4 -> {
-                System.out.println("Vous maudissez " + ennemi.nom);
-                ennemi.vie_max -= 2 + boost;
-                ennemi.vie -= 2 + boost;
-            }
-            case 5 -> {
-                System.out.println("Vous maudissez agressivement " + ennemi.nom);
-                ennemi.vie_max -= 3 + boost;
-                ennemi.vie -= 3 + boost;
-            }
-            case 6 -> {
-                System.out.println("Vous maudissez puissament " + ennemi.nom);
-                ennemi.vie_max -= 5 + boost;
-                ennemi.vie -= 5 + boost;
-            }
-            default -> System.out.println("vous n'arrivez pas à maudir " + ennemi.nom);
-        }
-    }
-
-    static private void onde_choc(boolean[] actif, String[] nom, boolean[] assomme, Monstre ennemi) throws IOException {
-        for(int i = 0; i < nom.length; i++){
-            if(!nom[i].equals(Main.archimage) && actif[i]){
-                System.out.println(nom[i] + " est frappé par l'onde de choc.");
-                if(i <= 4){
-                    if(input.D6() <= 3){
-                        System.out.println(nom[i] + " perd connaissance.\n");
-                        assomme[i] = true;
-                    }
-                    else{
-                        System.out.println(nom[i] + " parvient à rester conscient.\n");
-                    }
-                }
-                else{
-                    if(input.D4() <= 3){
-                        System.out.println(nom[i] + " perd connaissance.\n");
-                        assomme[i] = true;
-                    }
-                    else{
-                        System.out.println(nom[i] + " parvient à rester conscient.\n");
-                    }
-                }
-            }
-        }
-        System.out.println(ennemi.nom + " est frappé par l'onde de choc.");
-        System.out.print(Main.archimage + " : ");
-        switch (input.D6()){
-            case 2 -> ennemi.do_etourdi();
-            case 3, 4 -> ennemi.affecte();
-            case 5, 6 -> ennemi.do_assomme();
-            default -> System.out.println(ennemi.nom + " n'a pas l'air très affecté...\n");
-        }
     }
 
     /**
