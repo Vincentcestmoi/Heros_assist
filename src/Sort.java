@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.util.Random;
 
+import static java.lang.Math.max;
+
 public class Sort {
 
     static Input input = new Input();
@@ -281,4 +283,129 @@ public class Sort {
         ennemi.dommage_magique(dmg);
     }
 
+    /**
+     * Indique le résultat de la compétence "fouille"
+     */
+    public static void fouille() throws IOException {
+        System.out.println("Vous chercher autour de vous tout ce qui pourrait être utile pour vos potions.");
+        int temp = input.readInt();
+        if (temp <= 15 + rand.nextInt(10) - 5) {
+            System.out.println("Vous ne trouvez rien.");
+        }
+        else if (temp <= 20 + rand.nextInt(5) - 2) {
+            System.out.println("Vous trouvez 1 ingrédient.");
+        }
+        else {
+            System.out.println("Vous récoltez 2 ingrédients.");
+        }
+    }
+
+    /**
+     * Indique le résultat de la compétence "appel des morts"
+     * @param position la position du nécromancien
+     * @return si le nécromancien a réussi à appeler un mort
+     * @throws IOException toujours
+     */
+    public static boolean necromancie(Position position) throws IOException {
+        Monstre l1, l2, l3;
+        //invocation selon le lieu
+        switch (position) {
+            case ENFERS -> {
+                l1 = Lieu.true_enfers();
+                l2 = Lieu.true_enfers();
+                l3 = Lieu.true_enfers();
+            }
+            case PRAIRIE -> {
+                l1 = Lieu.true_prairie();
+                l2 = Lieu.true_enfers();
+                l3 = Lieu.true_enfers();
+            }
+            case VIGNES -> {
+                l1 = Lieu.true_vigne();
+                l2 = Lieu.true_prairie();
+                l3 = Lieu.true_enfers();
+            }
+            case TEMPLE -> {
+                l1 = Lieu.true_temple();
+                l2 = Lieu.true_vigne();
+                l3 = Lieu.true_prairie();
+            }
+            case MER -> {
+                l1 = Lieu.true_mer();
+                l2 = Lieu.true_temple();
+                l3 = Lieu.true_vigne();
+            }
+            case MONTS -> {
+                l1 = Lieu.true_mont();
+                l2 = Lieu.true_mer();
+                l3 = Lieu.true_temple();
+            }
+            case OLYMPE -> {
+                l1 = Lieu.true_mont();
+                l2 = Lieu.true_mont();
+                l3 = Lieu.true_mer();
+            }
+            case ASCENDANT -> {
+                System.out.println("ERROR :DONOT");
+                return false;
+            }
+            default -> {
+                l1 = Lieu.true_prairie();
+                l2 = l1;
+                l3 = l2;
+            }
+        }
+        System.out.println("Vous rappelez à la vie les cadavres de ces terres.");
+        System.out.println("Combien de PP mettez vous dans le sort ? (min 4) : ");
+        int mana = input.readInt();
+
+        // selection du monstre a ressuciter
+        int jet = input.D6() + mana + rand.nextInt(2) - 1;
+        Monstre rez;
+        if (jet <= 5 || mana < 4) {
+            System.out.println("Le sort a échoué.\n");
+            return false;
+        } else if (jet <= 7) {
+            rez = l3;
+        } else if (jet <= 12) {
+            rez = l2;
+        } else {
+            rez = l1;
+        }
+        System.out.println("Vous ressentez la réponse d'une âme à travers le sol.");
+
+        //selection de la puissance du monstre
+        jet = input.D8() + mana + rand.nextInt(2) - 2 + jet / 3;
+        if (jet <= 7) {
+            System.out.println("nouveau familier : carcasse réanimée");
+            System.out.println("attaque : " + (int)max(rez.attaque *0.25, 1));
+            System.out.println("vie : " + (int)max(rez.vie_max *0.25, 1));
+            System.out.println("armure : " + (int)(rez.armure *0.25) + "\n");
+        }
+        else if (jet <= 10) {
+            System.out.println("nouveau familier : esprit désincarné");
+            System.out.println("attaque : " + rez.attaque);
+            System.out.println("vie : " + (int)max(rez.vie_max *0.25, 1));
+            System.out.println("armure : 0\n");
+        }
+        else if (jet <= 12) {
+            System.out.println("nouveau familier : zombie");
+            System.out.println("attaque : " + max(rez.attaque / 3, 1));
+            System.out.println("vie : " + rez.vie_max);
+            System.out.println("armure : " + (int)(rez.armure * 0.75) + "\n");
+        }
+        else if (jet <= 14) {
+            System.out.println("nouveau familier : ancien squelette");
+            System.out.println("attaque : " + (int)max(0.75 * rez.attaque, 1));
+            System.out.println("vie : " + rez.vie_max);
+            System.out.println("armure : " + rez.armure + "\n");
+        }
+        else {
+            System.out.println("nouveau familier : ancien gardien");
+            System.out.println("attaque : " + (int)(rez.attaque * 1.2));
+            System.out.println("vie : " + (int)(rez.vie_max * 1.2));
+            System.out.println("armure : " + (int)(max(rez.armure * 1.2, 1)) + "\n");
+        }
+        return true;
+    }
 }

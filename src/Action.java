@@ -27,6 +27,7 @@ public enum Action {
     ONDE_ADG,
     ONDE_BDF,
     FOUDRE,
+    FOUILLE,
     END,
     RETOUR,
 }

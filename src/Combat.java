@@ -321,6 +321,7 @@ public class Combat {
                             System.out.println("L'arme principale de " + Main.guerriere + " se brise !");
                         }
                     }
+                    case FOUILLE -> Sort.fouille();
                     case RETOUR -> {
                         int k = j;
                         do{
@@ -403,8 +404,30 @@ public class Combat {
             if (run) {
                 ennemi.attaque(nom[pr_l]);
                 if (ennemi.check_mort()) {
+                    // la mort est donné par les méthodes de dommage
                     gestion_nomme(ennemi);
                     run = false;
+
+                    //le nécromancien peut tenter de ressuciter le monstre
+                    boolean actif_a = false;
+                    for (int k = 0; k < 8; k++) {
+                        if (actif[k] && Objects.equals(nom[k], Main.necromancien)) {
+                            actif_a = true;
+                            break;
+                        }
+                    }
+                    if (actif_a && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier pour 2PP ?")) {
+                        if (ressuciter(ennemi)) {
+                            return switch(Main.necromancien){
+                                //noinspection DataFlowIssue
+                                case Main.Joueur_A -> 0;
+                                case Main.Joueur_B -> 1;
+                                case Main.Joueur_C -> 2;
+                                case Main.Joueur_D -> 3;
+                                default -> -1;
+                            };
+                        }
+                    }
                 }
             }
         }
@@ -464,7 +487,7 @@ public class Combat {
      * @throws IOException ça roule
      */
     private static void fuir(String ne, int i, boolean is_pr, boolean[] actif, String n) throws IOException {
-        if (is_pr || input.D6() > 2 + rand.nextInt(2)) {
+        if (!is_pr || input.D6() > 2 + rand.nextInt(2)) {
             actif[i] = false;
             System.out.println(n + " a fuit le combat.\n");
         } else {

@@ -221,6 +221,8 @@ public class Input {
         return text.toString();
     }
 
+    // ********************************************************************************************************** //
+
     //visuel (terminal)
 
     /**
@@ -488,6 +490,7 @@ public class Input {
                     if (ya_mort) {
                         text += "/(re)ssuciter par potion";
                     }
+                    text += "/(fo)uiller";
                 }
                 case Main.guerriere -> text += "/(be)rserker/(la)me d'aura";
             }
@@ -603,6 +606,9 @@ public class Input {
             case "fo", "FO", "Fo", "fO" -> {
                 if (nom.equals(Main.archimage)) {
                     yield Action.FOUDRE;
+                }
+                if (nom.equals(Main.alchimiste)){
+                    yield Action.FOUILLE;
                 }
                 System.out.println("Action non reconnue.");
                 yield action(nom, est_familier, est_premiere_ligne, mort);
@@ -756,13 +762,22 @@ public class Input {
      * @param obe l'obéissance du familier du joueur
      * @return : un choix correspondant
      */
-    Choix tour(Position position, int obe) throws IOException {
+    Choix tour(Position position, int obe, int index) throws IOException {
         while (true) {
             String text = "Que voulez-vous faire : (E)xplorer";
             boolean peut_descendre =  position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
             boolean peut_monter = position != Position.OLYMPE;
             boolean market = position != Position.OLYMPE && position != Position.ENFERS;
             boolean peut_entrainer = obe > 0 && obe < 3;
+            if(Main.nom[index].equals(Main.alchimiste)){
+                text += "/(fo)uiller";
+            }
+            if(Main.nom[index].equals(Main.archimage)){
+                text += "/(me)ditation";
+            }
+            if(Main.nom[index].equals(Main.necromancien)){
+                text += "/(ap)pel des morts";
+            }
             if(peut_descendre){
                 text += "/(d)escendre";
             }
@@ -778,6 +793,8 @@ public class Input {
             text += "/(c)ustom ?";
             System.out.println(text);
             switch (read()) {
+
+                // normaux
                 case "E", "e", "explorer", "Explorer", "" -> {
                     return Choix.EXPLORER;
                 }
@@ -809,6 +826,8 @@ public class Input {
                 case "c", "C", "Custom", "custom" -> {
                     return Choix.ATTENDRE;
                 }
+
+                // caché
                 case "q" -> {
                     System.out.println("Confirmez l'arret");
                     if(read().equals("q")) {
@@ -838,6 +857,26 @@ public class Input {
                     if(read().equals("sui")) {
                         return Choix.SUICIDE;
                     }
+                }
+
+                // par métier
+                case "ap", "AP", "Ap", "aP" -> {
+                    if(Main.nom[index].equals(Main.necromancien)){
+                        return Choix.NECROMANCIE;
+                    }
+                    System.out.println("Input unknow");
+                }
+                case "fo", "FO", "Fo", "fO" -> {
+                    if(Main.nom[index].equals(Main.alchimiste)){
+                        return Choix.FOUILLE;
+                    }
+                    System.out.println("Input unknow");
+                }
+                case "me", "ME", "Me", "mE" -> {
+                    if(Main.nom[index].equals(Main.archimage)){
+                        return Choix.MEDITATION;
+                    }
+                    System.out.println("Input unknow");
                 }
                 default -> System.out.println("Input unknow");
             }

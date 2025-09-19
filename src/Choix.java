@@ -10,4 +10,7 @@ public enum Choix {
     FAMILIER_MOINS,
     RETOUR,
     SUICIDE,
+    NECROMANCIE,
+    MEDITATION,
+    FOUILLE,
 }

@@ -124,17 +124,8 @@ public class Main {
             }
             System.out.println(nom[i] + " c'est votre tour, vous êtes " + texte_pos(positions[i]) + ".");
             int temp = -1;
-            switch (input.tour(positions[i], new int[]{f_a, f_b, f_c, f_d}[i])) {
-                case SUICIDE -> {
-                    System.out.println(nom[i] + " est mort.");
-                    positions[i] = Position.ENFERS;
-                    switch (i){
-                        case 0 -> f_a = 0;
-                        case 1 -> f_b = 0;
-                        case 2 -> f_c = 0;
-                        case 3 -> f_d = 0;
-                    }
-                }
+            switch (input.tour(positions[i], new int[]{f_a, f_b, f_c, f_d}[i], i)) {
+                // action classique
                 case EXPLORER -> temp = expedition(nbj, i, f_a, f_b, f_c, f_d);
                 case MONTER -> temp = ascension(i);
                 case DESCENDRE -> {
@@ -152,6 +143,27 @@ public class Main {
                     }
                 }
                 case ATTENDRE -> System.out.println(nom[i] + " passe son tour.");
+
+                // action de classe
+                case MEDITATION -> Sort.meditation();
+                case NECROMANCIE -> {
+                    if(Sort.necromancie(positions[i])){
+                        temp = i;
+                    }
+                }
+                case FOUILLE -> Sort.fouille();
+
+                // action caché
+                case SUICIDE -> {
+                    System.out.println(nom[i] + " est mort.");
+                    positions[i] = Position.ENFERS;
+                    switch (i){
+                        case 0 -> f_a = 0;
+                        case 1 -> f_b = 0;
+                        case 2 -> f_c = 0;
+                        case 3 -> f_d = 0;
+                    }
+                }
                 case QUITTER -> run = false;
                 case FAMILIER_PLUS -> {
                     switch (nom[i]) {
