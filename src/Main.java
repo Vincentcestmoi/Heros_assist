@@ -10,8 +10,8 @@ public class Main {
     static String Ext = ".txt";
     static Position[] positions = {Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE};
     static final String Joueur_A = "Micky";
-    static final String Joueur_C = "Lucien";
     static final String Joueur_B = "Vincent";
+    static final String Joueur_C = "Lucien";
     static final String Joueur_D = "Aloyse";
     static final String necromancien = Joueur_A;
     static final String archimage = Joueur_C;
@@ -123,7 +123,7 @@ public class Main {
                 i = 0;
             }
             System.out.println(nom[i] + " c'est votre tour, vous êtes " + texte_pos(positions[i]) + ".");
-            int temp = 0;
+            int temp = -1;
             switch (input.tour(positions[i], new int[]{f_a, f_b, f_c, f_d}[i])) {
                 case SUICIDE -> {
                     System.out.println(nom[i] + " est mort.");
@@ -234,6 +234,10 @@ public class Main {
             case TEMPLE -> Position.VIGNES;
             case MER -> Position.TEMPLE;
             case MONTS -> Position.MER;
+            case ASCENDANT -> {
+                System.out.println("ERROR : DONOT");
+                yield Position.ENFERS;
+            }
             default -> { //ENFERS, PRAIRIES, OLYMPE
                 System.out.println("Erreur : position " + position + " ne peut être descendue !");
                 yield position;
@@ -296,12 +300,12 @@ public class Main {
             case 4, 5 -> {
                 System.out.println(text + " parvient sans encombre " + texte_pos(next_pos) + ".\n");
                 positions[index] = next_pos;
-                return 0;
+                return -1;
             }
             default -> {
                 System.out.println("Erreur : résultat inatendu. Action annulée.\n");
                 positions[index] = pos;
-                return 0;
+                return -1;
             }
         }
         System.out.println(text);
@@ -367,7 +371,7 @@ public class Main {
             case OLYMPE -> expedition_olympe(nbj, meneur, f_a, f_b, f_c, f_d);
             case ASCENDANT -> {
                 System.out.println("ERROR : DONOT");
-                yield 0;
+                yield -1;
             }
         };
     }
@@ -415,7 +419,7 @@ public class Main {
                 return Combat.affrontement(nbj, Position.ENFERS, meneur, f_a, f_b, f_c, f_d, monstre);
             }
         }
-        return 0;
+        return -1;
     }
 
     static int expedition_prairie(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
@@ -442,7 +446,7 @@ public class Main {
                 return Combat.affrontement(nbj, Position.PRAIRIE, meneur, f_a, f_b, f_c, f_d, monstre);
             }
         }
-        return 0;
+        return -1;
     }
 
     static int expedition_vigne(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
@@ -479,7 +483,7 @@ public class Main {
                 return Combat.affrontement(nbj, Position.VIGNES, meneur, f_a, f_b, f_c, f_d, monstre);
             }
         }
-        return 0;
+        return -1;
     }
 
     static int expedition_temple(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
@@ -519,7 +523,7 @@ public class Main {
                 return Combat.affrontement(nbj, Position.TEMPLE, meneur, f_a, f_b, f_c, f_d, monstre);
             }
         }
-        return 0;
+        return -1;
     }
 
     static int expedition_mer(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
@@ -559,7 +563,7 @@ public class Main {
                 return Combat.affrontement(nbj, Position.MER, meneur, f_a, f_b, f_c, f_d, monstre);
             }
         }
-        return 0;
+        return -1;
     }
 
     static int expedition_mont(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
@@ -592,7 +596,7 @@ public class Main {
                 return Combat.affrontement(nbj, Position.MONTS, meneur, f_a, f_b, f_c, f_d, monstre);
             }
         }
-        return 0;
+        return -1;
     }
 
     static int expedition_olympe(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
@@ -615,7 +619,7 @@ public class Main {
                 return Combat.affrontement(nbj, Position.OLYMPE, meneur, f_a, f_b, f_c, f_d, monstre);
             }
         }
-        return 0;
+        return -1;
     }
 
     /**
