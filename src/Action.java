@@ -9,12 +9,13 @@ public enum Action {
     DOMESTIQUER,
     ANALYSER,
     AUTRE,
-    ETRE_MORT,
+    OFF,
     AVANCER,
     MAUDIR,
     ONDE_CHOC,
     POTION_REZ,
     BERSERK,
     LAME_DAURA,
-    END
+    END,
+    RETOUR,
 }

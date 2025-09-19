@@ -140,7 +140,7 @@ public class Combat {
         int ob, i;
         String n;
         Action act;
-        boolean run = !ennemi.est_mort();
+        boolean run = !ennemi.check_mort();
         boolean a_pass = false, berserk = false;
         while (run) {
 
@@ -155,40 +155,14 @@ public class Combat {
 
                 n = nom[i]; // on stocke le nom par commodité
 
-                // si le joueur est assommé, ce bloc remplace son tour
-                if (assomme[i]) {
-                    System.out.println(n + " est inconscient.");
-                    if (Objects.equals(n, Main.archimage) && input.yn("Utiliser purge (3PP) ?")) {
-                        System.out.println(n + " se réveille.\n");
-                        assomme[i] = false;
-                        reveil[i] = 0;
-                    }
-                    else if (input.D4() + reveil[i] >= 3) {
-                        System.out.println(n + " se réveille.\n");
-                        assomme[i] = false;
-                        reveil[i] = 0;
-                    }
-                    else {
-                        System.out.println(n + " est toujours inconscient.\n");
-                        if (Objects.equals(n, Main.archimage)) {
-                            System.out.println(n + " recupère 1PP.\n");
-                            if (rand.nextBoolean()) {
-                                reveil[i] += 1;
-                            }
-                        }
-                        else{
-                            reveil[i] += 1;
-                        }
-                    }
-                    if (Objects.equals(n, Main.necromancien) && a_pass) {
-                        a_pass = false;
-                    }
-                    continue;
-                } // bloc assomé
-
                 // si le nécromancien a ressucité, il a déjà utilisé son tour
                 if (Objects.equals(n, Main.necromancien) && a_pass) {
+                    System.out.println(n + " s'est concentré sur son sort de résurection.");
                     a_pass = false;
+                    continue;
+                }
+
+                if (gere_assome(assomme, n, i, reveil)){
                     continue;
                 }
 
@@ -214,13 +188,15 @@ public class Combat {
 
                 // action
                 act = input.action(n, ob != 0, i == pr_l, mort);
-
+                //TODO : méditation
                 switch (act) {
-                    case ETRE_MORT -> {
-                        a_pass = act_mort(actif, assomme, mort, nom, n, a_pass, i);
-                        a_pass = act_mort(actif, assomme, mort, nom, nom[pr_l], a_pass, pr_l);
-                        if (actif[i]) {
-                            j--;
+                    case OFF -> {
+                        a_pass = alteration(actif, assomme, mort, nom, n, a_pass, i);
+                        if(i != pr_l) {
+                            a_pass = alteration(actif, assomme, mort, nom, nom[pr_l], a_pass, pr_l);
+                            if (actif[i]) {
+                                j--;
+                            }
                         }
                     }
                     case END -> {
@@ -301,6 +277,13 @@ public class Combat {
                             System.out.println("L'arme principale de " + Main.guerriere + " se brise !");
                         }
                     }
+                    case RETOUR -> {
+                        int k = j;
+                        do{
+                            k = k == 0 ? 7 : k - 1;
+                        }while(!actif[t[k]]);
+                        j = t[k];
+                    }
                     default -> { // ATTAQUER
                         if (berserk && n.equals(Main.guerriere)) { //berserker
                             if (input.D6() < 4) {
@@ -343,7 +326,7 @@ public class Combat {
                     System.out.println(nom[k] + " se retrouve en première ligne.\n");
                 }
 
-                if (ennemi.est_mort()) {
+                if (ennemi.check_mort()) {
                     // la mort est donné par les méthodes de dommage
                     gestion_nomme(ennemi);
                     run = false;
@@ -375,13 +358,56 @@ public class Combat {
             // tour de l'adversaire
             if (run) {
                 ennemi.attaque(nom[pr_l]);
-                if (ennemi.est_mort()) {
+                if (ennemi.check_mort()) {
                     gestion_nomme(ennemi);
                     run = false;
                 }
             }
         }
         return -1;
+    }
+
+    /**
+     * Regarde si le participant est assommé et gère le cas échéant
+     * @param assomme tableau de boolean indiquant les participants assommés
+     * @param n nom du participant
+     * @param index indix du participant
+     * @param reveil tableau de valeur indiquant a quel point les participants sont proches de se reveiller
+     * @return si la participant perd son tour
+     * @throws IOException toujours
+     */
+    private static boolean gere_assome(boolean[] assomme, String n, int index, int[] reveil) throws IOException {
+        if (!assomme[index]) {
+            return false;
+        }
+        System.out.println(n + " est inconscient.");
+
+        // l'archimage peut se réveiller et jouer quand même via un sort
+        if (Objects.equals(n, Main.archimage) && input.yn("Utiliser purge (3PP) ?")) {
+            System.out.println(n + " se réveille.\n");
+            assomme[index] = false;
+            reveil[index] = 0;
+            return false;
+        }
+
+        // réveil standard
+        else if (input.D6() + reveil[index] >= 5) {
+            System.out.println(n + " se réveille.\n");
+            assomme[index] = false;
+            reveil[index] = 0;
+        } else {
+            System.out.println(n + " est toujours inconscient.");
+            if (Objects.equals(n, Main.archimage)) {
+                System.out.println(n + " recupère 1PP.\n");
+            }
+            else{
+                System.out.println();
+            }
+
+            // réveil pas à pas
+            reveil[index] += 1;
+        }
+        return true;
     }
 
     /**
@@ -435,7 +461,8 @@ public class Combat {
     }
 
     /**
-     * Gère le retour OFF de l'action, c.-à-d. la mort ou le retrait du joueur actif ou de celui de première ligne
+     * Gère le retour OFF de l'action, c.-à-d. la mort, l'inconscience ou le retrait du joueur actif ou de celui
+     * de première ligne
      * @param actif booléens indiquants quels participants sont actifs
      * @param assomme booléens indiquants quels participants sont assommés
      * @param mort booléens indiquants quels participants sont morts
@@ -443,10 +470,10 @@ public class Combat {
      * @param n le nom du participant actuel (supposemment off)
      * @param a_pass si le joueur A (nécro) passera son prochain tour
      * @param i l'indice du joueur actuel
-     * @return si le joueur A tente une résurection
+     * @return si le nécromancien a utilisé son tour
      * @throws IOException mon poto
      */
-    private static boolean act_mort(boolean[] actif, boolean[] assomme, boolean[] mort, String[] nom, String n, boolean a_pass, int i) throws IOException {
+    private static boolean alteration(boolean[] actif, boolean[] assomme, boolean[] mort, String[] nom, String n, boolean a_pass, int i) throws IOException {
         if(input.yn(n + " est-il/elle mort(e) ?")){
 
             //on regarde si on peut le ressuciter immédiatement
