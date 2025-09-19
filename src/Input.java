@@ -445,8 +445,8 @@ public class Input {
     public Action action(String nom, Boolean est_familier, Boolean est_premiere_ligne, boolean[] mort) throws IOException {
         String text;
         boolean ya_mort = false;
-        for(int i = 0; i < 4; i++){
-            if(mort[i]){
+        for (int i = 0; i < 4; i++) {
+            if (mort[i]) {
                 ya_mort = true;
                 break;
             }
@@ -455,8 +455,7 @@ public class Input {
             text = nom + " entrez votre action : (A)ttaquer/(t)irer/(m)agie/(f)uir";
             if (est_premiere_ligne) {
                 text += "/a(s)somer/(e)ncaisser/(d)omestiquer";
-            }
-            else{
+            } else {
                 text += "/(s)'avancer";
             }
             text += "/(p)remier soin/a(n)alyser/(c)ustom/(o)ff";
@@ -470,124 +469,134 @@ public class Input {
                 }
                 case Main.guerriere -> text += "/(be)rserker/(la)me d'aura";
             }
-            text += " : ";
-            System.out.println(text);
-            String input = read();
-            if (input.equals("A") || input.equals("a") || input.isEmpty()) {
-                return Action.ATTAQUER;
-            }
-            return switch (input) {
-                case "T", "t" -> Action.TIRER;
-                case "M", "m" -> Action.MAGIE;
-                case "F", "f" -> Action.FUIR;
-                case "P", "p" -> Action.SOIGNER;
-                case "n", "N" -> Action.ANALYSER;
-                case "C", "c" -> Action.AUTRE;
-                case "O", "o" -> Action.ETRE_MORT;
-                case "S", "s" -> {
-                    if (est_premiere_ligne) {
-                        yield Action.ASSOMER;
-                    }
-                    else{
-                        yield Action.AVANCER;
-                    }
-                }
-                case "E", "e" -> {
-                    if (est_premiere_ligne) {
-                        yield Action.ENCAISSER;
-                    }
-                    System.out.println("Action non reconnue.");
-                    yield action(nom, false, false, mort);
-                }
-                case "D", "d" -> {
-                    if (est_premiere_ligne) {
-                        yield Action.DOMESTIQUER;
-                    }
-                    System.out.println("Action non reconnue.");
-                    yield action(nom, false, false, mort);
-                }
-                case "q", "Q" -> {
-                    if (yn("Confirmez ")) {
-                        yield Action.END;
-                    }
-                    yield action(nom, false, est_premiere_ligne, mort);
-                }
-                case "ma", "MA", "Ma", "mA" -> {
-                    if (nom.equals(Main.necromancien)) {
-                        yield Action.MAUDIR;
-                    }
-                    System.out.println("Action non reconnue.");
-                    yield action(nom, false, est_premiere_ligne, mort);
-                }
-                case "on", "ON", "On", "oN" -> {
-                    if (nom.equals(Main.archimage)) {
-                        yield Action.ONDE_CHOC;
-                    }
-                    System.out.println("Action non reconnue.");
-                    yield action(nom, false, est_premiere_ligne, mort);
-                }
-                case "re", "RE", "Re", "rE" -> {
-                    if (ya_mort && nom.equals(Main.alchimiste)) {
-                        yield Action.POTION_REZ;
-                    }
-                    System.out.println("Action non reconnue.");
-                    yield action(nom, false, est_premiere_ligne, mort);
-                }
-                case "be", "BE", "Be", "bE" -> {
-                    if (nom.equals(Main.guerriere)) {
-                        yield Action.BERSERK;
-                    }
-                    System.out.println("Action non reconnue.");
-                    yield action(nom, false, est_premiere_ligne, mort);
-                }
-                case "la", "LA", "La", "lA" -> {
-                    if (nom.equals(Main.guerriere)) {
-                        yield Action.LAME_DAURA;
-                    }
-                    System.out.println("Action non reconnue.");
-                    yield action(nom, false, est_premiere_ligne, mort);
-                }
-                default -> {
-                    System.out.println("Action non reconnue.");
-                    yield action(nom, false, est_premiere_ligne, mort);
-                }
-            };
-        }
-        else { // familier
+        } else { //familier
             text = "Donnez un ordre au " + nom + " (A)ttaquer/(f)uir/(c)ustom/(o)ff";
-            if(!est_premiere_ligne){
+            if (!est_premiere_ligne) {
                 text += "/(s)'avancer";
             }
-            text += " : ";
-            System.out.println(text);
-
-            String input = read();
-            if (input.equals("A") || input.equals("a") || input.isEmpty()) {
-                return Action.ATTAQUER;
-            }
-            return switch (input) {
-                case "F", "f" -> Action.FUIR;
-                case "C", "c" -> Action.AUTRE;
-                case "O", "o" -> Action.ETRE_MORT;
-                case "s", "S" -> {
-                    if(!est_premiere_ligne) {
-                        yield Action.AVANCER;
-                    }
-                    System.out.println("Action non reconnue.");
-                    yield action(nom, true, true, mort);
-                }
-                case "q", "Q" -> {
-                    if(yn("Confirmez ")){
-                        yield Action.END;
-                    }
-                    yield action(nom, true, est_premiere_ligne, mort);
-                }
-                default -> {
-                    System.out.println("Action non reconnue.");
-                    yield action(nom, true, est_premiere_ligne, mort);
-                }
-            };
         }
+        text += " : ";
+        System.out.println(text);
+        String input = read();
+        if (input.equals("A") || input.equals("a") || input.isEmpty()) {
+            return Action.ATTAQUER;
+        }
+        return switch (input) {
+            case "F", "f" -> Action.FUIR;
+            case "C", "c" -> Action.AUTRE;
+            case "O", "o" -> Action.OFF;
+
+            // actions joueur
+            case "T", "t" -> {
+                if (!est_familier) {
+                    yield Action.TIRER;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, true, est_premiere_ligne, mort);
+            }
+            case "M", "m" -> {
+                if (!est_familier) {
+                    yield Action.MAGIE;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, true, est_premiere_ligne, mort);
+            }
+            case "P", "p" -> {
+                if (!est_familier) {
+                    yield Action.SOIGNER;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, true, est_premiere_ligne, mort);
+            }
+            case "n", "N" -> {
+                if (!est_familier) {
+                    yield Action.ANALYSER;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, true, est_premiere_ligne, mort);
+            }
+
+            // joueur en première ligne
+            case "S", "s" -> {
+                if (est_premiere_ligne && !est_familier) {
+                    yield Action.ASSOMER;
+                } else if (!est_premiere_ligne) {
+                    yield Action.AVANCER;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, true, true, mort);
+            }
+            case "E", "e" -> {
+                if (est_premiere_ligne && !est_familier) {
+                    yield Action.ENCAISSER;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "D", "d" -> {
+                if (est_premiere_ligne && !est_familier) {
+                    yield Action.DOMESTIQUER;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+
+            // action métier
+            case "ma", "MA", "Ma", "mA" -> {
+                if (nom.equals(Main.necromancien)) {
+                    yield Action.MAUDIR;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "on", "ON", "On", "oN" -> {
+                if (nom.equals(Main.archimage)) {
+                    yield Action.ONDE_CHOC;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "re", "RE", "Re", "rE" -> {
+                if (ya_mort && nom.equals(Main.alchimiste)) {
+                    yield Action.POTION_REZ;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "be", "BE", "Be", "bE" -> {
+                if (nom.equals(Main.guerriere)) {
+                    yield Action.BERSERK;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "la", "LA", "La", "lA" -> {
+                if (nom.equals(Main.guerriere)) {
+                    yield Action.LAME_DAURA;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+
+            // actions particulières
+            case "q", "Q" -> {
+                if (yn("Confirmez ")) {
+                    yield Action.END;
+                }
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+            case "r", "R" -> {
+                if (yn("Confirmez ")) {
+                    yield Action.RETOUR;
+                }
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+
+            default -> {
+                System.out.println("Action non reconnue.");
+                yield action(nom, est_familier, est_premiere_ligne, mort);
+            }
+        };
     }
 
     /**
