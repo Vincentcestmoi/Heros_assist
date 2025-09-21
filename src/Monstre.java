@@ -693,7 +693,7 @@ public class Monstre {
             return;
         }
         this.assomme = false;
-        System.out.println(this.nom + " se réveille.\n");
+        System.out.print(this.nom + " se réveille ");
         Random rand = new Random();
         if (rand.nextBoolean()){
             this.etourdi = true;
@@ -720,7 +720,7 @@ public class Monstre {
      * Renvoie si le monstre est mort
      * @return si le monstre est mort
      */
-    private boolean est_mort(){
+    public boolean est_mort(){
         if(competence == Competence.REVENANT){
             System.out.println("Une sombre brûme s'abat sur vous, vous perdez (tous) 1 point d'attaque pour la durée du combat.");
             System.out.println(this.nom + " se relève !\n");

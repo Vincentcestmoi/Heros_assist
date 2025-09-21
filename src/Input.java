@@ -483,12 +483,10 @@ public class Input {
             text += "/(p)remier soin/a(n)alyser/(c)ustom/(o)ff";
             switch (nom) {
                 case Main.necromancien -> text += "/(ma)udir";
-                case Main.archimage -> text += "/(me)ditation/(on)de de choc/(bo)ule de feu/(fo)udre/(ar)mure de glace/double boule de feu (bobo)/" +
-                        "armure de glace et boule de feu (arbo)/armure de glace et foudre(arfo)/boule de feu et foudre(bofo)/armure de glace" +
-                        " et onde de choc(aron)/boule de feu et onde de choc(boon)/double armure de glace(arar)";
+                case Main.archimage -> text += "/(me)ditation/(so)rt";
                 case Main.alchimiste -> {
                     if (ya_mort) {
-                        text += "/(re)ssuciter par potion";
+                        text += "/(re)ssuciter par potion/(co)ncocter des potions";
                     }
                     text += "/(fo)uiller";
                 }
@@ -582,89 +580,27 @@ public class Input {
                 System.out.println("Action non reconnue.");
                 yield action(nom, est_familier, est_premiere_ligne, mort);
             }
-            case "on", "ON", "On", "oN" -> {
+            case "so", "SO", "So", "sO" -> {
                 if (nom.equals(Main.archimage)) {
-                    yield Action.ONDE_CHOC;
-                }
-                System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
-            }
-            case "bo", "BO", "Bo", "bO" -> {
-                if (nom.equals(Main.archimage)) {
-                    yield Action.BDF;
-                }
-                System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
-            }
-            case "ar", "AR", "Ar", "aR" -> {
-                if (nom.equals(Main.archimage)) {
-                    yield Action.ADG;
+                    yield Action.SORT;
                 }
                 System.out.println("Action non reconnue.");
                 yield action(nom, est_familier, est_premiere_ligne, mort);
             }
             case "fo", "FO", "Fo", "fO" -> {
-                if (nom.equals(Main.archimage)) {
-                    yield Action.FOUDRE;
-                }
                 if (nom.equals(Main.alchimiste)){
                     yield Action.FOUILLE;
                 }
                 System.out.println("Action non reconnue.");
                 yield action(nom, est_familier, est_premiere_ligne, mort);
             }
-            case "bobo", "BOBO", "Bobo", "bOBO" -> {
-                if (nom.equals(Main.archimage)) {
-                    yield Action.BDF2;
+            case "co", "CO", "Co", "cO" -> {
+                if (nom.equals(Main.alchimiste)) {
+                    yield Action.CONCOCTION;
                 }
                 System.out.println("Action non reconnue.");
                 yield action(nom, est_familier, est_premiere_ligne, mort);
             }
-            case "arbo", "ARBO", "Arbo", "aRBO", "boar", "BOAR", "Boar", "bOAR" -> {
-                if (nom.equals(Main.archimage)) {
-                    yield Action.BDF_ADG;
-                }
-                System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
-            }
-            case "arfo", "ARFO", "Arfo", "aRFO", "foar", "FOAR", "Foar", "fOAR" -> {
-                if (nom.equals(Main.archimage)) {
-                    yield Action.FOUDRE_ADG;
-                }
-                System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
-            }
-            case "bofo", "BOFO", "Bofo", "bOFO", "fobo", "FOBO", "Fobo", "fOBO" -> {
-                if (nom.equals(Main.archimage)) {
-                    yield Action.FOUDRE_BDF;
-                }
-                System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
-            }
-            case "aron", "ARON", "Aron", "aRON", "roan", "ROAN", "Roan", "rOAN" -> {
-                if (nom.equals(Main.archimage)) {
-                    yield Action.ONDE_ADG;
-                }
-                System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
-            }
-            case "boon", "BOON", "Boon", "bOON", "onbo", "ONBO", "Onbo", "oNBO" -> {
-                if (nom.equals(Main.archimage)) {
-                    yield Action.ONDE_BDF;
-                }
-                System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
-            }
-            case "arar", "ARAR", "Arar", "aRAR"-> {
-                if (nom.equals(Main.archimage)) {
-                    yield Action.ADG2;
-                }
-                System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
-            }
-
-
-
             case "re", "RE", "Re", "rE" -> {
                 if (ya_mort && nom.equals(Main.alchimiste)) {
                     yield Action.POTION_REZ;
@@ -770,7 +706,7 @@ public class Input {
             boolean market = position != Position.OLYMPE && position != Position.ENFERS;
             boolean peut_entrainer = obe > 0 && obe < 3;
             if(Main.nom[index].equals(Main.alchimiste)){
-                text += "/(fo)uiller";
+                text += "/(fo)uiller/(co)ncocter des potions";
             }
             if(Main.nom[index].equals(Main.archimage)){
                 text += "/(me)ditation";
@@ -872,6 +808,12 @@ public class Input {
                     }
                     System.out.println("Input unknow");
                 }
+                case "co", "CO", "Co", "cO" -> {
+                    if(Main.nom[index].equals(Main.alchimiste)){
+                        return Choix.CONCOCTION;
+                    }
+                    System.out.println("Input unknow");
+                }
                 case "me", "ME", "Me", "mE" -> {
                     if(Main.nom[index].equals(Main.archimage)){
                         return Choix.MEDITATION;
@@ -883,4 +825,50 @@ public class Input {
         }
     }
 
+    /**
+     * Laisse l'alchimiste choisir la potion qu'il veut créer
+     * @return le type de potion
+     * @throws IOException toujours
+     */
+    public Action concoction() throws IOException {
+        System.out.println("Quel type de potion voulez vous concocter : (re)sistance/(al)éatoire/(di)vine/en (se)rie/" +
+                "(en)ergie/(fo)rce/(in)stable/(mi)racle/(so)in/(to)xique/(c)ustom ?");
+        return switch(read()){
+            case "re", "RE", "Re", "rE" -> Action.RESISTANCE;
+            case "al", "AL", "Al", "aL" -> Action.ALEATOIRE;
+            case "di", "DI", "Di", "dI" -> Action.DIVINE;
+            case "se", "SE", "Se", "sE" -> Action.SERIE;
+            case "en", "EN", "En", "enE" -> Action.ENERGIE;
+            case "fo", "FO", "Fo", "fO" -> Action.FORCE;
+            case "in", "IN", "In", "iN" -> Action.INSTABLE;
+            case "mi", "MI", "Mi", "mI" -> Action.MIRACLE;
+            case "so", "SO", "So", "sO" -> Action.SOIN;
+            case "to", "TO", "To", "tO" -> Action.TOXIQUE;
+            case "c", "C" -> Action.AUTRE;
+            default -> {
+                System.out.println("Input unknow");
+                yield concoction();
+            }
+        };
+    }
+
+    /**
+     * Demande à l'archimage quel sort il veut lancer
+     * @return le sort à lancer
+     * @throws IOException toujours
+     */
+    public Action sort() throws IOException {
+        System.out.println("Quel sort voulez vous lancer : (bo)ule de feu/(ar)mure de glace/(on)de de choc/(fo)udre/(c)ustom ?");
+        return switch(read()){
+            case "bo", "BO", "Bo", "bO" -> Action.BDF;
+            case "ar", "AR", "Ar", "aR" -> Action.ADG;
+            case "on", "ON", "On", "oN" -> Action.ONDE_CHOC;
+            case "fo", "FO", "Fo", "fO" -> Action.FOUDRE;
+            case "c", "C" -> Action.AUTRE;
+            default -> {
+                System.out.println("Input unknow");
+                yield sort();
+            }
+        };
+    }
 }

@@ -129,7 +129,7 @@ public class Combat {
 
         // on prépare une bijection aléatoire pour l'ordre de jeu
         int[] t = {-1, -1, -1, -1, -1, -1, -1, -1};
-        for (int i = 0; i < 8; ) {
+        for (int i = 0; i < 8;) {
             int temp = rand.nextInt(8);
             if (t[temp] == -1) {
                 t[temp] = i;
@@ -188,8 +188,8 @@ public class Combat {
 
                 // action
                 act = input.action(n, ob != 0, i == pr_l, mort);
-                //TODO : méditation
                 switch (act) {
+
                     case OFF -> {
                         a_pass = alteration(actif, assomme, mort, nom, n, a_pass, i);
                         if(i != pr_l) {
@@ -202,6 +202,14 @@ public class Combat {
                     case END -> {
                         return -1;
                     }
+                    case RETOUR -> {
+                        int k = j;
+                        do{
+                            k = k == 0 ? 7 : k - 1;
+                        }while(!actif[t[k]]);
+                        j = t[k];
+                    }
+
                     case TIRER -> ennemi.tir(input.atk());
                     case MAGIE -> {
                         System.out.println("Vous utilisez votre magie sur " + ennemi.nom);
@@ -259,39 +267,8 @@ public class Combat {
                             Sort.maudir();
                         }
                     }
-                    case ONDE_CHOC -> Sort.onde_choc(actif, nom, assomme, ennemi);
                     case MEDITATION -> Sort.meditation();
-                    case BDF -> Sort.boule_de_feu(ennemi);
-                    case ADG -> Sort.armure_de_glace();
-                    case BDF2 -> {
-                        Sort.boule_de_feu(ennemi);
-                        Sort.boule_de_feu(ennemi);
-                    }
-                    case ADG2 -> {
-                        Sort.armure_de_glace();
-                        Sort.armure_de_glace();
-                    }
-                    case FOUDRE -> Sort.foudre(ennemi);
-                    case BDF_ADG -> {
-                        Sort.armure_de_glace();
-                        Sort.boule_de_feu(ennemi);
-                    }
-                    case ONDE_ADG -> {
-                        Sort.onde_choc(actif, nom, assomme, ennemi);
-                        Sort.armure_de_glace();
-                    }
-                    case ONDE_BDF -> {
-                        Sort.onde_choc(actif, nom, assomme, ennemi);
-                        Sort.boule_de_feu(ennemi);
-                    }
-                    case FOUDRE_ADG -> {
-                        Sort.armure_de_glace();
-                        Sort.foudre(ennemi);
-                    }
-                    case FOUDRE_BDF -> {
-                        Sort.boule_de_feu(ennemi);
-                        Sort.foudre(ennemi);
-                    }
+                    case SORT -> Sort.sort(actif, nom, assomme, ennemi);
                     case POTION_REZ -> {
                         int temp = input.ask_rez(mort);
                         if (temp != -1 && popo_rez(nom[temp])) {
@@ -322,13 +299,8 @@ public class Combat {
                         }
                     }
                     case FOUILLE -> Sort.fouille();
-                    case RETOUR -> {
-                        int k = j;
-                        do{
-                            k = k == 0 ? 7 : k - 1;
-                        }while(!actif[t[k]]);
-                        j = t[k];
-                    }
+                    case CONCOCTION -> Sort.concocter();
+
                     default -> { // ATTAQUER
                         if (berserk && n.equals(Main.guerriere)) { //berserker
                             if (input.D6() < 4) {

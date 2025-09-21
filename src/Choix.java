@@ -13,4 +13,5 @@ public enum Choix {
     NECROMANCIE,
     MEDITATION,
     FOUILLE,
+    CONCOCTION,
 }

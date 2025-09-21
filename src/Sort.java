@@ -424,4 +424,310 @@ public class Sort {
             System.out.println("Vous récoltez 2 ingrédients.");
         }
     }
+
+    /**
+     * Permet à l'archimage de lancer ses sorts
+     * @param actif une liste de boolean indiquant les participants encore en jeu
+     * @param nom les noms des participants
+     * @param assomme une liste de boolean indiquant les participants inconscients
+     * @param ennemi le monstre ennemi
+     * @throws IOException toujours
+     */
+    public static void sort(boolean[] actif, String[] nom, boolean[] assomme, Monstre ennemi) throws IOException {
+        extracted(actif, nom, assomme, ennemi);
+        if(ennemi.est_mort()){
+            return;
+        }
+        System.out.println("Vous préparez votre second sort.");
+        extracted(actif, nom, assomme, ennemi);
+    }
+
+    /**
+     * Fonction auxiliaire de sort
+     */
+    private static void extracted(boolean[] actif, String[] nom, boolean[] assomme, Monstre ennemi) throws IOException {
+        switch (input.sort()){
+            case BDF -> boule_de_feu(ennemi);
+            case ONDE_CHOC -> onde_choc(actif, nom, assomme, ennemi);
+            case ADG -> armure_de_glace();
+            case FOUDRE -> foudre(ennemi);
+            case AUTRE -> ennemi.dommage_magique(input.magie());
+        }
+    }
+
+    /**
+     * Laisse l'alchimiste concoter ses potions
+     * @throws IOException toujours
+     */
+    public static void concocter() throws IOException {
+        switch (input.concoction()) {
+            case RESISTANCE -> concoc_resi();
+            case ALEATOIRE -> concoc_alea();
+            case DIVINE -> concoc_divine();
+            case SERIE -> concoc_serie();
+            case ENERGIE -> concoc_energie();
+            case FORCE -> concoc_force();
+            case INSTABLE -> concoc_bombe();
+            case MIRACLE -> concoc_miracle();
+            case SOIN -> concoc_soin();
+            case TOXIQUE -> concoc_toxique();
+            case AUTRE -> System.out.println("Vous réalisez votre concoction.");
+        }
+    }
+
+    /**
+     * Réalise une potion de résistance
+     * @throws IOException toujours
+     */
+    public static void concoc_resi() throws IOException {
+        System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 5): ");
+        int ingre = input.readInt();
+        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        if (jet < 11 || ingre < 5) {
+            System.out.println("Vous avez produit une potion insipide (EX1PV).");
+        }
+        else if (jet < 14) {
+            System.out.println("Vous avez produit une potion de vigeur (EX3RES).");
+        }
+        else if (jet < 19) {
+            System.out.println("Vous avez produit une potion de résistance (EX4RES).");
+        }
+        else{
+            System.out.println("Vous avez produit une potion de solidification (M4RES1DEF).");
+        }
+    }
+
+    /**
+     * Réalise une potion de difficulté 10 ou moins
+     * @throws IOException toujours
+     */
+    public static void concoc_alea() throws IOException {
+
+        int[] popo_cost = {1, 1, 5, 8, 4, 9, 9, 6, 10};
+        String[] popo = {"potion douteuse (EXC1D)", "potion insipide (EX1PV)", "potion toxique (EXC2D)",
+                "potion de poison (EXC3D)", "potion instable (EXD)", "potion de feu (EXD)", "de force (EX2ATK)",
+                "potion de vie (EX4PV)", "potion énergétique (M2PP)"};
+        
+        System.out.println("Combien d'ingrédient allez-vous utiliser ? (max 4): ");
+        int ingre = input.readInt();
+        int concoc = input.D4() + ingre + 2 + rand.nextInt(3) - 1;
+        int[] t = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
+
+        for (int i = 0; i < t.length; ) {
+            int temp = rand.nextInt(t.length);
+            if (t[temp] == -1) {
+                t[temp] = i;
+                i++;
+            }
+        }
+
+        for (int j : t) {
+            if (popo_cost[j] <= concoc) {
+                System.out.println("Vous avez concocté une " + popo[j]);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Tente de réaliser une potion divine
+     * @throws IOException toujours
+     */
+    public static void concoc_divine() throws IOException {
+        System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 7): ");
+        int ingre = input.readInt();
+        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        if (jet < 10 || ingre < 7) {
+            System.out.println("Vous avez produit une potion insipide (EX1PV).");
+        } 
+        else if (jet < 15) {
+            System.out.println("Vous avez produit une potion de santé (EX6PV).");
+        } 
+        else {
+            System.out.println("Vous avez produit une potion divine (ALC5PV7RES3ATK).");
+        }
+    }
+
+    /**
+     * Réalise des potions
+     * @throws IOException toujours
+     */
+    public static void concoc_serie() throws IOException {
+
+        int[] popo_cost = {1, 1, 5, 8, 4, 9, 9, 6, 10, 11, 13, 11, 14, 14, 11, 14, 15, 15};
+        String[] popo = {"potion douteuse (EXC1D)", "potion insipide (EX1PV)", "potion toxique (EXC2D)", "potion de poison (EXC3D)",
+                "potion instable (EXD)", "potion de feu (EXD)", "potion de force (EX2ATK)", "potion de vie (EX4PV)",
+                "potion énergétique (M2PP)", "potion de santé (EX6PV)", "potion d'énergie (M4PP)", "potion de vigeur (EX3RES)",
+                "potion de résistance (EX4RES)", "potion de puissance (EX3ATK)", "flasque nécrosé (EXC4D)", "potion nécrotyque (EXC5D)",
+                "potion explosive (EXD)", "potion divine (ALC5PV7RES3ATK)"};
+
+
+        System.out.println("Combien d'ingrédient allez-vous utiliser ? ");
+        int ingre = input.readInt();
+        int concoc = input.D6() + ingre + rand.nextInt(3) - 1;
+
+
+        while (concoc > 0) {
+
+            //tirage aléatoire
+            int[] t = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+            for (int i = 0; i < t.length; ) {
+                int temp = rand.nextInt(t.length);
+                if (t[temp] == -1) {
+                    t[temp] = i;
+                    i++;
+                }
+            }
+
+            for (int i = 0; i < popo.length; i++) {
+                int j = t[i];
+                if (popo_cost[j] <= concoc) {
+                    System.out.println("Vous avez concocté une " + popo[j]);
+                    concoc -= popo_cost[j];
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Réalise une potion d'énergie
+     * @throws IOException toujours
+     */
+    public static void concoc_energie() throws IOException {
+        System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 5): ");
+        int ingre = input.readInt();
+        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        if (jet < 10 || ingre < 5) {
+            System.out.println("Vous avez produit une potion insipide (EX1PV).");
+        } 
+        else if (jet < 13) {
+            System.out.println("Vous avez produit une potion énergétique (M2PP).");
+        } 
+        else if (jet < 18) {
+            System.out.println("Vous avez produit une potion d'énergie (M4PP).");
+        } 
+        else if (jet < 20) {
+            System.out.println("Vous avez produit une potion de mana (M6PP).");
+        } 
+        else {
+            System.out.println("Vous avez produit une potion ancestrale (MM+PP).");
+        }
+    }
+
+    /**
+     * Réalise une potion de force
+     * @throws IOException toujours
+     */
+    public static void concoc_force() throws IOException {
+        System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 4): ");
+        int ingre = input.readInt();
+        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        if (jet < 9 || ingre < 4) {
+            System.out.println("Vous avez produit une potion insipide (EX1PV).");
+        }
+        else if (jet < 14) {
+            System.out.println("Vous avez produit une potion de force (EX2ATK).");
+        }
+        else if (jet < 16) {
+            System.out.println("Vous avez produit une potion de puissance (EX3ATK).");
+        }
+        else {
+            System.out.println("Vous avez produit une potion du colosse (EX4ATK).");
+        }
+    }
+
+    /**
+     * Réalise une potion explosive
+     * @throws IOException toujours
+     */
+    public static void concoc_bombe() throws IOException {
+        System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 2): ");
+        int ingre = input.readInt();
+        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        if (jet < 4 || ingre < 2) {
+            System.out.println("Vous avez produit une potion douteuse (EXC1D).");
+        }
+        else if (jet < 9) {
+            System.out.println("Vous avez produit une potion instable (EXD).");
+        }
+        else if (jet < 15) {
+            System.out.println("Vous avez produit une potion de feu (EXD).");
+        }
+        else if (jet < 18) {
+            System.out.println("Vous avez produit une potion explosive (EXD).");
+        }
+        else {
+            System.out.println("Vous avez produit une bombe (EXD).");
+        }
+    }
+
+    /**
+     * Réalise une potion de soin
+     * @throws IOException toujours
+     */
+    public static void concoc_soin() throws IOException {
+        System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 3): ");
+        int ingre = input.readInt();
+        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        if (jet < 6 || ingre < 3) {
+            System.out.println("Vous avez produit une potion insipide (EX1PV).");
+        }
+        else if (jet < 11) {
+            System.out.println("Vous avez produit une potion de vie (EX4PV).");
+        }
+        else if (jet < 16) {
+            System.out.println("Vous avez produit une potion de santé (EX6PV).");
+        }
+        else if (jet < 20) {
+            System.out.println("Vous avez produit un fortifiant (EX8PV).");
+        }
+        else {
+            System.out.println("Vous avez produit une potion de regénération (M10PV).");
+        }
+    }
+
+    /**
+     * Réalise une potion de toxique
+     * @throws IOException toujours
+     */
+    public static void concoc_toxique() throws IOException {
+        System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 2): ");
+        int ingre = input.readInt();
+        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        if (jet < 5 || ingre < 2) {
+            System.out.println("Vous avez produit une potion douteuse (EXC1D).");
+        }
+        else if (jet < 8) {
+            System.out.println("Vous avez produit une potion toxique (EXC2D).");
+        }
+        else if (jet < 11) {
+            System.out.println("Vous avez produit une potion de poison (EXC3D).");
+        }
+        else if (jet < 14) {
+            System.out.println("Vous avez produit une flasque nécrosé (EXC4D).");
+        }
+        else {
+            System.out.println("Vous avez produit une potion nécrotyque (EXC5D).");
+        }
+    }
+
+    /**
+     * Tente de réaliser un élixir
+     * @throws IOException toujours
+     */
+    public static void concoc_miracle() throws IOException {
+        System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 10): ");
+        int ingre = input.readInt();
+        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        if (jet < 12 || ingre < 9) {
+            System.out.println("Vous avez produit une potion insipide (EX1PV).");
+        }
+        else if (jet < 21) {
+            System.out.println("Vous avez produit une potion de santé (EX6PV).");
+        }
+        else {
+            System.out.println("Vous avez produit un élixir (ALCRESALTPVRES).");
+        }
+    }
 }

@@ -152,6 +152,7 @@ public class Main {
                     }
                 }
                 case FOUILLE -> Sort.fouille();
+                case CONCOCTION -> Sort.concocter();
 
                 // action caché
                 case SUICIDE -> {
