@@ -41,6 +41,17 @@ public class Monstre {
     }
 
     /**
+     * Renvoie l'arrondit minoré par 1 de la valeur donnée
+     * @param valeur le float à corriger
+     */
+    static int corriger(float valeur) {
+        if (valeur % 1 == 0){
+            return max((int)(valeur), 1);
+        }
+        return max((int)(valeur) + 1, 1);
+    }
+
+    /**
      * Maquille l'illusioniste en lui donnant le nom de l'illusion
      */
     private void illu_check(){
@@ -61,18 +72,6 @@ public class Monstre {
     static Random rand = new Random();
 
     /**
-     * Renvoie l'arrondit minoré par 1 de la valeur donnée
-     * @param valeur le float à corriger
-     */
-    static int corriger(float valeur) {
-        if (valeur % 1 == 0){
-            return max((int)(valeur), 1);
-        }
-        return max((int)(valeur) + 1, 1);
-    }
-
-
-    /**
      * Écris la quantité de dommage infligé par le monstre à l'adversaire
      * @param nom le nom de l'entité attaqué
      * @implNote Calcul les effet de "encaisser", "étourdit" et "assommé"
@@ -84,7 +83,7 @@ public class Monstre {
         }
         else if (etourdi){
             if(applique_competence_pre(nom) && this.attaque > 0){
-                System.out.println(this.nom + " est étourdit et inflige " + corriger(((float) this.attaque / 2) * modificateur) + " dommages à " + nom + ".");
+                System.out.println(this.nom + " est étourdit et inflige " + corriger(this.attaque * 0.5F * modificateur) + " dommages à " + nom + ".");
                 applique_competence_post(nom);
             }
             undo_etourdi();
@@ -148,7 +147,7 @@ public class Monstre {
             }
             case VIOLENT -> {
                 if(rand.nextBoolean()){
-                    System.out.println(this.nom + " attaque violemment " + nom + " et lui inflige " + corriger((float) (attaque * 1.5)) + " dommages.");
+                    System.out.println(this.nom + " attaque violemment " + nom + " et lui inflige " + corriger(attaque * 1.5F) + " dommages.");
                     return false;
                 }
             }
@@ -193,12 +192,15 @@ public class Monstre {
                 }
             }
             case VAMPIRISME4 -> {
-                if(input.yn("L'attaque a-t-elle touchée ?") && this.vie < this.vie_max){
+                if(input.yn("L'attaque a-t-elle touchée ?")){
                     this.vie += 4;
+                    if(this.vie > this.vie_max){
+                        this.vie = this.vie_max;
+                    }
                 }
             }
             case POISON_CECITE -> {
-                if(input.yn("L'attaque a-t-elle touchée ?") && this.vie < this.vie_max){
+                if(input.yn("L'attaque a-t-elle touchée ?")){
                     System.out.println(nom + " est empoisonné(e) et subit cécité pour le combat.");
                     competence = Competence.AUCUNE;
                 }
@@ -217,12 +219,16 @@ public class Monstre {
                 competence = Competence.AUCUNE;
             }
             case POISON -> {
-                System.out.println(nom + " est légèrement empoisonné(e).");
-                competence = Competence.A_POISON;
+                if(input.yn("L'attaque a-t-elle touchée ?")) {
+                    System.out.println(nom + " est légèrement empoisonné(e).");
+                    competence = Competence.A_POISON;
+                }
             }
             case POISON2 -> {
-                System.out.println(nom + " est empoisonné");
-                competence = Competence.A_POISON2;
+                if(input.yn("L'attaque a-t-elle touchée ?")) {
+                    System.out.println(nom + " est empoisonné");
+                    competence = Competence.A_POISON2;
+                }
             }
             case CHARGE -> {
                 this.attaque -= 3;
@@ -285,7 +291,7 @@ public class Monstre {
      */
     private void drop() throws IOException {
         System.out.println("Vous fouillez le corp de " + this.nom);
-        if(this.drop_quantite_max == 0 || competence == Competence.ARNAQUE) {
+        if(this.drop_quantite_max <= 0 || competence == Competence.ARNAQUE) {
             System.out.println("Vous ne trouvez aucun équipement sur son cadavre");
             return;
         }
@@ -334,7 +340,7 @@ public class Monstre {
      * gère le cas de mort du monstre
      */
     void tir(int quantite) throws IOException {
-        if(quantite == 0){
+        if(quantite <= 0){
             return;
         }
         System.out.println("Vous tirez sur " + this.nom);
@@ -409,10 +415,10 @@ public class Monstre {
      * gère le cas de mort du monstre
      */
     void dommage_magique(int quantite) throws IOException {
-        if(quantite == 0){
+        if(quantite <= 0){
             return;
         }
-        int degas = applique_competence_magie(max(quantite, 1));
+        int degas = applique_competence_magie(quantite);
         this.vie -= degas;
     }
 
@@ -502,7 +508,7 @@ public class Monstre {
      * gère le cas de mort du monstre
      */
     void dommage(int quantite) throws IOException {
-        if(quantite == 0){
+        if(quantite <= 0){
             return;
         }
         System.out.println("Vous attaquez " + this.nom);
@@ -521,7 +527,7 @@ public class Monstre {
      * gère le cas de mort du monstre
      */
     void dommage(int quantite, float mult) throws IOException {
-        if(quantite == 0){
+        if(quantite <= 0){
             return;
         }
         System.out.println("Vous attaquez " + this.nom);
