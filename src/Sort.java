@@ -288,7 +288,7 @@ public class Sort {
      */
     public static void fouille() throws IOException {
         System.out.println("Vous chercher autour de vous tout ce qui pourrait être utile pour vos potions.");
-        int temp = input.readInt();
+        int temp = input.D20();
         if (temp <= 15 + rand.nextInt(10) - 5) {
             System.out.println("Vous ne trouvez rien.");
         }
