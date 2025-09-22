@@ -307,43 +307,36 @@ public class Sort {
      * @throws IOException toujours
      */
     public static boolean necromancie(Position position) throws IOException {
-        Monstre l1, l2, l3;
+        Monstre l1, l2;
         //invocation selon le lieu
         switch (position) {
             case ENFERS -> {
                 l1 = Lieu.true_enfers();
                 l2 = Lieu.true_enfers();
-                l3 = Lieu.true_enfers();
             }
             case PRAIRIE -> {
                 l1 = Lieu.true_prairie();
                 l2 = Lieu.true_enfers();
-                l3 = Lieu.true_enfers();
             }
             case VIGNES -> {
                 l1 = Lieu.true_vigne();
                 l2 = Lieu.true_prairie();
-                l3 = Lieu.true_enfers();
             }
             case TEMPLE -> {
                 l1 = Lieu.true_temple();
                 l2 = Lieu.true_vigne();
-                l3 = Lieu.true_prairie();
             }
             case MER -> {
                 l1 = Lieu.true_mer();
                 l2 = Lieu.true_temple();
-                l3 = Lieu.true_vigne();
             }
             case MONTS -> {
                 l1 = Lieu.true_mont();
                 l2 = Lieu.true_mer();
-                l3 = Lieu.true_temple();
             }
             case OLYMPE -> {
                 l1 = Lieu.true_mont();
                 l2 = Lieu.true_mont();
-                l3 = Lieu.true_mer();
             }
             case ASCENDANT -> {
                 System.out.println("ERROR :DONOT");
@@ -352,22 +345,19 @@ public class Sort {
             default -> {
                 l1 = Lieu.true_prairie();
                 l2 = l1;
-                l3 = l2;
             }
         }
         System.out.println("Vous rappelez à la vie les cadavres de ces terres.");
-        System.out.println("Combien de PP mettez vous dans le sort ? (min 4) : ");
+        System.out.println("Combien de PP mettez vous dans le sort ? (min 3) : ");
         int mana = input.readInt();
 
         // selection du monstre a ressuciter
         int jet = input.D6() + mana + rand.nextInt(2) - 1;
         Monstre rez;
-        if (jet <= 5 || mana < 4) {
+        if (jet <= 3 || mana < 3) {
             System.out.println("Le sort a échoué.\n");
             return false;
-        } else if (jet <= 7) {
-            rez = l3;
-        } else if (jet <= 12) {
+        } else if (jet <= 10) {
             rez = l2;
         } else {
             rez = l1;
@@ -375,7 +365,7 @@ public class Sort {
         System.out.println("Vous ressentez la réponse d'une âme à travers le sol.");
 
         //selection de la puissance du monstre
-        jet = input.D8() + mana + rand.nextInt(2) - 2 + jet / 3;
+        jet = input.D8() + mana + rand.nextInt(2) - 1 + Monstre.corriger(jet * 0.4F);
         if (jet <= 7) {
             System.out.println("nouveau familier : carcasse réanimée");
             System.out.println("attaque : " + (int)max(rez.attaque *0.25, 1));
