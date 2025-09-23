@@ -147,7 +147,7 @@ public class Input {
      */
     private boolean load_j(String nomFichier, String joueur, int index) {
         String log = read_log(nomFichier);
-        if(log.isEmpty() || log.equals(";")) {
+        if(log.isEmpty() || log.charAt(0) == ';') {
             return false;
         }
         StringBuilder temp = new StringBuilder();

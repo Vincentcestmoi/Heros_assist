@@ -233,6 +233,7 @@ public class Main {
             }
             i++;
         }
+        System.out.println("Sauvegarde des données joueurs.");
         for(int j = 0; j < nbj; j++) {
             Output.write_data(nom[j]);
         }
