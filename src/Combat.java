@@ -336,11 +336,13 @@ public class Combat {
                         System.out.println("Aucun joueur ou familier détecté en combat.");
                         // break inutile, car actif[i] toujours à false
                     }
-                    do{
-                        k = rand.nextInt(8);
-                    }while(!actif[k]);
-                    pr_l = k;
-                    System.out.println(nom[k] + " se retrouve en première ligne.\n");
+                    else {
+                        do {
+                            k = rand.nextInt(8);
+                        } while (!actif[k]);
+                        pr_l = k;
+                        System.out.println(nom[k] + " se retrouve en première ligne.\n");
+                    }
                 }
 
                 if (ennemi.check_mort()) {
