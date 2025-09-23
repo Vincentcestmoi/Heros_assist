@@ -8,6 +8,9 @@ public class Sort {
     static Input input = new Input();
     static Random rand = new Random();
 
+    static public int nb_fire_rune = 0;
+    static public int nb_great_fire_rune = 0;
+
     /**
      * Applique l'effet de la compétence "onde de choc"
      * @param actif une liste de boolean indiquant les participants encore en jeu
@@ -128,11 +131,11 @@ public class Sort {
      */
     public static void boule_de_feu(Monstre ennemi) throws IOException {
         System.out.println("Vous vous préparez à lancer une boule de feu.");
-        System.out.println("Combien de PP mettez vous dans le sort ? (min 2)");
+        System.out.println("Combien de PP mettez vous dans le sort ? (min " + (2 + nb_great_fire_rune) + ")");
         int mana = input.readInt();
-        int jet = input.D4() + mana + rand.nextInt(3) - 1;
+        int jet = input.D4() + mana + rand.nextInt(3) - 1 + (nb_fire_rune / 2) + (nb_great_fire_rune / 2);
         int dmg;
-        if (jet <= 2 || mana < 2) {
+        if (jet <= (2  + nb_great_fire_rune) || mana < (2  + nb_great_fire_rune)) {
             System.out.println("Le sort ne fonctionne pas .\n");
             return;
         }
@@ -149,7 +152,7 @@ public class Sort {
             dmg = 6;
         }
         else if (jet <= 8) {
-            System.out.println("Vous lancez une impressionnante boule de feu sur" + ennemi.nom + ".");
+            System.out.println("Vous lancez une impressionnante boule de feu sur " + ennemi.nom + ".");
             dmg = 8;
         }
         else if (jet <= 10) {
@@ -182,6 +185,7 @@ public class Sort {
             dmg = 18;
             ennemi.affecte();
         }
+        dmg += nb_great_fire_rune * 4 + nb_fire_rune * 2;
         ennemi.dommage_magique(dmg);
     }
 

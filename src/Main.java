@@ -8,15 +8,15 @@ public class Main {
     static Random rand = new Random();
     static String Path = "../Save/";
     static String Ext = ".txt";
-    static Position[] positions = {Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE};
-    static final String Joueur_A = "Micky";
-    static final String Joueur_B = "Vincent";
-    static final String Joueur_C = "Lucien";
-    static final String Joueur_D = "Aloyse";
-    static final String necromancien = Joueur_A;
-    static final String archimage = Joueur_C;
-    static final String alchimiste = Joueur_B;
-    static final String guerriere = Joueur_D;
+    static public Position[] positions = {Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE};
+    static public final String Joueur_A = "Micky";
+    static public final String Joueur_B = "Vincent";
+    static public final String Joueur_C = "Lucien";
+    static public final String Joueur_D = "Aloyse";
+    static public final String necromancien = Joueur_A;
+    static public final String archimage = Joueur_C;
+    static public final String alchimiste = Joueur_B;
+    static public final String guerriere = Joueur_D;
     public static int f_a = 0, f_b = 0, f_c = 0, f_d = 0;
     static final int f_max = 7;
     static final String[] nom = {Joueur_A, Joueur_B, Joueur_C, Joueur_D};
@@ -199,6 +199,26 @@ public class Main {
                     i -= 1; //n'utilise pas le tour
                 }
                 case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
+                case ADD_GREAT_RUNE -> {
+                    Sort.nb_great_fire_rune++;
+                    System.out.println("Rune majeure de feu ajoutée.");
+                    i--;
+                }
+                case DEL_GREAT_RUNE -> {
+                    Sort.nb_great_fire_rune = Sort.nb_great_fire_rune <= 0 ? 0 : Sort.nb_great_fire_rune - 1;
+                    System.out.println("Rune majeure de feu retirée.");
+                    i--;
+                }
+                case ADD_MINOR_RUNE -> {
+                    Sort.nb_fire_rune++;
+                    System.out.println("Rune mineure de feu ajoutée.");
+                    i--;
+                }
+                case DEL_MINOR_RUNE -> {
+                    Sort.nb_fire_rune = Sort.nb_fire_rune <= 0 ? 0 : Sort.nb_fire_rune - 1;
+                    System.out.println("Rune mineure de feu retirée.");
+                    i--;
+                }
             }
             switch (temp) {
                 case 0 -> f_a = new_fam(Joueur_A, f_a);

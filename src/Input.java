@@ -820,6 +820,50 @@ public class Input {
                     }
                     System.out.println("Input unknow");
                 }
+                case "adgr" -> {
+                    if(Main.nom[index].equals(Main.archimage)){
+                        System.out.println("Confirmez");
+                        if(read().equals("adgr")) {
+                            return Choix.ADD_GREAT_RUNE;
+                        }
+                    }
+                    else {
+                        System.out.println("Input unknow");
+                    }
+                }
+                case "admr" -> {
+                    if(Main.nom[index].equals(Main.archimage)){
+                        System.out.println("Confirmez");
+                        if(read().equals("admr")) {
+                            return Choix.ADD_MINOR_RUNE;
+                        }
+                    }
+                    else {
+                        System.out.println("Input unknow");
+                    }
+                }
+                case "dgr" -> {
+                    if(Main.nom[index].equals(Main.archimage)){
+                        System.out.println("Confirmez");
+                        if(read().equals("dgr")) {
+                            return Choix.DEL_GREAT_RUNE;
+                        }
+                    }
+                    else {
+                        System.out.println("Input unknow");
+                    }
+                }
+                case "dmr" -> {
+                    if(Main.nom[index].equals(Main.archimage)){
+                        System.out.println("Confirmez");
+                        if(read().equals("dmr")) {
+                            return Choix.DEL_MINOR_RUNE;
+                        }
+                    }
+                    else {
+                        System.out.println("Input unknow");
+                    }
+                }
                 default -> System.out.println("Input unknow");
             }
         }
