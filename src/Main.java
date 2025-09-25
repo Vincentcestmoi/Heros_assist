@@ -603,7 +603,7 @@ public class Main {
             boolean run = true;
             while(run) {
                 run = false;
-                System.out.println("Choississez votre profession : ");
+                System.out.println(Main.nom[i] + ", choississez votre profession : ");
                 for (String s : job) {
                     if (!s.isEmpty()) {
                         System.out.println(s + " ");

@@ -39,9 +39,11 @@ public class Output {
             default -> "ERROR";
         };
         String metier =" ";
-        for(String m : new String[] {Main.necromancien, Main.guerriere, Main.archimage, Main.alchimiste}){
-            if (m.equals(Main.nom[j])){
-                metier = Main.nom[j];
+        String[] job = {Main.necromancien, Main.guerriere, Main.archimage, Main.alchimiste};
+        String[] job_name = {"necromancien", "guerriere", "archimage", "alchimiste"};
+        for(int i = 0; i < job.length; i++){
+            if (job[i].equals(Main.nom[j])){
+                metier = job_name[i];
                 break;
             }
         }
