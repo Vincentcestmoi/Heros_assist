@@ -11,29 +11,22 @@ public class Combat {
 
     /**
      * Lance un combat entre les joueur et un monstres
-     *
-     * @param nb_joueurs   le nombre de joueurs dans la partie
      * @param position le lieu où a lieu l'affrontement
      * @param joueur_force l'indice du joueur qui est attaqué en cas d'embuscade (de 1 à 4) ou -1 sinon
-     * @param ob_a l'obéissance du familier de Joueur_A (de 1 à 3) ou 0 s'il n'existe pas
-     * @param ob_b l'obéissance du familier de Joueur_B (de 1 à 3) ou 0 s'il n'existe pas
-     * @param ob_c l'obéissance du familier de Joueur_C (de 1 à 3) ou 0 s'il n'existe pas
-     * @param ob_d l'obéissance du familier de joueur_D (de 1 à 3) ou 0 s'il n'existe pas
      * @param ennemi le monstre que les joueurs affronte
-     * @return un int lié au joueur qui obtient un familier (ou -1 si aucun n'en obtient).
      * @throws IOException lecture de terminal
      */
-    public static int affrontement(int nb_joueurs, Position position, int joueur_force, int ob_a, int ob_b, int ob_c, int ob_d, Monstre ennemi) throws IOException {
+    public static int affrontement(Position position, int joueur_force, Monstre ennemi) throws IOException {
 
         // repérer les participants
         boolean j_a = joueur_force == 0 || (Main.positions[0] == position && input.yn("Est-ce que " + Main.Joueur_A + " participe au combat ?"));
-        boolean j_b = joueur_force == 1 || (nb_joueurs > 1 && Main.positions[1] == position && input.yn("Est-ce que " + Main.Joueur_B + " participe au combat ?"));
-        boolean j_c = joueur_force == 2 || (nb_joueurs > 2 && Main.positions[2] == position && input.yn("Est-ce que " + Main.Joueur_C + " participe au combat ?"));
-        boolean j_d = joueur_force == 3 || (nb_joueurs > 3 && Main.positions[3] == position && input.yn("Est-ce que " + Main.Joueur_D + " participe au combat ?"));
-        boolean f_a = ob_a > 0 && j_a && input.yn("Est-ce que le familier de " + Main.Joueur_A + " participe au combat ?");
-        boolean f_b = ob_b > 0 && j_b && input.yn("Est-ce que le familier de " + Main.Joueur_B + " participe au combat ?");
-        boolean f_c = ob_c > 0 && j_c && input.yn("Est-ce que le familier de " + Main.Joueur_C + " participe au combat ?");
-        boolean f_d = ob_d > 0 && j_d && input.yn("Est-ce que le familier de " + Main.Joueur_D + " participe au combat ?");
+        boolean j_b = joueur_force == 1 || (Main.nbj > 1 && Main.positions[1] == position && input.yn("Est-ce que " + Main.Joueur_B + " participe au combat ?"));
+        boolean j_c = joueur_force == 2 || (Main.nbj > 2 && Main.positions[2] == position && input.yn("Est-ce que " + Main.Joueur_C + " participe au combat ?"));
+        boolean j_d = joueur_force == 3 || (Main.nbj > 3 && Main.positions[3] == position && input.yn("Est-ce que " + Main.Joueur_D + " participe au combat ?"));
+        boolean f_a = Main.f[0] > 0 && j_a && input.yn("Est-ce que le familier de " + Main.Joueur_A + " participe au combat ?");
+        boolean f_b = Main.f[1] > 0 && j_b && input.yn("Est-ce que le familier de " + Main.Joueur_B + " participe au combat ?");
+        boolean f_c = Main.f[2] > 0 && j_c && input.yn("Est-ce que le familier de " + Main.Joueur_C + " participe au combat ?");
+        boolean f_d = Main.f[3] > 0 && j_d && input.yn("Est-ce que le familier de " + Main.Joueur_D + " participe au combat ?");
 
         if (!(j_a || j_b || j_c || j_d)) {
             System.out.println("Erreur : aucun joueur détecté, annulation du combat.");
@@ -69,7 +62,7 @@ public class Combat {
             ennemi.attaque(nom[joueur_force]);
         }
 
-        int x = combat(ob_a, ob_b, ob_c, ob_d, ennemi, actif, nom, pr_l, mort);
+        int x = combat(ennemi, actif, nom, pr_l, mort);
 
         System.out.println("Fin du combat\n");
         gestion_mort_end(mort, nom);
@@ -107,10 +100,6 @@ public class Combat {
 
     /**
      * Gère le combat en appliquant les actions
-     * @param ob_a l'obéissance du familier du joueur A (0 s'il n'en a pas).
-     * @param ob_b l'obéissance du familier du joueur B (0 s'il n'en a pas).
-     * @param ob_c l'obéissance du familier du joueur C (0 s'il n'en a pas).
-     * @param ob_d l'obéissance du familier du joueur D (0 s'il n'en a pas).
      * @param ennemi le monstre adverse
      * @param actif liste de boolean indiquant si un participant est actif
      * @param nom liste des noms des participants
@@ -119,8 +108,7 @@ public class Combat {
      * @return l'index du joueur qui domestique l'ennemi, ou 0 sinon
      * @throws IOException et oui
      */
-    private static int combat(int ob_a, int ob_b, int ob_c, int ob_d, Monstre ennemi, boolean[] actif, String[] nom,
-                                  int pr_l, boolean[] mort) throws IOException {
+    private static int combat(Monstre ennemi, boolean[] actif, String[] nom, int pr_l, boolean[] mort) throws IOException {
 
 
         boolean[] assomme = {false, false, false, false, false, false, false, false};
@@ -167,22 +155,17 @@ public class Combat {
                 }
 
                 // on différencie les familiers et joueurs
-                if (n.contains("familier")) {
-                    if (n.contains(Main.Joueur_A)) {
-                        ob = ob_a;
-                    } else if (n.contains(Main.Joueur_B)) {
-                        ob = ob_b;
-                    } else if (n.contains(Main.Joueur_C)) {
-                        ob = ob_c;
-                    } else if (n.contains(Main.Joueur_D)) {
-                        ob = ob_d;
+                if (i >= 4) {
+                    if (i < 8) {
+                        ob = Main.f[i - 4];
                     } else {
                         System.out.println("Erreur : " + n + " détecté comme familier, mais aucun joueur rattaché" +
                                 "entité ignorée pour la suite du combat.");
                         actif[i] = false;
                         continue;
                     }
-                } else {
+                }
+                else {
                     ob = 0; // joueur
                 }
 
@@ -234,13 +217,7 @@ public class Combat {
                             System.out.println("vie : " + ennemi.vie_max);
                             System.out.println("armure : " + ennemi.armure + "\n");
 
-                            return switch (n) {
-                                case Main.Joueur_A -> 0;
-                                case Main.Joueur_B -> 1;
-                                case Main.Joueur_C -> 2;
-                                case Main.Joueur_D -> 3;
-                                default -> -1;
-                            };
+                            return i;
                         }
                     }
                     case ANALYSER -> analyser(i == pr_l, ennemi);
@@ -351,33 +328,26 @@ public class Combat {
                     run = false;
 
                     //le nécromancien peut tenter de ressuciter le monstre
-                    boolean actif_a = false;
-                    for (int k = 0; k < 8; k++) {
+                    int necro = -1;
+                    for (int k = 0; k < 4; k++) {
                         if (actif[k] && Objects.equals(nom[k], Main.necromancien)) {
-                            actif_a = true;
+                            necro = k;
                             break;
                         }
                     }
-                    if (actif_a && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier pour 2PP ?")) {
+                    if (necro != -1 && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier pour 2PP ?")) {
                         if (ressuciter(ennemi)) {
-                            return switch(Main.necromancien){
-                                //noinspection DataFlowIssue
-                                case Main.Joueur_A -> 0;
-                                case Main.Joueur_B -> 1;
-                                case Main.Joueur_C -> 2;
-                                case Main.Joueur_D -> 3;
-                                default -> -1;
-                            };
+                            return necro;
                         }
                     }
-                    actif_a = false;
-                    for(int k = 0; k < 8; k++){
+                    boolean alchi = false;
+                    for(int k = 0; k < 4; k++){
                         if (actif[k] && Objects.equals(nom[k], Main.alchimiste)) {
-                            actif_a = true;
+                            alchi = true;
                             break;
                         }
                     }
-                    if(actif_a && input.yn("Voulez vous dissequer " + ennemi.nom + " ?")){
+                    if(alchi && input.yn("Voulez vous dissequer " + ennemi.nom + " ?")){
                         Sort.dissection();
                     }
                     break;
@@ -393,33 +363,26 @@ public class Combat {
                     run = false;
 
                     //le nécromancien peut tenter de ressuciter le monstre
-                    boolean actif_a = false;
+                    int necro = -1;
                     for (int k = 0; k < 8; k++) {
                         if (actif[k] && Objects.equals(nom[k], Main.necromancien)) {
-                            actif_a = true;
+                            necro = k;
                             break;
                         }
                     }
-                    if (actif_a && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier pour 2PP ?")) {
+                    if (necro != -1 && input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier pour 2PP ?")) {
                         if (ressuciter(ennemi)) {
-                            return switch(Main.necromancien){
-                                //noinspection DataFlowIssue
-                                case Main.Joueur_A -> 0;
-                                case Main.Joueur_B -> 1;
-                                case Main.Joueur_C -> 2;
-                                case Main.Joueur_D -> 3;
-                                default -> -1;
-                            };
+                            return necro;
                         }
                     }
-                    actif_a = false;
+                    boolean alchi = false;
                     for(int k = 0; k < 8; k++){
                         if (actif[k] && Objects.equals(nom[k], Main.alchimiste)) {
-                            actif_a = true;
+                            alchi = true;
                             break;
                         }
                     }
-                    if(actif_a && input.yn("Voulez vous dissequer " + ennemi.nom + " ?")){
+                    if(alchi && input.yn("Voulez vous dissequer " + ennemi.nom + " ?")){
                         Sort.dissection();
                     }
                 }
@@ -1140,12 +1103,7 @@ public class Combat {
                     System.out.println(nom[i] + " a rendu l'âme.\n");
                     t = i - 4;
                 }
-                switch (t) {
-                    case 0 -> Main.f_a = 0;
-                    case 1 -> Main.f_b = 0;
-                    case 2 -> Main.f_c = 0;
-                    case 3 -> Main.f_d = 0;
-                }
+                Main.f[t] = 0;
             }
         }
     }

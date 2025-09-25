@@ -9,113 +9,23 @@ public class Main {
     static String Path = "../Save/";
     static String Ext = ".txt";
     static public Position[] positions = {Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE};
-    static public final String Joueur_A = "Micky";
-    static public final String Joueur_B = "Vincent";
-    static public final String Joueur_C = "Lucien";
-    static public final String Joueur_D = "Aloyse";
-    static public final String necromancien = Joueur_A;
-    static public final String archimage = Joueur_C;
-    static public final String alchimiste = Joueur_B;
-    static public final String guerriere = Joueur_D;
-    public static int f_a = 0, f_b = 0, f_c = 0, f_d = 0;
-    static final int f_max = 7;
+    static public String Joueur_A = "Joueur A";
+    static public String Joueur_B = "Joueur B";
+    static public String Joueur_C = "Joueur C";
+    static public String Joueur_D = "Joueur D";
+    static public String necromancien, archimage, alchimiste, guerriere;
+    public static int[] f;
     static final String[] nom = {Joueur_A, Joueur_B, Joueur_C, Joueur_D};
+    static final int f_max = 7;
+    static public int nbj;
 
-    @SuppressWarnings({"ConstantValue", "DataFlowIssue"})
     public static void main(String[] args) throws IOException {
 
-        int nbj = input.load();
-        if(nbj == -1) {
-            System.out.print("Entrez le nombre de joueur : ");
-            nbj = input.readInt();
+        nbj = input.load();
+        if (nbj == -1) {
+            init_game();
         }
-        if (nbj < 1 || nbj > 4) {
-            System.out.println("Nombre de joueur invalide : 1 à 4 joueurs seulement.");
-            return;
-        }
-
-        // rappel des classes
-        if(!necromancien.isEmpty()) {
-            switch(necromancien){
-                case Joueur_A -> System.out.println(necromancien + " est nécromancien.\n");
-                case Joueur_B -> {
-                    if(nbj >= 2){
-                        System.out.println(necromancien + " est nécromancien.\n");
-                    }
-                }
-                case Joueur_C -> {
-                    if(nbj >= 3){
-                        System.out.println(necromancien + " est nécromancien.\n");
-                    }
-                }
-                case Joueur_D -> {
-                    if(nbj == 4){
-                        System.out.println(necromancien + " est nécromancien.\n");
-                    }
-                }
-            }
-        }
-        if(!archimage.isEmpty()) {
-            switch(archimage){
-                case Joueur_A -> System.out.println(archimage + " est archimage.\n");
-                case Joueur_B -> {
-                    if(nbj >= 2) {
-                        System.out.println(archimage + " est archimage.\n");
-                    }
-                }
-                case Joueur_C -> {
-                    if(nbj >= 3) {
-                        System.out.println(archimage + " est archimage.\n");
-                    }
-                }
-                case Joueur_D -> {
-                    if(nbj == 4) {
-                        System.out.println(archimage + " est archimage.\n");
-                    }
-                }
-            }
-        }
-        if(!alchimiste.isEmpty()) {
-            switch (alchimiste) {
-                case Joueur_A -> System.out.println(alchimiste + " est alchimiste.\n");
-                case Joueur_B -> {
-                    if (nbj >= 2) {
-                        System.out.println(alchimiste + " est alchimiste.\n");
-                    }
-                }
-                case Joueur_C -> {
-                    if (nbj >= 3) {
-                        System.out.println(alchimiste + " est alchimiste.\n");
-                    }
-                }
-                case Joueur_D -> {
-                    if (nbj == 4) {
-                        System.out.println(alchimiste + " est alchimiste.\n");
-                    }
-                }
-            }
-        }
-        if(!guerriere.isEmpty()) {
-            switch (guerriere) {
-                case Joueur_A -> System.out.println(guerriere + " est guerrière.\n");
-                case Joueur_B -> {
-                    if (nbj >= 2) {
-                        System.out.println(guerriere + " est guerrière.\n");
-                    }
-                }
-                case Joueur_C -> {
-                    if (nbj >= 3) {
-                        System.out.println(guerriere + " est guerrière.\n");
-                    }
-                }
-                case Joueur_D -> {
-                    if (nbj == 4) {
-                        System.out.println(guerriere + " est guerrière.\n");
-                    }
-                }
-            }
-        }
-
+        
         boolean run = true;
         int i = 0;
         while (run) {
@@ -124,30 +34,22 @@ public class Main {
             }
             System.out.println(nom[i] + " c'est votre tour, vous êtes " + texte_pos(positions[i]) + ".");
             int temp = -1;
-            switch (input.tour(positions[i], new int[]{f_a, f_b, f_c, f_d}[i], i)) {
+            switch (input.tour(positions[i], f[i], i)) {
                 // action classique
-                case EXPLORER -> temp = expedition(nbj, i, f_a, f_b, f_c, f_d);
+                case EXPLORER -> temp = expedition(i);
                 case MONTER -> temp = ascension(i);
                 case DESCENDRE -> {
                     System.out.println(nom[i] + " retourne en des terres moins inhospitalières.");
                     positions[i] = reduire_pos(positions[i]);
                 }
                 case MARCHE -> marche(positions[i]);
-                case DRESSER -> {
-                    switch (nom[i]) {
-                        case Joueur_A -> f_a = gere_entrainement(f_a);
-                        case Joueur_B -> f_b = gere_entrainement(f_b);
-                        case Joueur_C -> f_c = gere_entrainement(f_c);
-                        case Joueur_D -> f_d = gere_entrainement(f_d);
-                        default -> System.out.println("Erreur : joueur " + nom[i] + " non reconnu");
-                    }
-                }
+                case DRESSER -> f[i] = gere_entrainement(f[i]);
                 case ATTENDRE -> System.out.println(nom[i] + " passe son tour.");
 
                 // action de classe
                 case MEDITATION -> Sort.meditation();
                 case NECROMANCIE -> {
-                    if(Sort.necromancie(positions[i])){
+                    if (Sort.necromancie(positions[i])) {
                         temp = i;
                     }
                 }
@@ -158,44 +60,16 @@ public class Main {
                 case SUICIDE -> {
                     System.out.println(nom[i] + " est mort.");
                     positions[i] = Position.ENFERS;
-                    switch (i){
-                        case 0 -> f_a = 0;
-                        case 1 -> f_b = 0;
-                        case 2 -> f_c = 0;
-                        case 3 -> f_d = 0;
-                    }
+                    f[i] = 0;
                 }
                 case QUITTER -> run = false;
                 case FAMILIER_PLUS -> {
-                    switch (nom[i]) {
-                        case Joueur_A -> f_a = new_fam(Joueur_A, f_a);
-                        case Joueur_B -> f_b = new_fam(Joueur_B, f_b);
-                        case Joueur_C -> f_c = new_fam(Joueur_C, f_c);
-                        case Joueur_D -> f_d = new_fam(Joueur_D, f_d);
-                        default -> System.out.println("Erreur : joueur " + nom[i] + " non reconnu");
-                    }
+                    f[i] = new_fam(nom[i], f[i]);
                     i -= 1; //n'utilise pas le tour
                 }
                 case FAMILIER_MOINS -> {
-                    switch (nom[i]) {
-                        case Joueur_A -> {
-                            f_a = 0;
-                            System.out.println("Le familier de " + Main.Joueur_A + " a bien été supprimé");
-                        }
-                        case Joueur_B -> {
-                            f_b = 0;
-                            System.out.println("Le familier de " + Main.Joueur_B + " a bien été supprimé");
-                        }
-                        case Joueur_C -> {
-                            f_c = 0;
-                            System.out.println("Le familier de " + Main.Joueur_C + " a bien été supprimé");
-                        }
-                        case Joueur_D -> {
-                            f_d = 0;
-                            System.out.println("Le familier du Joueur D a bien été supprimé");
-                        }
-                        default -> System.out.println("Erreur : joueur " + nom[i] + " non reconnu");
-                    }
+                    f[i] = 0;
+                    System.out.println("Le familier de " + nom[i] + " a bien été supprimé");
                     i -= 1; //n'utilise pas le tour
                 }
                 case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
@@ -220,21 +94,17 @@ public class Main {
                     i--;
                 }
             }
-            switch (temp) {
-                case 0 -> f_a = new_fam(Joueur_A, f_a);
-                case 1 -> f_b = new_fam(Joueur_B, f_b);
-                case 2 -> f_c = new_fam(Joueur_C, f_c);
-                case 3 -> f_d = new_fam(Joueur_D, f_d);
-                default -> { // dont -1
-                }
+            // gestion familier
+            if(temp != -1) {
+                f[temp] = new_fam(Joueur_A, f[temp]);
             }
-            for(int j = 0; j < nbj; j++) {
+            for (int j = 0; j < nbj; j++) {
                 Output.write_data(nom[j]);
             }
             i++;
         }
         System.out.println("Sauvegarde des données joueurs.");
-        for(int j = 0; j < nbj; j++) {
+        for (int j = 0; j < nbj; j++) {
             Output.write_data(nom[j]);
         }
         System.out.println("Fin du programme");
@@ -242,10 +112,11 @@ public class Main {
 
     /**
      * Redirige vers le bon marché selon la position
+     *
      * @param position la position du joueur
      */
     private static void marche(Position position) {
-        switch (position){
+        switch (position) {
             case PRAIRIE -> Equipement.marche_prairie();
             case VIGNES -> Equipement.marche_vigne();
             case TEMPLE -> Equipement.marche_temple();
@@ -343,7 +214,7 @@ public class Main {
             }
         }
         System.out.println(text);
-        int temp = Combat.affrontement(4, Position.ASCENDANT, lead, f_a, f_b, f_c, f_d, m);
+        int temp = Combat.affrontement(Position.ASCENDANT, lead, m);
         if (input.yn(nom[index] + " a-t-il vaincu le monstre ?")) {
             System.out.println(nom[index] + " arrive " + texte_pos(next_pos));
             positions[index] = next_pos;
@@ -361,7 +232,7 @@ public class Main {
      * Tente d'entrainer un familier
      *
      * @param f l'obéissance actuelle du familier
-     * @return l'obéissance résultnte du familier
+     * @return l'obéissance résultante du familier
      * @throws IOException pas de soucis
      */
     private static int gere_entrainement(int f) throws IOException {
@@ -384,25 +255,20 @@ public class Main {
     /**
      * Gère le départ en expédition et ses conscéquences
      *
-     * @param nbj    le nombre de joueurs actifs
      * @param meneur le joueur principal
-     * @param f_a    l'obéissance du familier du joueur A (0 s'il n'en a pas).
-     * @param f_b    l'obéissance du familier du joueur B (0 s'il n'en a pas).
-     * @param f_c    l'obéissance du familier du joueur C (0 s'il n'en a pas).
-     * @param f_d    l'obéissance du familier du joueur D (0 s'il n'en a pas).
      * @return l'index + 1 d'un joueur qui obtient un nouveau familier (ou 0).
      * @throws IOException sans problème
      */
-    static int expedition(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+    static int expedition(int meneur) throws IOException {
         Position pos = positions[meneur];
         return switch (pos) {
-            case ENFERS -> expedition_enfer(nbj, meneur, f_a, f_b, f_c, f_d);
-            case PRAIRIE -> expedition_prairie(nbj, meneur, f_a, f_b, f_c, f_d);
-            case VIGNES -> expedition_vigne(nbj, meneur, f_a, f_b, f_c, f_d);
-            case TEMPLE -> expedition_temple(nbj, meneur, f_a, f_b, f_c, f_d);
-            case MER -> expedition_mer(nbj, meneur, f_a, f_b, f_c, f_d);
-            case MONTS -> expedition_mont(nbj, meneur, f_a, f_b, f_c, f_d);
-            case OLYMPE -> expedition_olympe(nbj, meneur, f_a, f_b, f_c, f_d);
+            case ENFERS -> expedition_enfer(meneur);
+            case PRAIRIE -> expedition_prairie(meneur);
+            case VIGNES -> expedition_vigne(meneur);
+            case TEMPLE -> expedition_temple(meneur);
+            case MER -> expedition_mer(meneur);
+            case MONTS -> expedition_mont(meneur);
+            case OLYMPE -> expedition_olympe(meneur);
             case ASCENDANT -> {
                 System.out.println("ERROR : DONOT");
                 yield -1;
@@ -429,40 +295,45 @@ public class Main {
         };
     }
 
-    static int expedition_enfer(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+    static int expedition_enfer(int meneur) throws IOException {
         Monstre monstre = Lieu.enfers();
         switch (input.D4()) {
             case 1, 2, 3 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
-                    return Combat.affrontement(nbj, Position.ENFERS, -1, f_a, f_b, f_c, f_d, monstre);
+                    return Combat.affrontement(Position.ENFERS, -1, monstre);
                 } else {
                     System.out.println("Vous vous éloignez discrètement");
                 }
 
             }
             case 4, 5 -> {
-                if (rand.nextBoolean()) {
+                if (rand.nextBoolean() || rand.nextBoolean()) {
                     Equipement.drop_0();
                 } else {
-                    System.out.println("Vous ne trouvez rien ni personne");
+                    System.out.println("Vous apercevez un(e) " + monstre.nom);
+                    if (input.yn("Voulez vous l'attaquer ?")) {
+                        return Combat.affrontement(Position.ENFERS, -1, monstre);
+                    } else {
+                        System.out.println("Vous vous éloignez discrètement");
+                    }
                 }
             }
             default -> {
                 System.out.println(monstre.nom + " vous attaque");
-                return Combat.affrontement(nbj, Position.ENFERS, meneur, f_a, f_b, f_c, f_d, monstre);
+                return Combat.affrontement(Position.ENFERS, meneur, monstre);
             }
         }
         return -1;
     }
 
-    static int expedition_prairie(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+    static int expedition_prairie(int meneur) throws IOException {
         Monstre monstre = Lieu.prairie();
         switch (input.D6()) {
             case 2, 3, 4, 5 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
-                    return Combat.affrontement(nbj, Position.PRAIRIE, -1, f_a, f_b, f_c, f_d, monstre);
+                    return Combat.affrontement(Position.PRAIRIE, -1, monstre);
                 } else {
                     System.out.println("Vous vous éloignez discrètement");
                 }
@@ -470,26 +341,35 @@ public class Main {
             }
             case 6, 7 -> {
                 if (rand.nextBoolean()) {
+                    Equipement.drop_1();
+                }
+                else if (rand.nextBoolean()) {
                     Equipement.drop_0();
-                } else {
-                    System.out.println("Vous ne trouvez rien ni personne");
+                }
+                else {
+                    System.out.println("Vous apercevez un(e) " + monstre.nom);
+                    if (input.yn("Voulez vous l'attaquer ?")) {
+                        return Combat.affrontement(Position.PRAIRIE, -1, monstre);
+                    } else {
+                        System.out.println("Vous vous éloignez discrètement");
+                    }
                 }
             }
             default -> { // 1
                 System.out.println(monstre.nom + " vous attaque");
-                return Combat.affrontement(nbj, Position.PRAIRIE, meneur, f_a, f_b, f_c, f_d, monstre);
+                return Combat.affrontement(Position.PRAIRIE, meneur, monstre);
             }
         }
         return -1;
     }
 
-    static int expedition_vigne(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+    static int expedition_vigne(int meneur) throws IOException {
         Monstre monstre = Lieu.vigne();
         switch (input.D6()) {
             case 3, 4, 5 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
-                    return Combat.affrontement(nbj, Position.VIGNES, -1, f_a, f_b, f_c, f_d, monstre);
+                    return Combat.affrontement(Position.VIGNES, -1, monstre);
                 } else {
                     System.out.println("Vous vous éloignez discrètement");
                 }
@@ -501,8 +381,17 @@ public class Main {
                     for (int i = 0; i <= t; i++) {
                         Equipement.drop_1();
                     }
-                } else {
-                    System.out.println("Vous ne trouvez rien ni personne");
+                }
+                else if (rand.nextBoolean()) {
+                    Equipement.drop_0();
+                }
+                else {
+                    System.out.println("Vous apercevez un(e) " + monstre.nom);
+                    if (input.yn("Voulez vous l'attaquer ?")) {
+                        return Combat.affrontement(Position.VIGNES, -1, monstre);
+                    } else {
+                        System.out.println("Vous vous éloignez discrètement");
+                    }
                 }
             }
             case 7 -> {
@@ -514,19 +403,19 @@ public class Main {
             }
             default -> { // 1, 2
                 System.out.println(monstre.nom + " vous attaque");
-                return Combat.affrontement(nbj, Position.VIGNES, meneur, f_a, f_b, f_c, f_d, monstre);
+                return Combat.affrontement(Position.VIGNES, meneur, monstre);
             }
         }
         return -1;
     }
 
-    static int expedition_temple(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+    static int expedition_temple(int meneur) throws IOException {
         Monstre monstre = Lieu.temple();
         switch (input.D8()) {
             case 4, 5, 6, 7 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
-                    return Combat.affrontement(nbj, Position.TEMPLE, -1, f_a, f_b, f_c, f_d, monstre);
+                    return Combat.affrontement(Position.TEMPLE, -1, monstre);
                 } else {
                     System.out.println("Vous vous éloignez discrètement");
                 }
@@ -546,7 +435,7 @@ public class Main {
                 }
             }
             case 9 -> {
-                if (rand.nextBoolean()) {
+                if (rand.nextBoolean() || rand.nextBoolean()) {
                     Equipement.drop_1();
                 } else {
                     Equipement.drop_promo();
@@ -554,19 +443,19 @@ public class Main {
             }
             default -> { // 1, 2, 3
                 System.out.println(monstre.nom + " vous attaque");
-                return Combat.affrontement(nbj, Position.TEMPLE, meneur, f_a, f_b, f_c, f_d, monstre);
+                return Combat.affrontement(Position.TEMPLE, meneur, monstre);
             }
         }
         return -1;
     }
 
-    static int expedition_mer(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+    static int expedition_mer(int meneur) throws IOException {
         Monstre monstre = Lieu.mer();
         switch (input.D8()) {
             case 5, 6, 7 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
-                    return Combat.affrontement(nbj, Position.MER, -1, f_a, f_b, f_c, f_d, monstre);
+                    return Combat.affrontement(Position.MER, -1, monstre);
                 } else {
                     System.out.println("Vous vous éloignez discrètement");
                 }
@@ -594,19 +483,19 @@ public class Main {
             }
             default -> { // 1, 2, 3, 4
                 System.out.println(monstre.nom + " vous attaque");
-                return Combat.affrontement(nbj, Position.MER, meneur, f_a, f_b, f_c, f_d, monstre);
+                return Combat.affrontement(Position.MER, meneur, monstre);
             }
         }
         return -1;
     }
 
-    static int expedition_mont(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+    static int expedition_mont(int meneur) throws IOException {
         Monstre monstre = Lieu.mont();
         switch (input.D12()) {
             case 7, 8, 9, 10, 11 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
-                    return Combat.affrontement(nbj, Position.MONTS, -1, f_a, f_b, f_c, f_d, monstre);
+                    return Combat.affrontement(Position.MONTS, -1, monstre);
                 } else {
                     System.out.println("Vous vous éloignez discrètement");
                 }
@@ -627,30 +516,30 @@ public class Main {
             }
             default -> { // 1, 2, 3, 4, 5, 6
                 System.out.println(monstre.nom + " vous attaque");
-                return Combat.affrontement(nbj, Position.MONTS, meneur, f_a, f_b, f_c, f_d, monstre);
+                return Combat.affrontement(Position.MONTS, meneur, monstre);
             }
         }
         return -1;
     }
 
-    static int expedition_olympe(int nbj, int meneur, int f_a, int f_b, int f_c, int f_d) throws IOException {
+    static int expedition_olympe(int meneur) throws IOException {
         Monstre monstre = Lieu.olympe();
         switch (input.D20()) {
             case 19, 20, 21 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
-                    return Combat.affrontement(nbj, Position.OLYMPE, -1, f_a, f_b, f_c, f_d, monstre);
+                    return Combat.affrontement(Position.OLYMPE, -1, monstre);
                 } else if (rand.nextBoolean()) {
                     System.out.println("Vous vous éloignez discrètement");
                 } else {
                     System.out.println(monstre.nom + " vous remarque et vous fonce dessus !");
-                    return Combat.affrontement(nbj, Position.OLYMPE, -1, f_a, f_b, f_c, f_d, monstre);
+                    return Combat.affrontement(Position.OLYMPE, -1, monstre);
                 }
 
             }
             default -> { // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
                 System.out.println(monstre.nom + " vous attaque");
-                return Combat.affrontement(nbj, Position.OLYMPE, meneur, f_a, f_b, f_c, f_d, monstre);
+                return Combat.affrontement(Position.OLYMPE, meneur, monstre);
             }
         }
         return -1;
@@ -693,5 +582,10 @@ public class Main {
                 yield Lieu.true_enfers();
             }
         };
+    }
+
+    private static void init_game() {
+        Main.f = new int[]{0, 0, 0, 0};
+        
     }
 }

@@ -979,7 +979,7 @@ public class Monstre {
         return switch (input.D6()) {
             case 1 -> {
                 if (input.D4() <= 2) {
-                    System.out.println("Votre familier désapprouve fortement vos méthodes d'entrainements.\n");
+                    System.out.println("Votre familier désapprouve fortement vos méthodes d'entrainement.\n");
                     yield -1;
                 }
                 System.out.println();
@@ -990,10 +990,10 @@ public class Monstre {
                 yield 0;
             }
             case 4, 5 -> {
-                System.out.println("Votre familier vous respecter un peu plus.\n");
+                System.out.println("Votre familier vous respecte un peu plus.\n");
                 yield 1;
             }
-            case 6 -> {
+            case 6, 7 -> {
                 if (input.D4() >= 3) {
                     System.out.println("Votre familier semble particulièrement apprécier votre entrainement !\n");
                     yield 2;
