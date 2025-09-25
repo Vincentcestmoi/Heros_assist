@@ -105,7 +105,7 @@ public class Race {
     static Race[] prairie = {loup, karpoi, basilic, serpent, serpent_geant, sanglier, sanglier_feu, corneille, ours_agonisant, lycaon, mormo};
 
     static Competence[] herf_comp = {Competence.ARNAQUE, Competence.VOLEUR_CASQUE, Competence.BENEDICTION};
-    static Race herbe_folle = new Race("herbe_folle", 1, 6, 0, 0, 0, 0, herf_comp);
+    static Race herbe_folle = new Race("herbe folle", 1, 6, 0, 0, 0, 0, herf_comp);
     static Competence[] ours_comp = {Competence.VITALITE_NATURELLE, Competence.ARMURE_NATURELLE, Competence.SAUVAGE, Competence.VIOLENT};
     static Race ours = new Race("ours", 5, 19, 1, 1, 1, 2, ours_comp);
     static Competence[] mant_comp = {Competence.POISON, Competence.CIBLE_CASQUE, Competence.POISON_CECITE, Competence.ARMURE_NATURELLE};
