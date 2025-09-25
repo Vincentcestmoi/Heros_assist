@@ -6,48 +6,62 @@ import java.io.FileReader;
 
 public class Input {
 
+    private final String[] fichLoad = {"Joueur A", "Joueur B", "Joueur C", "Joueur D", "enfers", "prairie", "vigne",
+            "temple", "mer", "mont", "olympe", "rangO", "rangI", "rangII", "rangIII", "rangIV",
+            "promo_monture", "promo_artefact", "promo_renforcement"};
+
 
     // sauvegarde
 
     /**
      * Sauvegarde les données enregistrées, ne touche rien si les données sont innaccessibles
      */
-    public int load() throws IOException {
-        File fichier = new File(Main.Path + "Joueur A" + Main.Ext);
-        int nbj = 0;
-        if (!fichier.exists() || read_log("Joueur A").equals(";")) {
-            return -1;
+    public void load() throws IOException {
+        File fichier = new File(Main.Path + fichLoad[0] + Main.Ext);
+        if (!fichier.exists() || read_log(fichLoad[0]).equals(";")) {
+            return;
         }
         if (!yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la suppression")) {
-            String[] nomFichier = {"Joueur A", "Joueur B", "Joueur C", "Joueur D", "enfers", "prairie", "vigne",
-                    "temple", "mer", "mont", "olympe", "rangO", "rangI", "rangII", "rangIII", "rangIV",
-                    "promo_monture", "promo_artefact", "promo_renforcement"};
-            for(String s : nomFichier) {
+            for(String s : fichLoad) {
                 Output.delete_fichier(s);
             }
             System.out.println("lancement du jeu.\n\n");
-            return -1;
-        } else {
-            //joueur
-            if (load_ja()) {
-                nbj++;
+            return;
+        }
+        else {
+            // taille temporaire pour les data
+            Main.nom = new String[Main.nbj_max];
+            Main.f = new int[Main.nbj_max];
+            Main.positions = new Position[Main.nbj_max];
+
+            //joueurs
+            for(int i = 0; i < Main.nbj_max; i++) {
+                if (load_j(fichLoad[i], i)) {
+                    System.out.println(Main.nom[i] + " chargé(e) avec succès.");
+                    Main.nbj++;
+                }
+                else{
+                    break;
+                }
             }
-            if(load_jb()){
-                nbj++;
-            }
-            if(load_jc()){
-                nbj++;
-            }
-            if(load_jd()){
-                nbj++;
-            }
+
+            // on réduit à la bonne taille les listes
+            String[] t_nom = new String[Main.nbj];
+            System.arraycopy(Main.nom, 0, t_nom, 0, Main.nbj);
+            Main.nom = t_nom;
+            int[] t_f = new int[Main.nbj];
+            System.arraycopy(Main.f, 0, t_f, 0, Main.nbj);
+            Main.f = t_f;
+            Position[] t_pos = new Position[Main.nbj];
+            System.arraycopy(Main.positions, 0, t_pos, 0, Main.nbj);
+            Main.positions = t_pos;
+
             //monstre nommé
             corrige_nomme();
             //item unique
             corrige_item();
         }
         System.out.println("lancement du jeu.\n\n");
-        return nbj;
     }
 
     /**
@@ -105,87 +119,77 @@ public class Input {
         }
     }
 
-    private boolean load_ja() {
-        if(load_j("Joueur A", Main.Joueur_A, 0)){
-            System.out.println(Main.Joueur_A + " chargé(e).");
-            return true;
-        }
-        return false;
-    }
-
-    private boolean load_jb() {
-        if(load_j("Joueur B", Main.Joueur_B, 1)){
-            System.out.println(Main.Joueur_B + " chargé(e).");
-            return true;
-        }
-        return false;
-    }
-
-    private boolean load_jc() {
-        if(load_j("Joueur C", Main.Joueur_C, 2)){
-            System.out.println(Main.Joueur_C + " chargé(e).");
-            return true;
-        }
-        return false;
-    }
-
-    private boolean load_jd() {
-        if(load_j("Joueur D", Main.Joueur_D, 3)){
-            System.out.println(Main.Joueur_D + " chargé(e).");
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Charge les données d'un joueur
      * @param nomFichier le chemin de la sauvegarde
-     * @param joueur le joueur à charger
      * @param index l'index correspondant au joueur
      * @return si le chargement a eu lieu
      * @implNote suppose que le fichier est correctement formaté, le cas contraire cause des crashs
      */
-    private boolean load_j(String nomFichier, String joueur, int index) {
+    private boolean load_j(String nomFichier, int index) {
         String log = read_log(nomFichier);
         if(log.isEmpty() || log.charAt(0) == ';') {
             return false;
         }
+
+        //nom
         StringBuilder temp = new StringBuilder();
         int i = 0;
         while (log.charAt(i) != ',') {
             temp.append(log.charAt(i));
             i++;
         }
-        if(!joueur.contentEquals(temp)){
-            System.out.println("Mauvais joueur : attendu : " + joueur + ", obtenue : " + temp + ", lien impossible");
-            System.exit(0);
-        }
+        Main.nom[index] = temp.toString();
         temp = new StringBuilder();
         i++;
+
+        //metier
         while (log.charAt(i) != ',') {
             temp.append(log.charAt(i));
             i++;
         }
-        switch (temp.toString()) {
-            case "ENFERS" -> Main.positions[index] = Position.ENFERS;
-            case "PRAIRIE" -> Main.positions[index] = Position.PRAIRIE;
-            case "VIGNES" -> Main.positions[index] = Position.VIGNES;
-            case "TEMPLE" -> Main.positions[index] = Position.TEMPLE;
-            case "MER" -> Main.positions[index] = Position.MER;
-            case "MONTS" -> Main.positions[index] = Position.MONTS;
-            case "OLYMPE" -> Main.positions[index] = Position.OLYMPE;
+        setJob(String.valueOf(temp), index);
+        temp = new StringBuilder();
+        i++;
+
+        // position
+        while (log.charAt(i) != ',') {
+            temp.append(log.charAt(i));
+            i++;
+        }
+        Main.positions[index] = switch (temp.toString()) {
+            case "ENFERS" ->  Position.ENFERS;
+            case "PRAIRIE" ->  Position.PRAIRIE;
+            case "VIGNES" ->  Position.VIGNES;
+            case "TEMPLE" ->  Position.TEMPLE;
+            case "MER" ->  Position.MER;
+            case "MONTS" ->  Position.MONTS;
+            case "OLYMPE" ->  Position.OLYMPE;
             case "ASCENDANT" -> {
                 System.out.println("ERROR : DONOT");
-                Main.positions[index] = Position.PRAIRIE;
+                yield Position.PRAIRIE;
             }
-        }
-        switch (index){
-            case 0 -> Main.f_a = (int)log.charAt(i + 1) - 48;
-            case 1 -> Main.f_b = (int)log.charAt(i + 1) - 48;
-            case 2 -> Main.f_c = (int)log.charAt(i + 1) - 48;
-            case 3 -> Main.f_d = (int)log.charAt(i + 1) - 48;
-        }
+            default -> {
+                System.out.println("ERROR : UNKNOW POSITION : " + temp);
+                yield Position.PRAIRIE;
+            }
+        };
+
+        //familier
+        Main.f[index] = (int)log.charAt(i + 1) - 48;
         return true;
+    }
+
+    private void setJob(String temp, int index) {
+        String job = temp;
+        switch(temp){
+            case "necromancien" -> Main.necromancien = Main.nom[index];
+            case "archimage" -> Main.archimage = Main.nom[index];
+            case "alchimiste" -> Main.alchimiste = Main.nom[index];
+            case "guerriere" -> Main.guerriere = Main.nom[index];
+            default -> job = "chomeur";
+        }
+        System.out.println(Main.nom[index] + " est " + job);
     }
 
     /**
@@ -481,16 +485,20 @@ public class Input {
                 text += "/(s)'avancer";
             }
             text += "/(p)remier soin/a(n)alyser/(c)ustom/(o)ff";
-            switch (nom) {
-                case Main.necromancien -> text += "/(ma)udir";
-                case Main.archimage -> text += "/(me)ditation/(so)rt";
-                case Main.alchimiste -> {
-                    if (ya_mort) {
-                        text += "/(re)ssuciter par potion/(co)ncocter des potions";
-                    }
-                    text += "/(fo)uiller";
+            if(nom.equals(Main.necromancien)) {
+                text += "/(ma)udir";
+            }
+            if(nom.equals(Main.archimage)) {
+                    text += "/(me)ditation/(so)rt";
                 }
-                case Main.guerriere -> text += "/(be)rserker/(la)me d'aura";
+            if(nom.equals(Main.alchimiste)) {
+                if (ya_mort) {
+                    text += "/(re)ssuciter par potion";
+                }
+                text += "/(co)ncocter des potions/(fo)uiller";
+            }
+            if(nom.equals(Main.guerriere)) {
+                text += "/(be)rserker/(la)me d'aura";
             }
         } else { //familier
             text = "Donnez un ordre au " + nom + " (A)ttaquer/(f)uir/(c)ustom/(o)ff";

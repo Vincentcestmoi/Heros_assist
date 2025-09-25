@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
@@ -11,34 +12,30 @@ public class Combat {
 
     /**
      * Lance un combat entre les joueur et un monstres
-     * @param position le lieu où a lieu l'affrontement
+     *
+     * @param position     le lieu où a lieu l'affrontement
      * @param joueur_force l'indice du joueur qui est attaqué en cas d'embuscade (de 1 à 4) ou -1 sinon
-     * @param ennemi le monstre que les joueurs affronte
+     * @param ennemi       le monstre que les joueurs affronte
      * @throws IOException lecture de terminal
      */
     public static int affrontement(Position position, int joueur_force, Monstre ennemi) throws IOException {
 
+        boolean[] actif = new boolean[Main.nbj * 2];
+        Arrays.fill(actif, false);
         // repérer les participants
-        boolean j_a = joueur_force == 0 || (Main.positions[0] == position && input.yn("Est-ce que " + Main.Joueur_A + " participe au combat ?"));
-        boolean j_b = joueur_force == 1 || (Main.nbj > 1 && Main.positions[1] == position && input.yn("Est-ce que " + Main.Joueur_B + " participe au combat ?"));
-        boolean j_c = joueur_force == 2 || (Main.nbj > 2 && Main.positions[2] == position && input.yn("Est-ce que " + Main.Joueur_C + " participe au combat ?"));
-        boolean j_d = joueur_force == 3 || (Main.nbj > 3 && Main.positions[3] == position && input.yn("Est-ce que " + Main.Joueur_D + " participe au combat ?"));
-        boolean f_a = Main.f[0] > 0 && j_a && input.yn("Est-ce que le familier de " + Main.Joueur_A + " participe au combat ?");
-        boolean f_b = Main.f[1] > 0 && j_b && input.yn("Est-ce que le familier de " + Main.Joueur_B + " participe au combat ?");
-        boolean f_c = Main.f[2] > 0 && j_c && input.yn("Est-ce que le familier de " + Main.Joueur_C + " participe au combat ?");
-        boolean f_d = Main.f[3] > 0 && j_d && input.yn("Est-ce que le familier de " + Main.Joueur_D + " participe au combat ?");
-
-        if (!(j_a || j_b || j_c || j_d)) {
-            System.out.println("Erreur : aucun joueur détecté, annulation du combat.");
-            return -1;
+        for (int i = 0; i < Main.nbj; i++) {
+            actif[i] = joueur_force == i || (Main.positions[i] == position && input.yn("Est-ce que " + Main.nom[i] + " participe au combat ?"));
+            actif[i + Main.nbj] = Main.f[i] > 0 && actif[i] && input.yn("Est-ce que le familier de " + Main.nom[i] + " participe au combat ?");
         }
 
         // stockage des participants
-        boolean[] actif = {j_a, j_b, j_c, j_d, f_a, f_b, f_c, f_d};
-        String[] nom = {Main.Joueur_A, Main.Joueur_B, Main.Joueur_C, Main.Joueur_D,
-                "le familier de " + Main.Joueur_A, "le familier de " + Main.Joueur_B, "le familier de " + Main.Joueur_C,
-                "le familier de " + Main.Joueur_D};
-        boolean[] mort = {false, false, false, false, false, false, false, false};
+        String[] nom = new String[Main.nbj * 2];
+        for (int i = 0; i < Main.nbj; i++) {
+            nom[i] = Main.nom[i];
+            nom[i + Main.nbj] = "familier de " + Main.nom[i];
+        }
+        boolean[] mort = new boolean[Main.nbj * 2];
+        Arrays.fill(mort, false);
 
         int nbp = 0;
         for (boolean b : actif) {
@@ -47,8 +44,13 @@ public class Combat {
             }
         }
 
+        if (nbp == 0) {
+            System.out.println("Aucun joueur détecté, annulation du combat.");
+            return -1;
+        }
+
         int pr_l = joueur_force;
-        if(pr_l == -1){
+        if (pr_l == -1) {
             pr_l = getPrL(nom, nbp, actif);
         }
         System.out.println(nom[pr_l] + " se retrouve en première ligne.\n");
@@ -71,8 +73,9 @@ public class Combat {
 
     /**
      * Renvoie l'index du joueur qui serra en première ligne
-     * @param nom le nom des participants
-     * @param nbp le nombre de participants
+     *
+     * @param nom   le nom des participants
+     * @param nbp   le nombre de participants
      * @param actif les boolean indiquant si les participants sont actifs
      * @return l'index du joueur en première ligne
      * @throws IOException toujours
@@ -81,7 +84,7 @@ public class Combat {
 
         // demander gentimment
         if (nbp > 1) {
-            for (int i = 0; i < 8; i++) {
+            for (int i = Main.nbj * 2 - 1; i >= 0 ; i--) {
                 if (actif[i]) {
                     if (input.yn("Est-ce que " + nom[i] + " passe au front ?")) {
                         return i;
@@ -93,32 +96,36 @@ public class Combat {
         // z'avez plus le choix
         int i;
         do {
-            i = rand.nextInt(8);
+            i = rand.nextInt(Main.nbj * 2);
         } while (!actif[i]);
         return i;
     }
 
     /**
      * Gère le combat en appliquant les actions
+     *
      * @param ennemi le monstre adverse
-     * @param actif liste de boolean indiquant si un participant est actif
-     * @param nom liste des noms des participants
-     * @param pr_l index du participant de première ligne
-     * @param mort liste de boolean indiquant si les participants sont morts
+     * @param actif  liste de boolean indiquant si un participant est actif
+     * @param nom    liste des noms des participants
+     * @param pr_l   index du participant de première ligne
+     * @param mort   liste de boolean indiquant si les participants sont morts
      * @return l'index du joueur qui domestique l'ennemi, ou 0 sinon
      * @throws IOException et oui
      */
     private static int combat(Monstre ennemi, boolean[] actif, String[] nom, int pr_l, boolean[] mort) throws IOException {
 
 
-        boolean[] assomme = {false, false, false, false, false, false, false, false};
-        int[] reveil = {0, 0, 0, 0, 0, 0, 0, 0};
+        boolean[] assomme = new boolean[Main.nbj * 2];
+        Arrays.fill(assomme, false);
+        int[] reveil = new int[Main.nbj * 2];
+        Arrays.fill(reveil, 0);
 
 
         // on prépare une bijection aléatoire pour l'ordre de jeu
-        int[] t = {-1, -1, -1, -1, -1, -1, -1, -1};
-        for (int i = 0; i < 8;) {
-            int temp = rand.nextInt(8);
+        int[] t = new int[Main.nbj * 2];
+        Arrays.fill(t, -1);
+        for (int i = 0; i < Main.nbj * 2; ) {
+            int temp = rand.nextInt(Main.nbj * 2);
             if (t[temp] == -1) {
                 t[temp] = i;
                 i++;
@@ -133,7 +140,7 @@ public class Combat {
         while (run) {
 
             //chaque joueur
-            for (int j = 0; j < 8; j++) {
+            for (int j = 0; j < Main.nbj * 2; j++) {
                 i = t[j];
 
                 // on ne joue que les participants actifs
@@ -150,22 +157,21 @@ public class Combat {
                     continue;
                 }
 
-                if (gere_assome(assomme, n, i, reveil)){
+                if (gere_assome(assomme, n, i, reveil)) {
                     continue;
                 }
 
                 // on différencie les familiers et joueurs
-                if (i >= 4) {
-                    if (i < 8) {
-                        ob = Main.f[i - 4];
+                if (i >= Main.nbj) {
+                    if (i < Main.nbj * 2) {
+                        ob = Main.f[i - Main.nbj];
                     } else {
                         System.out.println("Erreur : " + n + " détecté comme familier, mais aucun joueur rattaché" +
                                 "entité ignorée pour la suite du combat.");
                         actif[i] = false;
                         continue;
                     }
-                }
-                else {
+                } else {
                     ob = 0; // joueur
                 }
 
@@ -175,7 +181,7 @@ public class Combat {
 
                     case OFF -> {
                         a_pass = alteration(actif, assomme, mort, nom, n, a_pass, i);
-                        if(i != pr_l) {
+                        if (i != pr_l) {
                             a_pass = alteration(actif, assomme, mort, nom, nom[pr_l], a_pass, pr_l);
                             if (actif[i]) {
                                 j--;
@@ -187,9 +193,9 @@ public class Combat {
                     }
                     case RETOUR -> {
                         int k = j;
-                        do{
+                        do {
                             k = k == 0 ? 7 : k - 1;
-                        }while(!actif[t[k]]);
+                        } while (!actif[t[k]]);
                         j = t[k];
                     }
 
@@ -199,7 +205,7 @@ public class Combat {
                         ennemi.dommage_magique(input.magie());
                     }
                     case FUIR -> {
-                        if(familier_act(ob, actif, i, n, ennemi)) {
+                        if (familier_act(ob, actif, i, n, ennemi)) {
                             fuir(ennemi.nom, i, i == pr_l, actif, n);
                         }
                     }
@@ -222,12 +228,12 @@ public class Combat {
                     }
                     case ANALYSER -> analyser(i == pr_l, ennemi);
                     case AUTRE -> {
-                        if(familier_act(ob, actif, i, n, ennemi)){
+                        if (familier_act(ob, actif, i, n, ennemi)) {
                             System.out.println(n + " fait quelque chose.\n");
                         }
                     }
                     case AVANCER -> {
-                        if(familier_act(ob, actif, i, n, ennemi)){
+                        if (familier_act(ob, actif, i, n, ennemi)) {
                             System.out.println(n + " passe en première ligne.\n");
                             pr_l = i;
                             ennemi.reset_encaisser();
@@ -237,10 +243,9 @@ public class Combat {
 
                     //compétence de classe
                     case MAUDIR -> {
-                        if(input.yn("Ciblez vous le monstre annemi ?")) {
+                        if (input.yn("Ciblez vous le monstre annemi ?")) {
                             Sort.maudir(ennemi);
-                        }
-                        else{
+                        } else {
                             Sort.maudir();
                         }
                     }
@@ -291,7 +296,7 @@ public class Combat {
                             }
                         }
                         // attaque normale
-                        else if(familier_act(ob, actif, i, n, ennemi)){
+                        else if (familier_act(ob, actif, i, n, ennemi)) {
                             System.out.println(n + " attaque l'ennemi.\n");
                             ennemi.dommage(input.atk());
                         }
@@ -302,8 +307,8 @@ public class Combat {
                 if (!actif[pr_l]) {
                     boolean is_active = false;
                     int k = 0;
-                    for(;k < 8; k++){
-                        if(actif[k]){
+                    for (; k < Main.nbj * 2; k++) {
+                        if (actif[k]) {
                             is_active = true;
                             break;
                         }
@@ -312,8 +317,7 @@ public class Combat {
                         run = false;
                         System.out.println("Aucun joueur ou familier détecté en combat.");
                         // break inutile, car actif[i] toujours à false
-                    }
-                    else {
+                    } else {
                         do {
                             k = rand.nextInt(8);
                         } while (!actif[k]);
@@ -329,7 +333,7 @@ public class Combat {
 
                     //le nécromancien peut tenter de ressuciter le monstre
                     int necro = -1;
-                    for (int k = 0; k < 4; k++) {
+                    for (int k = 0; k < Main.nbj; k++) {
                         if (actif[k] && Objects.equals(nom[k], Main.necromancien)) {
                             necro = k;
                             break;
@@ -341,13 +345,13 @@ public class Combat {
                         }
                     }
                     boolean alchi = false;
-                    for(int k = 0; k < 4; k++){
+                    for (int k = 0; k < Main.nbj; k++) {
                         if (actif[k] && Objects.equals(nom[k], Main.alchimiste)) {
                             alchi = true;
                             break;
                         }
                     }
-                    if(alchi && input.yn("Voulez vous dissequer " + ennemi.nom + " ?")){
+                    if (alchi && input.yn("Voulez vous dissequer " + ennemi.nom + " ?")) {
                         Sort.dissection();
                     }
                     break;
@@ -364,7 +368,7 @@ public class Combat {
 
                     //le nécromancien peut tenter de ressuciter le monstre
                     int necro = -1;
-                    for (int k = 0; k < 8; k++) {
+                    for (int k = 0; k < Main.nbj * 2; k++) {
                         if (actif[k] && Objects.equals(nom[k], Main.necromancien)) {
                             necro = k;
                             break;
@@ -376,13 +380,13 @@ public class Combat {
                         }
                     }
                     boolean alchi = false;
-                    for(int k = 0; k < 8; k++){
+                    for (int k = 0; k < Main.nbj * 2; k++) {
                         if (actif[k] && Objects.equals(nom[k], Main.alchimiste)) {
                             alchi = true;
                             break;
                         }
                     }
-                    if(alchi && input.yn("Voulez vous dissequer " + ennemi.nom + " ?")){
+                    if (alchi && input.yn("Voulez vous dissequer " + ennemi.nom + " ?")) {
                         Sort.dissection();
                     }
                 }
@@ -393,10 +397,11 @@ public class Combat {
 
     /**
      * Regarde si le participant est assommé et gère le cas échéant
+     *
      * @param assomme tableau de boolean indiquant les participants assommés
-     * @param n nom du participant
-     * @param index indix du participant
-     * @param reveil tableau de valeur indiquant à quel point les participants sont proches de se reveiller
+     * @param n       nom du participant
+     * @param index   indix du participant
+     * @param reveil  tableau de valeur indiquant à quel point les participants sont proches de se reveiller
      * @return si la participant perd son tour
      * @throws IOException toujours
      */
@@ -423,8 +428,7 @@ public class Combat {
             System.out.println(n + " est toujours inconscient.");
             if (Objects.equals(n, Main.archimage)) {
                 System.out.println(n + " recupère 1PP.\n");
-            }
-            else{
+            } else {
                 System.out.println();
             }
 
@@ -436,11 +440,12 @@ public class Combat {
 
     /**
      * Tente de fuir le combat
-     * @param ne le nom du monstre ennemi
-     * @param i l'index du participant
+     *
+     * @param ne    le nom du monstre ennemi
+     * @param i     l'index du participant
      * @param is_pr si le participant est en première ligne
      * @param actif la liste de boolean d'activité des participants
-     * @param n le nom du participant
+     * @param n     le nom du participant
      * @throws IOException ça roule
      */
     private static void fuir(String ne, int i, boolean is_pr, boolean[] actif, String n) throws IOException {
@@ -454,31 +459,29 @@ public class Combat {
 
     /**
      * Simule le comportement d'un familier en fonction de son niveau d'obéissance
-     * @param ob l'obéissance du familier, si la valeur est 0, le programme renverra true
-     * @param actif la liste de boolean d'activité des participants
-     * @param index l'index du familier
-     * @param n le nom du familier
+     *
+     * @param ob     l'obéissance du familier, si la valeur est 0, le programme renverra true
+     * @param actif  la liste de boolean d'activité des participants
+     * @param index  l'index du familier
+     * @param n      le nom du familier
      * @param ennemi le monstre ennemi
      * @return si le familier joue l'action, un false remplace l'action
      * @implNote un joueur peut être entré avec une obéissance de 0.
      */
     private static boolean familier_act(int ob, boolean[] actif, int index, String n, Monstre ennemi) throws IOException {
-        if(ob < 1 || ob == Main.f_max){
+        if (ob < 1 || ob == Main.f_max) {
             return true;
         }
         int temp = ob + input.D6() - 3 + rand.nextInt(2); //valeur d'obeisance à l'action
         if (temp <= 1) {
             System.out.println(n + " fuit le combat.\n");
             actif[index] = false;
-        }
-        else if (temp == 2) {
+        } else if (temp == 2) {
             System.out.println(n + " n'écoute pas vos ordres.\n");
-        }
-        else if (temp <= 4){
+        } else if (temp <= 4) {
             System.out.println(n + " ignore vos directives et attaque l'ennemi.\n");
             ennemi.dommage(input.atk());
-        }
-        else{
+        } else {
             return true;
         }
         return false;
@@ -487,45 +490,43 @@ public class Combat {
     /**
      * Gère le retour OFF de l'action, c.-à-d. la mort, l'inconscience ou le retrait du joueur actif ou de celui
      * de première ligne
-     * @param actif booléens indiquants quels participants sont actifs
+     *
+     * @param actif   booléens indiquants quels participants sont actifs
      * @param assomme booléens indiquants quels participants sont assommés
-     * @param mort booléens indiquants quels participants sont morts
-     * @param nom liste des noms des participants
-     * @param n le nom du participant actuel (supposemment off)
-     * @param a_pass si le joueur A (nécro) passera son prochain tour
-     * @param i l'indice du joueur actuel
+     * @param mort    booléens indiquants quels participants sont morts
+     * @param nom     liste des noms des participants
+     * @param n       le nom du participant actuel (supposemment off)
+     * @param a_pass  si le joueur A (nécro) passera son prochain tour
+     * @param i       l'indice du joueur actuel
      * @return si le nécromancien a utilisé son tour
      * @throws IOException mon poto
      */
     private static boolean alteration(boolean[] actif, boolean[] assomme, boolean[] mort, String[] nom, String n, boolean a_pass, int i) throws IOException {
-        if(input.yn(n + " est-il/elle mort(e) ?")){
+        if (input.yn(n + " est-il/elle mort(e) ?")) {
 
             //on regarde si on peut le ressuciter immédiatement
             boolean actif_a = false;
-            for(int k = 0; k < 8; k++){
+            for (int k = 0; k < Main.nbj * 2; k++) {
                 if (actif[k] && Objects.equals(nom[k], Main.necromancien) && !n.equals(nom[k]) && !assomme[k] && !a_pass) { //le joueur est necromancien et disponible
                     actif_a = true;
                     break;
                 }
             }
-            if(actif_a && input.yn("Est-ce que " + Main.necromancien + " veux tenter de ressuciter " + n + " pour 2 PP ?")) {
+            if (actif_a && input.yn("Est-ce que " + Main.necromancien + " veux tenter de ressuciter " + n + " pour 2 PP ?")) {
                 if (!ressuciter()) {
                     System.out.println(n + " est mort(e).");
                     actif[i] = false;
                     mort[i] = true;
                 }
                 a_pass = true;
-            }
-            else{
+            } else {
                 System.out.println(n + " est mort(e).");
                 actif[i] = false;
                 mort[i] = true;
             }
-        }
-        else if (input.yn(n + " est-il/elle inconscient(e) ?")) {
+        } else if (input.yn(n + " est-il/elle inconscient(e) ?")) {
             assomme[i] = true;
-        }
-        else if (!input.yn(n + " est-il/elle toujours en combat ?")) {
+        } else if (!input.yn(n + " est-il/elle toujours en combat ?")) {
             System.out.println(n + " est retiré(e) du combat.");
             actif[i] = false;
         }
@@ -535,78 +536,79 @@ public class Combat {
 
     /**
      * Gère les compétences du monstre juste avant le combat
+     *
      * @param ennemi le monstre qu'affrontent les participants
-     * @param nom les noms des participants
-     * @param pr_l l'indice du participant en premières lignes
-     * @param actif une liste indiquant si les participants sont actifs
+     * @param nom    les noms des participants
+     * @param pr_l   l'indice du participant en premières lignes
+     * @param actif  une liste indiquant si les participants sont actifs
      * @return si le combat s'arrête
      */
     static boolean competence(Monstre ennemi, String[] nom, int pr_l, boolean[] actif) throws IOException {
-        switch (ennemi.competence){
+        switch (ennemi.competence) {
             case DAMNATION_RES -> System.out.println(nom[pr_l] + " perd 2 points de vie pour la durée du combat.");
             case DAMNATION_ATK -> System.out.println(nom[pr_l] + " perd 1 point d'attaque pour la durée du combat.");
             case DAMN_ARES -> {
-                if (input.yn("Un de vous est-il descendant d'Ares ?")){
+                if (input.yn("Un de vous est-il descendant d'Ares ?")) {
                     System.out.println(ennemi.nom + " vous maudit.");
                     System.out.println("Tout descendant d'Arès perd 2 points d'attaque pour la durée du combat.");
                 }
             }
             case HATE_DEMETER -> {
-                if (input.yn("Un de vous est-il descendant de Demeter ?")){
+                if (input.yn("Un de vous est-il descendant de Demeter ?")) {
                     System.out.println(ennemi.nom + " vous regarde avec haine.");
                     ennemi.attaque += 1;
                 }
             }
             case HATE_DYONISOS -> {
-                if (input.yn("Un de vous est-il descendant de Dyonis ?")){
+                if (input.yn("Un de vous est-il descendant de Dyonis ?")) {
                     System.out.println(ennemi.nom + " vous regarde avec haine.");
                     ennemi.attaque += 1;
                 }
             }
             case HATE_POSEIDON -> {
-                if (input.yn("Un de vous est-il descendant de Poseidon ?")){
+                if (input.yn("Un de vous est-il descendant de Poseidon ?")) {
                     System.out.println(ennemi.nom + " vous regarde avec haine.");
                     ennemi.attaque += 1;
                 }
             }
             case HATE_ZEUS -> {
-                if (input.yn("Un de vous est-il descendant de Zeus ?")){
+                if (input.yn("Un de vous est-il descendant de Zeus ?")) {
                     System.out.println(ennemi.nom + " vous regarde avec haine.");
                     ennemi.attaque += 1;
                 }
             }
             case FEAR_ZEUS -> {
-                if (input.yn("Un de vous est-il descendant de Zeus ?")){
+                if (input.yn("Un de vous est-il descendant de Zeus ?")) {
                     System.out.println(ennemi.nom + " vous crains.");
                     ennemi.attaque -= 1;
                 }
             }
             case FEAR_DEMETER -> {
-                if (input.yn("Un de vous est-il descendant de Demeter ?")){
+                if (input.yn("Un de vous est-il descendant de Demeter ?")) {
                     System.out.println(ennemi.nom + " vous crains.");
                     ennemi.attaque -= 1;
                 }
             }
             case FEAR_POSEIDON -> {
-                if (input.yn("Un de vous est-il descendant de Poseidon ?")){
+                if (input.yn("Un de vous est-il descendant de Poseidon ?")) {
                     System.out.println(ennemi.nom + " vous crains.");
                     ennemi.attaque -= 1;
                 }
             }
             case FEAR_HYPNOS -> {
-                if (input.yn("Un de vous est-il descendant d'Hypnos ?")){
+                if (input.yn("Un de vous est-il descendant d'Hypnos ?")) {
                     System.out.println(ennemi.nom + " vous crains.");
                     ennemi.attaque -= 1;
                 }
             }
             case FEAR_DYONISOS -> {
-                if (input.yn("Un de vous est-il descendant de Dyonisos ?")){
+                if (input.yn("Un de vous est-il descendant de Dyonisos ?")) {
                     System.out.println(ennemi.nom + " vous crains.");
                     ennemi.attaque -= 1;
                 }
             }
             case CIBLE_CASQUE -> {
-                if (input.yn(nom[pr_l] + " porte-il/elle un casque ?") && input.D6() <= 4){
+                if (input.yn(nom[pr_l] + " porte-il/elle un casque ?") && input.D6() <= 4) {
                     System.out.println(ennemi.nom + " fait tomber votre casque pour le combat.");
                 }
             }
@@ -631,11 +633,11 @@ public class Combat {
             case FORCE_NATURELLE3 -> ennemi.attaque += 6;
             case PRUDENT -> {
                 int tolerance = ennemi.attaque;
-                for(int i = 0; i < 8; i++){
-                    if(actif[i]){
+                for (int i = 0; i < Main.nbj * 2; i++) {
+                    if (actif[i]) {
                         System.out.print(nom[i] + " ");
                         tolerance -= input.atk();
-                        if(tolerance < 0){
+                        if (tolerance < 0) {
                             System.out.println(ennemi.nom + " fuit en vous voyant avancer.");
                             return true;
                         }
@@ -644,12 +646,12 @@ public class Combat {
             }
             case SUSPICIEUX -> {
                 int tolerance = ennemi.vie + ennemi.armure * 3;
-                for(int i = 0; i < 8; i++){
-                    if(actif[i]){
+                for (int i = 0; i < Main.nbj * 2; i++) {
+                    if (actif[i]) {
                         System.out.print(nom[i] + " ");
                         tolerance -= 3 * input.def();
                         tolerance -= input.vie();
-                        if(tolerance < 0){
+                        if (tolerance < 0) {
                             System.out.println(ennemi.nom + " fuit en vous voyant avancer.");
                             return true;
                         }
@@ -658,13 +660,13 @@ public class Combat {
             }
             case MEFIANT -> {
                 int tolerance = ennemi.vie + ennemi.armure * 3 + ennemi.attaque;
-                for(int i = 0; i < 8; i++){
-                    if(actif[i]){
+                for (int i = 0; i < Main.nbj * 2; i++) {
+                    if (actif[i]) {
                         System.out.print(nom[i] + " ");
                         tolerance -= 3 * input.def();
                         tolerance -= input.vie();
                         tolerance -= input.atk();
-                        if(tolerance < 0){
+                        if (tolerance < 0) {
                             System.out.println(ennemi.nom + " fuit en vous voyant avancer.");
                             return true;
                         }
@@ -673,13 +675,13 @@ public class Combat {
             }
             case REGARD_APPEURANT -> {
                 System.out.println(nom[pr_l] + " croise le regard de " + ennemi.nom);
-                if(input.D4() != 4){
+                if (input.D4() != 4) {
                     System.out.println(nom[pr_l] + " est appeuré(e) et perd 1 points d'attaque pour la durée du combat");
                 }
             }
             case REGARD_TERRIFIANT -> {
                 System.out.println(nom[pr_l] + " croise le regard de " + ennemi.nom);
-                if(input.D6() <= 5){
+                if (input.D6() <= 5) {
                     System.out.println(nom[pr_l] + " est terrifié(e) et perd 3 points d'attaque pour la durée du combat");
                 }
             }
@@ -704,7 +706,8 @@ public class Combat {
                 ennemi.vie = ennemi.vie_max;
                 ennemi.armure = ennemi.armure == 0 ? 0 : ennemi.armure - 1;
             }
-            case BRUME -> System.out.println(ennemi.nom + "crée un rideau de brûme, tous les participants perdent 1 point d'attaque pour la durée du combat.");
+            case BRUME ->
+                    System.out.println(ennemi.nom + "crée un rideau de brûme, tous les participants perdent 1 point d'attaque pour la durée du combat.");
             case GOLEM_PIERRE -> {
                 ennemi.nom = "golem de pierre";
                 ennemi.attaque += rand.nextInt(3) + 1;
@@ -746,22 +749,25 @@ public class Combat {
 
     /**
      * Gère les compétences de l'ennemi lors d'un changement de position
-     * @param ennemi le monstre ennemi
+     *
+     * @param ennemi   le monstre ennemi
      * @param nom_pr_l le nom de l'unité en première ligne
      * @throws IOException ça va mon pote ?
      */
     static void competence_avance(Monstre ennemi, String nom_pr_l) throws IOException {
-        switch (ennemi.competence){
+        switch (ennemi.competence) {
             case ASSAUT -> {
                 System.out.println(ennemi.nom + " se jete sur " + nom_pr_l + " avant que vous ne vous en rendiez compte");
                 ennemi.attaque(nom_pr_l);
             }
-            case CHANT_SIRENE -> System.out.println("Le chant de " + ennemi.nom + " perturbe " + nom_pr_l + " qui perd 1 point d'attaque pour la durée du combat.");
+            case CHANT_SIRENE ->
+                    System.out.println("Le chant de " + ennemi.nom + " perturbe " + nom_pr_l + " qui perd 1 point d'attaque pour la durée du combat.");
         }
     }
 
     /**
      * Suprimme le monstre de sa zone après sa mort s'il est nommé
+     *
      * @param ennemi le monstre ennemi
      * @implNote ne couvre que les monstres nommés
      */
@@ -773,8 +779,8 @@ public class Combat {
     }
 
     /**
-     *
      * Supprime le monstre nommé donné de sa liste
+     *
      * @param monstre le nom du monstre à supprimer
      * @implNote ne couvre que les monstres nommés, utiliser delete_montre sinon
      */
@@ -794,6 +800,7 @@ public class Combat {
 
     /**
      * Supprime le monstre donné de sa liste
+     *
      * @param monstre le nom du monstre à supprimer
      * @implNote n'enregistre pas la suppression dans les fichiers de sauvegarde
      */
@@ -813,6 +820,7 @@ public class Combat {
 
     /**
      * Fournie la liste à laquelle appartient le monstre
+     *
      * @param ennemi le nom du monstre à identifier
      * @return sa liste de référence
      * @implNote ne regarde que les monstres nommés
@@ -823,16 +831,17 @@ public class Combat {
             case "Cerbère" -> list = Race.enfers;
             case "Lycaon", "Mormo" -> list = Race.prairie;
             case "Laton", "Empousa" -> list = Race.vigne;
-            case "Python", "Echidna" -> list =  Race.temple;
-            case "Scylla", "Charibe" -> list =  Race.mer;
-            case "Typhon", "l'Aigle du Caucase" -> list =  Race.mont;
-            case "Chronos" -> list =  Race.olympe;
+            case "Python", "Echidna" -> list = Race.temple;
+            case "Scylla", "Charibe" -> list = Race.mer;
+            case "Typhon", "l'Aigle du Caucase" -> list = Race.mont;
+            case "Chronos" -> list = Race.olympe;
         }
         return list;
     }
 
     /**
      * Fournie le nom de la liste à laquelle appartient le monstre
+     *
      * @param ennemi le nom du monstre à identifier
      * @return le nom de sa liste de référence
      * @implNote ne regarde que les monstres nommés
@@ -855,13 +864,14 @@ public class Combat {
 
     /**
      * Tente de ressuciter un ennemi par nécromancie
+     *
      * @param ennemi le monstre à ressuciter
      * @return si le sort a fonctionné
      * @throws IOException pour l'input
      * @implNote codé en dur de manière très irresponsable
      */
     private static boolean ressuciter(Monstre ennemi) throws IOException {
-        switch(input.D8()){
+        switch (input.D8()) {
             case 4, 5 -> { //25%
                 System.out.println(ennemi.nom + " a été partiellement ressucité.");
 
@@ -881,7 +891,7 @@ public class Combat {
                 return true;
             }
             case 7 -> { // 75%
-                System.out.println(ennemi.nom + " a été correctement ressucité" );
+                System.out.println(ennemi.nom + " a été correctement ressucité");
 
                 System.out.println("nouveau familier : " + ennemi.nom + " le ressucité");
                 System.out.println("attaque : " + max(ennemi.attaque * 3 / 4, 1));
@@ -907,6 +917,7 @@ public class Combat {
 
     /**
      * Tente de ressuciter un allié par nécromancie
+     *
      * @return si l'allié a été ressucité
      * @throws IOException notre poto anti bug
      */
@@ -932,13 +943,12 @@ public class Combat {
     }
 
     /**
-     *
      * @param nom_mort le nom du joueur qui se fait ressuciter
      * @return si le mort revient à la vie
      * @throws IOException toujours
      */
     static private boolean popo_rez(String nom_mort) throws IOException {
-        if(input.yn("Utilisez vous une potion divine ?")){
+        if (input.yn("Utilisez vous une potion divine ?")) {
             System.out.println(Main.alchimiste + " fait boire à " + nom_mort + " une potion gorgé de l'énergie des dieux.");
             switch (input.D6()) {
                 case 1 -> {
@@ -963,7 +973,7 @@ public class Combat {
                 }
             }
         }
-        if(input.yn("Utilisez vous un élixir ?")){
+        if (input.yn("Utilisez vous un élixir ?")) {
             switch (input.D20()) {
                 case 1, 2, 3 -> {
                     System.out.println(nom_mort + " se réveille avec 2 points de vie et 3 points de résistance additionels.\n");
@@ -1013,6 +1023,7 @@ public class Combat {
 
     /**
      * Analyse le monstre ennemi et écrit ses stats aux joueurs
+     *
      * @param is_prl booléan indiquant si l'analyste est en première ligne
      * @param ennemi le monstre analysé
      * @throws IOException ce bon vieux throws
@@ -1020,11 +1031,11 @@ public class Combat {
     static private void analyser(boolean is_prl, Monstre ennemi) throws IOException {
         System.out.println("Vous analysez le monstre en face de vous.");
         int temp = input.D8() + rand.nextInt(2);
-        if(!is_prl){
+        if (!is_prl) {
             temp -= 2; //malus si en seconde ligne
         }
         int pv, pvm, arm, atk;
-        switch(ennemi.competence) {
+        switch (ennemi.competence) {
             case ILLU_AURAI -> {
                 pvm = Race.aurai_malefique.get_vie();
                 pv = pvm - (ennemi.vie_max - ennemi.vie);
@@ -1087,21 +1098,21 @@ public class Combat {
     }
 
     static private void gestion_mort_end(boolean[] morts, String[] nom) throws IOException {
-        for(int i = 0; i < 8; i++){
-            if(morts[i] && input.yn(nom[i] + " est mort durant le combat, le reste-t-il/elle ?")) {
+        for (int i = 0; i < Main.nbj * 2; i++) {
+            if (morts[i] && input.yn(nom[i] + " est mort durant le combat, le reste-t-il/elle ?")) {
                 if (nom[i].equals(Main.guerriere) && input.D10() > 6) {
                     System.out.println(nom[i] + " résiste à la mort.\n");
                     return;
                 }
                 int t;
-                if (i < 4) {
+                if (i < Main.nbj) {
                     System.out.println(nom[i] + " se retrouve aux enfers.\n");
                     Main.positions[i] = Position.ENFERS;
                     t = i;
                 }
                 else {
                     System.out.println(nom[i] + " a rendu l'âme.\n");
-                    t = i - 4;
+                    t = i - Main.nbj;
                 }
                 Main.f[t] = 0;
             }

@@ -8,20 +8,18 @@ public class Main {
     static Random rand = new Random();
     static String Path = "../Save/";
     static String Ext = ".txt";
-    static public Position[] positions = {Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE, Position.PRAIRIE};
-    static public String Joueur_A = "Joueur A";
-    static public String Joueur_B = "Joueur B";
-    static public String Joueur_C = "Joueur C";
-    static public String Joueur_D = "Joueur D";
-    static public String necromancien, archimage, alchimiste, guerriere;
-    public static int[] f;
-    static final String[] nom = {Joueur_A, Joueur_B, Joueur_C, Joueur_D};
     static final int f_max = 7;
-    static public int nbj;
+    static final int nbj_max = 4;
+
+    static public String[] nom;
+    static public Position[] positions;
+    public static int[] f;
+    static public String necromancien = "", archimage = "", alchimiste = "", guerriere = "";
+    static public int nbj = -1;
 
     public static void main(String[] args) throws IOException {
 
-        nbj = input.load();
+        input.load();
         if (nbj == -1) {
             init_game();
         }
@@ -64,7 +62,7 @@ public class Main {
                 }
                 case QUITTER -> run = false;
                 case FAMILIER_PLUS -> {
-                    f[i] = new_fam(nom[i], f[i]);
+                    new_fam(i);
                     i -= 1; //n'utilise pas le tour
                 }
                 case FAMILIER_MOINS -> {
@@ -94,18 +92,15 @@ public class Main {
                     i--;
                 }
             }
-            // gestion familier
-            if(temp != -1) {
-                f[temp] = new_fam(Joueur_A, f[temp]);
-            }
+            new_fam(temp);
             for (int j = 0; j < nbj; j++) {
-                Output.write_data(nom[j]);
+                Output.write_data(j);
             }
             i++;
         }
         System.out.println("Sauvegarde des données joueurs.");
         for (int j = 0; j < nbj; j++) {
-            Output.write_data(nom[j]);
+            Output.write_data(j);
         }
         System.out.println("Fin du programme");
     }
@@ -548,24 +543,24 @@ public class Main {
     /**
      * Traite la venue d'un nouveau familier, traite le cas de double familier
      *
-     * @param nom le nom du joueur qui obtient ce familier
-     * @param obe l'obéissance du familier actuel
-     * @return l'obéissance du familier conservé
+     * @param  index l'index du joueur qui gagne un familier, ou -1 s'il faut ognorer cette fonction
      * @throws IOException mon vieux pote en input
      */
-    static private int new_fam(String nom, int obe) throws IOException {
-        if (obe != 0) {
-            if (input.yn(nom + " possède déjà un familier, le remplacer ? ")) {
-                obe = 1;
+    static private void new_fam(int index) throws IOException {
+        if(index == -1){
+            return;
+        }
+        if (f[index] != 0) {
+            if (input.yn(nom[index] + " possède déjà un familier, le remplacer ? ")) {
                 System.out.println("Nouveau familier enregistré.\n");
+                f[index] = 1;
             } else {
                 System.out.println("Ancien familier conservé.\n");
             }
         } else {
-            obe = 1;
-            System.out.println(nom + " a un nouveau familier.\n");
+            System.out.println(nom[index] + " a un nouveau familier.\n");
+            f[index] = 1;
         }
-        return obe;
     }
 
     private static Monstre true_monstre(Position pos) {
@@ -584,8 +579,66 @@ public class Main {
         };
     }
 
-    private static void init_game() {
-        Main.f = new int[]{0, 0, 0, 0};
-        
+    private static void init_game() throws IOException {
+        System.out.print("Entrez le nombre de joueur :");
+        Main.nbj = input.readInt();
+        while(Main.nbj <= 0 || Main.nbj > Main.nbj_max) {
+            System.out.println("Impossible, le nombre de joueur doit être comprit entre 1 et " + Main.nbj_max +".");
+            Main.nbj = input.readInt();
+        }
+        Main.nom = new String[Main.nbj];
+        Main.positions = new Position[Main.nbj];
+        Main.f = new int[Main.nbj];
+        String[] job = {"(ne)cromancien", "(ar)chimage", "(al)chimiste", "(gu)erriere", "(au)cun"};
+        for(int i = 0; i < Main.nbj; i++) {
+            System.out.println("Joueur " + (i + 1) + ", entrez votre nom :");
+            String temp = input.read();
+            while(!input.yn("Voulez vous confirmer le pseudo " + temp + " ?")) {
+                System.out.println("Joueur " + (i + 1) + ", entrez votre nom :");
+                temp = input.read();
+            }
+            Main.nom[i] = temp;
+            Main.f[i] = 0;
+            Main.positions[i] = Position.PRAIRIE;
+            boolean run = true;
+            while(run) {
+                run = false;
+                System.out.println("Choississez votre profession : ");
+                for (String s : job) {
+                    if (!s.isEmpty()) {
+                        System.out.println(s + " ");
+                    }
+                }
+                switch (input.read()) {
+                    case "ne", "NE", "Ne", "nE" -> {
+                        Main.necromancien = Main.nom[i];
+                        System.out.println(Main.necromancien + " est necromancien.");
+                        job[0] = "";
+                    }
+                    case "ar", "AR", "Ar", "aR" -> {
+                        Main.archimage = Main.nom[i];
+                        System.out.println(Main.archimage + " est archimage.");
+                        job[1] = "";
+                    }
+                    case "al", "AL", "Al", "aL" -> {
+                        Main.alchimiste = Main.nom[i];
+                        System.out.println(Main.alchimiste + " est alchimiste.");
+                        job[2] = "";
+                    }
+                    case "gu", "GU", "Gu", "gU" -> {
+                        Main.guerriere = Main.nom[i];
+                        System.out.println(Main.guerriere + " est guerriere.");
+                        job[3] = "";
+                    }
+                    case "au", "AU", "Au", "aU" ->
+                            System.out.println(Main.nom[i] + " est " + Output.barrer("chomeur") + " tryharder.");
+                    default -> {
+                        System.out.println("Unknow input");
+                        run = true;
+                    }
+                }
+            }
+            System.out.println(Main.nom[i] + " apparait dans la prairie.\n");
+        }
     }
 }

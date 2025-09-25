@@ -27,16 +27,25 @@ public class Output {
 
     /**
      * Mets à jour les sauvegarde des joueurs
-     * @param joueur le joueur donc on doit mettre à jour les données
+     * @param j l'indice du joueur dont on doit mettre à jour les données (0 à 3).
      */
-    public static void write_data(String joueur) {
-        switch (joueur) {
-            case Main.Joueur_A -> write("Joueur A", joueur + "," + Main.positions[0].toString() + "," + Main.f_a + ";");
-            case Main.Joueur_B -> write("Joueur B", joueur + "," + Main.positions[1].toString() + ","  + Main.f_b + ";");
-            case Main.Joueur_C -> write("Joueur C", joueur + "," + Main.positions[2].toString() + ","  + Main.f_c + ";");
-            case Main.Joueur_D -> write("Joueur D", joueur + "," + Main.positions[3].toString() + ","  + Main.f_d + ";");
-            default -> System.out.println("Joueur non reconnu");
+    public static void write_data(int j) {
+        String fichier = "Joueur ";
+        fichier += switch (j) {
+            case 0 -> "A";
+            case 1 -> "B";
+            case 2 -> "C";
+            case 3 -> "D";
+            default -> "ERROR";
+        };
+        String metier =" ";
+        for(String m : new String[] {Main.necromancien, Main.guerriere, Main.archimage, Main.alchimiste}){
+            if (m.equals(Main.nom[j])){
+                metier = Main.nom[j];
+                break;
+            }
         }
+        write(fichier, Main.nom[j] + "," + metier + "," + Main.positions[j].toString() + "," + Main.f[j] + ";");
     }
 
     /**
@@ -67,5 +76,18 @@ public class Output {
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException | InterruptedException e) {
             System.err.println("Erreur lors de la lecture du son : " + e.getMessage());
         }
+    }
+
+    /**
+     *
+     * @param mot le mot d'entré
+     * @return le même mot, mais barré
+     */
+    public static String barrer(String mot) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : mot.toCharArray()) {
+            sb.append(c).append('̶'); // ajoute le caractère de barré
+        }
+        return sb.toString();
     }
 }
