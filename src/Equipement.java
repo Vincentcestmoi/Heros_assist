@@ -582,7 +582,7 @@ public class Equipement {
             "Lancez un dé à 6 face, si vous faite 6, gagnez 15PO. Jetez ce ticket.");
 
     static Equipement main1_0 = new Equipement("branche solide", Rang.O, Base.MAIN_1, 1, 0, 0, 5);
-    static Equipement main2_0 = new Equipement("pavé", Rang.O, Base.MAIN_2, 3, 0, 0, 7);
+    static Equipement main2_0 = new Equipement("pavé", Rang.O, Base.MAIN_2, 4, 0, 0, 7);
     static Equipement arc_0 = new Equipement("vieil arc", Rang.O, Base.ARC, 0, 0, 0, 3);
     static Equipement bouclier_0 = new Equipement("planche en bois", Rang.O, Base.BOUCLIER, 0, 2, 0, 8);
     static Equipement armure_0 = new Equipement("vieille armure", Rang.O, Base.ARMURE, 0, 1, 0, 3);
