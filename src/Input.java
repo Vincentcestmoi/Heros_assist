@@ -3,11 +3,12 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Objects;
 
 public class Input {
 
-    private final String[] fichLoad = {"Joueur A", "Joueur B", "Joueur C", "Joueur D", "enfers", "prairie", "vigne",
-            "temple", "mer", "mont", "olympe", "rangO", "rangI", "rangII", "rangIII", "rangIV",
+    private final String[] fichLoad = {"Joueur A", "Joueur B", "Joueur C", "Joueur D", "Joueur E", "Joueur F", "Joueur G",
+            "Joueur H", "enfers", "prairie", "vigne", "temple", "mer", "mont", "olympe", "rangO", "rangI", "rangII", "rangIII", "rangIV",
             "promo_monture", "promo_artefact", "promo_renforcement"};
 
 
@@ -33,6 +34,7 @@ public class Input {
             Main.nom = new String[Main.nbj_max];
             Main.f = new int[Main.nbj_max];
             Main.positions = new Position[Main.nbj_max];
+            Main.metier = new Metier[Main.nbj_max];
 
             //joueurs
             for(int i = 0; i < Main.nbj_max; i++) {
@@ -55,6 +57,9 @@ public class Input {
             Position[] t_pos = new Position[Main.nbj];
             System.arraycopy(Main.positions, 0, t_pos, 0, Main.nbj);
             Main.positions = t_pos;
+            Metier[] metier = new Metier[Main.nbj];
+            System.arraycopy(Main.metier, 0, metier, 0, Main.nbj);
+            Main.metier = metier;
 
             //monstre nommé
             corrige_nomme();
@@ -181,15 +186,24 @@ public class Input {
     }
 
     private void setJob(String temp, int index) {
-        String job = temp;
-        switch(temp){
-            case "necromancien" -> Main.necromancien = Main.nom[index];
-            case "archimage" -> Main.archimage = Main.nom[index];
-            case "alchimiste" -> Main.alchimiste = Main.nom[index];
-            case "guerriere" -> Main.guerriere = Main.nom[index];
-            default -> job = "chomeur";
+        Metier job;
+        if(Objects.equals(temp, Output.texte_metier(Metier.NECROMANCIEN))) {
+            job = Metier.NECROMANCIEN;
         }
-        System.out.println(Main.nom[index] + " est " + job);
+        else if(Objects.equals(temp, Output.texte_metier(Metier.ARCHIMAGE))) {
+            job = Metier.ARCHIMAGE;
+        }
+        else if(Objects.equals(temp, Output.texte_metier(Metier.ALCHIMISTE))) {
+            job = Metier.ALCHIMISTE;
+        }
+        else if(Objects.equals(temp, Output.texte_metier(Metier.GUERRIERE))) {
+            job = Metier.GUERRIERE;
+        }
+        else {
+            job = Metier.AUCUN;
+        }
+        Main.metier[index] = job;
+        System.out.println(Main.nom[index] + " est " + temp);
     }
 
     /**
@@ -461,14 +475,14 @@ public class Input {
     /**
      * Demande au joueur l'action qu'il veut mener et renvoie un int correspondant
      *
-     * @param nom                le nom du joueur ou de son familier
+     * @param index              l'index du joueur (ou du familié associé)
      * @param est_familier       s'il s'agit d'un familier
      * @param est_premiere_ligne si la cible est en première ligne
      * @param mort la liste des morts
      * @return un int correspondant à l'action
      * @throws IOException en cas de problème ?
      */
-    public Action action(String nom, Boolean est_familier, Boolean est_premiere_ligne, boolean[] mort) throws IOException {
+    public Action action(int index, Boolean est_familier, Boolean est_premiere_ligne, boolean[] mort, boolean est_berserk) throws IOException {
         String text;
         boolean ya_mort = false;
         for (int i = 0; i < 4; i++) {
@@ -478,30 +492,66 @@ public class Input {
             }
         }
         if (!est_familier) { // joueur
-            text = nom + " entrez votre action : (A)ttaquer/(t)irer/(m)agie/(f)uir";
+            text = Main.nom[index] + " entrez votre action : (A)ttaquer/(t)irer";
+            if(!est_berserk){
+                text += "(m)agie/";
+            }
             if (est_premiere_ligne) {
-                text += "/a(s)somer/(e)ncaisser/(d)omestiquer";
+                text += "/a(s)sommer";
+                if(!est_berserk){
+                    text += "/(e)ncaisser/(d)omestiquer";
+                }
             } else {
                 text += "/(s)'avancer";
             }
-            text += "/(p)remier soin/a(n)alyser/(c)ustom/(o)ff";
-            if(nom.equals(Main.necromancien)) {
-                text += "/(ma)udir";
+            if(!est_berserk){
+                text += "/(p)remier soin/a(n)alyser";
             }
-            if(nom.equals(Main.archimage)) {
-                    text += "/(me)ditation/(so)rt";
+            text += "/(f)uir/(c)ustom/(o)ff";
+            text += switch(Main.metier[index]) {
+                case NECROMANCIEN -> {
+                    if (!est_berserk) {
+                        yield "/(ma)udir";
+                    }
+                    yield "";
                 }
-            if(nom.equals(Main.alchimiste)) {
-                if (ya_mort) {
-                    text += "/(re)ssuciter par potion";
+                case ARCHIMAGE -> {
+                        if(!est_berserk) {
+                            yield "/(me)ditation/(so)rt";
+                        }
+                        yield "";
                 }
-                text += "/(co)ncocter des potions/(fo)uiller";
-            }
-            if(nom.equals(Main.guerriere)) {
-                text += "/(be)rserker/(la)me d'aura";
-            }
+                case ALCHIMISTE -> {
+                    if(est_berserk) {
+                        yield "";
+                    }
+                    if (ya_mort) {
+                        yield "/(re)ssuciter par potion/(co)ncocter des potions/(fo)uiller";
+                    }
+                    yield "/(co)ncocter des potions/(fo)uiller";
+                }
+                case GUERRIERE -> {
+                    if(!est_berserk) {
+                        yield "/(be)rserker/(la)me d'aura";
+                    }
+                    yield "/(la)me d'aura";
+                }
+                case ARCHER -> {
+                    if(est_premiere_ligne && est_berserk) {
+                        yield "/(as)saut";
+                    }
+                    if(!est_berserk){
+                        if(est_premiere_ligne){
+                            yield "/(co)ut critique";
+                        }
+                        yield "/(co)up critique/(as)sassinat";
+                    }
+                    yield "";
+                }
+                case AUCUN -> "";
+            };
         } else { //familier
-            text = "Donnez un ordre au " + nom + " (A)ttaquer/(f)uir/(c)ustom/(o)ff";
+            text = "Donnez un ordre au familier de " + Main.nom[index - 4] + " (A)ttaquer/(f)uir/(c)ustom/(o)ff";
             if (!est_premiere_ligne) {
                 text += "/(s)'avancer";
             }
@@ -523,28 +573,28 @@ public class Input {
                     yield Action.TIRER;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, true, est_premiere_ligne, mort);
+                yield action(index, true, est_premiere_ligne, mort, est_berserk);
             }
             case "M", "m" -> {
-                if (!est_familier) {
+                if (!est_familier && !est_berserk) {
                     yield Action.MAGIE;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, true, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
             case "P", "p" -> {
-                if (!est_familier) {
+                if (!est_familier && !est_berserk) {
                     yield Action.SOIGNER;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, true, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
             case "n", "N" -> {
-                if (!est_familier) {
+                if (!est_familier && !est_berserk) {
                     yield Action.ANALYSER;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, true, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
 
             // joueur en première ligne
@@ -555,81 +605,94 @@ public class Input {
                     yield Action.AVANCER;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, true, true, mort);
+                yield action(index, true, true, mort, est_berserk);
             }
             case "E", "e" -> {
-                if (est_premiere_ligne && !est_familier) {
+                if (est_premiere_ligne && !est_familier && !est_berserk) {
                     yield Action.ENCAISSER;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
             case "D", "d" -> {
-                if (est_premiere_ligne && !est_familier) {
+                if (est_premiere_ligne && !est_familier &&!est_berserk) {
                     yield Action.DOMESTIQUER;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
 
             // action métier
             case "ma", "MA", "Ma", "mA" -> {
-                if (nom.equals(Main.necromancien)) {
+                if (index < Main.nbj && Main.metier[index] == Metier.NECROMANCIEN && !est_berserk) {
                     yield Action.MAUDIR;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
 
             case "me", "ME", "Me", "eM" -> {
-                if (nom.equals(Main.archimage)) {
+                if (index < Main.nbj && Main.metier[index] == Metier.ARCHIMAGE && !est_berserk) {
                     yield Action.MEDITATION;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
             case "so", "SO", "So", "sO" -> {
-                if (nom.equals(Main.archimage)) {
+                if (index < Main.nbj && Main.metier[index] == Metier.ARCHIMAGE && !est_berserk) {
                     yield Action.SORT;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
             case "fo", "FO", "Fo", "fO" -> {
-                if (nom.equals(Main.alchimiste)){
+                if (index < Main.nbj && Main.metier[index] == Metier.ALCHIMISTE && !est_berserk){
                     yield Action.FOUILLE;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
             case "co", "CO", "Co", "cO" -> {
-                if (nom.equals(Main.alchimiste)) {
+                if (index < Main.nbj && Main.metier[index] == Metier.ALCHIMISTE && !est_berserk) {
                     yield Action.CONCOCTION;
                 }
+                if (index < Main.nbj && Main.metier[index] == Metier.ARCHER && !est_berserk) {
+                    yield Action.CRITIQUE;
+                }
                 System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
             case "re", "RE", "Re", "rE" -> {
-                if (ya_mort && nom.equals(Main.alchimiste)) {
+                if (ya_mort && index < Main.nbj && Main.metier[index] == Metier.ALCHIMISTE && !est_berserk) {
                     yield Action.POTION_REZ;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
 
             case "be", "BE", "Be", "bE" -> {
-                if (nom.equals(Main.guerriere)) {
+                if (index < Main.nbj && Main.metier[index] == Metier.GUERRIERE && !est_berserk) {
                     yield Action.BERSERK;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
             case "la", "LA", "La", "lA" -> {
-                if (nom.equals(Main.guerriere)) {
+                if (index < Main.nbj && Main.metier[index] == Metier.GUERRIERE) {
                     yield Action.LAME_DAURA;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+            }
+            case "as", "AS", "As", "aS" -> {
+                if (index < Main.nbj && Main.metier[index] == Metier.ARCHER) {
+                    if(est_berserk && est_premiere_ligne){
+                        yield Action.ASSAUT;
+                    }
+                    yield Action.ASSASSINAT;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
 
             // actions particulières
@@ -637,18 +700,18 @@ public class Input {
                 if (yn("Confirmez ")) {
                     yield Action.END;
                 }
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
             case "r", "R" -> {
                 if (yn("Confirmez ")) {
                     yield Action.RETOUR;
                 }
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
 
             default -> {
                 System.out.println("Action non reconnue.");
-                yield action(nom, est_familier, est_premiere_ligne, mort);
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
         };
     }
@@ -713,13 +776,13 @@ public class Input {
             boolean peut_monter = position != Position.OLYMPE;
             boolean market = position != Position.OLYMPE && position != Position.ENFERS;
             boolean peut_entrainer = obe > 0 && obe < 3;
-            if(Main.nom[index].equals(Main.alchimiste)){
+            if(Main.metier[index] == Metier.ALCHIMISTE){
                 text += "/(fo)uiller/(co)ncocter des potions";
             }
-            if(Main.nom[index].equals(Main.archimage)){
+            if(Main.metier[index] == Metier.ARCHIMAGE){
                 text += "/(me)ditation";
             }
-            if(Main.nom[index].equals(Main.necromancien)){
+            if(Main.metier[index] == Metier.NECROMANCIEN){
                 text += "/(ap)pel des morts";
             }
             if(peut_descendre){
@@ -805,31 +868,31 @@ public class Input {
 
                 // par métier
                 case "ap", "AP", "Ap", "aP" -> {
-                    if(Main.nom[index].equals(Main.necromancien)){
+                    if(Main.metier[index] == Metier.NECROMANCIEN){
                         return Choix.NECROMANCIE;
                     }
                     System.out.println("Input unknow");
                 }
                 case "fo", "FO", "Fo", "fO" -> {
-                    if(Main.nom[index].equals(Main.alchimiste)){
+                    if(Main.metier[index] == Metier.ALCHIMISTE){
                         return Choix.FOUILLE;
                     }
                     System.out.println("Input unknow");
                 }
                 case "co", "CO", "Co", "cO" -> {
-                    if(Main.nom[index].equals(Main.alchimiste)){
+                    if(Main.metier[index] == Metier.ALCHIMISTE){
                         return Choix.CONCOCTION;
                     }
                     System.out.println("Input unknow");
                 }
                 case "me", "ME", "Me", "mE" -> {
-                    if(Main.nom[index].equals(Main.archimage)){
+                    if(Main.metier[index] == Metier.ARCHIMAGE){
                         return Choix.MEDITATION;
                     }
                     System.out.println("Input unknow");
                 }
                 case "adgr" -> {
-                    if(Main.nom[index].equals(Main.archimage)){
+                    if(Main.metier[index] == Metier.ARCHIMAGE){
                         System.out.println("Confirmez");
                         if(read().equals("adgr")) {
                             return Choix.ADD_GREAT_RUNE;
@@ -840,7 +903,7 @@ public class Input {
                     }
                 }
                 case "admr" -> {
-                    if(Main.nom[index].equals(Main.archimage)){
+                    if(Main.metier[index] == Metier.ARCHIMAGE){
                         System.out.println("Confirmez");
                         if(read().equals("admr")) {
                             return Choix.ADD_MINOR_RUNE;
@@ -851,7 +914,7 @@ public class Input {
                     }
                 }
                 case "dgr" -> {
-                    if(Main.nom[index].equals(Main.archimage)){
+                    if(Main.metier[index] == Metier.ARCHIMAGE){
                         System.out.println("Confirmez");
                         if(read().equals("dgr")) {
                             return Choix.DEL_GREAT_RUNE;
@@ -862,7 +925,7 @@ public class Input {
                     }
                 }
                 case "dmr" -> {
-                    if(Main.nom[index].equals(Main.archimage)){
+                    if(Main.metier[index] == Metier.ARCHIMAGE){
                         System.out.println("Confirmez");
                         if(read().equals("dmr")) {
                             return Choix.DEL_MINOR_RUNE;

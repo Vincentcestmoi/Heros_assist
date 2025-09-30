@@ -349,6 +349,20 @@ public class Monstre {
     }
 
     /**
+     * Inflige des dommages à distance au monstre
+     * @param quantite la puissance d'attaque
+     * @param mult un multiplicateur à appliquer à la quantité
+     * @implNote Considère l'armure et la compétence du monstre
+     * gère le cas de mort du monstre
+     */
+    void tir(int quantite, float mult) throws IOException {
+        if(quantite <= 0){
+            return;
+        }
+        tir(corriger(quantite * mult));
+    }
+
+    /**
      * Applique la compétence avant de subir des dommages à distance
      * @param degas les dommages infligés par l'attaque
      * @return les dégas subits par le monstre
@@ -481,7 +495,7 @@ public class Monstre {
 
     /**
      * Regarde si le monstre est mort et agit en conséquence
-     * @return si le monstre est mort
+     * @return si le monstre est vivant
      */
     public boolean check_mort() throws IOException {
         if (est_mort()) {
@@ -495,9 +509,9 @@ public class Monstre {
                 default -> System.out.println(this.nom + " est mort(e).");
             }
             drop();
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
 
@@ -517,7 +531,6 @@ public class Monstre {
         if(!est_mort()) {
             applique_competence_post_dommage();
         }
-        System.out.println();
     }
 
     /**
@@ -732,64 +745,6 @@ public class Monstre {
     }
 
     /**
-     * Applique la compétence "assommer" sur le monstre
-     * Demande aux joueurs les informations nécessaires
-     * @throws IOException jsp mais sans ça, ça ne marche pas
-     */
-    void assommer() throws IOException {
-        switch (competence) {
-            case VOL -> {
-                System.out.println("L'attaque n'atteint pas " + this.nom + ".");
-                competence = Competence.VOL_OFF;
-                System.out.println(this.nom + " se pose à terre.\n");
-                return;
-            }
-            case VOLAGE -> {
-                System.out.println("L'attaque n'atteint pas " + this.nom + ".");
-                competence = Competence.AUCUNE;
-                System.out.println(this.nom + " se pose à terre.\n");
-                return;
-            }
-            case FURTIF -> {
-                System.out.println("Vous ne parvenez plus à identifier où se trouve " + nom + " et renoncez à attaquer.\n");
-                competence = Competence.AUCUNE;
-                return;
-            }
-            default -> {
-            }
-
-        }
-        int attaque = input.atk();
-        switch (input.D6()) {
-            case 1:
-                System.out.print("Vous manquez votre cible.\n");
-                return;
-            case 2:
-                System.out.print("Vous frappez de justesse votre cible, au moins, vous l'avez touchée.");
-                affecte();
-                break;
-            case 3, 4 :
-                attaque = corriger((float) attaque / 2);
-                dommage(attaque);
-                affecte();
-                break;
-            case 5:
-                attaque = corriger((float) attaque / 2);
-                dommage(attaque);
-                do_assomme();
-                break;
-            case 6:
-                System.out.println("Vous frappez avec force !");
-                dommage(attaque);
-                do_assomme();
-                break;
-            default:
-                System.out.println("Le résultat n'a pas été comprit, attaque classique appliquée.");
-                dommage(attaque);
-        }
-    }
-
-    /**
      * Applique la compétence "encaisser" et ses résultats
      * Demande aux joueurs les informations nécessaires
      * @throws IOException jsp mais sans ça, ça ne marche pas
@@ -800,7 +755,7 @@ public class Monstre {
         switch (input.D6()) {
             case 1:
                 encaissement = 0.5F;
-                System.out.println("Vous vous préparer à encaisser en oubliant d'attaquer !\n");
+                System.out.println("Vous vous préparer à encaisser en oubliant d'attaquer !");
                 break;
             case 2, 3, 4:
                 attaque = corriger((float) attaque / 10);
@@ -813,9 +768,8 @@ public class Monstre {
                 dommage(attaque);
                 encaissement = 0.5F;
                 System.out.println("Vous vous préparez à encaisser.");
-                dommage(attaque);
                 break;
-            case 6:
+            case 6, 7:
                 attaque = corriger((float) attaque / 2);
                 dommage(attaque);
                 encaissement = 0.9F;
@@ -848,7 +802,6 @@ public class Monstre {
                     System.out.println("Vous vous exposez légèrement.");
                     part_soin += 0.1F;
                 }
-                System.out.println();
             }
             case 5 -> {
                 System.out.println("Vous soignez la cible de 7.");
@@ -856,7 +809,6 @@ public class Monstre {
                     System.out.println("Vous vous exposez légèrement.");
                     part_soin += 0.1F;
                 }
-                System.out.println();
             }
             case 4, 3, 2 -> {
                 System.out.println("Vous soignez la cible de " + (2 + soin) + ".");
@@ -864,7 +816,6 @@ public class Monstre {
                     System.out.println("Vous vous exposez.");
                     part_soin += 0.5F;
                 }
-                System.out.println();
             }
             case 1 -> {
                 System.out.println("Vous soignez la cible de 2.");
@@ -872,10 +823,9 @@ public class Monstre {
                     System.out.println("Vous vous exposez lourdement.");
                     part_soin += 1F;
                 }
-                System.out.println();
             }
             default -> {
-                System.out.println("Le résultat n'a pas été comprit, attaque classique appliquée.\n");
+                System.out.println("Le résultat n'a pas été comprit, attaque classique appliquée.");
                 dommage(input.atk());
             }
         }

@@ -4,17 +4,17 @@ import java.util.Random;
 
 public class Main {
 
-    static Input input = new Input();
-    static Random rand = new Random();
-    static String Path = "../Save/";
-    static String Ext = ".txt";
+    static final Input input = new Input();
+    static final Random rand = new Random();
+    static final String Path = "../Save/";
+    static final String Ext = ".txt";
     static final int f_max = 7;
-    static final int nbj_max = 4;
+    static final int nbj_max = 7;
 
     static public String[] nom;
     static public Position[] positions;
+    static public Metier[] metier;
     public static int[] f;
-    static public String necromancien = "", archimage = "", alchimiste = "", guerriere = "";
     static public int nbj = -1;
 
     public static void main(String[] args) throws IOException {
@@ -563,6 +563,11 @@ public class Main {
         }
     }
 
+    /**
+     * Renvoie un monstre de la position demandé en supprimant les chances qu'il vienne d'une position voisine
+     * @param pos la position dont on veut le monstre
+     * @return un Monstre
+     */
     private static Monstre true_monstre(Position pos) {
         return switch (pos) {
             case ENFERS -> Lieu.true_enfers();
@@ -579,6 +584,10 @@ public class Main {
         };
     }
 
+    /**
+     * Initialise les paramètres d'une partie à la place d'une sauvegarde
+     * @throws IOException toujours
+     */
     private static void init_game() throws IOException {
         System.out.print("Entrez le nombre de joueur :");
         Main.nbj = input.readInt();
@@ -589,14 +598,21 @@ public class Main {
         Main.nom = new String[Main.nbj];
         Main.positions = new Position[Main.nbj];
         Main.f = new int[Main.nbj];
-        String[] job = {"(ne)cromancien", "(ar)chimage", "(al)chimiste", "(gu)erriere", "(au)cun"};
+        Main.metier = new Metier[Main.nbj];
+        String[] job = {"(ne)cromancien", "archi(ma)ge", "(al)chimiste", "(gu)erriere", "(ar)cher", "(au)cun"};
         for(int i = 0; i < Main.nbj; i++) {
-            System.out.println("Joueur " + (i + 1) + ", entrez votre nom :");
-            String temp = input.read();
-            while(!input.yn("Voulez vous confirmer le pseudo " + temp + " ?")) {
+            String temp;
+            do{
                 System.out.println("Joueur " + (i + 1) + ", entrez votre nom :");
                 temp = input.read();
-            }
+                if(temp.contains(",") || temp.contains(";")){
+                    System.out.println("Le nom du joueur ne peut pas contenir les caractères ',' et ';' !");
+                    temp = ";";
+                }
+                if(temp.isEmpty() || temp.equals("\n")){
+                    temp = ";";
+                }
+            }while(temp.equals(";") || !input.yn("Voulez vous confirmer le pseudo " + temp + " ?"));
             Main.nom[i] = temp;
             Main.f[i] = 0;
             Main.positions[i] = Position.PRAIRIE;
@@ -605,38 +621,21 @@ public class Main {
                 run = false;
                 System.out.println(Main.nom[i] + ", choississez votre profession : ");
                 for (String s : job) {
-                    if (!s.isEmpty()) {
-                        System.out.println(s + " ");
-                    }
+                    System.out.println(s + " ");
                 }
                 switch (input.read()) {
-                    case "ne", "NE", "Ne", "nE" -> {
-                        Main.necromancien = Main.nom[i];
-                        System.out.println(Main.necromancien + " est necromancien.");
-                        job[0] = "";
-                    }
-                    case "ar", "AR", "Ar", "aR" -> {
-                        Main.archimage = Main.nom[i];
-                        System.out.println(Main.archimage + " est archimage.");
-                        job[1] = "";
-                    }
-                    case "al", "AL", "Al", "aL" -> {
-                        Main.alchimiste = Main.nom[i];
-                        System.out.println(Main.alchimiste + " est alchimiste.");
-                        job[2] = "";
-                    }
-                    case "gu", "GU", "Gu", "gU" -> {
-                        Main.guerriere = Main.nom[i];
-                        System.out.println(Main.guerriere + " est guerriere.");
-                        job[3] = "";
-                    }
-                    case "au", "AU", "Au", "aU" ->
-                            System.out.println(Main.nom[i] + " est " + Output.barrer("chomeur") + " tryharder.");
+                    case "ne", "NE", "Ne", "nE" -> Main.metier[i] = Metier.NECROMANCIEN;
+                    case "ma", "MA", "Ma", "mA" -> Main.metier[i] = Metier.ARCHIMAGE;
+                    case "ar", "AR", "Ar", "aR" -> Main.metier[i] = Metier.ARCHER;
+                    case "al", "AL", "Al", "aL" -> Main.metier[i] = Metier.ALCHIMISTE;
+                    case "gu", "GU", "Gu", "gU" -> Main.metier[i] = Metier.GUERRIERE;
+                    case "au", "AU", "Au", "aU" -> Main.metier[i] = Metier.AUCUN;
                     default -> {
                         System.out.println("Unknow input");
                         run = true;
                     }
                 }
+                System.out.println(Main.nom[i] + " est " + Output.texte_metier(Main.metier[i]) + ".");
             }
             System.out.println(Main.nom[i] + " apparait dans la prairie.\n");
         }

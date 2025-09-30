@@ -16,31 +16,35 @@ public class Sort {
      * @param actif une liste de boolean indiquant les participants encore en jeu
      * @param nom les noms des participants
      * @param assomme une liste de boolean indiquant les participants inconscients
+     * @param reveil le tableau de niveau de réveil des participants
      * @param ennemi le monstre ennemi
+     * @param lanceur l'index du lanceur de sort
      * @throws IOException toujours
      */
-    static public void onde_choc(boolean[] actif, String[] nom, boolean[] assomme, Monstre ennemi) throws IOException {
+    static public void onde_choc(boolean[] actif, String[] nom, boolean[] assomme, int[] reveil, Monstre ennemi, int lanceur) throws IOException {
 
         // sur les participants
         for(int i = 0; i < nom.length; i++){
-            if(!nom[i].equals(Main.archimage) && actif[i]){
+            if(i != lanceur && actif[i]){
                 System.out.println(nom[i] + " est frappé par l'onde de choc.");
                 if(i <= 4){
                     if(input.D6() < 2 + rand.nextInt(5)){
-                        System.out.println(nom[i] + " perd connaissance.\n");
+                        System.out.println(nom[i] + " perd connaissance.");
                         assomme[i] = true;
+                        reveil[i] = 0;
                     }
                     else{
-                        System.out.println(nom[i] + " parvient à rester conscient.\n");
+                        System.out.println(nom[i] + " parvient à rester conscient.");
                     }
                 }
                 else{
                     if(input.D4() <= 3 + rand.nextInt(2)){
-                        System.out.println(nom[i] + " perd connaissance.\n");
+                        System.out.println(nom[i] + " perd connaissance.");
                         assomme[i] = true;
+                        reveil[i] = 0;
                     }
                     else{
-                        System.out.println(nom[i] + " parvient à rester conscient.\n");
+                        System.out.println(nom[i] + " parvient à rester conscient.");
                     }
                 }
             }
@@ -48,12 +52,12 @@ public class Sort {
 
         // sur l'ennemi
         System.out.println(ennemi.nom + " est frappé par l'onde de choc.");
-        System.out.print(Main.archimage + " : ");
+        System.out.print(Main.nom[lanceur] + " : ");
         switch (input.D6()){
             case 2 -> ennemi.do_etourdi();
             case 3, 4 -> ennemi.affecte();
             case 5, 6 -> ennemi.do_assomme();
-            default -> System.out.println(ennemi.nom + " n'a pas l'air très affecté...\n");
+            default -> System.out.println(ennemi.nom + " n'a pas l'air très affecté...");
         }
     }
 
@@ -66,26 +70,26 @@ public class Sort {
         int boost = rand.nextInt(3);
         switch (input.D6()){
             case 2 -> {
-                System.out.println("Vous maudissez faiblement " + ennemi.nom + ".\n");
+                System.out.println("Vous maudissez faiblement " + ennemi.nom + ".");
                 ennemi.vie_max -= 1 + boost;
                 ennemi.vie -= 1 + boost;
             }
             case 3, 4 -> {
-                System.out.println("Vous maudissez " + ennemi.nom + ".\n");
+                System.out.println("Vous maudissez " + ennemi.nom + ".");
                 ennemi.vie_max -= 2 + boost;
                 ennemi.vie -= 2 + boost;
             }
             case 5 -> {
-                System.out.println("Vous maudissez agressivement " + ennemi.nom + ".\n");
+                System.out.println("Vous maudissez agressivement " + ennemi.nom + ".");
                 ennemi.vie_max -= 3 + boost;
                 ennemi.vie -= 3 + boost;
             }
             case 6 -> {
-                System.out.println("Vous maudissez puissament " + ennemi.nom + ".\n");
+                System.out.println("Vous maudissez puissament " + ennemi.nom + ".");
                 ennemi.vie_max -= 5 + boost;
                 ennemi.vie -= 5 + boost;
             }
-            default -> System.out.println("vous n'arrivez pas à maudir " + ennemi.nom + ".\n");
+            default -> System.out.println("vous n'arrivez pas à maudir " + ennemi.nom + ".");
         }
     }
 
@@ -96,11 +100,11 @@ public class Sort {
     public static void maudir() throws IOException {
         int boost = rand.nextInt(3);
         switch (input.D6()){
-            case 2 -> System.out.println("Votre cible perds définitivement " + (1 + boost) + " point(s) de résistance.\n");
-            case 3, 4 -> System.out.println("Votre cible perds définitivement " + (2 + boost) + " points de résistance.\n");
-            case 5 -> System.out.println("Votre cible perds définitivement " + (3 + boost) + " points de résistance.\n");
-            case 6, 7 -> System.out.println("Votre cible perds définitivement " + (5 + boost) + " points de résistance.\n");
-            default -> System.out.println("vous n'arrivez pas à maudir votre cible.\n");
+            case 2 -> System.out.println("Votre cible perds définitivement " + (1 + boost) + " point(s) de résistance.");
+            case 3, 4 -> System.out.println("Votre cible perds définitivement " + (2 + boost) + " points de résistance.");
+            case 5 -> System.out.println("Votre cible perds définitivement " + (3 + boost) + " points de résistance.");
+            case 6, 7 -> System.out.println("Votre cible perds définitivement " + (5 + boost) + " points de résistance.");
+            default -> System.out.println("vous n'arrivez pas à maudir votre cible.");
         }
     }
 
@@ -111,16 +115,16 @@ public class Sort {
     public static void meditation() throws IOException {
         int jet = input.D8() + rand.nextInt(3) - 1;
         if (jet <= 2) {
-            System.out.println("Vous récupérez 2PP.\n");
+            System.out.println("Vous récupérez 2PP.");
         }
         else if(jet <= 4) {
-            System.out.println("Vous récupérez 3PP.\n");
+            System.out.println("Vous récupérez 3PP.");
         }
         else if(jet <= 7) {
-            System.out.println("Vous récupérez 4PP.\n");
+            System.out.println("Vous récupérez 4PP.");
         }
         else{
-            System.out.println("Vous récupérez 5PP.\n");
+            System.out.println("Vous récupérez 5PP.");
         }
     }
 
@@ -136,7 +140,7 @@ public class Sort {
         int jet = input.D4() + mana + rand.nextInt(3) - 1 + (nb_fire_rune / 2) + (nb_great_fire_rune / 2);
         int dmg;
         if (jet <= (2  + nb_great_fire_rune) || mana < (2  + nb_great_fire_rune)) {
-            System.out.println("Le sort ne fonctionne pas .\n");
+            System.out.println("Le sort ne fonctionne pas .");
             return;
         }
         else if (jet == 3) {
@@ -199,21 +203,21 @@ public class Sort {
         int mana = input.readInt();
         int jet = input.D8() + mana + rand.nextInt(3) - 1;
         if (jet <= 3 || mana < 3) {
-            System.out.println("Le sort ne fonctionne pas.\n");
+            System.out.println("Le sort ne fonctionne pas.");
         } else if (jet <= 6) {
-            System.out.println("La cible gagne 3 points de résistance.\n");
+            System.out.println("La cible gagne 3 points de résistance.");
         } else if (jet <= 9) {
-            System.out.println("La cible gagne 5 points de résistance.\n");
+            System.out.println("La cible gagne 5 points de résistance.");
         } else if (jet <= 12) {
-            System.out.println("La cible gagne 6 points de résistance et 1 point d'armure.\n");
+            System.out.println("La cible gagne 6 points de résistance et 1 point d'armure.");
         } else if (jet == 15) {
-            System.out.println("La cible gagne 8 points de résistance et 1 point d'armure.\n");
+            System.out.println("La cible gagne 8 points de résistance et 1 point d'armure.");
         } else if (jet == 16) {
-            System.out.println("La cible gagne 9 points de résistance et 1 point d'armure.\n");
+            System.out.println("La cible gagne 9 points de résistance et 1 point d'armure.");
         } else if (jet == 17) {
-            System.out.println("La cible gagne 10 points de résistance et 1 point d'armure.\n");
+            System.out.println("La cible gagne 10 points de résistance et 1 point d'armure.");
         } else {
-            System.out.println("La cible gagne 10 points de résistance et 2 point d'armure.\n");
+            System.out.println("La cible gagne 10 points de résistance et 2 point d'armure.");
         }
     }
 
@@ -229,7 +233,7 @@ public class Sort {
         int jet = input.D12() + mana + rand.nextInt(3) - 1;
         int dmg;
         if (jet <= 7 || mana < 7) {
-            System.out.println("Le sort ne fonctionne pas.\n");
+            System.out.println("Le sort ne fonctionne pas.");
             return;
         }
         else if (jet <= 10) {
@@ -359,7 +363,7 @@ public class Sort {
         int jet = input.D6() + mana + rand.nextInt(2) - 1;
         Monstre rez;
         if (jet <= 3 || mana < 3) {
-            System.out.println("Le sort a échoué.\n");
+            System.out.println("Le sort a échoué.");
             return false;
         } else if (jet <= 10) {
             rez = l2;
@@ -374,48 +378,72 @@ public class Sort {
             System.out.println("nouveau familier : carcasse réanimée");
             System.out.println("attaque : " + (int)max(rez.attaque *0.25, 1));
             System.out.println("vie : " + (int)max(rez.vie_max *0.25, 1));
-            System.out.println("armure : " + (int)(rez.armure *0.25) + "\n");
+            System.out.println("armure : " + (int)(rez.armure *0.25));
         }
         else if (jet <= 10) {
             System.out.println("nouveau familier : esprit désincarné");
             System.out.println("attaque : " + rez.attaque);
             System.out.println("vie : " + (int)max(rez.vie_max *0.25, 1));
-            System.out.println("armure : 0\n");
+            System.out.println("armure : 0");
         }
         else if (jet <= 12) {
             System.out.println("nouveau familier : zombie");
             System.out.println("attaque : " + max(rez.attaque / 3, 1));
             System.out.println("vie : " + rez.vie_max);
-            System.out.println("armure : " + (int)(rez.armure * 0.75) + "\n");
+            System.out.println("armure : " + (int)(rez.armure * 0.75));
         }
         else if (jet <= 14) {
             System.out.println("nouveau familier : ancien squelette");
             System.out.println("attaque : " + (int)max(0.75 * rez.attaque, 1));
             System.out.println("vie : " + rez.vie_max);
-            System.out.println("armure : " + rez.armure + "\n");
+            System.out.println("armure : " + rez.armure);
         }
         else {
             System.out.println("nouveau familier : ancien gardien");
             System.out.println("attaque : " + (int)(rez.attaque * 1.2));
             System.out.println("vie : " + (int)(rez.vie_max * 1.2));
-            System.out.println("armure : " + (int)(max(rez.armure * 1.2, 1)) + "\n");
+            System.out.println("armure : " + (int)(max(rez.armure * 1.2, 1)));
         }
         return true;
     }
 
     /**
      * Indique le résultat de la compétence "dissection"
+     * @param etat l'état du cadavre
+     * @return le changement d'état du corps
      * @throws IOException toujours
      */
-    public static void dissection() throws IOException {
+    public static int dissection(int etat) throws IOException {
         int temp = input.D6();
+        if(etat >= 25){
+            temp += 2;
+        }
+        else if(etat >= 15){
+            temp += 1;
+        }
+        else if(etat == 0){
+            temp -= 3;
+        }
+        else if(etat < 5){
+            temp -= 2;
+        }
+        else if(etat < 10){
+            temp -= 1;
+        }
         if (temp <= 1 + rand.nextInt(2) - 1) {
             System.out.println("Vous n'extrayez rien d'utile.");
-        } else if (temp <= 5 + rand.nextInt(2) - 1) {
+            return -1;
+        } else if (temp <= 4 + rand.nextInt(2) - 1) {
             System.out.println("Vous trouvez 1 ingrédient.");
+            return -8 - rand.nextInt(4);
+        }
+        else if (temp <= 6){
+            System.out.println("Vous récoltez 2 ingrédients.");
+            return -13 - rand.nextInt(11);
         }
         else{
-            System.out.println("Vous récoltez 2 ingrédients.");
+            System.out.println("Vous récoltez 3 ingrédients.");
+            return -20 - rand.nextInt(25);
         }
     }
 
@@ -424,25 +452,27 @@ public class Sort {
      * @param actif une liste de boolean indiquant les participants encore en jeu
      * @param nom les noms des participants
      * @param assomme une liste de boolean indiquant les participants inconscients
+     * @param reveil le tableau indiquand à quel point les participant sont près de se réveillé
      * @param ennemi le monstre ennemi
+     * @param lanceur l'indice de l'archimage
      * @throws IOException toujours
      */
-    public static void sort(boolean[] actif, String[] nom, boolean[] assomme, Monstre ennemi) throws IOException {
-        extracted(actif, nom, assomme, ennemi);
+    public static void sort(boolean[] actif, String[] nom, boolean[] assomme, int[] reveil, Monstre ennemi, int lanceur) throws IOException {
+        extracted(actif, nom, assomme, reveil, ennemi, lanceur);
         if(ennemi.est_mort()){
             return;
         }
         System.out.println("Vous préparez votre second sort.");
-        extracted(actif, nom, assomme, ennemi);
+        extracted(actif, nom, assomme, reveil, ennemi, lanceur);
     }
 
     /**
      * Fonction auxiliaire de sort
      */
-    private static void extracted(boolean[] actif, String[] nom, boolean[] assomme, Monstre ennemi) throws IOException {
+    private static void extracted(boolean[] actif, String[] nom, boolean[] assomme, int[] reveil, Monstre ennemi, int lanceur) throws IOException {
         switch (input.sort()){
             case BDF -> boule_de_feu(ennemi);
-            case ONDE_CHOC -> onde_choc(actif, nom, assomme, ennemi);
+            case ONDE_CHOC -> onde_choc(actif, nom, assomme, reveil, ennemi, lanceur);
             case ADG -> armure_de_glace();
             case FOUDRE -> foudre(ennemi);
             case AUTRE -> ennemi.dommage_magique(input.magie());

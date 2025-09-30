@@ -30,23 +30,8 @@ public class Output {
      * @param j l'indice du joueur dont on doit mettre à jour les données (0 à 3).
      */
     public static void write_data(int j) {
-        String fichier = "Joueur ";
-        fichier += switch (j) {
-            case 0 -> "A";
-            case 1 -> "B";
-            case 2 -> "C";
-            case 3 -> "D";
-            default -> "ERROR";
-        };
-        String metier =" ";
-        String[] job = {Main.necromancien, Main.guerriere, Main.archimage, Main.alchimiste};
-        String[] job_name = {"necromancien", "guerriere", "archimage", "alchimiste"};
-        for(int i = 0; i < job.length; i++){
-            if (job[i].equals(Main.nom[j])){
-                metier = job_name[i];
-                break;
-            }
-        }
+        String fichier = "Joueur "+ (char)('A' + j);
+        String metier = texte_metier(Main.metier[j]);
         write(fichier, Main.nom[j] + "," + metier + "," + Main.positions[j].toString() + "," + Main.f[j] + ";");
     }
 
@@ -91,5 +76,21 @@ public class Output {
             sb.append(c).append('̶'); // ajoute le caractère de barré
         }
         return sb.toString();
+    }
+
+    /**
+     * Convertie un métier en texte
+     * @param m le métier
+     * @return un String associé
+     */
+    static public String texte_metier(Metier m){
+        return switch (m){
+            case NECROMANCIEN -> "nécromancien";
+            case ALCHIMISTE -> "alchimiste";
+            case ARCHIMAGE -> "archimage";
+            case GUERRIERE -> "guerrière";
+            case ARCHER -> "archer";
+            case AUCUN -> Output.barrer("chomeur") + "tryhardeur";
+        };
     }
 }

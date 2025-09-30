@@ -19,6 +19,9 @@ public enum Action {
     MEDITATION,
     FOUILLE,
     CONCOCTION,
+    CRITIQUE,
+    ASSASSINAT,
+    ASSAUT,
     END,
     RETOUR,
 
