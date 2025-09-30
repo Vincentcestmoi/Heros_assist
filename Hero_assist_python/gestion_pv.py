@@ -42,6 +42,7 @@ while True:
             pv -= degat
             if pv <= 0:
                 print("Vous êtes mort.")
+                pv = 0
             elif pv <= (pv_m / 10):
                 print("Votre vision se trouble, vos sens s'amenuisent, la mort vous sourit.")
             elif degat > pv_m / 2:
@@ -49,4 +50,6 @@ while True:
             elif degat > pv_m / 3:
                 print("Vous sentez votre corps souffrir de l'impact.")
             elif degat > pv_m / 4:
-                print("Vous ressentez douloureusement l'attaque.")
+                print("Vous ressentez l'attaque.")
+            else:
+                print("Vous n'avez presque rien senti.")
