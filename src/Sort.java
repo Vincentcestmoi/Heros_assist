@@ -473,7 +473,7 @@ public class Sort {
      * @param actif une liste de boolean indiquant les participants encore en jeu
      * @param nom les noms des participants
      * @param assomme une liste de boolean indiquant les participants inconscients
-     * @param reveil le tableau indiquand à quel point les participant sont près de se réveillé
+     * @param reveil le tableau indiquand à quel point les participant sont près de se réveiller
      * @param ennemi le monstre ennemi
      * @param lanceur l'indice de l'archimage
      * @throws IOException toujours
