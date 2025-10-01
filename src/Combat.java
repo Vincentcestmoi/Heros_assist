@@ -65,7 +65,7 @@ public class Combat {
         }
 
         System.out.println();
-        int x = combat(ennemi, actif, nom, pr_l, mort);
+        int x = combat(ennemi, actif, nom, pr_l, mort, position);
 
         System.out.println("Fin du combat\n");
         gestion_mort_end(mort, nom);
@@ -113,7 +113,7 @@ public class Combat {
      * @return l'index du joueur qui domestique l'ennemi, ou 0 sinon
      * @throws IOException et oui
      */
-    private static int combat(Monstre ennemi, boolean[] actif, String[] nom, int pr_l, boolean[] mort) throws IOException {
+    private static int combat(Monstre ennemi, boolean[] actif, String[] nom, int pr_l, boolean[] mort, Position pos) throws IOException {
 
 
         boolean[] assomme = new boolean[Main.nbj * 2];
@@ -184,10 +184,10 @@ public class Combat {
                 switch (act) {
 
                     case OFF -> {
-                        alteration(actif, assomme, mort, reveil, n, skip, i);
+                        alteration(actif, assomme, mort, reveil, berserk, n, skip, i);
                         System.out.println();
                         if (i != pr_l) {
-                            alteration(actif, assomme, mort, reveil, nom[pr_l], skip, pr_l);
+                            alteration(actif, assomme, mort, reveil, berserk, nom[pr_l], skip, pr_l);
                             if (actif[i]) {
                                 j--;
                             }
@@ -211,9 +211,9 @@ public class Combat {
                                 do {
                                     l = rand.nextInt(8);
                                 } while (!actif[l]);
-                                int temp = input.atk();
+                                int temp = input.tir();
                                 temp += Monstre.corriger(temp * (berserk[i] / 2));
-                                System.out.println("Prise de folie, " + Main.nom[i] + " attaque " + nom[i] + " et lui inflige " + temp + " dommages !");
+                                System.out.println("Pris(e) de folie, " + Main.nom[i] + " attaque " + nom[i] + " et lui inflige " + temp + " dommages !");
                             } else {
                                 ennemi.tir(input.atk(), berserk[i] + 1);
                             }
@@ -374,7 +374,7 @@ public class Combat {
                         System.out.println(nom[k] + " se retrouve en première ligne.\n");
                     }
                 }
-                int temp = verifie_mort(ennemi, actif);
+                int temp = verifie_mort(ennemi, actif, pos);
                 if(temp != -2){
                     return temp;
                 }
@@ -383,7 +383,7 @@ public class Combat {
             // tour de l'adversaire
             if (run) {
                 ennemi.attaque(nom[pr_l]);
-                int temp = verifie_mort(ennemi, actif);
+                int temp = verifie_mort(ennemi, actif, pos);
                 if(temp != -2){
                     return temp;
                 }
@@ -399,7 +399,7 @@ public class Combat {
      * @return -2 si le monstre est en vie, -1 s'il est mort, l'index du joueur qui l'a domestiqué sinon
      * @throws IOException toujours
      */
-    private static int verifie_mort(Monstre ennemi, boolean[] actif) throws IOException {
+    private static int verifie_mort(Monstre ennemi, boolean[] actif, Position pos) throws IOException {
         if (ennemi.check_mort()) {
             return -2;
         }
@@ -437,7 +437,7 @@ public class Combat {
                 }
             }
         }
-        if (etat == 0) {
+        if (etat == 0 || pos == Position.ENFERS || pos == Position.OLYMPE || pos == Position.ASCENDANT) {
             return -1;
         }
         System.out.println("Vous pouvez vendre le cadavre de " + ennemi.nom + " pour " + (1 + (etat - 1) / 10) + " PO.");
@@ -556,7 +556,7 @@ public class Combat {
      * @param i       l'indice du joueur actuel
      * @throws IOException mon poto
      */
-    private static void alteration(boolean[] actif, boolean[] assomme, boolean[] mort, int[] reveil, String n, boolean[] skip, int i) throws IOException {
+    private static void alteration(boolean[] actif, boolean[] assomme, boolean[] mort, int[] reveil, float[] berserk, String n, boolean[] skip, int i) throws IOException {
         if (input.yn(n + " est-il/elle mort(e) ?")) {
 
             //on regarde si on peut le ressuciter immédiatement
@@ -590,6 +590,8 @@ public class Combat {
                 assomme[i] = true;
                 reveil[i] = 0;
             }
+        } else if (input.yn(n + " est-il/elle berserk ?")) {
+            berserk[i] = 0.1f + 0.1f * rand.nextInt(6);
         }
         else if (!input.yn(n + " est-il/elle toujours en combat ?")) {
             System.out.println(n + " est retiré(e) du combat.");
