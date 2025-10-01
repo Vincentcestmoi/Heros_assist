@@ -205,6 +205,19 @@ public class Combat {
                     }
 
                     case TIRER -> {
+                        if (berserk[i] > 0) { //berserker
+                            if (input.D6() < 2 + berserk[i]) {
+                                int l;
+                                do {
+                                    l = rand.nextInt(8);
+                                } while (!actif[l]);
+                                int temp = input.atk();
+                                temp += Monstre.corriger(temp * (berserk[i] / 2));
+                                System.out.println("Prise de folie, " + Main.nom[i] + " attaque " + nom[i] + " et lui inflige " + temp + " dommages !");
+                            } else {
+                                ennemi.tir(input.atk(), berserk[i] + 1);
+                            }
+                        }
                         // coup critique
                         if((Main.metier[i] == Metier.RANGER && rand.nextInt(10) == 0) || rand.nextInt(100) == 0) {
                             ennemi.tir(input.tir(), 1.0f + 0.1f * rand.nextInt(11));
@@ -485,10 +498,14 @@ public class Combat {
      * @throws IOException ça roule
      */
     private static void fuir(String ne, int i, boolean is_pr, boolean[] actif, String n, float[] berserk) throws IOException {
-        if(berserk[i] > 0 && input.D4() < berserk[i]) {
+        int bonus = 0;
+        if(i < Main.nbj && Main.metier[i] == Metier.RANGER) {
+            bonus += rand.nextInt(4);
+        }
+        if(berserk[i] > 0 && input.D4() + bonus < berserk[i]) {
             System.out.println(n + " est trop enragé(e) pour fuir.");
         }
-        else if (!is_pr || input.D6() > 2 + rand.nextInt(2)) {
+        else if (!is_pr || input.D6() + bonus > 2 + rand.nextInt(2)) {
             actif[i] = false;
             System.out.println(n + " a fuit le combat.");
         } else {
@@ -568,7 +585,13 @@ public class Combat {
         } else if (input.yn(n + " est-il/elle inconscient(e) ?")) {
             assomme[i] = true;
             reveil[i] = 0;
-        } else if (!input.yn(n + " est-il/elle toujours en combat ?")) {
+        } else if (i < Main.nbj && Main.metier[i] == Metier.ARCHIMAGE && input.yn("Le mana de " + n + " est-il tombé à 0 ?")) {
+            if(Sort.addiction()){
+                assomme[i] = true;
+                reveil[i] = 0;
+            }
+        }
+        else if (!input.yn(n + " est-il/elle toujours en combat ?")) {
             System.out.println(n + " est retiré(e) du combat.");
             actif[i] = false;
         }

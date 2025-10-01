@@ -507,8 +507,8 @@ public class Input {
         }
         if (!est_familier) { // joueur
             text = Main.nom[index] + " entrez votre action : (A)ttaquer/(t)irer";
-            if(!est_berserk){
-                text += "(m)agie/";
+            if(!est_berserk && Main.metier[index] != Metier.ARCHIMAGE){
+                text += "/(m)agie";
             }
             if (est_premiere_ligne) {
                 text += "/a(s)sommer";

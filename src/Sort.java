@@ -292,6 +292,27 @@ public class Sort {
     }
 
     /**
+     * Applique les compétences "addiction au mana" et "maitre du mana" de l'archimage
+     * @throws IOException toujours
+     */
+    public static boolean addiction() throws IOException {
+        int jet = input.D4() + rand.nextInt(3) - 1;
+        if (jet < 4) {
+            System.out.println("Vous perdez connaissance.");
+            return true;
+        }
+        else {
+            jet = input.D4();
+            if (jet > 1) {
+                System.out.println("Vous récuperez " + (jet - 1) + "PP.");
+            } else {
+                System.out.println("Vous récuperez 1PP.");
+            }
+        }
+        return false;
+    }
+
+    /**
      * Indique le résultat de la compétence "fouille"
      */
     public static void fouille() throws IOException {
@@ -462,8 +483,21 @@ public class Sort {
         if(ennemi.est_mort()){
             return;
         }
+        if(input.yn("Votre mana est-il tombé à 0 ?")){
+            if(addiction()){
+                assomme[lanceur] = true;
+                reveil[lanceur] = 0;
+                return;
+            }
+        }
         System.out.println("Vous préparez votre second sort.");
         extracted(actif, nom, assomme, reveil, ennemi, lanceur);
+        if(input.yn("Votre mana est-il tombé à 0 ?")){
+            if(addiction()){
+                assomme[lanceur] = true;
+                reveil[lanceur] = 0;
+            }
+        }
     }
 
     /**
