@@ -39,11 +39,11 @@ public class Input {
             //joueurs
             for(int i = 0; i < Main.nbj_max; i++) {
                 if (load_j(fichLoad[i], i)) {
-                    System.out.println(Main.nom[i] + ", " + Output.texte_metier(Main.metier[i]) + " chargé(e) avec succès " + Main.texte_pos(Main.positions[i]) + ".");
+                    System.out.println(Main.nom[i] + ", " + Output.texte_metier(Main.metier[i]) + ", chargé(e) avec succès " + Main.texte_pos(Main.positions[i]) + ".");
                     Main.nbj++;
                 }
                 else{
-                    System.out.println(Main.nbj + " joueurs chargés avec succés.");
+                    System.out.println(Main.nbj + " joueur(s) chargé(s) avec succés.");
                     break;
                 }
             }

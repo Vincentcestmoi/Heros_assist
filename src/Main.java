@@ -20,7 +20,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         input.load();
-        if (nbj == -1) {
+        if (nbj == 0) {
             init_game();
         }
         
@@ -102,7 +102,7 @@ public class Main {
         for (int j = 0; j < nbj; j++) {
             Output.write_data(j);
         }
-        Output.delete_fichier("Joueur "+ (char)('A' + nbj + 1));
+        Output.delete_fichier("Joueur "+ (char)('A' + nbj));
         System.out.println("Fin du programme");
     }
 
@@ -649,7 +649,7 @@ public class Main {
         Main.positions = new Position[Main.nbj];
         Main.f = new int[Main.nbj];
         Main.metier = new Metier[Main.nbj];
-        String[] job = {"(ne)cromancien", "archi(ma)ge", "(al)chimiste", "(gu)erriere", "(ar)cher", "(au)cun"};
+        String[] job = {"(ne)cromancien", "archi(ma)ge", "(al)chimiste", "(gu)erriere", "(ra)nger", "(au)cun"};
         for(int i = 0; i < Main.nbj; i++) {
             String temp;
             do{
@@ -674,19 +674,49 @@ public class Main {
                     System.out.println(s + " ");
                 }
                 switch (input.read()) {
-                    case "ne", "NE", "Ne", "nE" -> Main.metier[i] = Metier.NECROMANCIEN;
-                    case "ma", "MA", "Ma", "mA" -> Main.metier[i] = Metier.ARCHIMAGE;
-                    case "ar", "AR", "Ar", "aR" -> Main.metier[i] = Metier.RANGER;
-                    case "al", "AL", "Al", "aL" -> Main.metier[i] = Metier.ALCHIMISTE;
-                    case "gu", "GU", "Gu", "gU" -> Main.metier[i] = Metier.GUERRIERE;
-                    case "au", "AU", "Au", "aU" -> Main.metier[i] = Metier.AUCUN;
+                    case "ne", "NE", "Ne", "nE" -> {
+                        Main.metier[i] = Metier.NECROMANCIEN;
+                        System.out.println("Base : Résistance : 4 ; attaque : 1 ; PP: 6/8");
+                        System.out.println("Caractéristiques : Thaumaturge, Rite sacrificiel");
+                        System.out.println("Pouvoir : Appel des morts, Résurrection, Zombification, Malédiction");
+                    }
+                    case "ma", "MA", "Ma", "mA" -> {
+                        Main.metier[i] = Metier.ARCHIMAGE;
+                        System.out.println("Base : Résistance : 4 ; attaque : 0 ; PP: 10/10");
+                        System.out.println("Caractéristiques : Addiction au mana, Maitre de l'énergie, Double incantateur, Manchot");
+                        System.out.println("Pouvoir : Méditation, Boule de feu, Armure de glace, Foudre, Onde de choc, Purge");
+                    }
+                    case "ra", "RA", "rA", "Ra" -> {
+                        Main.metier[i] = Metier.RANGER;
+                        System.out.println("Base : Résistance : 4 ; attaque : 2 ; PP: 4/4 ; tir : 3");
+                        System.out.println("Caractéristiques : Explorateur, Eclaireur");
+                        System.out.println("Pouvoir : Assassinat, Coup critique, Assaut");
+                    }
+                    case "al", "AL", "Al", "aL" -> {
+                        Main.metier[i] = Metier.ALCHIMISTE;
+                        System.out.println("Base : Résistance : 5 ; attaque : 1 ; PP: 0/0 ; ingrédient : 3/11");
+                        System.out.println("Caractéristiques : Dextérité");
+                        System.out.println("Pouvoir : Fouille, Dissection, Concoction");
+                    }
+                    case "gu", "GU", "Gu", "gU" -> {
+                        Main.metier[i] = Metier.GUERRIERE;
+                        System.out.println("Base : Résistance : 6 ; attaque : 3 ; PP: 1/5");
+                        System.out.println("Caractéristiques : Invincible");
+                        System.out.println("Pouvoir : Berserk, Lame d'aura");
+                    }
+                    case "au", "AU", "Au", "aU" -> {
+                        Main.metier[i] = Metier.AUCUN;
+                        System.out.println("Base : Résistance : 5 ; attaque : 1 ; PP: 6/6");
+                        System.out.println("Caractéristiques : Aucune");
+                        System.out.println("Pouvoir : Aucun");
+                    }
                     default -> {
                         System.out.println("Unknow input");
                         run = true;
                     }
                 }
-                System.out.println(Main.nom[i] + " est " + Output.texte_metier(Main.metier[i]) + ".");
             }
+            System.out.println(Main.nom[i] + " est " + Output.texte_metier(Main.metier[i]) + ".");
             System.out.println(Main.nom[i] + " apparait dans la prairie.\n");
         }
     }
