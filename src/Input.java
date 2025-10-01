@@ -200,6 +200,9 @@ public class Input {
         else if(Objects.equals(temp, Output.texte_metier(Metier.GUERRIERE))) {
             job = Metier.GUERRIERE;
         }
+        else if(Objects.equals(temp, Output.texte_metier(Metier.RANGER))) {
+            job = Metier.RANGER;
+        }
         else {
             job = Metier.AUCUN;
         }
