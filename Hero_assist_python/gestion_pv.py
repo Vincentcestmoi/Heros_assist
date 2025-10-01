@@ -3,10 +3,12 @@
 while True:
     pv_m = int(input("Nombre de PV : "))
     armure = int(input("Nombre d'Armure : "))
+    armure_base = armure
+    pv_base = pv_m
     pv = pv_m
     run = True
     while run:
-        temp = input("(S)oins ou (B)oost ou Boost (A)rmure ?")
+        temp = input("(D)ommage | (S)oins | (B)oost | Boost (A)rmure | (Q)uit (=redémarre) | (R)eset ?")
 
         if temp in ["S", "s"]:
             soin = int(input("Soins : "))
@@ -36,7 +38,12 @@ while True:
         elif temp in ["Q", "q"]:
             run = False
 
-        else :
+        elif temp in ["R", "r"]:
+            pv_m = pv_base
+            pv = pv_base
+            armure = armure_base
+
+        elif temp in ["D", "d"] :
             attaque = int(input("Dégâts : "))
             degat = max(attaque - armure, 1)
             pv -= degat
