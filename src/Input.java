@@ -39,7 +39,7 @@ public class Input {
             //joueurs
             for(int i = 0; i < Main.nbj_max; i++) {
                 if (load_j(fichLoad[i], i)) {
-                    System.out.println(Main.nom[i] + " chargé(e) avec succès.");
+                    System.out.println(Main.nom[i] + ", " + Output.texte_metier(Main.metier[i]) + " chargé(e) avec succès " + Main.texte_pos(Main.positions[i]) + ".");
                     Main.nbj++;
                 }
                 else{
@@ -203,7 +203,6 @@ public class Input {
             job = Metier.AUCUN;
         }
         Main.metier[index] = job;
-        System.out.println(Main.nom[index] + " est " + temp);
     }
 
     /**
