@@ -9,13 +9,13 @@ public class Main {
     static final String Path = "../Save/";
     static final String Ext = ".txt";
     static final int f_max = 7;
-    static final int nbj_max = 7;
+    static final int nbj_max = 8;
 
     static public String[] nom;
     static public Position[] positions;
     static public Metier[] metier;
     public static int[] f;
-    static public int nbj = -1;
+    static public int nbj = 0;
 
     public static void main(String[] args) throws IOException {
 
@@ -102,6 +102,7 @@ public class Main {
         for (int j = 0; j < nbj; j++) {
             Output.write_data(j);
         }
+        Output.delete_fichier("Joueur "+ (char)('A' + nbj + 1));
         System.out.println("Fin du programme");
     }
 
