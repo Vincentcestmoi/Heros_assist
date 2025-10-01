@@ -399,6 +399,17 @@ public class Input {
     }
 
     /**
+     * Demande au joueur son attaque
+     *
+     * @return le nombre donné par le joueur
+     * @throws IOException en cas de problème ?
+     */
+    public int tir() throws IOException {
+        System.out.print("entrez votre puissance de tir actuelle : ");
+        return readInt();
+    }
+
+    /**
      * Demande au joueur sa vie
      *
      * @return le nombre donné par le joueur
@@ -536,7 +547,7 @@ public class Input {
                     }
                     yield "/(la)me d'aura";
                 }
-                case ARCHER -> {
+                case RANGER -> {
                     if(est_premiere_ligne && est_berserk) {
                         yield "/(as)saut";
                     }
@@ -656,7 +667,7 @@ public class Input {
                 if (index < Main.nbj && Main.metier[index] == Metier.ALCHIMISTE && !est_berserk) {
                     yield Action.CONCOCTION;
                 }
-                if (index < Main.nbj && Main.metier[index] == Metier.ARCHER && !est_berserk) {
+                if (index < Main.nbj && Main.metier[index] == Metier.RANGER && !est_berserk) {
                     yield Action.CRITIQUE;
                 }
                 System.out.println("Action non reconnue.");
@@ -685,7 +696,7 @@ public class Input {
                 yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
             case "as", "AS", "As", "aS" -> {
-                if (index < Main.nbj && Main.metier[index] == Metier.ARCHER) {
+                if (index < Main.nbj && Main.metier[index] == Metier.RANGER) {
                     if(est_berserk && est_premiere_ligne){
                         yield Action.ASSAUT;
                     }

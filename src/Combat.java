@@ -206,11 +206,11 @@ public class Combat {
 
                     case TIRER -> {
                         // coup critique
-                        if((Main.metier[i] == Metier.ARCHER && rand.nextInt(10) == 0) || rand.nextInt(100) == 0) {
-                            ennemi.tir(input.atk(), 1.0f + 0.1f * rand.nextInt(11));
+                        if((Main.metier[i] == Metier.RANGER && rand.nextInt(10) == 0) || rand.nextInt(100) == 0) {
+                            ennemi.tir(input.tir(), 1.0f + 0.1f * rand.nextInt(11));
                         }
                         else{
-                            ennemi.tir(input.atk());
+                            ennemi.tir(input.tir());
                         }
                     }
                     case MAGIE -> {
@@ -301,10 +301,17 @@ public class Combat {
                     }
                     case FOUILLE -> Sort.fouille();
                     case CONCOCTION -> Sort.concocter();
+                    case ASSASSINAT -> {
+                        if(Sort.assassinat(ennemi)){
+                            pr_l = i;
+                        }
+                    }
+                    case ASSAUT -> Sort.assaut(ennemi, berserk[i]);
+                    case CRITIQUE -> Sort.coup_critique(ennemi);
 
                     default -> { // ATTAQUER
                         if (berserk[i] > 0) { //berserker
-                            if (input.D6() < 4) {
+                            if (input.D6() < 2 + berserk[i]) {
                                 int l;
                                 do {
                                     l = rand.nextInt(8);
@@ -324,7 +331,7 @@ public class Combat {
                                     (rand.nextInt(100) == 0 ||
                                             (Main.metier[i] == Metier.GUERRIERE && rand.nextInt(10) == 0)))
                                     || rand.nextInt(255) == 0) { // on donne une chance au familier aussi
-                                ennemi.dommage(input.atk(), 1.0f + 0.1f * rand.nextInt(11));
+                                ennemi.dommage(input.atk(), 1.1f + 0.1f * rand.nextInt(10));
                             }
                             ennemi.dommage(input.atk());
                         }

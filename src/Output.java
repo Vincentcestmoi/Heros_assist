@@ -89,7 +89,7 @@ public class Output {
             case ALCHIMISTE -> "alchimiste";
             case ARCHIMAGE -> "archimage";
             case GUERRIERE -> "guerrière";
-            case ARCHER -> "archer";
+            case RANGER -> "archer";
             case AUCUN -> Output.barrer("chomeur") + "tryhardeur";
         };
     }

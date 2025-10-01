@@ -480,6 +480,58 @@ public class Sort {
     }
 
     /**
+     * Applique la compétence "coup critique" sur un tir classique
+     * @param ennemi le monstre ennemi
+     * @throws IOException toujours
+     */
+    public static void coup_critique(Monstre ennemi) throws IOException {
+        switch(input.D4()){
+            case 1 -> {
+                System.out.println("La pointe de votre flèche éclate en plein vol.");
+                ennemi.tir(input.tir(), 0.5F);
+            }
+            case 2, 3 -> ennemi.tir(input.tir());
+            case 4, 5 -> {
+                System.out.println("Votre flèche file droit sur " + ennemi.nom + " et lui porte un coup puissant.");
+                ennemi.tir(input.tir(), 2F);
+            }
+            default -> {
+                System.out.println("Entré invalide, tir classique appliqué.");
+                ennemi.tir(input.tir());
+            }
+        }
+    }
+
+    /**
+     * Appliques les effets de la compétence "assassinat"
+     * @param ennemi le monstre adverse
+     * @return true si le joueur est passé en première ligne, false sinon
+     * @throws IOException toujours
+     */
+    public static boolean assassinat(Monstre ennemi) throws IOException {
+        if(input.D6() + rand.nextInt(3) - 1 > 3){
+            System.out.println("Vous vous faufilez derrière " + ennemi.nom + " sans qu'il ne vous remarque.");
+            ennemi.dommage(input.atk() * 2 + 7);
+            return true;
+        }
+        System.out.println("Vous jugez plus prudent de ne pas engagez pour l'instant...");
+        return false;
+    }
+
+    /**
+     * Applique la compétence "assaut"
+     * @param ennemi le monstre ennemi
+     * @param berserk la force de frappe additionnelle
+     * @throws IOException toujours
+     */
+    public static void assaut(Monstre ennemi, float berserk) throws IOException {
+        System.out.println("Vous chargez brutalement " + ennemi.nom);
+        int jet = input.D8() + rand.nextInt(3) - 1;
+        ennemi.dommage(input.atk(), 0.1f * jet + berserk);
+        ennemi.part_soin += berserk;
+    }
+
+    /**
      * Laisse l'alchimiste concoter ses potions
      * @throws IOException toujours
      */
@@ -754,4 +806,5 @@ public class Sort {
             System.out.println("Vous avez produit un élixir (ALCRESALTPVRES).");
         }
     }
+
 }

@@ -292,7 +292,14 @@ public class Main {
 
     static int expedition_enfer(int meneur) throws IOException {
         Monstre monstre = Lieu.enfers();
-        switch (input.D4()) {
+        int jet = input.D4();
+        if (Main.metier[meneur] == Metier.RANGER){
+            jet += rand.nextInt(3);
+        }
+        if(jet > 5){
+            jet = 5;
+        }
+        switch (jet) {
             case 1, 2, 3 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
@@ -324,7 +331,14 @@ public class Main {
 
     static int expedition_prairie(int meneur) throws IOException {
         Monstre monstre = Lieu.prairie();
-        switch (input.D6()) {
+        int jet = input.D6();
+        if (Main.metier[meneur] == Metier.RANGER){
+            jet += rand.nextInt(3);
+        }
+        if(jet > 7){
+            jet = 7;
+        }
+        switch (jet) {
             case 2, 3, 4, 5 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
@@ -360,7 +374,14 @@ public class Main {
 
     static int expedition_vigne(int meneur) throws IOException {
         Monstre monstre = Lieu.vigne();
-        switch (input.D6()) {
+        int jet = input.D6();
+        if (Main.metier[meneur] == Metier.RANGER){
+            jet += rand.nextInt(3);
+        }
+        if(jet > 7){
+            jet = 7;
+        }
+        switch (jet) {
             case 3, 4, 5 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
@@ -406,7 +427,14 @@ public class Main {
 
     static int expedition_temple(int meneur) throws IOException {
         Monstre monstre = Lieu.temple();
-        switch (input.D8()) {
+        int jet = input.D8();
+        if (Main.metier[meneur] == Metier.RANGER){
+            jet += rand.nextInt(3);
+        }
+        if(jet > 9){
+            jet = 9;
+        }
+        switch (jet) {
             case 4, 5, 6, 7 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
@@ -446,7 +474,14 @@ public class Main {
 
     static int expedition_mer(int meneur) throws IOException {
         Monstre monstre = Lieu.mer();
-        switch (input.D8()) {
+        int jet = input.D8();
+        if (Main.metier[meneur] == Metier.RANGER){
+            jet += rand.nextInt(3);
+        }
+        if(jet > 9){
+            jet = 9;
+        }
+        switch (jet) {
             case 5, 6, 7 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
@@ -486,7 +521,14 @@ public class Main {
 
     static int expedition_mont(int meneur) throws IOException {
         Monstre monstre = Lieu.mont();
-        switch (input.D12()) {
+        int jet = input.D12();
+        if (Main.metier[meneur] == Metier.RANGER){
+            jet += rand.nextInt(3);
+        }
+        if(jet > 13){
+            jet = 13;
+        }
+        switch (jet) {
             case 7, 8, 9, 10, 11 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
@@ -519,12 +561,19 @@ public class Main {
 
     static int expedition_olympe(int meneur) throws IOException {
         Monstre monstre = Lieu.olympe();
-        switch (input.D20()) {
+        int jet = input.D20();
+        if (Main.metier[meneur] == Metier.RANGER){
+            jet += rand.nextInt(3);
+        }
+        if(jet > 21){
+            jet = 21;
+        }
+        switch (jet) {
             case 19, 20, 21 -> {
                 System.out.println("Vous apercevez un(e) " + monstre.nom);
                 if (input.yn("Voulez vous l'attaquer ?")) {
                     return Combat.affrontement(Position.OLYMPE, -1, monstre);
-                } else if (rand.nextBoolean()) {
+                } else if (rand.nextBoolean() || (jet > 20 && rand.nextBoolean())) {
                     System.out.println("Vous vous éloignez discrètement");
                 } else {
                     System.out.println(monstre.nom + " vous remarque et vous fonce dessus !");
@@ -626,7 +675,7 @@ public class Main {
                 switch (input.read()) {
                     case "ne", "NE", "Ne", "nE" -> Main.metier[i] = Metier.NECROMANCIEN;
                     case "ma", "MA", "Ma", "mA" -> Main.metier[i] = Metier.ARCHIMAGE;
-                    case "ar", "AR", "Ar", "aR" -> Main.metier[i] = Metier.ARCHER;
+                    case "ar", "AR", "Ar", "aR" -> Main.metier[i] = Metier.RANGER;
                     case "al", "AL", "Al", "aL" -> Main.metier[i] = Metier.ALCHIMISTE;
                     case "gu", "GU", "Gu", "gU" -> Main.metier[i] = Metier.GUERRIERE;
                     case "au", "AU", "Au", "aU" -> Main.metier[i] = Metier.AUCUN;

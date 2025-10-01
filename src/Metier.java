@@ -3,6 +3,6 @@ public enum Metier {
     ARCHIMAGE,
     ALCHIMISTE,
     GUERRIERE,
-    ARCHER,
+    RANGER,
     AUCUN,
 }
