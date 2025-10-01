@@ -649,7 +649,7 @@ public class Main {
         Main.positions = new Position[Main.nbj];
         Main.f = new int[Main.nbj];
         Main.metier = new Metier[Main.nbj];
-        String[] job = {"(ne)cromancien", "archi(ma)ge", "(al)chimiste", "(gu)erriere", "(ra)nger", "(au)cun"};
+        String[] job = {"(ne)cromancien", "archi(ma)ge", "(al)chimiste", "(gu)erriere", "(ra)nger", "(sh)aman", "(au)cun"};
         for(int i = 0; i < Main.nbj; i++) {
             String temp;
             do{
@@ -703,6 +703,12 @@ public class Main {
                         System.out.println("Base : Résistance : 6 ; attaque : 3 ; PP: 1/5");
                         System.out.println("Caractéristiques : Invincible");
                         System.out.println("Pouvoir : Berserk, Lame d'aura");
+                    }
+                    case "sh", "SH", "Sh", "sH" -> {
+                        Main.metier[i] = Metier.SHAMAN;
+                        System.out.println("Base : Résistance : 4 ; attaque : 1 ; PP: 0/0");
+                        System.out.println("Caractéristiques : Ancien esprit");
+                        System.out.println("Pouvoir : Lien, Incantation, Paix intérieure");
                     }
                     case "au", "AU", "Au", "aU" -> {
                         Main.metier[i] = Metier.AUCUN;

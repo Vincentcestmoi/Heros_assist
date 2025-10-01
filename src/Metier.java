@@ -4,5 +4,6 @@ public enum Metier {
     ALCHIMISTE,
     GUERRIERE,
     RANGER,
+    SHAMAN,
     AUCUN,
 }

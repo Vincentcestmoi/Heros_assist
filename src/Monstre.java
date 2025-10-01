@@ -343,7 +343,6 @@ public class Monstre {
         if(quantite <= 0){
             return;
         }
-        System.out.println("Vous tirez sur " + this.nom);
         int degat = applique_competence_tir(max(quantite - this.armure, 1));
         this.vie -= degat;
     }
@@ -525,7 +524,6 @@ public class Monstre {
         if(quantite <= 0){
             return;
         }
-        System.out.println("Vous attaquez " + this.nom);
         int degas = applique_competence_dommage(max(quantite - this.armure, 1));
         this.vie -= degas;
         if(!est_mort()) {
@@ -543,7 +541,6 @@ public class Monstre {
         if(quantite <= 0){
             return;
         }
-        System.out.println("Vous attaquez " + this.nom);
         int degas = applique_competence_dommage((corriger(quantite * mult) - this.armure));
         this.vie -= degas;
         if(!est_mort()) {

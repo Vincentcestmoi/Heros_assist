@@ -321,6 +321,16 @@ public class Combat {
                     }
                     case ASSAUT -> Sort.assaut(ennemi, berserk[i]);
                     case CRITIQUE -> Sort.coup_critique(ennemi);
+                    case LIEN -> {
+                        if(Sort.lien(i, ennemi, mort, actif)){
+                            return -1;
+                        }
+                    }
+                    case INCANTATION -> Sort.incantation(i, ennemi, berserk, assomme, reveil);
+                    case CALME -> {
+                        System.out.println(n + " s'harmonise avec l'univers et laisse retomber sa rage.");
+                        berserk[i] = 0f;
+                    }
 
                     default -> { // ATTAQUER
                         if (berserk[i] > 0) { //berserker
@@ -1170,7 +1180,8 @@ public class Combat {
     static private void gestion_mort_end(boolean[] morts, String[] nom) throws IOException {
         for (int i = 0; i < Main.nbj * 2; i++) {
             if (morts[i] && input.yn(nom[i] + " est mort durant le combat, le reste-t-il/elle ?")) {
-                if (Main.metier[i] == Metier.GUERRIERE && input.D10() > 6) {
+                if ((Main.metier[i] == Metier.GUERRIERE && input.D10() > 6)
+                        || (Main.metier[i] == Metier.SHAMAN && input.D10() > 8)) {
                     System.out.println(nom[i] + " résiste à la mort.\n");
                     return;
                 }

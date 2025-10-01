@@ -1,7 +1,9 @@
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 
 import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class Sort {
 
@@ -841,4 +843,365 @@ public class Sort {
         }
     }
 
+    /**
+     * Applique la compétence "lien" du shaman
+     * @param i l'indice du shaman
+     * @param ennemi le Monstre à lier
+     * @param mort la liste de mortalité
+     * @param actif la liste d'activités
+     * @return si le combat s'arrète
+     * @throws IOException toujours
+     */
+    public static boolean lien(int i, Monstre ennemi, boolean[] mort, boolean[] actif) throws IOException {
+        if (ennemi.competence == Competence.CHRONOS) {
+            System.out.println("Les esprits de vos ancêtres vous arretes avant que vous ne fassiez quelques choses de stupides.");
+            return false;
+        }
+        int ratio = (int) ((float) ennemi.vie / ennemi.vie_max * 12);
+        if (ennemi.competence == Competence.PRUDENT || ennemi.competence == Competence.MEFIANT || ennemi.competence == Competence.SUSPICIEUX) {
+            ratio += 4 + rand.nextInt(3);
+        }
+        System.out.println(Main.nom[i] + " tente de lier son âme à " + ennemi.nom);
+        int result = input.D12() - ratio + rand.nextInt(3) - 1;
+        if (result <= 1) {
+            System.out.println("L'âme de " + Main.nom[i] + " est violemment rejeté par celle de " + ennemi.nom + " !");
+            mort[i] = true;
+            actif[i] = false;
+            return false;
+        }
+        if (result <= 4) {
+            System.out.println(Main.nom[i] + " n'est pas parvenu à se lier à " + ennemi.nom);
+            return false;
+        }
+        else {
+            System.out.println("Les âmes de " + ennemi.nom + " et de " + Main.nom[i] + " entre en communion !");
+            Main.f[i] = min(7, rand.nextInt(result) + 1);
+            return true;
+        }
+    }
+
+    //TODO pas mal de docstrings
+    public static void incantation(int i, Monstre ennemi, float[] berserk, boolean[] assomme, int[] reveil) throws IOException {
+        switch(input.incantation()){
+            case COLERE -> colere(i, ennemi, berserk);
+            case NUAGE -> nuage(ennemi);
+            case ELEMENTAIRE -> element(ennemi, assomme, reveil);
+            case BENIE -> benir();
+        }
+    }
+
+    public static void colere(int i, Monstre ennemi, float[] berserk) throws IOException {
+        switch(rand.nextInt(5)){
+            case 0 -> colere_boost();
+            case 1, 2, 3 -> colere_attaque(ennemi);
+            case 4 -> colere_berserk(i, berserk);
+        }
+    }
+
+    public static void colere_boost() throws IOException {
+        int jet = input.D8() + rand.nextInt(3) - 1;
+        if(jet <= 3){
+            System.out.println("Les esprits des ancients guerriers exalte vos actes.");
+            System.out.println("Votre attaque augmente temporairement de 1 point.");
+        }
+        else if (jet <= 5){
+            System.out.println("Les âmes de vos ancestres guerriers renforcent vos actes.");
+            System.out.println("Votre attaque augmente temporairement de 2 points.");
+        }
+        else if (jet <= 8){
+            System.out.println("L'âme d'un ancien guerrier guide votre main.");
+            System.out.println("Votre attaque augmente temporairement de 4 points.");
+        }
+        else{
+            System.out.println("Votre âme entre en symbiose avec celle de vos ancestres belliqueux.");
+            System.out.println("Votre attaque augmente temporairement de 7 points.");
+        }
+    }
+
+    public static void colere_attaque(Monstre ennemi) throws IOException {
+        System.out.println("Les esprits de vos ancêtres déchainent leur colère sur " + ennemi.nom);
+        int attaque;
+        int jet = input.D10() + rand.nextInt(3) - 1;
+        if(jet <= 3){
+            attaque = 2;
+        }
+        else if(jet <= 5){
+            attaque = 4 + rand.nextInt(3);
+        }
+        else if(jet <= 7){
+            attaque = 6 + rand.nextInt(4);
+        }
+        else{
+            attaque = 9 + rand.nextInt(5);
+            ennemi.affecte();
+        }
+        ennemi.dommage_magique(attaque);
+    }
+
+    public static void colere_berserk(int i, float[] berserk) throws IOException {
+        int jet = input.D10() + rand.nextInt(3) - 1;
+        if (jet <= 3) {
+            System.out.println("Un esprit vous emplie de colère.");
+            berserk[i] = max(0.1f, jet * 0.1f);
+        } else if (jet <= 5) {
+            System.out.println("L'âme d'un guerrier emplie votre coeur de haine !");
+            berserk[i] = jet * 0.2f + 0.1f;
+        } else if (jet <= 7) {
+            System.out.println("Une âme pleine de colère emplie votre coeur de rage !");
+            berserk[i] = 1.4f + rand.nextInt(3) * 0.1f;
+        } else {
+            System.out.println("L'âme d'un ancien guerrier tombé au combat incruste votre coeur d'une haine féroce !");
+            berserk[i] = 1.5f + rand.nextInt(3) * 0.2f;
+        }
+    }
+
+    public static void nuage(Monstre ennemi) throws IOException {
+        switch(rand.nextInt(6)){
+            case 0 -> nuage_pluie();
+            case 1, 2 -> nuage_grele(ennemi);
+            case 3, 4 -> nuage_brume(ennemi);
+            case 5 -> nuage_foudre(ennemi);
+        }
+    }
+
+    public static void nuage_pluie() throws IOException {
+        System.out.println("Des nages apparaissent dans le ciel et une pluie légère commence à tomber.");
+        int jet = input.D10() + rand.nextInt(3) - 1;
+        if (jet <= 2) {
+            System.out.println("La pluie tombante recouvre vos blessures.");
+            System.out.println("Chaque joueur et familier soigne de 2 points");
+        }
+        else if (jet <= 5) {
+            System.out.println("Les goutes d'eau s'abatent sur vos blessures, qui commencent à se refermer.");
+            System.out.println("Chaque joueur et familier soigne de " + jet + " points");
+        }
+        else if (jet <= 7) {
+            System.out.println("Une pluie douce et appaissante vous recouvre.");
+            System.out.println("Chaque joueur et familier soigne de " + (jet + 2) + " points");
+        }
+        else{
+            System.out.println("Une force ancienne s'infiltre dans vos corps au travers les gouttes d'eau.");
+            System.out.println("Chaque joueur et familier soigne de 10 points.");
+            System.out.println("Chaque joueur et familier gagne temporairement 3 points de résistance.");
+        }
+    }
+
+    public static void nuage_grele(Monstre ennemi) throws IOException {
+        System.out.println("De sombres nuages s'amoncèlent au dessus de vous");
+        int jet = input.D10() + rand.nextInt(3) - 1;
+        if (jet <= 2) {
+            System.out.println("Une fine grèle vous frappe.");
+            System.out.println("Chaque joueur et familier subit 1 point de dommage.");
+            ennemi.dommage(1);
+        }
+        else if (jet <= 5) {
+            System.out.println("La grèle s'abat sur vous.");
+            System.out.println("Chaque joueur et familier subit 2 points de dommage.");
+            ennemi.dommage(jet - rand.nextInt(2));
+        }
+        else if (jet <= 7) {
+            System.out.println("Une violente tempête se lève et la grèle vous frappe.");
+            System.out.println("Chaque joueur et familier subit 4 points de dommage.");
+            ennemi.dommage(jet + rand.nextInt(3) -1);
+            if(rand.nextBoolean()){
+                ennemi.do_etourdi();
+            }
+        }
+        else{
+            System.out.println("Une immense tempête de neige vous frappe de plein fouet.");
+            System.out.println("Chaque joueur et familier subit 7 points de dommage.");
+            ennemi.dommage(8 + rand.nextInt(5));
+            if(rand.nextBoolean()){
+                ennemi.affecte();
+            }
+        }
+    }
+
+    public static void nuage_brume(Monstre ennemi) throws IOException {
+        System.out.println("Un nuage apparait au dessus de vous et commence à se rapprocher du sol");
+        int jet = input.D10() + rand.nextInt(3) - 1;
+        if (jet <= 2) {
+            System.out.println("C'est... joli ?");
+        }
+        else if (jet <= 5) {
+            System.out.println("La brûme commence à vous encercler.");
+            System.out.println("Chaque joueur et familier perds temporairement 1 point d'attaque.");
+            if(ennemi.attaque > 0){
+                ennemi.attaque = min(1, ennemi.attaque - 2);
+            }
+        }
+        else if (jet <= 7) {
+            System.out.println("Un épais brouillard vous recouvre.");
+            System.out.println("Chaque joueur et familier perds temporairement 3 points d'attaque.");
+            if(ennemi.attaque > 0){
+                ennemi.attaque = min(1, ennemi.attaque - 5);
+            }
+        }
+        else{
+            System.out.println("Une brûme vous entoure, si dense que vous ne vous voyez presque plus.");
+            System.out.println("Il est désormais impossible de tirer.");
+            System.out.println("Il est désormais impossible de lancer un sort ciblé sur une autre cible que soit-même.");
+            System.out.println("Chaque joueur et familier perds temporairement 8 points d'attaque.");
+            if(ennemi.attaque > 0){
+                ennemi.attaque = min(1, ennemi.attaque - 15);
+            }
+        }
+    }
+
+    public static void nuage_foudre(Monstre ennemi) throws IOException {
+        System.out.println("Un nuage apparait au dessus de vous et commence à se rapprocher du sol");
+        int jet = input.D10() + rand.nextInt(3) - 1;
+        if(jet <= 1) {
+            System.out.println("C'est... joli ?");
+        }
+        else if (jet <= 4) {
+            System.out.println("Vous percevez un fugasse arc électrique.");
+            ennemi.affecte();
+        }
+        else if (jet <= 6) {
+            System.out.println("La foudre frappe l'ennemi.");
+            ennemi.dommage(jet + rand.nextInt(5) - 3);
+            ennemi.affecte();
+        }
+        else{
+            System.out.println("Le nuage s'abat sur le monstre ennemi, suivi d'un éclair.");
+            ennemi.dommage(jet + rand.nextInt(5) - 3);
+            ennemi.affecte();
+            if(ennemi.attaque > 0){
+                ennemi.attaque = min(1, ennemi.attaque - 2);
+            }
+        }
+    }
+
+    public static void element(Monstre ennemi, boolean[] assomme, int[] reveil) throws IOException {
+        switch(rand.nextInt(7)){
+            case 0, 4 -> vent(ennemi);
+            case 1, 5 -> terre(ennemi);
+            case 2, 6 -> feu(ennemi);
+            case 3 -> eau(ennemi, assomme, reveil);
+        }
+    }
+
+    public static void vent(Monstre ennemi) throws IOException {
+        System.out.println("Le vent se lève...");
+        int jet = input.D6() + rand.nextInt(3) - 1;
+        if(jet <= 1) {
+            System.out.println("Une légère brise se fait sentir.");
+        }
+        else if (jet <= 4) {
+            System.out.println("Une puissant vent souffle.");
+            System.out.println("Tous les tirs effectués pendant un tour gagnent un bonus de 2");
+        }
+        else if (jet <= 6) {
+            System.out.println("De violente rafale se prononce.");
+            System.out.println("Tous les tirs effectués pendant un tour gagnent un bonus de 3");
+            ennemi.dommage(2);
+        }
+        else{
+            System.out.println("Le vent est si puissant que vous avez du mal à ne pas être emporté.");
+            System.out.println("Tous les tirs effectués pendant un tour gagnent un bonus de 5");
+            System.out.println("Toutes les attaques effectuées pendant un tour subissent un bonus de 3");
+            ennemi.dommage(5);
+        }
+    }
+
+    public static void terre(Monstre ennemi) throws IOException {
+        System.out.println("La terre commence à trembler...");
+        int jet = input.D6() + rand.nextInt(3) - 1;
+        if(jet <= 1) {
+            System.out.println("Vous entendez un léger grondement.");
+        }
+        else if (jet <= 4) {
+            System.out.println("Des fragment de roches s'arrachent du sol et herte l'ennemi.");
+            ennemi.dommage(3 + rand.nextInt(2));
+            if(rand.nextBoolean()){
+                ennemi.do_etourdi();
+            }
+        }
+        else if (jet <= 6) {
+            System.out.println("Le sol se fends sous l'ennemi !");
+            ennemi.dommage(3 + rand.nextInt(2));
+            if(rand.nextBoolean()){
+                ennemi.do_etourdi();
+            }
+            else {
+                ennemi.affecte();
+            }
+        }
+        else{
+            System.out.println("Le sol sous l'ennemi se soulève !");
+            ennemi.dommage(4 + rand.nextInt(3));
+            ennemi.affecte();
+        }
+    }
+
+    public static void feu(Monstre ennemi) throws IOException {
+        System.out.println("Vous entendez de légers crépitements...");
+        int jet = input.D6() + rand.nextInt(3) - 1;
+        if(jet <= 1) {
+            System.out.println("Must been the wind...");
+        }
+        else if (jet <= 3) {
+            System.out.println("L'ennemi semble indisposé par quelque chose.");
+            ennemi.dommage(2 + rand.nextInt(2));
+        }
+        else if (jet <= 5) {
+            System.out.println("Le monstre prend feu !");
+            ennemi.dommage(4 + rand.nextInt(3));
+        }
+        else if (jet <= 7) {
+            System.out.println("Des flammes s'élève tout autour de l'adversaire !");
+            ennemi.dommage(5 + rand.nextInt(5));
+        }
+        else{
+            System.out.println("Un véritable brasier apparait aurour de l'ennemi !");
+            ennemi.dommage(6 + rand.nextInt(7));
+        }
+    }
+
+    public static void eau(Monstre ennemi, boolean[] assomme, int[] reveil) throws IOException {
+        System.out.println("Vous entendez un léger gargouillement...");
+        int jet = input.D6() + rand.nextInt(3) - 1;
+        if(jet <= 1) {
+            System.out.println("Vous sentez quelques gouttes de pluie.");
+        }
+        else if (jet <= 3) {
+            System.out.println("Une pluie purificatrice s'abat.");
+            System.out.println("Tous les joueurs récupèrent 1PP.");
+        }
+        else if (jet <= 5) {
+            System.out.println("De l'eau jaillit de sous l'adversaire, le faisant glisser.");
+            ennemi.dommage(1 + rand.nextInt(2));
+            ennemi.do_etourdi(); // glissade
+        }
+        else if (jet <= 7) {
+            System.out.println("Une vague magique frappe l'ennemi !");
+            ennemi.dommage_magique(2 + rand.nextInt(2));
+            ennemi.affecte(); // affaiblissement magique
+        }
+        else {
+            System.out.println("Un torrent mystique s'abat sur le terrain, emportant l'ennemi et réveillant les joueurs.");
+            ennemi.dommage(4 + rand.nextInt(4));
+            ennemi.affecte();
+            Arrays.fill(assomme, false);
+            Arrays.fill(reveil, 0);
+        }
+    }
+
+    public static void benir() throws IOException {
+        switch(rand.nextInt(7)){
+            case 0, 1, 2 -> benir_soin();
+            case 3, 4 -> benir_vie();
+            case 5 -> benir_force();
+            case 6 -> benir_def();
+        }
+    }
+
+    public static void benir_soin() throws IOException {} //TODO
+
+    public static void benir_vie() throws IOException {} //TODO
+
+    public static void benir_force() throws IOException {} //TODO
+
+    public static void benir_def() throws IOException {} //TODO
 }

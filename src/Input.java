@@ -203,6 +203,9 @@ public class Input {
         else if(Objects.equals(temp, Output.texte_metier(Metier.RANGER))) {
             job = Metier.RANGER;
         }
+        else if(Objects.equals(temp, Output.texte_metier(Metier.SHAMAN))) {
+            job = Metier.SHAMAN;
+        }
         else {
             job = Metier.AUCUN;
         }
@@ -309,7 +312,11 @@ public class Input {
     public int D4() throws IOException {
         System.out.print("D4 : ");
         Output.jouerSonDe();
-        return readInt();
+        int temp = readInt();
+        if(temp > 6){
+            return 6;
+        }
+        return Math.max(temp, 1);
     }
 
     /**
@@ -321,7 +328,11 @@ public class Input {
     public int D6() throws IOException {
         System.out.print("D6 : ");
         Output.jouerSonDe();
-        return readInt();
+        int temp = readInt();
+        if(temp > 8){
+            return 8;
+        }
+        return Math.max(temp, 1);
     }
 
     /**
@@ -333,7 +344,11 @@ public class Input {
     public int D8() throws IOException {
         System.out.print("D8 : ");
         Output.jouerSonDe();
-        return readInt();
+        int temp = readInt();
+        if(temp > 10){
+            return 10;
+        }
+        return Math.max(temp, 1);
     }
 
     /**
@@ -345,7 +360,11 @@ public class Input {
     public int D10() throws IOException {
         System.out.print("D10 : ");
         Output.jouerSonDe();
-        return readInt();
+        int temp = readInt();
+        if(temp > 12){
+            return 12;
+        }
+        return Math.max(temp, 1);
     }
 
     /**
@@ -357,7 +376,11 @@ public class Input {
     public int D12() throws IOException {
         System.out.print("D12 : ");
         Output.jouerSonDe();
-        return readInt();
+        int temp = readInt();
+        if(temp > 14){
+            return 14;
+        }
+        return Math.max(temp, 1);
     }
 
     /**
@@ -369,7 +392,11 @@ public class Input {
     public int D20() throws IOException {
         System.out.print("D20 : ");
         Output.jouerSonDe();
-        return readInt();
+        int temp = readInt();
+        if(temp > 22){
+            return 22;
+        }
+        return Math.max(temp, 1);
     }
 
     /**
@@ -499,7 +526,7 @@ public class Input {
     public Action action(int index, Boolean est_familier, Boolean est_premiere_ligne, boolean[] mort, boolean est_berserk) throws IOException {
         String text;
         boolean ya_mort = false;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < Main.nbj; i++) {
             if (mort[i]) {
                 ya_mort = true;
                 break;
@@ -562,10 +589,20 @@ public class Input {
                     }
                     yield "";
                 }
+                case SHAMAN -> {
+                    if(!est_berserk){
+                        if(Main.f[index] == 0)
+                        {
+                            yield("/(in)cantation/(li)en");
+                        }
+                        yield "/(in)cantation";
+                    }
+                    yield "/(pa)ix intérieure";
+                }
                 case AUCUN -> "";
             };
         } else { //familier
-            text = "Donnez un ordre au familier de " + Main.nom[index - 4] + " (A)ttaquer/(f)uir/(c)ustom/(o)ff";
+            text = "Donnez un ordre au familier de " + Main.nom[index - Main.nbj] + " (A)ttaquer/(f)uir/(c)ustom/(o)ff";
             if (!est_premiere_ligne) {
                 text += "/(s)'avancer";
             }
@@ -708,6 +745,27 @@ public class Input {
                 System.out.println("Action non reconnue.");
                 yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
             }
+            case "in", "IN", "In", "iN" -> {
+                if (index < Main.nbj && Main.metier[index] == Metier.SHAMAN) {
+                    yield Action.INCANTATION;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+            }
+            case "li", "LI", "Li", "lI" -> {
+                if (index < Main.nbj && Main.metier[index] == Metier.SHAMAN && Main.f[index] == 0) {
+                    yield Action.LIEN;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+            }
+            case "pa", "PA", "Pa", "pA" -> {
+                if (index < Main.nbj && Main.metier[index] == Metier.SHAMAN && est_berserk) {
+                    yield Action.CALME;
+                }
+                System.out.println("Action non reconnue.");
+                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+            }
 
             // actions particulières
             case "q", "Q" -> {
@@ -756,7 +814,7 @@ public class Input {
      */
     public int ask_rez(boolean[] mort) throws IOException {
         boolean ok = false;
-        for(int i = 0; i < 4; i++){
+        for(int i = 0; i < Main.nbj; i++){
             if (mort[i]) {
                 ok = true;
                 break;
@@ -773,7 +831,7 @@ public class Input {
                     return i;
                 }
             }
-            i = i == 4 ? 0 : i + 1;
+            i = i == Main.nbj ? 0 : i + 1;
         }
     }
 
@@ -999,5 +1057,25 @@ public class Input {
                 yield sort();
             }
         };
+    }
+
+    /**
+     * Demande au shaman quelle incantation il veut reciter
+     * @return l'incantation à lancer
+     * @throws IOException toujours
+     */
+    public Action incantation() throws IOException {
+        System.out.println("Quel type d'incantation voulez-vous réciter : (ap)pelle des nuages/(ch)ant de colère/(be)nédiction/(in)vocation des éléments ?");
+        return switch(read()){
+            case "ap", "AP", "Ap", "aP" -> Action.NUAGE;
+            case "ch", "CH", "Ch", "cH" -> Action.COLERE;
+            case "be", "BE", "Be", "bE", "bé", "Bé" -> Action.BENIE;
+            case "in", "IN", "In", "iN" -> Action.ELEMENTAIRE;
+            default -> {
+                System.out.println("Input unknow");
+                yield incantation();
+            }
+        };
+
     }
 }

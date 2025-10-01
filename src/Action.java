@@ -22,6 +22,9 @@ public enum Action {
     CRITIQUE,
     ASSASSINAT,
     ASSAUT,
+    INCANTATION,
+    LIEN,
+    CALME,
     END,
     RETOUR,
 
@@ -42,4 +45,10 @@ public enum Action {
     MIRACLE,
     SOIN,
     TOXIQUE,
+
+    //type d'incantation
+    COLERE,
+    NUAGE,
+    BENIE,
+    ELEMENTAIRE,
 }

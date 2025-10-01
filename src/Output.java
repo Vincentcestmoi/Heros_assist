@@ -90,6 +90,7 @@ public class Output {
             case ARCHIMAGE -> "archimage";
             case GUERRIERE -> "guerrière";
             case RANGER -> "ranger";
+            case SHAMAN -> "shaman";
             case AUCUN -> Output.barrer("chomeur") + "tryhardeur";
         };
     }
