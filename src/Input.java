@@ -43,6 +43,7 @@ public class Input {
                     Main.nbj++;
                 }
                 else{
+                    System.out.println(Main.nbj + " joueurs chargés avec succés.");
                     break;
                 }
             }
