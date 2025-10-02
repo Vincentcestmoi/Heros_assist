@@ -46,7 +46,7 @@ public class Output {
     }
 
     /**
-     * Joue un son de dés pendant 2,3 secondes (bloque le terminal durant ce temp)
+     * Joue un son de dés
      */
     static void jouerSonDe() {
         try {
@@ -56,11 +56,7 @@ public class Output {
             clip.open(audioStream);
             clip.start();
 
-            // Attendre la durée souhaitée, puis arrêter le son
-            Thread.sleep(2300);
-            clip.stop();
-            clip.close();
-        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException | InterruptedException e) {
+        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             System.err.println("Erreur lors de la lecture du son : " + e.getMessage());
         }
     }
