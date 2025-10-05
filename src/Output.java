@@ -7,7 +7,7 @@ public class Output {
 
     static boolean write(String fichier, String contenu) {
         try {
-            FileWriter writer = new FileWriter(Main.Path + fichier + Main.Ext);
+            FileWriter writer = new FileWriter(Main.Path + fichier);
             writer.write(contenu);
             writer.close();
             return true;
@@ -25,14 +25,11 @@ public class Output {
         write((fichier), pre_equipement.nom + "," + Input.read_log(fichier));
     }
 
-    /**
-     * Mets à jour les sauvegarde des joueurs
-     * @param j l'indice du joueur dont on doit mettre à jour les données (0 à 3).
-     */
-    public static void write_data(int j) {
-        String fichier = "Joueur "+ (char)('A' + j);
-        String metier = texte_metier(Main.metier[j]);
-        write(fichier, Main.nom[j] + "," + metier + "," + Main.positions[j].toString() + "," + Main.f[j] + ";");
+    public static void save_data() throws IOException {
+        for (int i = 0; i < Main.nbj; i++) {
+            Main.joueurs[i].sauvegarder(Main.Path + "Joueur" + i + ".json");
+        }
+        Output.write(Main.Path + "nbj", String.valueOf(Main.nbj));
     }
 
     /**
@@ -40,7 +37,7 @@ public class Output {
      * @param nomFichier le chemin du fichier
      */
     public static void delete_fichier(String nomFichier) {
-        if(write(nomFichier, ";")) {
+        if(write(Main.Path + nomFichier, ";")) {
             System.out.println(nomFichier + " écrasé avec succès");
         }
     }
@@ -74,20 +71,4 @@ public class Output {
         return sb.toString();
     }
 
-    /**
-     * Convertie un métier en texte
-     * @param m le métier
-     * @return un String associé
-     */
-    static public String texte_metier(Metier m){
-        return switch (m){
-            case NECROMANCIEN -> "nécromancien";
-            case ALCHIMISTE -> "alchimiste";
-            case ARCHIMAGE -> "archimage";
-            case GUERRIERE -> "guerrière";
-            case RANGER -> "ranger";
-            case SHAMAN -> "shaman";
-            case AUCUN -> Output.barrer("chomeur") + "tryhardeur";
-        };
-    }
 }
