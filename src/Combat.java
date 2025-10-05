@@ -125,6 +125,9 @@ public class Combat {
         float[] berserk = new float[Main.nbj * 2];
         Arrays.fill(berserk, 0);
 
+        int[] alter_tir = {0, 0}; //{altération, tour_restant}
+        int[] alter_attaque = {0, 0};
+
 
         // on prépare une bijection aléatoire pour l'ordre de jeu
         int[] t = new int[Main.nbj * 2];
@@ -150,6 +153,22 @@ public class Combat {
                 // on ne joue que les participants actifs
                 if (!actif[i]) {
                     continue;
+                }
+
+                if(alter_tir[1] > 0){
+                    alter_tir[1]--;
+                }
+                else if(alter_tir[0] > 0){
+                    alter_tir[0] = 0;
+                    System.out.println("Le vent arrête de souffler");
+                }
+
+                if(alter_attaque[1] > 0){
+                    alter_attaque[1]--;
+                }
+                else if(alter_attaque[0] > 0){
+                    alter_attaque[0] = 0;
+                    System.out.println("Le attaque commentce à se calmer");
                 }
 
                 n = nom[i]; // on stocke le nom par commodité
@@ -211,19 +230,19 @@ public class Combat {
                                 do {
                                     l = rand.nextInt(8);
                                 } while (!actif[l]);
-                                int temp = input.tir();
+                                int temp = input.tir() + alter_tir[0];
                                 temp += Monstre.corriger(temp * (berserk[i] / 2));
                                 System.out.println("Pris(e) de folie, " + Main.nom[i] + " attaque " + nom[i] + " et lui inflige " + temp + " dommages !");
                             } else {
-                                ennemi.tir(input.atk(), berserk[i] + 1);
+                                ennemi.tir(input.atk() + alter_tir[0], berserk[i] + 1);
                             }
                         }
                         // coup critique
                         if((Main.metier[i] == Metier.RANGER && rand.nextInt(10) == 0) || rand.nextInt(100) == 0) {
-                            ennemi.tir(input.tir(), 1.0f + 0.1f * rand.nextInt(11));
+                            ennemi.tir(input.tir() + alter_tir[0], 1.0f + 0.1f * rand.nextInt(11));
                         }
                         else{
-                            ennemi.tir(input.tir());
+                            ennemi.tir(input.tir() + alter_tir[0]);
                         }
                     }
                     case MAGIE -> {
@@ -244,11 +263,7 @@ public class Combat {
                     }
                     case DOMESTIQUER -> {
                         if (ennemi.domestiquer()) {
-                            System.out.println("nouveau familier : " + ennemi.nom);
-                            System.out.println("attaque : " + ennemi.attaque);
-                            System.out.println("vie : " + ennemi.vie_max);
-                            System.out.println("armure : " + ennemi.armure + "\n");
-
+                            ennemi.presente_familier();
                             return i;
                         }
                     }
@@ -293,7 +308,7 @@ public class Combat {
                     case BERSERK -> {
                         System.out.println(n + " est prit d'une folie meurtrière !");
                         berserk[i] = 0.2f + 0.1f * rand.nextInt(9);
-                        ennemi.dommage(input.atk(), berserk[i]);
+                        ennemi.dommage(input.atk() + alter_attaque[0], berserk[i]);
                     }
                     case LAME_DAURA -> {
                         if (berserk[i] > 0 && input.D6() < 4) {
@@ -301,12 +316,12 @@ public class Combat {
                             do {
                                 l = rand.nextInt(8);
                             } while (!actif[l]);
-                            int temp = input.atk();
+                            int temp = input.atk() + alter_attaque[0];
                             temp += Monstre.corriger(temp * (berserk[i] / 2));
                             System.out.println("Prise de folie, " + n + " attaque " + nom[i] + " et lui infliges " + temp + " dommages !");
                             berserk[i] += rand.nextInt(3) * 0.1f + 0.1f;
                         } else {
-                            int temp = input.atk();
+                            int temp = input.atk() + alter_attaque[0];
                             temp += Monstre.corriger(temp * berserk[i]);
                             ennemi.dommage(temp, 2.7F);
                             System.out.println("L'arme principale de " + n + " se brise !");
@@ -326,7 +341,7 @@ public class Combat {
                             return -1;
                         }
                     }
-                    case INCANTATION -> Sort.incantation(i, ennemi, berserk, assomme, reveil);
+                    case INCANTATION -> Sort.incantation(i, ennemi, berserk, assomme, reveil, alter_tir, alter_attaque);
                     case CALME -> {
                         System.out.println(n + " s'harmonise avec l'univers et laisse retomber sa rage.");
                         berserk[i] = 0f;
@@ -339,11 +354,11 @@ public class Combat {
                                 do {
                                     l = rand.nextInt(8);
                                 } while (!actif[l]);
-                                int temp = input.atk();
+                                int temp = input.atk() + alter_attaque[0];
                                 temp += Monstre.corriger(temp * (berserk[i] / 2));
                                 System.out.println("Prise de folie, " + Main.nom[i] + " attaque " + nom[i] + " et lui inflige " + temp + " dommages !");
                             } else {
-                                ennemi.dommage(input.atk(), berserk[i] + 1);
+                                ennemi.dommage(input.atk() + alter_attaque[0], berserk[i] + 1);
                             }
                         }
                         // attaque normale
@@ -354,9 +369,9 @@ public class Combat {
                                     (rand.nextInt(100) == 0 ||
                                             (Main.metier[i] == Metier.GUERRIERE && rand.nextInt(10) == 0)))
                                     || rand.nextInt(255) == 0) { // on donne une chance au familier aussi
-                                ennemi.dommage(input.atk(), 1.1f + 0.1f * rand.nextInt(10));
+                                ennemi.dommage(input.atk() + alter_attaque[0], 1.1f + 0.1f * rand.nextInt(10));
                             }
-                            ennemi.dommage(input.atk());
+                            ennemi.dommage(input.atk() + alter_attaque[0]);
                         }
                     }
                 }

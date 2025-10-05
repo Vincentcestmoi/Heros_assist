@@ -20,6 +20,11 @@ public class Monstre {
     protected float encaissement;   // quand l'adversaire utilise "encaisser"
     protected float part_soin;      // quand l'adversaire utilise "premier soin" en première ligne.
 
+    // stats de base à concerver
+    protected int vie_base;
+    protected int attaque_base;
+    protected int armure_base;
+
     Monstre(Race race) {
         this.nom = race.get_nom();
         this.attaque = race.get_attaque();
@@ -30,10 +35,15 @@ public class Monstre {
         this.niveau_drop_max = race.get_niveau_drop_max();
         this.drop_quantite_max = race.get_drop_quantite();
         this.competence = race.competence();
+
         this.etourdi = false;
         this.assomme = false;
         this.encaissement = 0F;
         this.part_soin = 0F;
+
+        this.vie_base = this.vie_max;
+        this.attaque_base = this.attaque;
+        this.armure_base = this.armure;
 
         if(Objects.equals(this.nom, "illusioniste")){
             illu_check();
@@ -914,44 +924,12 @@ public class Monstre {
     }
 
     /**
-     * Définie si la compétence "entrainement" fonctionne ou non
-     * @return si le niveau d'obéissance du familier a augmenté :
-     * 2 oui ;
-     * 1 oui ;
-     * 0 non ;
-     * -1 rebellion potentielle ;
-     * @throws IOException jsp mais sans ça, ça ne marche pas
+     * Affiche les statistiques de base du monstre
      */
-    static int entrainement() throws IOException {
-        return switch (input.D6()) {
-            case 1 -> {
-                if (input.D4() <= 2) {
-                    System.out.println("Votre familier désapprouve fortement vos méthodes d'entrainement.\n");
-                    yield -1;
-                }
-                System.out.println();
-                yield 0;
-            }
-            case 2, 3 -> {
-                System.out.println("Vous familier n'a pas l'air très attentif...\n");
-                yield 0;
-            }
-            case 4, 5 -> {
-                System.out.println("Votre familier vous respecte un peu plus.\n");
-                yield 1;
-            }
-            case 6, 7 -> {
-                if (input.D4() >= 3) {
-                    System.out.println("Votre familier semble particulièrement apprécier votre entrainement !\n");
-                    yield 2;
-                }
-                System.out.println();
-                yield 1;
-            }
-            default -> {
-                System.out.println("Résultat non reconnu, compétence ignorée.\n");
-                yield 0;
-            }
-        };
+    void presente_familier() {
+        System.out.println("nouveau familier : " + this.nom);
+        System.out.println("attaque : " + this.attaque_base);
+        System.out.println("vie : " + this.vie_base);
+        System.out.println("armure : " + this.armure_base + "\n");
     }
 }

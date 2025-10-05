@@ -10,7 +10,7 @@ public class Sort {
     static Input input = new Input();
     static Random rand = new Random();
 
-    static public int nb_fire_rune = 0;
+    static public int nb_fire_rune = 1;
     static public int nb_great_fire_rune = 0;
 
     /**
@@ -75,21 +75,25 @@ public class Sort {
                 System.out.println("Vous maudissez faiblement " + ennemi.nom + ".");
                 ennemi.vie_max -= 1 + boost;
                 ennemi.vie -= 1 + boost;
+                ennemi.vie_base -= 1 + boost;
             }
             case 3, 4 -> {
                 System.out.println("Vous maudissez " + ennemi.nom + ".");
                 ennemi.vie_max -= 2 + boost;
                 ennemi.vie -= 2 + boost;
+                ennemi.vie_base -= 2 + boost;
             }
             case 5 -> {
                 System.out.println("Vous maudissez agressivement " + ennemi.nom + ".");
                 ennemi.vie_max -= 3 + boost;
                 ennemi.vie -= 3 + boost;
+                ennemi.vie_base -= 3 + boost;
             }
-            case 6 -> {
+            case 6, 7 -> {
                 System.out.println("Vous maudissez puissament " + ennemi.nom + ".");
                 ennemi.vie_max -= 5 + boost;
                 ennemi.vie -= 5 + boost;
+                ennemi.vie_base -= 5 + boost;
             }
             default -> System.out.println("vous n'arrivez pas à maudir " + ennemi.nom + ".");
         }
@@ -880,16 +884,34 @@ public class Sort {
         }
     }
 
-    //TODO pas mal de docstrings
-    public static void incantation(int i, Monstre ennemi, float[] berserk, boolean[] assomme, int[] reveil) throws IOException {
+
+    /**
+     * Applique la compétence "incantation" du shaman
+     * @param i l'index du shaman
+     * @param ennemi le monstre adverse
+     * @param berserk la liste de berserk
+     * @param assomme la liste des entités assommée
+     * @param reveil la liste de réveil
+     * @param alter_attaque le modificateur d'attaque
+     * @param alter_tir le modificateur de tir
+     * @throws IOException toujours
+     */
+    public static void incantation(int i, Monstre ennemi, float[] berserk, boolean[] assomme, int[] reveil, int[] alter_tir, int[] alter_attaque) throws IOException {
         switch(input.incantation()){
             case COLERE -> colere(i, ennemi, berserk);
             case NUAGE -> nuage(ennemi);
-            case ELEMENTAIRE -> element(ennemi, assomme, reveil);
+            case ELEMENTAIRE -> element(ennemi, assomme, reveil, alter_tir, alter_attaque);
             case BENIE -> benir();
         }
     }
 
+    /**
+     * La compétence "chant de colère" du shaman
+     * @param i l'index du shaman
+     * @param ennemi le monstre adverse
+     * @param berserk la liste de berserk
+     * @throws IOException toujours
+     */
     public static void colere(int i, Monstre ennemi, float[] berserk) throws IOException {
         switch(rand.nextInt(5)){
             case 0 -> colere_boost();
@@ -898,6 +920,10 @@ public class Sort {
         }
     }
 
+    /**
+     * Chant de colère version attaque bonus
+     * @throws IOException toujours
+     */
     public static void colere_boost() throws IOException {
         int jet = input.D8() + rand.nextInt(3) - 1;
         if(jet <= 3){
@@ -918,6 +944,11 @@ public class Sort {
         }
     }
 
+    /**
+     * Chant de colère version dps
+     * @param ennemi le monstre adverse
+     * @throws IOException toujours
+     */
     public static void colere_attaque(Monstre ennemi) throws IOException {
         System.out.println("Les esprits de vos ancêtres déchainent leur colère sur " + ennemi.nom);
         int attaque;
@@ -938,23 +969,34 @@ public class Sort {
         ennemi.dommage_magique(attaque);
     }
 
+    /**
+     * Chant de colère version berserk
+     * @param i l'index du shaman
+     * @param berserk la liste de berserk
+     * @throws IOException toujours
+     */
     public static void colere_berserk(int i, float[] berserk) throws IOException {
         int jet = input.D10() + rand.nextInt(3) - 1;
         if (jet <= 3) {
             System.out.println("Un esprit vous emplie de colère.");
-            berserk[i] = max(0.1f, jet * 0.1f);
+            berserk[i] += max(0.1f, jet * 0.1f);
         } else if (jet <= 5) {
             System.out.println("L'âme d'un guerrier emplie votre coeur de haine !");
-            berserk[i] = jet * 0.2f + 0.1f;
+            berserk[i] += jet * 0.2f + 0.1f;
         } else if (jet <= 7) {
             System.out.println("Une âme pleine de colère emplie votre coeur de rage !");
-            berserk[i] = 1.4f + rand.nextInt(3) * 0.1f;
+            berserk[i] += 1.4f + rand.nextInt(3) * 0.1f;
         } else {
             System.out.println("L'âme d'un ancien guerrier tombé au combat incruste votre coeur d'une haine féroce !");
-            berserk[i] = 1.5f + rand.nextInt(3) * 0.2f;
+            berserk[i] += 1.5f + rand.nextInt(3) * 0.2f;
         }
     }
 
+    /**
+     * Applique la compétence "appel des nuages" du shaman
+     * @param ennemi le monstre adverse
+     * @throws IOException toujours
+     */
     public static void nuage(Monstre ennemi) throws IOException {
         switch(rand.nextInt(6)){
             case 0 -> nuage_pluie();
@@ -964,6 +1006,10 @@ public class Sort {
         }
     }
 
+    /**
+     * Appel des nuages version soin
+     * @throws IOException toujours
+     */
     public static void nuage_pluie() throws IOException {
         System.out.println("Des nages apparaissent dans le ciel et une pluie légère commence à tomber.");
         int jet = input.D10() + rand.nextInt(3) - 1;
@@ -986,6 +1032,11 @@ public class Sort {
         }
     }
 
+    /**
+     * Appel des nuages version dps AOE
+     * @param ennemi le monstre adverse
+     * @throws IOException toujours
+     */
     public static void nuage_grele(Monstre ennemi) throws IOException {
         System.out.println("De sombres nuages s'amoncèlent au dessus de vous");
         int jet = input.D10() + rand.nextInt(3) - 1;
@@ -1017,6 +1068,11 @@ public class Sort {
         }
     }
 
+    /**
+     * Appel des nuages version debuff
+     * @param ennemi le monstre adverse
+     * @throws IOException toujours
+     */
     public static void nuage_brume(Monstre ennemi) throws IOException {
         System.out.println("Un nuage apparait au dessus de vous et commence à se rapprocher du sol");
         int jet = input.D10() + rand.nextInt(3) - 1;
@@ -1048,6 +1104,11 @@ public class Sort {
         }
     }
 
+    /**
+     * Appel des nuages version dps debuff
+     * @param ennemi le monstre adverse
+     * @throws IOException toujours
+     */
     public static void nuage_foudre(Monstre ennemi) throws IOException {
         System.out.println("Un nuage apparait au dessus de vous et commence à se rapprocher du sol");
         int jet = input.D10() + rand.nextInt(3) - 1;
@@ -1073,16 +1134,32 @@ public class Sort {
         }
     }
 
-    public static void element(Monstre ennemi, boolean[] assomme, int[] reveil) throws IOException {
+    /**
+     * Applique la compétence "invocation des éléments" du shaman
+     * @param ennemi le monstre adverse
+     * @param assomme la liste des entités assommée
+     * @param reveil la liste de réveil
+     * @param alter_attaque le modificateur d'attaque
+     * @param alter_tir le modificateur de tir
+     * @throws IOException toujours
+     */
+    public static void element(Monstre ennemi, boolean[] assomme, int[] reveil, int[] alter_tir, int[] alter_attaque) throws IOException {
         switch(rand.nextInt(7)){
-            case 0, 4 -> vent(ennemi);
+            case 0, 4 -> vent(ennemi, alter_tir, alter_attaque);
             case 1, 5 -> terre(ennemi);
             case 2, 6 -> feu(ennemi);
             case 3 -> eau(ennemi, assomme, reveil);
         }
     }
 
-    public static void vent(Monstre ennemi) throws IOException {
+    /**
+     * Invocation des éléments version buff tir
+     * @param ennemi le monstre adverse
+     * @param alter_attaque le modificateur d'attaque
+     * @param alter_tir le modificateur de tir
+     * @throws IOException toujours
+     */
+    public static void vent(Monstre ennemi, int[] alter_tir, int[] alter_attaque) throws IOException {
         System.out.println("Le vent se lève...");
         int jet = input.D6() + rand.nextInt(3) - 1;
         if(jet <= 1) {
@@ -1090,21 +1167,40 @@ public class Sort {
         }
         else if (jet <= 4) {
             System.out.println("Une puissant vent souffle.");
-            System.out.println("Tous les tirs effectués pendant un tour gagnent un bonus de 2");
+            if(alter_tir[0] <= 2){
+                alter_tir[0] = 2;
+                alter_tir[1] = Main.nbj * 2;
+            }
+            System.out.println("Tous les tirs sont temporairement boostés.");
         }
         else if (jet <= 6) {
             System.out.println("De violente rafale se prononce.");
-            System.out.println("Tous les tirs effectués pendant un tour gagnent un bonus de 3");
+            if(alter_tir[0] <= 3){
+                alter_tir[0] = 3;
+                alter_tir[1] = Main.nbj * 2 + rand.nextInt(Main.nbj);
+            }
+            System.out.println("Tous les tirs sont temporairement boostés.");
             ennemi.dommage(2);
         }
         else{
             System.out.println("Le vent est si puissant que vous avez du mal à ne pas être emporté.");
-            System.out.println("Tous les tirs effectués pendant un tour gagnent un bonus de 5");
-            System.out.println("Toutes les attaques effectuées pendant un tour subissent un bonus de 3");
+            if(alter_tir[0] <= 5){
+                alter_tir[0] = 5;
+                alter_tir[1] = Main.nbj * 2 + rand.nextInt(Main.nbj * 3);
+                alter_attaque[0] = -3;
+                alter_attaque[1] = Main.nbj * 2;
+            }
+            System.out.println("Tous les tirs sont temporairement boostés.");
+            System.out.println("Toutes les attaques sont temporairement baissés.");
             ennemi.dommage(5);
         }
     }
 
+    /**
+     * Invocation des éléments version debuff et dps
+     * @param ennemi le monstre adverse
+     * @throws IOException toujours
+     */
     public static void terre(Monstre ennemi) throws IOException {
         System.out.println("La terre commence à trembler...");
         int jet = input.D6() + rand.nextInt(3) - 1;
@@ -1135,6 +1231,11 @@ public class Sort {
         }
     }
 
+    /**
+     * Invocation des éléments version dps
+     * @param ennemi le monstre adverse
+     * @throws IOException toujours
+     */
     public static void feu(Monstre ennemi) throws IOException {
         System.out.println("Vous entendez de légers crépitements...");
         int jet = input.D6() + rand.nextInt(3) - 1;
@@ -1159,6 +1260,11 @@ public class Sort {
         }
     }
 
+    /**
+     * Invocation des éléments version buff/random
+     * @param ennemi le monstre adverse
+     * @throws IOException toujours
+     */
     public static void eau(Monstre ennemi, boolean[] assomme, int[] reveil) throws IOException {
         System.out.println("Vous entendez un léger gargouillement...");
         int jet = input.D6() + rand.nextInt(3) - 1;
@@ -1188,6 +1294,10 @@ public class Sort {
         }
     }
 
+    /**
+     * Applique la compétence "bénédiction" du shaman
+     * @throws IOException toujours
+     */
     public static void benir() throws IOException {
         switch(rand.nextInt(7)){
             case 0, 1, 2 -> benir_soin();
@@ -1197,11 +1307,89 @@ public class Sort {
         }
     }
 
-    public static void benir_soin() throws IOException {} //TODO
+    /**
+     * Bénédiction version soin
+     * @throws IOException toujours
+     */
+    public static void benir_soin() throws IOException {
+        int jet = input.D8() + rand.nextInt(3) - 1;
+        if(jet <= 1) {
+            System.out.println("La cible guérie de 2.");
+        }
+        else if (jet <= 4) {
+            System.out.println("La cible guérie de " + (2 + jet) + ".");
+        }
+        else if (jet <= 6) {
+            System.out.println("La cible guérie de 7.");
+        }
+        else if (jet <= 8) {
+            System.out.println("La cible guérie de 9.");
+        }
+        else{
+            System.out.println("La cible guérie de 11.");
+        }
+    }
 
-    public static void benir_vie() throws IOException {} //TODO
+    /**
+     * Bénédiction version buff résistance
+     * @throws IOException toujours
+     */
+    public static void benir_vie() throws IOException {
+        int jet = input.D8() + rand.nextInt(3) - 1;
+        if(jet <= 1) {
+            System.out.println("La cible gagne temporairement 1 point de résistance.");
+        }
+        else if (jet <= 3) {
+            System.out.println("La cible gagne temporairement 2 points de résistance.");
+        }
+        else if (jet <= 5) {
+            System.out.println("La cible gagne temporairement 4 points de résistance.");
+        }
+        else if (jet <= 7) {
+            System.out.println("La cible gagne temporairement 6 points de résistance.");
+        }
+        else{
+            System.out.println("La cible gagne temporairement 8 points de résistance.");
+        }
+    }
 
-    public static void benir_force() throws IOException {} //TODO
+    /**
+     * Bénédiction version buff attaque
+     * @throws IOException toujours
+     */
+    public static void benir_force() throws IOException {
+        int jet = input.D8() + rand.nextInt(3) - 1;
+        if(jet <= 1) {
+            System.out.println("La cible gagne temporairement 1 point d'attaque.");
+        }
+        else if (jet <= 3) {
+            System.out.println("La cible gagne temporairement 2 points d'attaque.");
+        }
+        else if (jet <= 5) {
+            System.out.println("La cible gagne temporairement 3 points d'attaque.");
+        }
+        else if (jet <= 7) {
+            System.out.println("La cible gagne temporairement 4 points d'attaque.");
+        }
+        else{
+            System.out.println("La cible gagne temporairement 6 points d'attaque.");
+        }
+    }
 
-    public static void benir_def() throws IOException {} //TODO
+    /**
+     * Bénédiction version buff résistance/armure
+     * @throws IOException toujours
+     */
+    public static void benir_def() throws IOException {
+        int jet = input.D8() + rand.nextInt(3) - 1;
+        if(jet <= 3) {
+            System.out.println("La cible gagne temporairement 1 point de résistance.");
+        }
+        else if (jet <= 6) {
+            System.out.println("La cible gagne temporairement 3 points de résistance..");
+        }
+        else{
+            System.out.println("La cible gagne temporairement 1 pont d'armure.");
+        }
+    }
 }

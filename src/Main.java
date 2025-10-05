@@ -235,7 +235,7 @@ public class Main {
         if (f == 0) {
             System.out.println("Erreur : aucun familier détecté.");
         } else {
-            f += Monstre.entrainement();
+            f += entrainement();
             if (f <= 0) {
                 System.out.println("Votre familier vous a fuit de manière définitive.");
                 f = 0;
@@ -246,6 +246,48 @@ public class Main {
         }
         System.out.println();
         return f;
+    }
+
+    /**
+     * Définie si la compétence "entrainement" fonctionne ou non
+     * @return si le niveau d'obéissance du familier a augmenté :
+     * 2 oui ;
+     * 1 oui ;
+     * 0 non ;
+     * -1 rebellion potentielle ;
+     * @throws IOException jsp mais sans ça, ça ne marche pas
+     */
+    static int entrainement() throws IOException {
+        return switch (input.D6()) {
+            case 1 -> {
+                if (input.D4() <= 2) {
+                    System.out.println("Votre familier désapprouve fortement vos méthodes d'entrainement.\n");
+                    yield -1;
+                }
+                System.out.println();
+                yield 0;
+            }
+            case 2, 3 -> {
+                System.out.println("Vous familier n'a pas l'air très attentif...\n");
+                yield 0;
+            }
+            case 4, 5 -> {
+                System.out.println("Votre familier vous respecte un peu plus.\n");
+                yield 1;
+            }
+            case 6, 7 -> {
+                if (input.D4() >= 3) {
+                    System.out.println("Votre familier semble particulièrement apprécier votre entrainement !\n");
+                    yield 2;
+                }
+                System.out.println();
+                yield 1;
+            }
+            default -> {
+                System.out.println("Résultat non reconnu, compétence ignorée.\n");
+                yield 0;
+            }
+        };
     }
 
     /**
