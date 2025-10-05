@@ -10,12 +10,5 @@ public enum Choix {
     FAMILIER_MOINS,
     RETOUR,
     SUICIDE,
-    NECROMANCIE,
-    MEDITATION,
-    FOUILLE,
-    CONCOCTION,
-    ADD_GREAT_RUNE,
-    ADD_MINOR_RUNE,
-    DEL_GREAT_RUNE,
-    DEL_MINOR_RUNE,
+    AUCUN,
 }
