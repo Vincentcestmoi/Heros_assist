@@ -702,27 +702,54 @@ public class Combat {
                     System.out.println(ennemi.nom + " fait tomber votre casque pour le combat.");
                 }
             }
-            case ARMURE_NATURELLE, ARMURE_GLACE -> ennemi.armure += 1;
-            case ARMURE_NATURELLE2, ARMURE_GLACE2 -> ennemi.armure += 2;
-            case ARMURE_NATURELLE3 -> ennemi.armure += 3;
-            case ARMURE_NATURELLE4 -> ennemi.armure += 4;
+            case ARMURE_GLACE -> ennemi.armure += 1;
+            case ARMURE_NATURELLE -> {
+                ennemi.armure += 1;
+                ennemi.armure_base += 1;
+            }
+            case ARMURE_GLACE2 -> ennemi.armure += 2;
+            case ARMURE_NATURELLE2 -> {
+                ennemi.armure += 2;
+                ennemi.armure_base += 2;
+            }
+            case ARMURE_NATURELLE3 -> {
+                ennemi.armure += 3;
+                ennemi.armure_base += 3;
+            }
+            case ARMURE_NATURELLE4 -> {
+                ennemi.armure += 4;
+                ennemi.armure_base += 4;
+            }
             case VITALITE_NATURELLE -> {
                 ennemi.vie_max += 3;
                 ennemi.vie += 3;
+                ennemi.vie_base += 3;
             }
             case VITALITE_NATURELLE2 -> {
                 ennemi.vie_max += 6;
                 ennemi.vie += 6;
+                ennemi.vie_base += 6;
             }
             case VITALITE_NATURELLE3 -> {
                 ennemi.vie_max += 9;
                 ennemi.vie += 9;
+                ennemi.vie_base += 9;
             }
-            case FORCE_NATURELLE, FLAMME_ATTAQUE -> ennemi.attaque += 2;
-            case FORCE_NATURELLE2 -> ennemi.attaque += 4;
-            case FORCE_NATURELLE3 -> ennemi.attaque += 6;
+            case FLAMME_ATTAQUE -> ennemi.attaque += 2;
+            case FORCE_NATURELLE -> {
+                ennemi.attaque += 2;
+                ennemi.attaque_base += 2;
+            }
+            case FORCE_NATURELLE2 -> {
+                ennemi.attaque += 4;
+                ennemi.attaque_base += 4;
+            }
+            case FORCE_NATURELLE3 -> {
+                ennemi.attaque += 6;
+                ennemi.attaque_base += 6;
+            }
             case PRUDENT -> {
-                int tolerance = ennemi.attaque;
+                int tolerance = ennemi.vie_max;
                 for (int i = 0; i < Main.nbj * 2; i++) {
                     if (actif[i]) {
                         System.out.print(nom[i] + " ");
@@ -735,11 +762,11 @@ public class Combat {
                 }
             }
             case SUSPICIEUX -> {
-                int tolerance = ennemi.vie + ennemi.armure * 3;
+                int tolerance = ennemi.attaque * 2;
                 for (int i = 0; i < Main.nbj * 2; i++) {
                     if (actif[i]) {
                         System.out.print(nom[i] + " ");
-                        tolerance -= 3 * input.def();
+                        tolerance -= 2 * input.def();
                         tolerance -= input.vie();
                         if (tolerance < 0) {
                             System.out.println(ennemi.nom + " fuit en vous voyant avancer.");
@@ -775,7 +802,10 @@ public class Combat {
                     System.out.println(nom[pr_l] + " est terrifié(e) et perd 3 points d'attaque pour la durée du combat");
                 }
             }
-            case FAIBLE -> ennemi.attaque -= 3;
+            case FAIBLE -> {
+                ennemi.attaque -= 3;
+                ennemi.attaque_base -= 3;
+            }
             case BENEDICTION -> {
                 System.out.println(ennemi.nom + " béni " + nom[pr_l] + " qui gagne définitivement 1 point de résistance.");
                 System.out.println(ennemi.nom + " a disparu...");
@@ -801,24 +831,33 @@ public class Combat {
             case GOLEM_PIERRE -> {
                 ennemi.nom = "golem de pierre";
                 ennemi.attaque += rand.nextInt(3) + 1;
+                ennemi.attaque_base = ennemi.attaque;
                 ennemi.vie_max += rand.nextInt(4) + 3;
                 ennemi.vie = ennemi.vie_max;
+                ennemi.vie_base = ennemi.vie;
                 ennemi.armure += rand.nextInt(4) + 1;
+                ennemi.armure_base = ennemi.armure;
             }
             case GOLEM_FER -> {
                 ennemi.nom = "golem de fer";
                 ennemi.attaque += rand.nextInt(4) + 2;
+                ennemi.attaque_base = ennemi.attaque;
                 ennemi.vie_max += rand.nextInt(8) + 5;
                 ennemi.vie = ennemi.vie_max;
+                ennemi.vie_base = ennemi.vie;
                 ennemi.armure += rand.nextInt(5) + 2;
+                ennemi.armure_base = ennemi.armure;
                 ennemi.niveau_drop_max += 1;
             }
             case GOLEM_ACIER -> {
                 ennemi.nom = "golem d'acier";
                 ennemi.attaque += rand.nextInt(6) + 3;
+                ennemi.attaque_base = ennemi.attaque;
                 ennemi.vie_max += rand.nextInt(10) + 7;
                 ennemi.vie = ennemi.vie_max;
+                ennemi.vie_base = ennemi.vie;
                 ennemi.armure += rand.nextInt(6) + 3;
+                ennemi.armure_base = ennemi.armure;
                 ennemi.niveau_drop_max += 1;
                 ennemi.niveau_drop_min += 1;
                 ennemi.drop_quantite_max += 1;
@@ -826,9 +865,12 @@ public class Combat {
             case GOLEM_MITHRIL -> {
                 ennemi.nom = "golem de mithril";
                 ennemi.attaque += rand.nextInt(8) + 4;
+                ennemi.attaque_base = ennemi.attaque;
                 ennemi.vie_max += rand.nextInt(12) + 9;
                 ennemi.vie = ennemi.vie_max;
+                ennemi.vie_base = ennemi.vie;
                 ennemi.armure += rand.nextInt(6) + 4;
+                ennemi.armure_base = ennemi.armure;
                 ennemi.niveau_drop_max += 2;
                 ennemi.niveau_drop_min += 1;
                 ennemi.drop_quantite_max += 2;
