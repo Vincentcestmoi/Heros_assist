@@ -2,6 +2,7 @@ import java.util.Random;
 
 public class Lieu {
 
+    //TODO : docstrings everywhere
     static Random random = new Random();
 
     public static Monstre enfers(){
@@ -128,6 +129,50 @@ public class Lieu {
             race = Race.olympe[random.nextInt(Race.olympe.length)];
         }while (race == null);
         return new Monstre(race);
+    }
+
+    /**
+     * Renvoie un monstre de la position demandé en supprimant les chances qu'il vienne d'une position voisine
+     * @param pos la position dont on veut le monstre
+     * @return un Monstre
+     */
+    public static Monstre true_monstre(Position pos) {
+        return switch (pos) {
+            case ENFERS -> true_enfers();
+            case PRAIRIE -> true_prairie();
+            case VIGNES -> true_vigne();
+            case TEMPLE -> true_temple();
+            case MER -> true_mer();
+            case MONTS -> true_mont();
+            case OLYMPE -> olympe();
+            case ASCENDANT -> {
+                System.out.println("ERROR : DONOT");
+                yield true_enfers();
+            }
+        };
+    }
+
+    /**
+     * Renvoie un monstre de la position demandé en supprimant les chances qu'il vienne d'une position voisine
+     * @param pos la position dont on veut le monstre
+     * @return un Monstre
+     */
+    public static Monstre true_monstre(Position pos, boolean next_pos) {
+        if(!next_pos){
+            return true_monstre(pos);
+        }
+        return switch (pos) {
+            case ENFERS -> true_prairie();
+            case PRAIRIE -> true_vigne();
+            case VIGNES -> true_temple();
+            case TEMPLE -> true_mer();
+            case MER -> true_mont();
+            case MONTS, OLYMPE -> olympe();
+            case ASCENDANT -> {
+                System.out.println("ERROR : DONOT");
+                yield true_enfers();
+            }
+        };
     }
 
 }
