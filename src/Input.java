@@ -3,12 +3,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.Objects;
 
 public class Input {
 
-    private final String[] fichLoad = {"Joueur A", "Joueur B", "Joueur C", "Joueur D", "Joueur E", "Joueur F", "Joueur G",
-            "Joueur H", "enfers", "prairie", "vigne", "temple", "mer", "mont", "olympe", "rangO", "rangI", "rangII", "rangIII", "rangIV",
+    private static final String[] fichLoad = {"nbj", "enfers", "prairie", "vigne", "temple", "mer", "mont", "olympe", "rangO", "rangI", "rangII", "rangIII", "rangIV",
             "promo_monture", "promo_artefact", "promo_renforcement"};
 
 
@@ -16,64 +14,66 @@ public class Input {
 
     /**
      * Sauvegarde les données enregistrées, ne touche rien si les données sont innaccessibles
+     * @return true si une sauvegarde a été chargée, false sinon
      */
-    public void load() throws IOException {
-        File fichier = new File(Main.Path + fichLoad[0] + Main.Ext);
-        if (!fichier.exists() || read_log(fichLoad[0]).equals(";")) {
-            return;
+    public static boolean load() throws IOException {
+
+        //choix save
+        boolean[] has_save = new boolean[Main.nb_save];
+        StringBuilder text = new StringBuilder("Choississez une sauvegarde : ");
+        for (int i = 0; i < Main.nb_save; i++) {
+            File fichier = new File(Main.Path + i + "/" + fichLoad[0]);
+            text.append(i);
+            has_save[i] = (fichier.exists() && !read_log(i + "/" + fichLoad[0]).equals(";"));
+            if (!has_save[i]) {
+                text.append(" (vide)");
+            }
+            text.append("\n");
         }
-        if (!yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la suppression")) {
-            for(String s : fichLoad) {
+        int reponse;
+        do {
+            System.out.println(text);
+            reponse = readInt();
+        } while (reponse < 0 || reponse >= Main.nb_save);
+
+        Main.Path += reponse + "/";
+
+        // charger ou nouvelle partie
+        if (has_save[reponse] && !yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la suppression")) {
+            for (String s : fichLoad) {
                 Output.delete_fichier(s);
             }
             System.out.println("lancement du jeu.\n\n");
-            return;
+            return false;
         }
-        else {
-            // taille temporaire pour les data
-            Main.nom = new String[Main.nbj_max];
-            Main.f = new int[Main.nbj_max];
-            Main.positions = new Position[Main.nbj_max];
-            Main.metier = new Metier[Main.nbj_max];
 
-            //joueurs
-            for(int i = 0; i < Main.nbj_max; i++) {
-                if (load_j(fichLoad[i], i)) {
-                    System.out.println(Main.nom[i] + ", " + Output.texte_metier(Main.metier[i]) + ", chargé(e) avec succès " + Main.texte_pos(Main.positions[i]) + ".");
-                    Main.nbj++;
-                }
-                else{
-                    System.out.println(Main.nbj + " joueur(s) chargé(s) avec succés.");
-                    break;
-                }
-            }
+        //charger
+        String temp = read_log("nbj");
+        Main.nbj = Integer.parseInt(temp);
+        Main.joueurs = new Joueur[Main.nbj];
 
-            // on réduit à la bonne taille les listes
-            String[] t_nom = new String[Main.nbj];
-            System.arraycopy(Main.nom, 0, t_nom, 0, Main.nbj);
-            Main.nom = t_nom;
-            int[] t_f = new int[Main.nbj];
-            System.arraycopy(Main.f, 0, t_f, 0, Main.nbj);
-            Main.f = t_f;
-            Position[] t_pos = new Position[Main.nbj];
-            System.arraycopy(Main.positions, 0, t_pos, 0, Main.nbj);
-            Main.positions = t_pos;
-            Metier[] metier = new Metier[Main.nbj];
-            System.arraycopy(Main.metier, 0, metier, 0, Main.nbj);
-            Main.metier = metier;
-
-            //monstre nommé
-            corrige_nomme();
-            //item unique
-            corrige_item();
+        //joueurs
+        for (int i = 0; i < Main.nbj; i++) {
+            temp = Main.Path + "Joueur" + i + ".json";
+            Joueur joueur = new Joueur(temp);
+            System.out.println("Joueur chargé avec succès :");
+            joueur.presente();
+            Main.joueurs[i] = joueur;
         }
+
+        //monstre nommé
+        corrige_nomme();
+        //item unique
+        corrige_item();
+
         System.out.println("lancement du jeu.\n\n");
+        return true;
     }
 
     /**
      * Supprime les objets uniques déjà tirés
      */
-    private void corrige_item() {
+    private static void corrige_item() {
         String[] nomFichier = {"rangO", "rangI", "rangII", "rangIII", "rangIV", "promo_monture", "promo_artefact", "promo_renforcement"};
         Rang[] rang = {Rang.O, Rang.I, Rang.II, Rang.III, Rang.IV, Rang.PROMOTION, Rang.PROMOTION, Rang.PROMOTION};
         Promo_Type[] promo = {Promo_Type.QUIT, Promo_Type.QUIT, Promo_Type.QUIT, Promo_Type.QUIT, Promo_Type.QUIT,
@@ -102,7 +102,7 @@ public class Input {
     /**
      * Supprime les monstres nommés enregistrés comme abscent
      */
-    private void corrige_nomme() {
+    private static void corrige_nomme() {
         String[] nomFichier = {"enfers", "prairie", "vigne", "temple", "mer", "mont", "olympe"};
         String log;
         for (String s : nomFichier) {
@@ -126,99 +126,12 @@ public class Input {
     }
 
     /**
-     * Charge les données d'un joueur
-     * @param nomFichier le chemin de la sauvegarde
-     * @param index l'index correspondant au joueur
-     * @return si le chargement a eu lieu
-     * @implNote suppose que le fichier est correctement formaté, le cas contraire cause des crashs
-     */
-    private boolean load_j(String nomFichier, int index) {
-        String log = read_log(nomFichier);
-        if(log.isEmpty() || log.charAt(0) == ';') {
-            return false;
-        }
-
-        //nom
-        StringBuilder temp = new StringBuilder();
-        int i = 0;
-        while (log.charAt(i) != ',') {
-            temp.append(log.charAt(i));
-            i++;
-        }
-        Main.nom[index] = temp.toString();
-        temp = new StringBuilder();
-        i++;
-
-        //metier
-        while (log.charAt(i) != ',') {
-            temp.append(log.charAt(i));
-            i++;
-        }
-        setJob(String.valueOf(temp), index);
-        temp = new StringBuilder();
-        i++;
-
-        // position
-        while (log.charAt(i) != ',') {
-            temp.append(log.charAt(i));
-            i++;
-        }
-        Main.positions[index] = switch (temp.toString()) {
-            case "ENFERS" ->  Position.ENFERS;
-            case "PRAIRIE" ->  Position.PRAIRIE;
-            case "VIGNES" ->  Position.VIGNES;
-            case "TEMPLE" ->  Position.TEMPLE;
-            case "MER" ->  Position.MER;
-            case "MONTS" ->  Position.MONTS;
-            case "OLYMPE" ->  Position.OLYMPE;
-            case "ASCENDANT" -> {
-                System.out.println("ERROR : DONOT");
-                yield Position.PRAIRIE;
-            }
-            default -> {
-                System.out.println("ERROR : UNKNOW POSITION : " + temp);
-                yield Position.PRAIRIE;
-            }
-        };
-
-        //familier
-        Main.f[index] = (int)log.charAt(i + 1) - 48;
-        return true;
-    }
-
-    private void setJob(String temp, int index) {
-        Metier job;
-        if(Objects.equals(temp, Output.texte_metier(Metier.NECROMANCIEN))) {
-            job = Metier.NECROMANCIEN;
-        }
-        else if(Objects.equals(temp, Output.texte_metier(Metier.ARCHIMAGE))) {
-            job = Metier.ARCHIMAGE;
-        }
-        else if(Objects.equals(temp, Output.texte_metier(Metier.ALCHIMISTE))) {
-            job = Metier.ALCHIMISTE;
-        }
-        else if(Objects.equals(temp, Output.texte_metier(Metier.GUERRIERE))) {
-            job = Metier.GUERRIERE;
-        }
-        else if(Objects.equals(temp, Output.texte_metier(Metier.RANGER))) {
-            job = Metier.RANGER;
-        }
-        else if(Objects.equals(temp, Output.texte_metier(Metier.SHAMAN))) {
-            job = Metier.SHAMAN;
-        }
-        else {
-            job = Metier.AUCUN;
-        }
-        Main.metier[index] = job;
-    }
-
-    /**
      * Lis un fichoer
      * @param cheminFichier le chemin du fichier
      * @return le contenu du fichier
      */
     public static String read_log(String cheminFichier) {
-        File fichier = new File(Main.Path + cheminFichier + Main.Ext);
+        File fichier = new File(Main.Path + cheminFichier);
         StringBuilder text = new StringBuilder();
 
         if (!fichier.exists()) {
@@ -255,7 +168,7 @@ public class Input {
      * @return le texte lu
      * @throws IOException en cas de problème ?
      */
-    public String read() throws IOException {
+    public static String read() throws IOException {
         StringBuilder readed = new StringBuilder();
         int temp = System.in.read();
         while (temp != 10) {
@@ -272,7 +185,7 @@ public class Input {
      * @return la valeur
      * @throws IOException en cas de problème ?
      */
-    public int readInt() throws IOException {
+    public static int readInt() throws IOException {
         int number;
         while (true) {
             number = 0;
@@ -305,11 +218,11 @@ public class Input {
 
     /**
      * Demande au joueur le résultat d'un jet 4 et le renvoie
-     *
+     * majoration par 6.
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
-    public int D4() throws IOException {
+    public static int D4() throws IOException {
         System.out.print("D4 : ");
         Output.jouerSonDe();
         int temp = readInt();
@@ -321,11 +234,11 @@ public class Input {
 
     /**
      * Demande au joueur le résultat d'un jet 6 et le renvoie
-     *
+     * majoration par 8.
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
-    public int D6() throws IOException {
+    public static int D6() throws IOException {
         System.out.print("D6 : ");
         Output.jouerSonDe();
         int temp = readInt();
@@ -337,11 +250,11 @@ public class Input {
 
     /**
      * Demande au joueur le résultat d'un jet 8 et le renvoie
-     *
+     * majoration par 10
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
-    public int D8() throws IOException {
+    public static int D8() throws IOException {
         System.out.print("D8 : ");
         Output.jouerSonDe();
         int temp = readInt();
@@ -353,11 +266,11 @@ public class Input {
 
     /**
      * Demande au joueur le résultat d'un jet 10 et le renvoie
-     *
+     * majoration par 12
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
-    public int D10() throws IOException {
+    public static int D10() throws IOException {
         System.out.print("D10 : ");
         Output.jouerSonDe();
         int temp = readInt();
@@ -369,11 +282,11 @@ public class Input {
 
     /**
      * Demande au joueur le résultat d'un jet 12 et le renvoie
-     *
+     * majoration par 14
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
-    public int D12() throws IOException {
+    public static int D12() throws IOException {
         System.out.print("D12 : ");
         Output.jouerSonDe();
         int temp = readInt();
@@ -385,11 +298,11 @@ public class Input {
 
     /**
      * Demande au joueur le résultat d'un jet 20 et le renvoie
-     *
+     * majoration par 22
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
-    public int D20() throws IOException {
+    public static int D20() throws IOException {
         System.out.print("D20 : ");
         Output.jouerSonDe();
         int temp = readInt();
@@ -403,7 +316,7 @@ public class Input {
      * Pose une question au joueur
      * @return s'il a répondu oui
      */
-    public boolean yn(String question) throws IOException {
+    public static boolean yn(String question) throws IOException {
         while(true) {
             System.out.print(question + " O/n ");
             String reponse = read();
@@ -423,7 +336,7 @@ public class Input {
      * @return le nombre donné par le joueur
      * @throws IOException en cas de problème ?
      */
-    public int atk() throws IOException {
+    public static int atk() throws IOException {
         System.out.print("entrez votre attaque actuelle : ");
         return readInt();
     }
@@ -434,7 +347,7 @@ public class Input {
      * @return le nombre donné par le joueur
      * @throws IOException en cas de problème ?
      */
-    public int tir() throws IOException {
+    public static int tir() throws IOException {
         System.out.print("entrez votre puissance de tir actuelle : ");
         return readInt();
     }
@@ -445,7 +358,7 @@ public class Input {
      * @return le nombre donné par le joueur
      * @throws IOException en cas de problème ?
      */
-    public int vie() throws IOException {
+    public static int vie() throws IOException {
         System.out.print("entrez votre résistance actuelle : ");
         return readInt();
     }
@@ -456,7 +369,7 @@ public class Input {
      * @return le nombre donné par le joueur
      * @throws IOException en cas de problème ?
      */
-    public int def() throws IOException {
+    public static int def() throws IOException {
         System.out.print("entrez votre armure actuelle : ");
         return readInt();
     }
@@ -467,7 +380,7 @@ public class Input {
      * @return le nombre donné par le joueur
      * @throws IOException en cas de problème ?
      */
-    public int magie() throws IOException {
+    public static int magie() throws IOException {
         System.out.print("entrez votre puissance d'attaque magique : ");
         return readInt();
     }
@@ -476,7 +389,7 @@ public class Input {
      * Laisse le joueur choisir sa promotion
      * @return un indice sur le type de promotion que le joueur veut
      */
-    public Promo_Type promo() throws IOException {
+    public static Promo_Type promo() throws IOException {
         String texte = "Choississez votre type de récompense : ";
         if(Pre_Equipement.nb_monture > 0){
             texte += "(m)onture ";
@@ -514,30 +427,31 @@ public class Input {
     }
 
     /**
-     * Demande au joueur l'action qu'il veut mener et renvoie un int correspondant
-     *
-     * @param index              l'index du joueur (ou du familié associé)
-     * @param est_familier       s'il s'agit d'un familier
-     * @param est_premiere_ligne si la cible est en première ligne
-     * @param mort la liste des morts
-     * @return un int correspondant à l'action
-     * @throws IOException en cas de problème ?
+     * Demande au joueur l'action qu'il veut mener et la transmet
+     * @param joueur le joueur qui réalise l'action
+     * @param est_familier s'il s'agit d'un familier
+     * @return l'action choisit
+     * @throws IOException toujours
      */
-    public Action action(int index, Boolean est_familier, Boolean est_premiere_ligne, boolean[] mort, boolean est_berserk) throws IOException {
+    public static Action action(Joueur joueur, boolean est_familier) throws IOException {
+        if(est_familier && !joueur.familier_peut_jouer()){
+            return Action.AUTRE;
+        }
         String text;
         boolean ya_mort = false;
         for (int i = 0; i < Main.nbj; i++) {
-            if (mort[i]) {
+            if (Main.joueurs[i].est_mort()) {
                 ya_mort = true;
                 break;
             }
         }
         if (!est_familier) { // joueur
-            text = Main.nom[index] + " entrez votre action : (A)ttaquer/(t)irer";
+            text = joueur.getNom() + " entrez votre action : (A)ttaquer/(t)irer";
+            /*
             if(!est_berserk && Main.metier[index] != Metier.ARCHIMAGE){
                 text += "/(m)agie";
             }
-            if (est_premiere_ligne) {
+            if (joueur.est_front()) {
                 text += "/a(s)sommer";
                 if(!est_berserk){
                     text += "/(e)ncaisser/(d)omestiquer";
@@ -578,11 +492,11 @@ public class Input {
                     yield "/(la)me d'aura";
                 }
                 case RANGER -> {
-                    if(est_premiere_ligne && est_berserk) {
+                    if(joueur.est_front() && est_berserk) {
                         yield "/(as)saut";
                     }
                     if(!est_berserk){
-                        if(est_premiere_ligne){
+                        if(joueur.est_front()){
                             yield "/(co)ut critique";
                         }
                         yield "/(co)up critique/(as)sassinat";
@@ -600,12 +514,9 @@ public class Input {
                     yield "/(pa)ix intérieure";
                 }
                 case AUCUN -> "";
-            };
+            };*/ //TODO
         } else { //familier
-            text = "Donnez un ordre au familier de " + Main.nom[index - Main.nbj] + " (A)ttaquer/(f)uir/(c)ustom/(o)ff";
-            if (!est_premiere_ligne) {
-                text += "/(s)'avancer";
-            }
+            text = "Donnez un ordre au familier de " + joueur.getNom() + " (A)ttaquer/(f)uir/(c)ustom/(o)ff";
         }
         text += " : ";
         System.out.println(text);
@@ -624,166 +535,169 @@ public class Input {
                     yield Action.TIRER;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, true, est_premiere_ligne, mort, est_berserk);
+                yield action(joueur, true);
             }
             case "M", "m" -> {
-                if (!est_familier && !est_berserk) {
+                if (!est_familier && !joueur.est_berserk()) {
                     yield Action.MAGIE;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(joueur, est_familier);
             }
             case "P", "p" -> {
-                if (!est_familier && !est_berserk) {
+                if (!est_familier && !joueur.est_berserk()) {
                     yield Action.SOIGNER;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(joueur, est_familier);
             }
             case "n", "N" -> {
-                if (!est_familier && !est_berserk) {
+                if (!est_familier && !joueur.est_berserk()) {
                     yield Action.ANALYSER;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(joueur, est_familier);
             }
 
             // joueur en première ligne
             case "S", "s" -> {
-                if (est_premiere_ligne && !est_familier) {
+                if(est_familier){
+                    System.out.println("Action non reconnue.");
+                    yield action(joueur, true);
+                }
+                if (joueur.est_front()) {
                     yield Action.ASSOMER;
-                } else if (!est_premiere_ligne) {
+                } else {
                     yield Action.AVANCER;
                 }
-                System.out.println("Action non reconnue.");
-                yield action(index, true, true, mort, est_berserk);
             }
             case "E", "e" -> {
-                if (est_premiere_ligne && !est_familier && !est_berserk) {
+                if (joueur.est_front() && !est_familier && !joueur.est_berserk()) {
                     yield Action.ENCAISSER;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(joueur, est_familier);
             }
             case "D", "d" -> {
-                if (est_premiere_ligne && !est_familier &&!est_berserk) {
+                if (joueur.est_front() && !est_familier &&!joueur.est_berserk()) {
                     yield Action.DOMESTIQUER;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(joueur, est_familier);
             }
 
+            /*
             // action métier
             case "ma", "MA", "Ma", "mA" -> {
-                if (index < Main.nbj && Main.metier[index] == Metier.NECROMANCIEN && !est_berserk) {
+                if (index < Main.nbj && Main.metier[index] == Metier.NECROMANCIEN && !joueur.est_berserk()) {
                     yield Action.MAUDIR;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(index, est_familier, joueur.est_front(), mort, joueur.est_berserk());
             }
 
             case "me", "ME", "Me", "eM" -> {
-                if (index < Main.nbj && Main.metier[index] == Metier.ARCHIMAGE && !est_berserk) {
+                if (index < Main.nbj && Main.metier[index] == Metier.ARCHIMAGE && !joueur.est_berserk()) {
                     yield Action.MEDITATION;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(index, est_familier, joueur.est_front(), mort, joueur.est_berserk());
             }
             case "so", "SO", "So", "sO" -> {
-                if (index < Main.nbj && Main.metier[index] == Metier.ARCHIMAGE && !est_berserk) {
+                if (index < Main.nbj && Main.metier[index] == Metier.ARCHIMAGE && !joueur.est_berserk()) {
                     yield Action.SORT;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(index, est_familier, joueur.est_front(), mort, joueur.est_berserk());
             }
             case "fo", "FO", "Fo", "fO" -> {
-                if (index < Main.nbj && Main.metier[index] == Metier.ALCHIMISTE && !est_berserk){
+                if (index < Main.nbj && Main.metier[index] == Metier.ALCHIMISTE && !joueur.est_berserk()){
                     yield Action.FOUILLE;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(index, est_familier, joueur.est_front(), mort, joueur.est_berserk());
             }
             case "co", "CO", "Co", "cO" -> {
-                if (index < Main.nbj && Main.metier[index] == Metier.ALCHIMISTE && !est_berserk) {
+                if (index < Main.nbj && Main.metier[index] == Metier.ALCHIMISTE && !joueur.est_berserk()) {
                     yield Action.CONCOCTION;
                 }
-                if (index < Main.nbj && Main.metier[index] == Metier.RANGER && !est_berserk) {
+                if (index < Main.nbj && Main.metier[index] == Metier.RANGER && !joueur.est_berserk()) {
                     yield Action.CRITIQUE;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(index, est_familier, joueur.est_front(), mort, joueur.est_berserk());
             }
             case "re", "RE", "Re", "rE" -> {
-                if (ya_mort && index < Main.nbj && Main.metier[index] == Metier.ALCHIMISTE && !est_berserk) {
+                if (ya_mort && index < Main.nbj && Main.metier[index] == Metier.ALCHIMISTE && !joueur.est_berserk()) {
                     yield Action.POTION_REZ;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(index, est_familier, joueur.est_front(), mort, joueur.est_berserk());
             }
 
             case "be", "BE", "Be", "bE" -> {
-                if (index < Main.nbj && Main.metier[index] == Metier.GUERRIERE && !est_berserk) {
+                if (index < Main.nbj && Main.metier[index] == Metier.GUERRIERE && !joueur.est_berserk()) {
                     yield Action.BERSERK;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(index, est_familier, joueur.est_front(), mort, joueur.est_berserk());
             }
             case "la", "LA", "La", "lA" -> {
                 if (index < Main.nbj && Main.metier[index] == Metier.GUERRIERE) {
                     yield Action.LAME_DAURA;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(index, est_familier, joueur.est_front(), mort, joueur.est_berserk());
             }
             case "as", "AS", "As", "aS" -> {
                 if (index < Main.nbj && Main.metier[index] == Metier.RANGER) {
-                    if(est_berserk && est_premiere_ligne){
+                    if(joueur.est_berserk() && joueur.est_front()){
                         yield Action.ASSAUT;
                     }
                     yield Action.ASSASSINAT;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(index, est_familier, joueur.est_front(), mort, joueur.est_berserk());
             }
             case "in", "IN", "In", "iN" -> {
                 if (index < Main.nbj && Main.metier[index] == Metier.SHAMAN) {
                     yield Action.INCANTATION;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(index, est_familier, joueur.est_front(), mort, joueur.est_berserk());
             }
             case "li", "LI", "Li", "lI" -> {
                 if (index < Main.nbj && Main.metier[index] == Metier.SHAMAN && Main.f[index] == 0) {
                     yield Action.LIEN;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(index, est_familier, joueur.est_front(), mort, joueur.est_berserk());
             }
             case "pa", "PA", "Pa", "pA" -> {
-                if (index < Main.nbj && Main.metier[index] == Metier.SHAMAN && est_berserk) {
+                if (index < Main.nbj && Main.metier[index] == Metier.SHAMAN && joueur.est_berserk()) {
                     yield Action.CALME;
                 }
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
-            }
+                yield action(index, est_familier, joueur.est_front(), mort, joueur.est_berserk());
+            }*/ //TODO
 
             // actions particulières
             case "q", "Q" -> {
                 if (yn("Confirmez ")) {
                     yield Action.END;
                 }
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(joueur, est_familier);
             }
             case "r", "R" -> {
                 if (yn("Confirmez ")) {
                     yield Action.RETOUR;
                 }
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(joueur, est_familier);
             }
 
             default -> {
                 System.out.println("Action non reconnue.");
-                yield action(index, est_familier, est_premiere_ligne, mort, est_berserk);
+                yield action(joueur, est_familier);
             }
         };
     }
@@ -795,7 +709,7 @@ public class Input {
      * @param premier_ligne l'indice du participant de première ligne
      * @return si la cible est en première ligne
      */
-    public boolean ask_heal(String[] nom, boolean[] actif, int premier_ligne) throws IOException {
+    public static boolean ask_heal(String[] nom, boolean[] actif, int premier_ligne) throws IOException {
         int i = 0;
         while (true) {
             if (actif[i]) {
@@ -812,7 +726,7 @@ public class Input {
      * @param mort le booléen de descès des participants
      * @return l'indice du ressucité
      */
-    public int ask_rez(boolean[] mort) throws IOException {
+    public static int ask_rez(boolean[] mort) throws IOException {
         boolean ok = false;
         for(int i = 0; i < Main.nbj; i++){
             if (mort[i]) {
@@ -827,7 +741,7 @@ public class Input {
         int i = 0;
         while (true) {
             if (mort[i]) {
-                if (yn("Voulez vous rescussiter " + Main.nom[i] + " ?")) {
+                if (yn("Voulez vous rescussiter " + Main.joueurs[i].getNom() + " ?")) {
                     return i;
                 }
             }
@@ -837,26 +751,19 @@ public class Input {
 
     /**
      * Demande au joueur ce qu'il fait de son tour
-     * @param position la position du joueur
-     * @param obe l'obéissance du familier du joueur
+     * @param index l'index du joueur dont c'est le tour
      * @return : un choix correspondant
      */
-    Choix tour(Position position, int obe, int index) throws IOException {
+    static Choix tour(int index) throws IOException {
+        Joueur joueur = Main.joueurs[index];
+        Position position = joueur.getPosition();
         while (true) {
             String text = "Que voulez-vous faire : (E)xplorer";
             boolean peut_descendre =  position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
             boolean peut_monter = position != Position.OLYMPE;
             boolean market = position != Position.OLYMPE && position != Position.ENFERS;
-            boolean peut_entrainer = obe > 0 && obe < 3;
-            if(Main.metier[index] == Metier.ALCHIMISTE){
-                text += "/(fo)uiller/(co)ncocter des potions";
-            }
-            if(Main.metier[index] == Metier.ARCHIMAGE){
-                text += "/(me)ditation";
-            }
-            if(Main.metier[index] == Metier.NECROMANCIEN){
-                text += "/(ap)pel des morts";
-            }
+            boolean peut_entrainer = joueur.a_familier() && !joueur.familier_loyalmax();
+            text += joueur.text_tour();
             if(peut_descendre){
                 text += "/(d)escendre";
             }
@@ -871,7 +778,8 @@ public class Input {
             }
             text += "/(c)ustom ?";
             System.out.println(text);
-            switch (read()) {
+            String readed = read();
+            switch (readed) {
 
                 // normaux
                 case "E", "e", "explorer", "Explorer", "" -> {
@@ -938,76 +846,12 @@ public class Input {
                     }
                 }
 
-                // par métier
-                case "ap", "AP", "Ap", "aP" -> {
-                    if(Main.metier[index] == Metier.NECROMANCIEN){
-                        return Choix.NECROMANCIE;
+                default -> {
+                    if (joueur.tour(readed)) {
+                        return Choix.AUCUN;
                     }
                     System.out.println("Input unknow");
                 }
-                case "fo", "FO", "Fo", "fO" -> {
-                    if(Main.metier[index] == Metier.ALCHIMISTE){
-                        return Choix.FOUILLE;
-                    }
-                    System.out.println("Input unknow");
-                }
-                case "co", "CO", "Co", "cO" -> {
-                    if(Main.metier[index] == Metier.ALCHIMISTE){
-                        return Choix.CONCOCTION;
-                    }
-                    System.out.println("Input unknow");
-                }
-                case "me", "ME", "Me", "mE" -> {
-                    if(Main.metier[index] == Metier.ARCHIMAGE){
-                        return Choix.MEDITATION;
-                    }
-                    System.out.println("Input unknow");
-                }
-                case "adgr" -> {
-                    if(Main.metier[index] == Metier.ARCHIMAGE){
-                        System.out.println("Confirmez");
-                        if(read().equals("adgr")) {
-                            return Choix.ADD_GREAT_RUNE;
-                        }
-                    }
-                    else {
-                        System.out.println("Input unknow");
-                    }
-                }
-                case "admr" -> {
-                    if(Main.metier[index] == Metier.ARCHIMAGE){
-                        System.out.println("Confirmez");
-                        if(read().equals("admr")) {
-                            return Choix.ADD_MINOR_RUNE;
-                        }
-                    }
-                    else {
-                        System.out.println("Input unknow");
-                    }
-                }
-                case "dgr" -> {
-                    if(Main.metier[index] == Metier.ARCHIMAGE){
-                        System.out.println("Confirmez");
-                        if(read().equals("dgr")) {
-                            return Choix.DEL_GREAT_RUNE;
-                        }
-                    }
-                    else {
-                        System.out.println("Input unknow");
-                    }
-                }
-                case "dmr" -> {
-                    if(Main.metier[index] == Metier.ARCHIMAGE){
-                        System.out.println("Confirmez");
-                        if(read().equals("dmr")) {
-                            return Choix.DEL_MINOR_RUNE;
-                        }
-                    }
-                    else {
-                        System.out.println("Input unknow");
-                    }
-                }
-                default -> System.out.println("Input unknow");
             }
         }
     }
@@ -1017,7 +861,7 @@ public class Input {
      * @return le type de potion
      * @throws IOException toujours
      */
-    public Action concoction() throws IOException {
+    public static Action concoction() throws IOException {
         System.out.println("Quel type de potion voulez vous concocter : (re)sistance/(al)éatoire/(di)vine/en (se)rie/" +
                 "(en)ergie/(fo)rce/(in)stable/(mi)racle/(so)in/(to)xique/(c)ustom ?");
         return switch(read()){
@@ -1044,7 +888,7 @@ public class Input {
      * @return le sort à lancer
      * @throws IOException toujours
      */
-    public Action sort() throws IOException {
+    public static Action sort() throws IOException {
         System.out.println("Quel sort voulez vous lancer : (bo)ule de feu/(ar)mure de glace/(on)de de choc/(fo)udre/(c)ustom ?");
         return switch(read()){
             case "bo", "BO", "Bo", "bO" -> Action.BDF;
@@ -1064,7 +908,7 @@ public class Input {
      * @return l'incantation à lancer
      * @throws IOException toujours
      */
-    public Action incantation() throws IOException {
+    public static Action incantation() throws IOException {
         System.out.println("Quel type d'incantation voulez-vous réciter : (ap)pelle des nuages/(ch)ant de colère/(be)nédiction/(in)vocation des éléments ?");
         return switch(read()){
             case "ap", "AP", "Ap", "aP" -> Action.NUAGE;
