@@ -471,6 +471,7 @@ public class Main {
             joueurs[i] = Joueur.CreerJoueur(nom, Position.PRAIRIE, metier, 0);
             joueurs[i].presente_base();
             joueurs[i].presente();
+            System.out.println();
         }
     }
 
