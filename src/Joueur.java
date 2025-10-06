@@ -3,77 +3,64 @@ import java.util.Random;
 import javax.json.*;
 import java.io.*;
 
-public class Joueur {
-    private final String nom;
+public abstract class Joueur {
+    protected final String nom;
     private Position position;
-    private final Metier metier;
     private int ob_f;
 
     // en combat
-    private boolean front;
-    private boolean actif;
-    private boolean vivant;
-    private boolean conscient;
-    private boolean skip;
-    private int reveil;
-    private float berserk;
+    protected boolean front;
+    protected boolean actif;
+    protected boolean vivant;
+    protected boolean conscient;
+    protected boolean skip;
+    protected int reveil;
+    protected float berserk;
 
     //familier en combat
-    private boolean f_front;
-    private boolean f_actif;
-    private boolean f_vivant;
-    private boolean f_conscient;
-    private boolean f_skip;
-    private int f_reveil;
-    private float f_berserk;
+    protected boolean f_front;
+    protected boolean f_actif;
+    protected boolean f_conscient;
+    protected boolean f_skip;
+    protected int f_reveil;
+    protected float f_berserk;
 
+    Joueur(String nom, Position position, int ob_f){
+        this.nom = nom;
+        this.position = position;
+        this.ob_f = ob_f;
+    }
 
-    Joueur(String chemin) throws FileNotFoundException {
+    public static Joueur chargerJoueur(String chemin) throws IOException {
         try (JsonReader reader = Json.createReader(new FileReader(chemin))) {
             JsonObject json = reader.readObject();
 
-            nom = json.getString("nom");
-            metier = Metier.valueOf(json.getString("metier")); // String → Enum
-            position = Position.valueOf(json.getString("position")); // String → Enum
-            ob_f = json.getInt("ob_f");
+            String nom = json.getString("nom");
+            Metier metier = Metier.valueOf(json.getString("metier"));
+            int ob_f = json.getInt("ob_f");
+            Position position = Position.valueOf(json.getString("position"));
+
+            return CreerJoueur(nom, position, metier, ob_f);
         }
     }
 
-    // chargement
-    Joueur(String nom, Position position, Metier metier, int ob_f) {
-        this.nom = nom;
-        this.position = position;
-        this.metier = metier;
-        this.ob_f = ob_f;
+    public static Joueur CreerJoueur(String nom, Position position, Metier metier, int ob_f) {
+        return switch (metier) {
+            case NECROMANCIEN -> new Necromancien(nom, position, ob_f);
+            case ARCHIMAGE -> new Archimage(nom, position, ob_f);
+            case ALCHIMISTE -> new Alchimiste(nom, position, ob_f);
+            case GUERRIERE -> new Guerriere(nom, position, ob_f);
+            case RANGER -> new Ranger(nom, position, ob_f);
+            case SHAMAN -> new Shaman(nom, position, ob_f);
+            case AUCUN -> new Tryharder(nom, position, ob_f);
+        };
     }
+
+    abstract protected Metier getMetier();
 
     static Random rand = new Random();
 
     //************************************************GETTER**********************************************************//
-
-    public boolean est_alchimiste(){
-        return metier.equals(Metier.ALCHIMISTE);
-    }
-
-    public boolean est_archimage(){
-        return metier.equals(Metier.ARCHIMAGE);
-    }
-
-    public boolean est_ranger(){
-        return metier.equals(Metier.RANGER);
-    }
-
-    public boolean est_necromancien(){
-        return metier.equals(Metier.NECROMANCIEN);
-    }
-
-    public boolean est_shaman(){
-        return metier.equals(Metier.SHAMAN);
-    }
-
-    public boolean est_guerriere(){
-        return metier.equals(Metier.GUERRIERE);
-    }
 
     public boolean a_familier(){
         return ob_f > 0;
@@ -115,12 +102,8 @@ public class Joueur {
         return f_berserk > 0;
     }
 
-    public boolean peut_jouer(){
-        return !skip;
-    }
-
-    public boolean familier_peut_jouer(){
-        return a_familier_actif() && !f_skip;
+    public boolean familier_peut_pas_jouer(){
+        return !a_familier_actif() || f_skip || f_est_assomme();
     }
 
     public boolean est_assomme(){
@@ -128,76 +111,37 @@ public class Joueur {
     }
 
     public boolean f_est_assomme(){
-        return a_familier_actif() && !f_skip;
+        return !f_conscient;
     }
 
     public boolean est_front(){
         return front;
     }
 
-    public boolean f_est_front(){
+    public boolean est_front_f(){
         return f_front;
     }
 
-    public boolean est_mort(){
-        return !vivant;
+    public boolean est_vivant(){
+        return vivant;
     }
 
-    public boolean f_est_mort(){
-        return !f_vivant;
+    public boolean est_pas_activable(){
+        return !est_actif() || !est_vivant();
     }
 
     //************************************************PRESENTATION****************************************************//
 
-    public void presente_base(){
-        switch(metier){
-            case ALCHIMISTE -> {
-                System.out.println("Alchimiste");
-                System.out.println("Base : Résistance : 5 ; attaque : 1 ; PP: 0/0 ; ingrédient : 3/11");
-                System.out.println("Caractéristiques : Dextérité");
-                System.out.println("Pouvoir : Fouille, Dissection, Concoction");
-            }
-            case ARCHIMAGE -> {
-                System.out.println("Archimage");
-                System.out.println("Base : Résistance : 4 ; attaque : 0 ; PP: 10/10");
-                System.out.println("Caractéristiques : Addiction au mana, Maitre de l'énergie, Double incantateur, Manchot, Bruyant");
-                System.out.println("Pouvoir : Méditation, Boule de feu, Armure de glace, Foudre, Onde de choc, Purge");
-            }
-            case RANGER -> {
-                System.out.println("Ranger");
-                System.out.println("Base : Résistance : 4 ; attaque : 2 ; PP: 4/4 ; tir : 3");
-                System.out.println("Caractéristiques : Explorateur, Eclaireur");
-                System.out.println("Pouvoir : Assassinat, Coup critique, Assaut");
-            }
-            case NECROMANCIEN -> {
-                System.out.println("Necromancien");
-                System.out.println("Base : Résistance : 4 ; attaque : 1 ; PP: 6/8");
-                System.out.println("Caractéristiques : Thaumaturge, Rite sacrificiel");
-                System.out.println("Pouvoir : Appel des morts, Résurrection, Zombification, Malédiction");
-            }
-            case SHAMAN -> {
-                System.out.println("Shaman");
-                System.out.println("Base : Résistance : 4 ; attaque : 1 ; PP: 0/0");
-                System.out.println("Caractéristiques : Ancien esprit, Eclaireur");
-                System.out.println("Pouvoir : Lien, Incantation, Paix intérieure");
-            }
-            case GUERRIERE -> {
-                System.out.println("Guerrier");
-                System.out.println("Base : Résistance : 6 ; attaque : 3 ; PP: 1/5");
-                System.out.println("Caractéristiques : Invincible");
-                System.out.println("Pouvoir : Berserk, Lame d'aura");
-            }
-            case AUCUN -> {
-                System.out.println(Output.barrer("chomeur") + "tryharder");
-                System.out.println("Base : Résistance : 5 ; attaque : 1 ; PP: 6/6");
-                System.out.println("Caractéristiques : Aucune");
-                System.out.println("Pouvoir : Aucun");
-            }
-        }
-    }
+    /**
+     * Présente les caractéristiques et statistiques du joueur
+     */
+    abstract void presente_base();
 
+    /**
+     * Présente la condition et position du joueur
+     */
     public void presente(){
-        System.out.print(this.nom + " est " + Main.texte_metier(this.metier) + " et se trouve " + Main.texte_pos(this.position));
+        System.out.print(this.nom + " est " + Main.texte_metier(getMetier()) + " et se trouve " + Main.texte_pos(getPosition()));
         if(a_familier()){
             System.out.print(" avec son familier");
         }
@@ -218,13 +162,18 @@ public class Joueur {
         berserk = 0;
         if(a_familier() && Input.yn("Est-ce que votre familier participe au combat ?")){
             f_actif = true;
-            f_vivant = true;
             f_conscient = true;
             f_skip = false;
             f_reveil = 0;
         }
     }
 
+    /**
+     * Demande au joueur d'aller en première ligne et gère les résultats
+     * @param force si le joueur DOIT passer en première ligne
+     * @return si le joueur passe en première ligne
+     * @throws IOException toujours
+     */
     public boolean faire_front(boolean force) throws IOException {
         if(force || Input.yn(nom + " veut-il passer en première ligne ?")){
             front = true;
@@ -236,36 +185,30 @@ public class Joueur {
         return false;
     }
 
+    public void f_faire_front(){
+        f_front = true;
+    }
+
     public void familier_seul(Monstre ennemi) throws IOException {
-        if(!a_familier_actif() || ob_f <= 3 || !front || f_est_assomme()){
+        if(!a_familier_actif() || ob_f <= 3 || f_est_assomme()){
             return;
         }
-        System.out.println("Votre familier attaque l'ennemi pour vous proteger.");
+        System.out.println("Votre familier attaque l'ennemi pour proteger " + nom + ".");
         f_attaque(ennemi);
+    }
+
+    public void inactiver(){
+        actif = false;
+        f_actif = false;
+    }
+
+    public void f_inactiver(){
+        f_actif = false;
     }
 
     public void fin_affrontement(){
         actif = false;
         f_actif = false;
-    }
-
-    public void passe(){
-        skip = true;
-    }
-
-    public void f_passe(){
-        f_skip = true;
-    }
-
-    public void essaie_reveil_commun() throws IOException {
-        if (Input.D6() + reveil >= 6) {
-            System.out.println(nom + " se réveille.\n");
-            conscient = true;
-            reveil = 0;
-            return;
-        }
-        System.out.println(nom + " est toujours inconscient.");
-        reveil += 1;
     }
 
     public void f_essaie_reveil() throws IOException {
@@ -279,9 +222,80 @@ public class Joueur {
         f_reveil += 1;
     }
 
-    /*********SAVE/LOAD********/
+    public void tirer(Monstre ennemi) throws IOException {
+        int base = Input.tir();
+        float bonus = 0;
+        if (est_berserk()) {
+            bonus = berserk_tir(base);
+            if (bonus == berserk_tir_alliee) {
+                return;
+            }
+        }
+        bonus += critique_tir(base);
+        bonus += bonus_tir();
+        //tir += modificateur; TODO
+        ennemi.tir(base + Main.corriger(bonus, 0));
+    }
 
-    private void f_attaque(Monstre ennemi) throws IOException {
+    public void attaquer(Monstre ennemi) throws IOException {
+        int base = Input.atk();
+        float bonus = 0;
+        if (est_berserk()) {
+            bonus = berserk_atk(base);
+            if (bonus == berserk_atk_alliee) {
+                return;
+            }
+        }
+        bonus += critique_atk(base);
+        bonus += bonus_atk();
+        //bonus += modificateur; TODO
+        ennemi.dommage(base + Main.corriger(bonus, 0));
+    }
+
+    public void rendre_vivant(int malus){
+        vivant = true;
+        int luck = rand.nextInt(4) - malus;
+        if(luck < 0){
+            assomme(4 - malus);
+        }
+    }
+
+    public void rendre_mort(){
+        vivant = false;
+    }
+
+    public void f_rendre_mort(){
+        ob_f = 0;
+        f_actif = false;
+    }
+
+    public void assomme(){
+        assomme(0);
+    }
+
+    public void assomme(int reveil){
+        conscient = false;
+        this.reveil = reveil;
+    }
+
+    public void f_assomme(){
+        f_assomme(0);
+    }
+
+    public void f_assomme(int reveil){
+        f_conscient = false;
+        f_reveil = reveil;
+    }
+
+    public void berserk(float rage){
+        this.berserk = rage;
+    }
+
+    public void f_berserk(float rage){
+        this.f_berserk = rage;
+    }
+
+    protected void f_attaque(Monstre ennemi) throws IOException {
         // berserk
         if (f_est_berserk()) {
 
@@ -292,7 +306,7 @@ public class Joueur {
                     l = rand.nextInt(8);
                 } while (!Main.joueurs[l].est_actif());
                 int temp = Input.atk();
-                temp += Monstre.corriger(temp * (f_berserk / 2));
+                temp += Main.corriger(temp * (f_berserk / 2));
                 System.out.println("Pris(e) de folie, le familier de " + nom + " attaque " + Main.joueurs[l].getNom()
                         + " et lui inflige " + temp + " dommages !");
             }
@@ -311,10 +325,13 @@ public class Joueur {
         ennemi.dommage(Input.atk());
     }
 
+
+    //************************************************SAVE/LOAD*******************************************************//
+
     public void sauvegarder(String chemin) throws IOException {
         JsonObject json = Json.createObjectBuilder()
                 .add("nom", nom)
-                .add("metier", metier.name())
+                .add("metier", getMetier().name())
                 .add("ob_f", ob_f)
                 .add("position", position.name())
                 .build();
@@ -324,8 +341,7 @@ public class Joueur {
         }
     }
 
-
-    /******MAIN*******/
+    //************************************************MAIN************************************************************//
 
     public void descendre(){
         this.position = switch (position) {
@@ -398,7 +414,7 @@ public class Joueur {
         }
     }
     
-    private void monter(){
+    protected void monter(){
         position = switch (position) {
             case ENFERS -> Position.PRAIRIE;
             case PRAIRIE -> Position.VIGNES;
@@ -431,7 +447,7 @@ public class Joueur {
         corrige_ob();
     }
 
-    private int entrainer() throws IOException {
+    protected int entrainer() throws IOException {
         return switch (Input.D6()) {
             case 1 -> {
                 if (Input.D4() <= 2) {
@@ -464,7 +480,7 @@ public class Joueur {
         };
     }
 
-    private void corrige_ob(){
+    protected void corrige_ob(){
         if (ob_f < 0){
            ob_f = 0;
         }
@@ -508,247 +524,331 @@ public class Joueur {
 
     //************************************************METHODE METIER**************************************************//
 
+    /**
+     * Extension de la fonction Input.tour, annonce les choix de métier possibles
+     * @return le texte à ajouter
+     */
     public String text_tour() {
-        return switch (metier) {
-            case ALCHIMISTE -> text_tour_alchimiste();
-            case ARCHIMAGE -> text_tour_archimage();
-            case RANGER -> text_tour_ranger();
-            case GUERRIERE -> text_tour_guerriere();
-            case NECROMANCIEN -> text_tour_necromencien();
-            case SHAMAN -> text_tour_shaman();
-            case AUCUN -> text_tour_aucun();
-        };
+        return "";
     }
 
+    /**
+     * Extension de la fonction Input.tour, permet de jouer les choix de métier
+     * @param choix le choix fait par le joueur
+     * @return si le tour a été joué
+     */
     public boolean tour(String choix) throws IOException {
-        return switch (metier){
-            case ALCHIMISTE -> tour_alchimiste(choix);
-            case ARCHIMAGE -> tour_archimage(choix);
-            case RANGER -> tour_ranger(choix);
-            case GUERRIERE -> tour_guerriere(choix);
-            case NECROMANCIEN -> tour_necromancien(choix);
-            case SHAMAN -> tour_shaman(choix);
-            case AUCUN -> tour_aucun(choix);
-        };
+        return false;
     }
 
-    public int bonus_exploration(){
-        return switch (metier){
-            case ALCHIMISTE -> bonus_exploration_alchimiste();
-            case ARCHIMAGE -> bonus_exploration_archimage();
-            case RANGER -> bonus_exploration_ranger();
-            case GUERRIERE -> bonus_exploration_guerriere();
-            case NECROMANCIEN -> bonus_exploration_necromancien();
-            case SHAMAN -> bonus_exploration_shaman();
-            case AUCUN -> bonus_exploration_aucun();
-        };
-    }
-
-    public void fin_tour_combat(){
-        switch (metier){
-            case ALCHIMISTE -> fin_tour_combat_alchimiste();
-            case ARCHIMAGE -> fin_tour_combat_archimage();
-            case RANGER -> fin_tour_combat_ranger();
-            case GUERRIERE -> fin_tour_combat_guerriere();
-            case NECROMANCIEN -> fin_tour_combat_necromancien();
-            case SHAMAN -> fin_tour_combat_shaman();
-            case AUCUN -> fin_tour_combat_aucun();
+    /**
+     * Extension de la fonction Input.action, annonce les actions possibles du joueur
+     * @return le texte à ajouter
+     */
+    public String text_action(){
+        String text = nom + " entrez votre action : (A)ttaquer/(t)irer";
+        if(!est_berserk() && getMetier() != Metier.ARCHIMAGE){
+            text += "/(m)agie";
         }
+        if(est_front()){
+            text += "/a(s)sommer";
+            if(!est_berserk()){
+                text += "/(e)ncaisser/(d)omestiquer";
+            }
+        }
+        else {
+            text += "/(s)'avancer";
+        }
+        if(!est_berserk()){
+            text += "/(p)remier soin/a(n)alyser";
+        }
+        text += "/(f)uir/(c)ustom/(o)ff";
+        return text;
+    }
+
+    /**
+     * Extension de la fonction Input.action, annonce les actions possibles du familier
+     * @return le texte à ajouter
+     */
+    public String f_text_action(){
+        String text = "Donnez un ordre au familier de " + nom + " (A)ttaquer/(f)uir/(c)ustom";
+        if(est_front_f()){
+            text += "/(e)ncaisser";
+        }
+        else if(est_front()){
+            text += "/pa(s)ser devant/(v)eiller";
+        }
+        return text;
+    }
+
+    /**
+     * Extension de la fonction Input.action, permet de jouer les action de métier
+     * @param choix le choix fait par le joueur (en lowercase)
+     * @param est_familier s'il s'agit d'un familier ou d'un joueur
+     * @return si le tour a été joué
+     */
+    public Action action(String choix, boolean est_familier) throws IOException {
+        return Action.AUCUNE;
+    }
+
+    /**
+     * Contablise les bonus d'exploration des métiers
+     * @return le bonus
+     */
+    public int bonus_exploration(){
+        return 0;
+    }
+
+    /**
+     * Réalise les actions de fin de combat
+     */
+    public void fin_tour_combat(){
         skip = false;
         f_skip = false;
     }
 
+    /**
+     * Essaie de se réveiller (assommé)
+     * @throws IOException toujours
+     */
     public void essaie_reveil() throws IOException {
-        switch (metier){
-            case ALCHIMISTE -> essaie_reveil_alchimiste();
-            case ARCHIMAGE -> essaie_reveil_archimage();
-            case RANGER -> essaie_reveil_ranger();
-            case GUERRIERE -> essaie_reveil_guerriere();
-            case NECROMANCIEN -> essaie_reveil_necromancien();
-            case SHAMAN -> essaie_reveil_shaman();
-            case AUCUN -> essaie_reveil_aucun();
-        }
-    }
-
-    //************************************************ALCHIMISTE******************************************************//
-
-    private String text_tour_alchimiste(){
-        return "/(fo)uiller/(co)ncocter des potions";
-    }
-
-    private boolean tour_alchimiste(String choix) throws IOException {
-        if(choix.equalsIgnoreCase("fo")){
-            Sort.fouille();
-            return true;
-        }
-        if(choix.equalsIgnoreCase("co")){
-            Sort.concocter();
-            return true;
-        }
-        return false;
-    }
-
-    private int bonus_exploration_alchimiste(){
-        return 0;
-    }
-
-    private void fin_tour_combat_alchimiste(){
-
-    }
-
-    private void essaie_reveil_alchimiste() throws IOException {
-        essaie_reveil_commun();
-    }
-
-    //************************************************ARCHIMAGE*******************************************************//
-
-    private static String text_tour_archimage(){
-        return  "/(me)ditation";
-    }
-
-    private boolean tour_archimage(String choix) throws IOException {
-        if(choix.equalsIgnoreCase("me")){
-            Sort.meditation();
-            return true;
-        }
-        return false;
-    }
-
-    private int bonus_exploration_archimage(){
-        return rand.nextInt(2) - 1 /* bruyant */;
-    }
-
-    private void fin_tour_combat_archimage(){
-
-    }
-
-    private void essaie_reveil_archimage() throws IOException {
-        // l'archimage peut se réveiller et jouer quand même via un sort
-        if (Input.yn("Utiliser purge (3PP) pour reprendre conscience ?")) {
+        if (Input.D6() + reveil >= 6) {
             System.out.println(nom + " se réveille.\n");
             conscient = true;
             reveil = 0;
+            return;
         }
-        else{
-            essaie_reveil_commun();
-        }
-        if(est_assomme()){
-            System.out.println(nom + " récupère 1 point de mana.");
-        }
+        System.out.println(nom + " est toujours inconscient.");
+        reveil += 1;
     }
 
-    //************************************************GUERRIER********************************************************//
-
-    private static String text_tour_guerriere(){
-        return "";
+    /**
+     * Indique si le joueur est capable de jouer, c'est-à-dire de choisir une action et de la réaliser
+     * @return true si le joueur peut jouer
+     */
+    public boolean peut_jouer() {
+        return est_actif() && conscient && !skip;
     }
 
-    private boolean tour_guerriere(String choix){
+    /**
+     * Indique si le joueur est capable de ressuciter un autre joueur
+     * @return un booléan correspondant
+     */
+    public boolean peut_ressuciter(){
         return false;
     }
 
-    private int bonus_exploration_guerriere(){
+    /**
+     * Tente de ressuciter un joueur
+     * @param malus un malus à appliquer à la tentative
+     * @return true si la résurection est un succès, false sinon
+     * @throws IOException toujours
+     */
+    public boolean ressuciter(int malus) throws IOException{
+        return false;
+    }
+
+    /**
+     * Indique si le joueur est capable de diriger son familier, c'est-à-dire de lui donner un ordre
+     * @return true si le joueur a un familier et peut lui donner un ordre
+     */
+    public boolean peut_diriger_familier(){
+        return est_actif() && est_vivant() && !est_assomme() && a_familier_actif();
+    }
+
+    /**
+     * Gère les effets de coup critique à l'arc
+     * @param base la puissance de tir originale
+     * @return le bonus de dommages
+     */
+    protected float critique_tir(int base) {
+        if(rand.nextInt(50) == 0) { //2%
+            return base * 0.1f * (rand.nextInt(5) + 1); //10% à 50% de bonus
+        }
         return 0;
     }
 
-    private void fin_tour_combat_guerriere(){
-
-    }
-
-    private void essaie_reveil_guerriere() throws IOException {
-        essaie_reveil_commun();
-    }
-
-    //************************************************NECROMANCIEN****************************************************//
-
-    private static String text_tour_necromencien(){
-        return  "/(ap)pel des morts";
-    }
-
-    private boolean tour_necromancien(String choix) throws IOException {
-        if(choix.equalsIgnoreCase("ap")){
-            Sort.necromancie(position);
-            return true;
+    /**Nombre spécifique indiquant qu'un joueur berserk a tiré sur un allié**/
+    static float berserk_tir_alliee = -256;
+    /**
+     * Gère les effets de la folie du berserk lors de tir à l'arc
+     * @param base la puissance de tir originale
+     * @return le bonus de dommages, ou -1000 si le joueur attaque un allié
+     * @throws IOException toujours
+     */
+    protected float berserk_tir(int base) throws IOException {
+        if (Input.D6() < 2 + berserk) {
+            int i;
+            do {
+                i = rand.nextInt(Main.nbj);
+            } while (!Main.joueurs[i].est_actif());
+            int temp = Input.tir();
+            temp += Main.corriger(temp * (berserk * 0.5f));
+            System.out.println("Pris(e) de folie, " + nom + " attaque " + Main.joueurs[i].getNom() + " et lui inflige " + temp + " dommages !");
+            berserk += 0.1f + rand.nextInt(5) * 0.1f; //0.1 à 0.5 de boost
+            return berserk_tir_alliee;
         }
-        return false;
+        berserk += 0.1f + rand.nextInt(3) * 0.1f; //0.1 à 0.3 de boost
+        return base * berserk;
     }
 
-    private int bonus_exploration_necromancien(){
+    /**
+     * Indique les bonus d'attaque à l'arc
+     * @return la quantité de dommages aditionnel
+     */
+    protected int bonus_tir(){
         return 0;
     }
 
-    private void fin_tour_combat_necromancien(){
-
-    }
-
-    private void essaie_reveil_necromancien() throws IOException {
-        essaie_reveil_commun();
-    }
-
-    //************************************************RANGER**********************************************************//
-
-    private static String text_tour_ranger(){
-        return "";
-    }
-
-    private boolean tour_ranger(String choix){
-        return false;
-    }
-
-    private int bonus_exploration_ranger(){
-        return rand.nextInt(2) /* eclaireur */ + rand.nextInt(3)/* explorateur */;
-    }
-
-    private void fin_tour_combat_ranger(){
-
-    }
-
-    private void essaie_reveil_ranger() throws IOException {
-        essaie_reveil_commun();
-    }
-
-    //************************************************SHAMAN**********************************************************//
-
-    private static String text_tour_shaman(){
-        return "";
-    }
-
-    private boolean tour_shaman(String choix){
-        return false;
-    }
-
-    private int bonus_exploration_shaman(){
-        return rand.nextInt(2) /* eclaireur */;
-    }
-
-    private void fin_tour_combat_shaman(){
-
-    }
-
-    private void essaie_reveil_shaman() throws IOException {
-        essaie_reveil_commun();
-    }
-
-    //************************************************AUCUN***********************************************************//
-
-    private static String text_tour_aucun(){
-        return "";
-    }
-
-    private boolean tour_aucun(String choix){
-        return false;
-    }
-
-    private int bonus_exploration_aucun(){
+    /**
+     * Gère les effets de coup critique
+     * @param base la puissance de frappe originale
+     * @return le bonus de dommages
+     */
+    protected float critique_atk(int base) {
+        if(rand.nextInt(50) == 0) { //2%
+            return base * 0.1f * (rand.nextInt(5) + 1); //10% à 50% de bonus
+        }
         return 0;
     }
 
-    private void fin_tour_combat_aucun(){
-
+    /**Nombre spécifique indiquant qu'un joueur berserk a tiré sur un allié**/
+    static float berserk_atk_alliee = -256;
+    /**
+     * Gère les effets de la folie du berserk lors de tir à l'arc
+     * @param base la puissance de tir originale
+     * @return le bonus de dommages, ou -1000 si le joueur attaque un allié
+     * @throws IOException toujours
+     */
+    protected float berserk_atk(int base) throws IOException {
+        if (Input.D6() < 2 + berserk) {
+            int i;
+            do {
+                i = rand.nextInt(Main.nbj);
+            } while (!Main.joueurs[i].est_actif());
+            int temp = Input.atk();
+            temp += Main.corriger(temp * (berserk * 0.5f));
+            System.out.println("Pris(e) de folie, " + nom + " attaque " + Main.joueurs[i].getNom() + " et lui inflige " + temp + " dommages !");
+            berserk += 0.1f + rand.nextInt(5) * 0.1f; //0.1 à 0.5 de boost
+            return berserk_atk_alliee;
+        }
+        berserk += 0.1f + rand.nextInt(3) * 0.1f; //0.1 à 0.3 de boost
+        return base * berserk;
     }
 
-    private void essaie_reveil_aucun() throws IOException {
-        essaie_reveil_commun();
+    /**
+     * Indique les bonus d'attaque à l'arc
+     * @return la quantité de dommages aditionnel
+     */
+    protected int bonus_atk(){
+        return 0;
+    }
+
+    /**
+     * Tente de fuir le combat
+     * @throws IOException ça roule
+     */
+    public void fuir() throws IOException {
+        int bonus = -1 + rand.nextInt(3);
+        bonus += bonus_fuite();
+        bonus += berserk_fuite();
+        bonus += position_fuite();
+        if (Input.D6() + bonus >= 4) {
+            System.out.println(nom + " a fuit le combat.");
+            inactiver();
+        } else {
+            System.out.println(nom + " n'est pas parvenu à fuir le combat.");
+        }
+    }
+
+    /**
+     * Tente de fuir le combat (votre familier)
+     * @throws IOException comme d'hab'
+     */
+    public void f_fuir() throws IOException {
+        int bonus = -1 + rand.nextInt(3) + get_ob_f() / 2;
+        bonus += berserk_fuite();
+        bonus += f_position_fuite();
+        if (Input.D6() + bonus >= 4) {
+            System.out.println("Le familier de " + nom + " a fuit le combat.");
+            f_inactiver();
+        } else {
+            System.out.println("Le familier de " + nom + " n'est pas parvenu à fuir le combat.");
+        }
+    }
+
+    /**
+     * Indique les bonus de fuite
+     * @return le bonus
+     */
+    protected int bonus_fuite() {
+        return 0;
+    }
+
+    /**
+     * Indique les bonus/malus de l'état de berserk
+     * @return le bonus (ou malus en négatif)
+     * @throws IOException toujours
+     */
+    protected int berserk_fuite() throws IOException {
+        if(!est_berserk()){
+            return 0;
+        }
+        return Math.min(0, Math.round(Input.D4() * 0.5f - berserk));
+    }
+
+    /**
+     * Indique les bonus de fuite dû à la position (première ligne)
+     * @return le malus
+     */
+    protected int position_fuite() {
+        if(est_front()){
+            if(est_front_f()){
+                return -2;
+            }
+            return -3;
+        }
+        return 3;
+    }
+
+    /**
+     * Indique les bonus de fuite dû à la position (première ligne) du familier
+     * @return le malus
+     */
+    protected int f_position_fuite(){
+        if(est_front()){
+            if(est_front_f()){
+                return -3;
+            }
+            return -2;
+        }
+        return 2;
+    }
+
+    /**
+     * Le familier protège son maître
+     */
+    public void f_proteger(Monstre ennemi) throws IOException {
+        switch (Input.D6() + get_ob_f() / 3) {
+            case 1, 2:
+                ennemi.encaissement += 0.1F;
+                System.out.println("Votre familier vous protège maladroitement.");
+                break;
+            case 3, 4:
+                ennemi.encaissement += 0.3F;
+                System.out.println("Votre familier vous protège.");
+                break;
+            case 5, 6:
+                ennemi.encaissement += 0.5F;
+                System.out.println("Votre familier vous protège.");
+                break;
+            case 7, 8, 9, 10:
+                ennemi.encaissement += 0.7F;
+                System.out.println("Votre familier concentre chaque fibre de son être à se préparer à vous preoteger.");
+                break;
+            default:
+                System.out.println("Le résultat n'a pas été comprit, compétence ignorée.");
+        }
     }
 
 }
