@@ -50,16 +50,7 @@ public class Monstre {
         }
     }
 
-    /**
-     * Renvoie l'arrondit minoré par 1 de la valeur donnée
-     * @param valeur le float à corriger
-     */
-    static int corriger(float valeur) {
-        if (valeur % 1 == 0){
-            return max((int)(valeur), 1);
-        }
-        return max((int)(valeur) + 1, 1);
-    }
+    static Random rand = new Random();
 
     /**
      * Maquille l'illusioniste en lui donnant le nom de l'illusion
@@ -78,9 +69,6 @@ public class Monstre {
         };
     }
 
-    static Input input = new Input();
-    static Random rand = new Random();
-
     /**
      * Écris la quantité de dommage infligé par le monstre à l'adversaire
      * @param nom le nom de l'entité attaqué
@@ -93,14 +81,14 @@ public class Monstre {
         }
         else if (etourdi){
             if(applique_competence_pre(nom) && this.attaque > 0){
-                System.out.println(this.nom + " est étourdit et inflige " + corriger(this.attaque * 0.5F * modificateur) + " dommages à " + nom + ".");
+                System.out.println(this.nom + " est étourdit et inflige " + Main.corriger(this.attaque * 0.5F * modificateur) + " dommages à " + nom + ".");
                 applique_competence_post(nom);
             }
             undo_etourdi();
         }
         else{
             if(applique_competence_pre(nom) && this.attaque > 0){
-                System.out.println(this.nom + " inflige " + corriger(this.attaque * modificateur) + " dommages à " + nom + ".");
+                System.out.println(this.nom + " inflige " + Main.corriger(this.attaque * modificateur) + " dommages à " + nom + ".");
                 applique_competence_post(nom);
             }
         }
@@ -120,7 +108,7 @@ public class Monstre {
                 System.out.println(nom + " s'apprête à causer une explosion !");
             }
             case GEL -> {
-                if(input.yn("Portez vous (pl) une armure ?")){
+                if(Input.yn("Portez vous (pl) une armure ?")){
                     System.out.println(this.nom + " détruit votre armure");
                     competence = Competence.AUCUNE;
                 }
@@ -130,8 +118,8 @@ public class Monstre {
             }
             case REGARD_MORTEL -> {
                 System.out.println(this.nom + " regarde " + nom + " droit dans les yeux.");
-                if(input.D6() <= 4){
-                    System.out.println(nom + " sent son âme se faire assaillir et perd " + corriger(this.attaque + 2) + " points de vie.");
+                if(Input.D6() <= 4){
+                    System.out.println(nom + " sent son âme se faire assaillir et perd " + Main.corriger(this.attaque + 2) + " points de vie.");
                     competence = Competence.AUCUNE;
                     encaissement = 0F;
                     part_soin = 0F;
@@ -141,7 +129,7 @@ public class Monstre {
             }
             case REGARD_PETRIFIANT -> {
                 System.out.println(this.nom + " regarde " + nom + " droit dans les yeux.");
-                if(input.D6() <= 4){
+                if(Input.D6() <= 4){
                     System.out.println(nom + "se change partiellement en pierre.");
                     System.out.println(nom + " perd définitivement 4 points de résistance et gagne définitivement 1 point de défense.");
                     competence = Competence.AUCUNE;
@@ -157,7 +145,7 @@ public class Monstre {
             }
             case VIOLENT -> {
                 if(rand.nextBoolean()){
-                    System.out.println(this.nom + " attaque violemment " + nom + " et lui inflige " + corriger(attaque * 1.5F) + " dommages.");
+                    System.out.println(this.nom + " attaque violemment " + nom + " et lui inflige " + Main.corriger(attaque * 1.5F) + " dommages.");
                     return false;
                 }
             }
@@ -176,7 +164,7 @@ public class Monstre {
             }
 
             case VOLEUR_CASQUE -> {
-                if (input.yn(nom + " porte-iel un casque ?") && input.D6() <= 4){
+                if (Input.yn(nom + " porte-iel un casque ?") && Input.D6() <= 4){
                     System.out.println(this.nom + " vole votre casque et part avec.");
                     this.competence = Competence.CASQUE_VOLE;
                     return false;
@@ -197,12 +185,12 @@ public class Monstre {
                 competence = Competence.AUCUNE;
             }
             case VAMPIRISME -> {
-                if(input.yn("L'attaque a-t-elle touchée ?") && this.vie < this.vie_max){
+                if(Input.yn("L'attaque a-t-elle touchée ?") && this.vie < this.vie_max){
                     this.vie += 1;
                 }
             }
             case VAMPIRISME4 -> {
-                if(input.yn("L'attaque a-t-elle touchée ?")){
+                if(Input.yn("L'attaque a-t-elle touchée ?")){
                     this.vie += 4;
                     if(this.vie > this.vie_max){
                         this.vie = this.vie_max;
@@ -210,7 +198,7 @@ public class Monstre {
                 }
             }
             case POISON_CECITE -> {
-                if(input.yn("L'attaque a-t-elle touchée ?")){
+                if(Input.yn("L'attaque a-t-elle touchée ?")){
                     System.out.println(nom + " est empoisonné(e) et subit cécité pour le combat.");
                     competence = Competence.AUCUNE;
                 }
@@ -229,13 +217,13 @@ public class Monstre {
                 competence = Competence.AUCUNE;
             }
             case POISON -> {
-                if(input.yn("L'attaque a-t-elle touchée ?")) {
+                if(Input.yn("L'attaque a-t-elle touchée ?")) {
                     System.out.println(nom + " est légèrement empoisonné(e).");
                     competence = Competence.A_POISON;
                 }
             }
             case POISON2 -> {
-                if(input.yn("L'attaque a-t-elle touchée ?")) {
+                if(Input.yn("L'attaque a-t-elle touchée ?")) {
                     System.out.println(nom + " est empoisonné");
                     competence = Competence.A_POISON2;
                 }
@@ -258,7 +246,7 @@ public class Monstre {
             case FRAPPE_SPECTRALE -> System.out.println("L'attaque traverse partiellement l'armure de " + nom + " et ignore " + rand.nextInt(4) + " point(s) de défense.");
             case KAMICASE, CASQUE_VOLE -> this.vie = 0;
             case CHRONOS -> {
-                if(input.yn("L'attaque a-t-elle touchée ?")){
+                if(Input.yn("L'attaque a-t-elle touchée ?")){
                     System.out.println(nom + " perd définitivement 1 équipement de son choix.");
                 }
             }
@@ -368,7 +356,7 @@ public class Monstre {
         if(quantite <= 0){
             return;
         }
-        tir(corriger(quantite * mult));
+        tir(Main.corriger(quantite * mult));
     }
 
     /**
@@ -387,7 +375,7 @@ public class Monstre {
             }
             case RAPIDE -> {
                 System.out.println(nom + " esquive partiellement votre projectile.");
-                degas = corriger((float) degas / 2);
+                degas = Main.corriger((float) degas / 2);
             }
             case FLAMME_DEFENSE -> {
                 System.out.println("Votre projectile brûle en s'approchant de " + nom + ".");
@@ -407,17 +395,17 @@ public class Monstre {
             }
             case PEAU_DURE, GOLEM_PIERRE, CHRONOS -> {
                 System.out.println("La peau dure de " + nom + " amortie une partie de l'impact");
-                degas = corriger((float) (degas * 0.85));
+                degas = Main.corriger((float) (degas * 0.85));
             }
             case CHANT_SIRENE -> {
                 System.out.println("Le chant de " + nom + " perturbe le tir.");
-                if(input.D8() <= 2){
+                if(Input.D8() <= 2){
                     degas = degas > 4 ? degas - 4 : 0;
                 }
             }
             case PEAU_DACIER, GOLEM_ACIER, GOLEM_FER -> {
                 System.out.println("La peau extrêmement dure de " + this.nom + " absorbe l'essentiel de l'impact.");
-                degas = corriger((float) degas / 20);
+                degas = Main.corriger((float) degas / 20);
             }
             case INTANGIBLE -> {
                 System.out.println("Votre projectile passe au travers de " + nom + " sans l'affecter.");
@@ -425,7 +413,7 @@ public class Monstre {
             }
             case GOLEM_MITHRIL -> {
                 System.out.println("La peau particulièrement solide de " + this.nom + " réduit l'impact.");
-                degas = corriger((float) degas * 0.75F);
+                degas = Main.corriger((float) degas * 0.75F);
             }
         }
         return degas;
@@ -474,29 +462,29 @@ public class Monstre {
             }
             case PEAU_MAGIQUE -> {
                 System.out.println("La peau de " + nom + " diminue l'impact du sort.");
-                degas = corriger((float) degas / 2);
+                degas = Main.corriger((float) degas / 2);
             }
             case CUIR_MAGIQUE -> {
                 System.out.println("Le cuir de " + nom + " absorbe l'essentiel de l'impact du sort.");
-                degas = corriger((float) degas / 10);
+                degas = Main.corriger((float) degas / 10);
             }
             case CHANT_SIRENE -> {
                 System.out.println("Le chant de " + nom + " perturbe le lancement du sort.");
-                if(input.D8() <= 3){
+                if(Input.D8() <= 3){
                     degas = degas > 4 ? degas - 4 : 0;
                 }
             }
             case PEAU_DACIER -> {
                 System.out.println("La peau extrêmement dure de " + this.nom + " absorbe une partie de l'impact du sort.");
-                degas = corriger((float) degas / 2);
+                degas = Main.corriger((float) degas / 2);
             }
             case GOLEM_PIERRE, GOLEM_FER, GOLEM_ACIER -> {
                 System.out.println("La constitution particulière de " + this.nom + " diminue légèrement l'impact du sort.");
-                degas = corriger((float)degas * 0.9F);
+                degas = Main.corriger((float)degas * 0.9F);
             }
             case GOLEM_MITHRIL -> {
                 System.out.println("La matériaux particulier composant " + this.nom + " réduise immensément l'impact du sort.");
-                degas = corriger((float)degas / 20);
+                degas = Main.corriger((float)degas / 20);
             }
         }
         return degas;
@@ -544,14 +532,15 @@ public class Monstre {
     /**
      * Inflige des dommages au monstre
      * @param quantite la puissance d'attaque
-     * @implNote Considère l'armure et la compétence du monstre
+     * @param mult par combien on multiplie les dommages d'entrée
      * gère le cas de mort du monstre
+     * @throws IOException toujours
      */
     void dommage(int quantite, float mult) throws IOException {
         if(quantite <= 0){
             return;
         }
-        int degas = applique_competence_dommage((corriger(quantite * mult) - this.armure));
+        int degas = applique_competence_dommage((Main.corriger(quantite * mult) - this.armure));
         this.vie -= degas;
         if(!est_mort()) {
             applique_competence_post_dommage();
@@ -597,21 +586,21 @@ public class Monstre {
             }
             case PEAU_DURE, GOLEM_PIERRE, GOLEM_FER, CHRONOS -> {
                 System.out.println("La peau dure de " + this.nom + " amortie une partie de l'assaut");
-                degas = corriger((float) degas * 0.9F);
+                degas = Main.corriger((float) degas * 0.9F);
             }
             case CHANT_SIRENE -> {
                 System.out.println("Le chant de " + nom + " perturbe le lancement du sort.");
-                if(input.D8() <= 1){
+                if(Input.D8() <= 1){
                     degas = degas > 4 ? degas - 4 : 0;
                 }
             }
             case PEAU_DACIER, GOLEM_ACIER -> {
                 System.out.println("La peau extrêmement dure de " + this.nom + " absorbe l'essentiel de l'assaut.");
-                degas = corriger((float) degas / 10);
+                degas = Main.corriger((float) degas / 10);
             }
             case GOLEM_MITHRIL -> {
                 System.out.println("La peau particulièrement solide de " + this.nom + " absorbe une grande partie de l'assaut.");
-                degas = corriger((float) degas / 2);
+                degas = Main.corriger((float) degas / 2);
             }
         }
         return degas;
@@ -758,26 +747,26 @@ public class Monstre {
      * @implNote On considère que le joueur qui utilise encaisser est en première ligne
      */
     void encaisser() throws IOException {
-        int attaque = input.atk();
-        switch (input.D6()) {
+        int attaque = Input.atk();
+        switch (Input.D6()) {
             case 1:
                 encaissement = 0.5F;
                 System.out.println("Vous vous préparer à encaisser en oubliant d'attaquer !");
                 break;
             case 2, 3, 4:
-                attaque = corriger((float) attaque / 10);
+                attaque = Main.corriger(attaque * 0.1f);
                 encaissement = 0.5F;
                 System.out.println("Vous vous préparez à encaisser.");
                 dommage(attaque);
                 break;
             case 5:
-                attaque = corriger((float) attaque / 2);
+                attaque = Main.corriger(attaque * 0.5f);
                 dommage(attaque);
-                encaissement = 0.5F;
+                encaissement = 0.65F;
                 System.out.println("Vous vous préparez à encaisser.");
                 break;
             case 6, 7:
-                attaque = corriger((float) attaque / 2);
+                attaque = Main.corriger(attaque * 0.5f);
                 dommage(attaque);
                 encaissement = 0.9F;
                 System.out.println("Vous vous préparez fermement à encaisser, solide comme un roc.");
@@ -787,6 +776,38 @@ public class Monstre {
                 dommage(attaque);
         }
     }
+
+    void f_encaisser() throws IOException {
+        int attaque = Input.atk();
+        switch (Input.D4()) {
+            case 1:
+                encaissement = 0.3F;
+                System.out.println("Votre familier se prépare à encaisser en oubliant d'attaquer !");
+                break;
+            case 2:
+                attaque = Main.corriger(attaque * 0.1f);
+                encaissement = 0.3F;
+                System.out.println("Votre familier se prépare à encaisser.");
+                dommage(attaque);
+                break;
+            case 3:
+                attaque = Main.corriger(attaque * 0.2f);
+                encaissement = 0.5F;
+                System.out.println("Votre familier se prépare à encaisser.");
+                dommage(attaque);
+                break;
+            case 4, 5:
+                attaque = Main.corriger(attaque * 0.4f);
+                dommage(attaque);
+                encaissement = 0.7F;
+                System.out.println("Votre familier se prépare solidement à encaisser.");
+                break;
+            default:
+                System.out.println("Le résultat n'a pas été comprit, attaque classique appliquée.");
+                dommage(attaque);
+        }
+    }
+
 
     /**
      * Remet à zéro l'encaissement de l'ennemi
@@ -801,7 +822,7 @@ public class Monstre {
      * @throws IOException jsp mais sans ça, ça ne marche pas
      */
     void soigner(Boolean premiere_ligne) throws IOException {
-        int soin = input.D6();
+        int soin = Input.D6();
         switch (soin) {
             case 6 -> {
                 System.out.println("Vous soignez la cible de 9.");
@@ -833,7 +854,7 @@ public class Monstre {
             }
             default -> {
                 System.out.println("Le résultat n'a pas été comprit, attaque classique appliquée.");
-                dommage(input.atk());
+                dommage(Input.atk());
             }
         }
     }
@@ -846,7 +867,7 @@ public class Monstre {
     Boolean domestiquer() throws IOException {
         switch (competence){
             case COLERE, VIOLENT -> {
-                if(input.D8() <= this.vie){
+                if(Input.D8() <= this.vie){
                     System.out.println(this.nom + " réagit très agressivement.\n");
                     return false;
                 }
@@ -860,25 +881,25 @@ public class Monstre {
                 return false;
             }
             case GOLEM_PIERRE, GOLEM_FER -> {
-                if(input.D8() <= this.vie * 2) {
+                if(Input.D8() <= this.vie * 2) {
                     System.out.println(this.nom + " n'est pas très réceptif à votre tentative.\n");
                     return false;
                 }
             }
             case GOLEM_ACIER -> {
-                if(input.D6() <= this.vie * 2) {
+                if(Input.D6() <= this.vie * 2) {
                     System.out.println(this.nom + " n'est pas très réceptif à votre tentative.\n");
                     return false;
                 }
             }
             case GOLEM_MITHRIL -> {
-                if(input.D8() <= this.vie * 2) {
+                if(Input.D8() <= this.vie * 2) {
                     System.out.println(this.nom + " ne remarque même pas votre présence.\n");
                     return false;
                 }
                 else {
                     System.out.println(this.nom + " vous remarque.");
-                    if(input.D20() <= this.vie){
+                    if(Input.D20() <= this.vie){
                         System.out.println(this.nom + " ne vous accorde aucune importance.\n");
                         return false;
                     }
@@ -904,7 +925,7 @@ public class Monstre {
             ratio -= 100 - ratio;
         }
         if (ratio >= 50 && rand.nextInt(100) > ratio) {
-            int temp = input.D4();
+            int temp = Input.D4();
             if (temp > 2){
                 System.out.println(this.nom + " semble réagir positivement à votre approche.");
                 ratio = min(50, ratio - 10 * temp);
@@ -915,7 +936,7 @@ public class Monstre {
                 return false;
             }
         }
-        if (ratio - input.D6() * 10 < 0){
+        if (ratio - Input.D6() * 10 < 0){
             System.out.println(this.nom + " vous accorde sa confiance.\n");
             return true;
         }
