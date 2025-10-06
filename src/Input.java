@@ -19,11 +19,11 @@ public class Input {
 
         //choix save
         boolean[] has_save = new boolean[Main.nb_save];
-        StringBuilder text = new StringBuilder("Choississez une sauvegarde : ");
+        StringBuilder text = new StringBuilder("Choississez une sauvegarde : \n");
         for (int i = 0; i < Main.nb_save; i++) {
             File fichier = new File(Main.Path + i + "/" + fichLoad[0]);
             text.append(i);
-            has_save[i] = (fichier.exists() && !read_log(i + "/" + fichLoad[0]).equals(";"));
+            has_save[i] = (fichier.exists() && !read_log(i + "/" + fichLoad[0]).equals(";") && !read_log(i + "/" + fichLoad[0]).isEmpty());
             if (!has_save[i]) {
                 text.append(" (vide)");
             }
@@ -38,7 +38,7 @@ public class Input {
         Main.Path += reponse + "/";
 
         // charger ou nouvelle partie
-        if (has_save[reponse] && !yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la suppression")) {
+        if (!has_save[reponse] || !yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la suppression")) {
             for (String s : fichLoad) {
                 Output.delete_fichier(s);
             }
@@ -55,8 +55,9 @@ public class Input {
         for (int i = 0; i < Main.nbj; i++) {
             temp = Main.Path + "Joueur" + i + ".json";
             Joueur joueur = Joueur.chargerJoueur(temp);
-            System.out.println("Joueur chargé avec succès :");
+            System.out.print("Joueur chargé avec succès : ");
             joueur.presente();
+            System.out.println();
             Main.joueurs[i] = joueur;
         }
 
