@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.util.Random;
 
+import static java.lang.Math.max;
+
 
 public class Main {
     
@@ -81,9 +83,7 @@ public class Main {
             case MER -> expedition_mer(meneur);
             case MONTS -> expedition_mont(meneur);
             case OLYMPE -> expedition_olympe(meneur);
-            case ASCENDANT -> {
-                System.out.println("ERROR : DONOT");
-            }
+            case ASCENDANT -> System.out.println("ERROR : DONOT");
         }
     }
 
@@ -468,9 +468,36 @@ public class Main {
                     }
                 }
             }
-            joueurs[i] = new Joueur(nom, Position.PRAIRIE, metier, 0);
+            joueurs[i] = Joueur.CreerJoueur(nom, Position.PRAIRIE, metier, 0);
             joueurs[i].presente_base();
             joueurs[i].presente();
         }
+    }
+
+    /**
+     * Renvoie l'arrondit de la valeur donnée minorée par 1.
+     * @param valeur le float à corriger
+     */
+    static int corriger(float valeur) {
+        return corriger(valeur, 1);
+    }
+
+    /**
+     * Renvoie l'arrondit de la valeur donnée
+     * @param min un minorant au résultat
+     * @param valeur le float à corriger
+     */
+    static int corriger(float valeur, int min){
+        return max(Math.round(valeur), min);
+    }
+
+    /**
+     * Renvoie l'arrondit de la valeur donnée
+     * @param min un minorant au résultat
+     * @param maj un majorant au résultat
+     * @param valeur le float à corriger
+     */
+    static int corriger(float valeur, int min, int maj){
+        return Math.min(max(Math.round(valeur), min), maj);
     }
 }
