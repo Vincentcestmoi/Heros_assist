@@ -62,6 +62,10 @@ public abstract class Joueur {
 
     //************************************************GETTER**********************************************************//
 
+    public void setOb(int value){ //TODO temp, delete
+        this.ob_f = value;
+    }
+
     public boolean a_familier(){
         return ob_f > 0;
     }

@@ -6,8 +6,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public class Sort {
-
-    static Input input = new Input();
+    
     static Random rand = new Random();
 
     static public int nb_fire_rune = 1;
@@ -30,7 +29,7 @@ public class Sort {
             if(i != lanceur && actif[i]){
                 System.out.println(nom[i] + " est frappé par l'onde de choc.");
                 if(i <= 4){
-                    if(input.D6() < 2 + rand.nextInt(5)){
+                    if(Input.D6() < 2 + rand.nextInt(5)){
                         System.out.println(nom[i] + " perd connaissance.");
                         assomme[i] = true;
                         reveil[i] = 0;
@@ -40,7 +39,7 @@ public class Sort {
                     }
                 }
                 else{
-                    if(input.D4() <= 3 + rand.nextInt(2)){
+                    if(Input.D4() <= 3 + rand.nextInt(2)){
                         System.out.println(nom[i] + " perd connaissance.");
                         assomme[i] = true;
                         reveil[i] = 0;
@@ -54,8 +53,8 @@ public class Sort {
 
         // sur l'ennemi
         System.out.println(ennemi.nom + " est frappé par l'onde de choc.");
-        System.out.print(Main.nom[lanceur] + " : ");
-        switch (input.D6()){
+        System.out.print(Main.joueurs[lanceur].getNom() + " : ");
+        switch (Input.D6()){
             case 2 -> ennemi.do_etourdi();
             case 3, 4 -> ennemi.affecte();
             case 5, 6 -> ennemi.do_assomme();
@@ -70,7 +69,7 @@ public class Sort {
      */
     public static void maudir(Monstre ennemi) throws IOException {
         int boost = rand.nextInt(3);
-        switch (input.D6()){
+        switch (Input.D6()){
             case 2 -> {
                 System.out.println("Vous maudissez faiblement " + ennemi.nom + ".");
                 ennemi.vie_max -= 1 + boost;
@@ -105,7 +104,7 @@ public class Sort {
      */
     public static void maudir() throws IOException {
         int boost = rand.nextInt(3);
-        switch (input.D6()){
+        switch (Input.D6()){
             case 2 -> System.out.println("Votre cible perds définitivement " + (1 + boost) + " point(s) de résistance.");
             case 3, 4 -> System.out.println("Votre cible perds définitivement " + (2 + boost) + " points de résistance.");
             case 5 -> System.out.println("Votre cible perds définitivement " + (3 + boost) + " points de résistance.");
@@ -119,7 +118,7 @@ public class Sort {
      * @throws IOException toujours
      */
     public static void meditation() throws IOException {
-        int jet = input.D8() + rand.nextInt(3) - 1;
+        int jet = Input.D8() + rand.nextInt(3) - 1;
         if (jet <= 2) {
             System.out.println("Vous récupérez 2PP.");
         }
@@ -142,8 +141,8 @@ public class Sort {
     public static void boule_de_feu(Monstre ennemi) throws IOException {
         System.out.println("Vous vous préparez à lancer une boule de feu.");
         System.out.println("Combien de PP mettez vous dans le sort ? (min " + (2 + nb_great_fire_rune) + ")");
-        int mana = input.readInt();
-        int jet = input.D4() + mana + rand.nextInt(3) - 1 + (nb_fire_rune / 2) + (nb_great_fire_rune / 2);
+        int mana = Input.readInt();
+        int jet = Input.D4() + mana + rand.nextInt(3) - 1 + (nb_fire_rune / 2) + (nb_great_fire_rune / 2);
         int dmg;
         if (jet <= (2  + nb_great_fire_rune) || mana < (2  + nb_great_fire_rune)) {
             System.out.println("Le sort ne fonctionne pas .");
@@ -206,8 +205,8 @@ public class Sort {
     public static void armure_de_glace() throws IOException {
         System.out.println("Vous vous préparez à créer une armure de glace.");
         System.out.println("Combien de PP mettez vous dans le sort ? (min 3): ");
-        int mana = input.readInt();
-        int jet = input.D8() + mana + rand.nextInt(3) - 1;
+        int mana = Input.readInt();
+        int jet = Input.D8() + mana + rand.nextInt(3) - 1;
         if (jet <= 3 || mana < 3) {
             System.out.println("Le sort ne fonctionne pas.");
         } else if (jet <= 6) {
@@ -235,8 +234,8 @@ public class Sort {
     public static void foudre(Monstre ennemi) throws IOException {
         System.out.println("Vous vous préparez à lancer un puissant éclair.");
         System.out.println("Combien de PP mettez vous dans le sort ? (min 7) : ");
-        int mana = input.readInt();
-        int jet = input.D12() + mana + rand.nextInt(3) - 1;
+        int mana = Input.readInt();
+        int jet = Input.D12() + mana + rand.nextInt(3) - 1;
         int dmg;
         if (jet <= 7 || mana < 7) {
             System.out.println("Le sort ne fonctionne pas.");
@@ -302,13 +301,13 @@ public class Sort {
      * @throws IOException toujours
      */
     public static boolean addiction() throws IOException {
-        int jet = input.D4() + rand.nextInt(3) - 1;
+        int jet = Input.D4() + rand.nextInt(3) - 1;
         if (jet < 4) {
             System.out.println("Vous perdez connaissance.");
             return true;
         }
         else {
-            jet = input.D4();
+            jet = Input.D4();
             if (jet > 1) {
                 System.out.println("Vous récuperez " + (jet - 1) + "PP.");
             } else {
@@ -323,7 +322,7 @@ public class Sort {
      */
     public static void fouille() throws IOException {
         System.out.println("Vous chercher autour de vous tout ce qui pourrait être utile pour vos potions.");
-        int temp = input.D20();
+        int temp = Input.D20();
         if (temp <= 15 + rand.nextInt(10) - 5) {
             System.out.println("Vous ne trouvez rien.");
         }
@@ -384,10 +383,10 @@ public class Sort {
         }
         System.out.println("Vous rappelez à la vie les cadavres de ces terres.");
         System.out.println("Combien de PP mettez vous dans le sort ? (min 3) : ");
-        int mana = input.readInt();
+        int mana = Input.readInt();
 
         // selection du monstre a ressuciter
-        int jet = input.D6() + mana + rand.nextInt(2) - 1;
+        int jet = Input.D6() + mana + rand.nextInt(2) - 1;
         Monstre rez;
         if (jet <= 3 || mana < 3) {
             System.out.println("Le sort a échoué.");
@@ -400,7 +399,7 @@ public class Sort {
         System.out.println("Vous ressentez la réponse d'une âme à travers le sol.");
 
         //selection de la puissance du monstre
-        jet = input.D8() + mana + rand.nextInt(2) - 1 + Monstre.corriger(jet * 0.4F);
+        jet = Input.D8() + mana + rand.nextInt(2) - 1 + Main.corriger(jet * 0.4F);
         if (jet <= 7) {
             System.out.println("nouveau familier : carcasse réanimée");
             System.out.println("attaque : " + (int)max(rez.attaque *0.25, 1));
@@ -441,7 +440,7 @@ public class Sort {
      * @throws IOException toujours
      */
     public static int dissection(int etat) throws IOException {
-        int temp = input.D6();
+        int temp = Input.D6();
         if(etat >= 25){
             temp += 2;
         }
@@ -489,7 +488,7 @@ public class Sort {
         if(ennemi.est_mort()){
             return;
         }
-        if(input.yn("Votre mana est-il tombé à 0 ?")){
+        if(Input.yn("Votre mana est-il tombé à 0 ?")){
             if(addiction()){
                 assomme[lanceur] = true;
                 reveil[lanceur] = 0;
@@ -498,7 +497,7 @@ public class Sort {
         }
         System.out.println("Vous préparez votre second sort.");
         extracted(actif, nom, assomme, reveil, ennemi, lanceur);
-        if(input.yn("Votre mana est-il tombé à 0 ?")){
+        if(Input.yn("Votre mana est-il tombé à 0 ?")){
             if(addiction()){
                 assomme[lanceur] = true;
                 reveil[lanceur] = 0;
@@ -510,12 +509,12 @@ public class Sort {
      * Fonction auxiliaire de sort
      */
     private static void extracted(boolean[] actif, String[] nom, boolean[] assomme, int[] reveil, Monstre ennemi, int lanceur) throws IOException {
-        switch (input.sort()){
+        switch (Input.sort()){
             case BDF -> boule_de_feu(ennemi);
             case ONDE_CHOC -> onde_choc(actif, nom, assomme, reveil, ennemi, lanceur);
             case ADG -> armure_de_glace();
             case FOUDRE -> foudre(ennemi);
-            case AUTRE -> ennemi.dommage_magique(input.magie());
+            case AUTRE -> ennemi.dommage_magique(Input.magie());
         }
     }
 
@@ -525,19 +524,19 @@ public class Sort {
      * @throws IOException toujours
      */
     public static void coup_critique(Monstre ennemi) throws IOException {
-        switch(input.D4()){
+        switch(Input.D4()){
             case 1 -> {
                 System.out.println("La pointe de votre flèche éclate en plein vol.");
-                ennemi.tir(input.tir(), 0.5F);
+                ennemi.tir(Input.tir(), 0.5F);
             }
-            case 2, 3 -> ennemi.tir(input.tir());
+            case 2, 3 -> ennemi.tir(Input.tir());
             case 4, 5 -> {
                 System.out.println("Votre flèche file droit sur " + ennemi.nom + " et lui porte un coup puissant.");
-                ennemi.tir(input.tir(), 2F);
+                ennemi.tir(Input.tir(), 2F);
             }
             default -> {
                 System.out.println("Entré invalide, tir classique appliqué.");
-                ennemi.tir(input.tir());
+                ennemi.tir(Input.tir());
             }
         }
     }
@@ -549,9 +548,9 @@ public class Sort {
      * @throws IOException toujours
      */
     public static boolean assassinat(Monstre ennemi) throws IOException {
-        if(input.D6() + rand.nextInt(3) - 1 > 3){
+        if(Input.D6() + rand.nextInt(3) - 1 > 3){
             System.out.println("Vous vous faufilez derrière " + ennemi.nom + " sans qu'il ne vous remarque.");
-            ennemi.dommage(input.atk() * 2 + 7);
+            ennemi.dommage(Input.atk() * 2 + 7);
             return true;
         }
         System.out.println("Vous jugez plus prudent de ne pas engagez pour l'instant...");
@@ -566,8 +565,8 @@ public class Sort {
      */
     public static void assaut(Monstre ennemi, float berserk) throws IOException {
         System.out.println("Vous chargez brutalement " + ennemi.nom);
-        int jet = input.D8() + rand.nextInt(3) - 1;
-        ennemi.dommage(input.atk(), 0.1f * jet + berserk);
+        int jet = Input.D8() + rand.nextInt(3) - 1;
+        ennemi.dommage(Input.atk(), 0.1f * jet + berserk);
         ennemi.part_soin += berserk;
     }
 
@@ -576,7 +575,7 @@ public class Sort {
      * @throws IOException toujours
      */
     public static void concocter() throws IOException {
-        switch (input.concoction()) {
+        switch (Input.concoction()) {
             case RESISTANCE -> concoc_resi();
             case ALEATOIRE -> concoc_alea();
             case DIVINE -> concoc_divine();
@@ -597,8 +596,8 @@ public class Sort {
      */
     public static void concoc_resi() throws IOException {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 5): ");
-        int ingre = input.readInt();
-        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        int ingre = Input.readInt();
+        int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 11 || ingre < 5) {
             System.out.println("Vous avez produit une potion insipide (EX1PV).");
         }
@@ -625,8 +624,8 @@ public class Sort {
                 "potion de vie (EX4PV)", "potion énergétique (M2PP)"};
         
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (max 4): ");
-        int ingre = input.readInt();
-        int concoc = input.D4() + ingre + 2 + rand.nextInt(3) - 1;
+        int ingre = Input.readInt();
+        int concoc = Input.D4() + ingre + 2 + rand.nextInt(3) - 1;
         int[] t = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
 
         for (int i = 0; i < t.length; ) {
@@ -651,8 +650,8 @@ public class Sort {
      */
     public static void concoc_divine() throws IOException {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 7): ");
-        int ingre = input.readInt();
-        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        int ingre = Input.readInt();
+        int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 10 || ingre < 7) {
             System.out.println("Vous avez produit une potion insipide (EX1PV).");
         } 
@@ -679,8 +678,8 @@ public class Sort {
 
 
         System.out.println("Combien d'ingrédient allez-vous utiliser ? ");
-        int ingre = input.readInt();
-        int concoc = input.D6() + ingre + rand.nextInt(3) - 1;
+        int ingre = Input.readInt();
+        int concoc = Input.D6() + ingre + rand.nextInt(3) - 1;
 
 
         while (concoc > 0) {
@@ -712,8 +711,8 @@ public class Sort {
      */
     public static void concoc_energie() throws IOException {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 5): ");
-        int ingre = input.readInt();
-        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        int ingre = Input.readInt();
+        int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 10 || ingre < 5) {
             System.out.println("Vous avez produit une potion insipide (EX1PV).");
         } 
@@ -737,8 +736,8 @@ public class Sort {
      */
     public static void concoc_force() throws IOException {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 4): ");
-        int ingre = input.readInt();
-        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        int ingre = Input.readInt();
+        int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 9 || ingre < 4) {
             System.out.println("Vous avez produit une potion insipide (EX1PV).");
         }
@@ -759,8 +758,8 @@ public class Sort {
      */
     public static void concoc_bombe() throws IOException {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 2): ");
-        int ingre = input.readInt();
-        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        int ingre = Input.readInt();
+        int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 4 || ingre < 2) {
             System.out.println("Vous avez produit une potion douteuse (EXC1D).");
         }
@@ -784,8 +783,8 @@ public class Sort {
      */
     public static void concoc_soin() throws IOException {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 3): ");
-        int ingre = input.readInt();
-        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        int ingre = Input.readInt();
+        int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 6 || ingre < 3) {
             System.out.println("Vous avez produit une potion insipide (EX1PV).");
         }
@@ -809,8 +808,8 @@ public class Sort {
      */
     public static void concoc_toxique() throws IOException {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 2): ");
-        int ingre = input.readInt();
-        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        int ingre = Input.readInt();
+        int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 5 || ingre < 2) {
             System.out.println("Vous avez produit une potion douteuse (EXC1D).");
         }
@@ -834,8 +833,8 @@ public class Sort {
      */
     public static void concoc_miracle() throws IOException {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 10): ");
-        int ingre = input.readInt();
-        int jet = input.D10() + ingre + rand.nextInt(3) - 1;
+        int ingre = Input.readInt();
+        int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 12 || ingre < 9) {
             System.out.println("Vous avez produit une potion insipide (EX1PV).");
         }
@@ -865,21 +864,21 @@ public class Sort {
         if (ennemi.competence == Competence.PRUDENT || ennemi.competence == Competence.MEFIANT || ennemi.competence == Competence.SUSPICIEUX) {
             ratio += 4 + rand.nextInt(3);
         }
-        System.out.println(Main.nom[i] + " tente de lier son âme à " + ennemi.nom);
-        int result = input.D12() - ratio + rand.nextInt(3) - 1;
+        System.out.println(Main.joueurs[i].getNom() + " tente de lier son âme à " + ennemi.nom);
+        int result = Input.D12() - ratio + rand.nextInt(3) - 1;
         if (result <= 1) {
-            System.out.println("L'âme de " + Main.nom[i] + " est violemment rejeté par celle de " + ennemi.nom + " !");
+            System.out.println("L'âme de " + Main.joueurs[i].getNom() + " est violemment rejeté par celle de " + ennemi.nom + " !");
             mort[i] = true;
             actif[i] = false;
             return false;
         }
         if (result <= 4) {
-            System.out.println(Main.nom[i] + " n'est pas parvenu à se lier à " + ennemi.nom);
+            System.out.println(Main.joueurs[i].getNom() + " n'est pas parvenu à se lier à " + ennemi.nom);
             return false;
         }
         else {
-            System.out.println("Les âmes de " + ennemi.nom + " et de " + Main.nom[i] + " entre en communion !");
-            Main.f[i] = min(7, rand.nextInt(result) + 1);
+            System.out.println("Les âmes de " + ennemi.nom + " et de " + Main.joueurs[i].getNom() + " entre en communion !");
+            Main.joueurs[i].setOb(min(7, rand.nextInt(result) + 1));
             return true;
         }
     }
@@ -897,7 +896,7 @@ public class Sort {
      * @throws IOException toujours
      */
     public static void incantation(int i, Monstre ennemi, float[] berserk, boolean[] assomme, int[] reveil, int[] alter_tir, int[] alter_attaque) throws IOException {
-        switch(input.incantation()){
+        switch(Input.incantation()){
             case COLERE -> colere(i, ennemi, berserk);
             case NUAGE -> nuage(ennemi);
             case ELEMENTAIRE -> element(ennemi, assomme, reveil, alter_tir, alter_attaque);
@@ -925,7 +924,7 @@ public class Sort {
      * @throws IOException toujours
      */
     public static void colere_boost() throws IOException {
-        int jet = input.D8() + rand.nextInt(3) - 1;
+        int jet = Input.D8() + rand.nextInt(3) - 1;
         if(jet <= 3){
             System.out.println("Les esprits des ancients guerriers exalte vos actes.");
             System.out.println("Votre attaque augmente temporairement de 1 point.");
@@ -952,7 +951,7 @@ public class Sort {
     public static void colere_attaque(Monstre ennemi) throws IOException {
         System.out.println("Les esprits de vos ancêtres déchainent leur colère sur " + ennemi.nom);
         int attaque;
-        int jet = input.D10() + rand.nextInt(3) - 1;
+        int jet = Input.D10() + rand.nextInt(3) - 1;
         if(jet <= 3){
             attaque = 2;
         }
@@ -976,7 +975,7 @@ public class Sort {
      * @throws IOException toujours
      */
     public static void colere_berserk(int i, float[] berserk) throws IOException {
-        int jet = input.D10() + rand.nextInt(3) - 1;
+        int jet = Input.D10() + rand.nextInt(3) - 1;
         if (jet <= 3) {
             System.out.println("Un esprit vous emplie de colère.");
             berserk[i] += max(0.1f, jet * 0.1f);
@@ -1012,7 +1011,7 @@ public class Sort {
      */
     public static void nuage_pluie() throws IOException {
         System.out.println("Des nages apparaissent dans le ciel et une pluie légère commence à tomber.");
-        int jet = input.D10() + rand.nextInt(3) - 1;
+        int jet = Input.D10() + rand.nextInt(3) - 1;
         if (jet <= 2) {
             System.out.println("La pluie tombante recouvre vos blessures.");
             System.out.println("Chaque joueur et familier soigne de 2 points");
@@ -1039,7 +1038,7 @@ public class Sort {
      */
     public static void nuage_grele(Monstre ennemi) throws IOException {
         System.out.println("De sombres nuages s'amoncèlent au dessus de vous");
-        int jet = input.D10() + rand.nextInt(3) - 1;
+        int jet = Input.D10() + rand.nextInt(3) - 1;
         if (jet <= 2) {
             System.out.println("Une fine grèle vous frappe.");
             System.out.println("Chaque joueur et familier subit 1 point de dommage.");
@@ -1075,7 +1074,7 @@ public class Sort {
      */
     public static void nuage_brume(Monstre ennemi) throws IOException {
         System.out.println("Un nuage apparait au dessus de vous et commence à se rapprocher du sol");
-        int jet = input.D10() + rand.nextInt(3) - 1;
+        int jet = Input.D10() + rand.nextInt(3) - 1;
         if (jet <= 2) {
             System.out.println("C'est... joli ?");
         }
@@ -1111,7 +1110,7 @@ public class Sort {
      */
     public static void nuage_foudre(Monstre ennemi) throws IOException {
         System.out.println("Un nuage apparait au dessus de vous et commence à se rapprocher du sol");
-        int jet = input.D10() + rand.nextInt(3) - 1;
+        int jet = Input.D10() + rand.nextInt(3) - 1;
         if(jet <= 1) {
             System.out.println("C'est... joli ?");
         }
@@ -1161,7 +1160,7 @@ public class Sort {
      */
     public static void vent(Monstre ennemi, int[] alter_tir, int[] alter_attaque) throws IOException {
         System.out.println("Le vent se lève...");
-        int jet = input.D6() + rand.nextInt(3) - 1;
+        int jet = Input.D6() + rand.nextInt(3) - 1;
         if(jet <= 1) {
             System.out.println("Une légère brise se fait sentir.");
         }
@@ -1203,7 +1202,7 @@ public class Sort {
      */
     public static void terre(Monstre ennemi) throws IOException {
         System.out.println("La terre commence à trembler...");
-        int jet = input.D6() + rand.nextInt(3) - 1;
+        int jet = Input.D6() + rand.nextInt(3) - 1;
         if(jet <= 1) {
             System.out.println("Vous entendez un léger grondement.");
         }
@@ -1238,7 +1237,7 @@ public class Sort {
      */
     public static void feu(Monstre ennemi) throws IOException {
         System.out.println("Vous entendez de légers crépitements...");
-        int jet = input.D6() + rand.nextInt(3) - 1;
+        int jet = Input.D6() + rand.nextInt(3) - 1;
         if(jet <= 1) {
             System.out.println("Must been the wind...");
         }
@@ -1267,7 +1266,7 @@ public class Sort {
      */
     public static void eau(Monstre ennemi, boolean[] assomme, int[] reveil) throws IOException {
         System.out.println("Vous entendez un léger gargouillement...");
-        int jet = input.D6() + rand.nextInt(3) - 1;
+        int jet = Input.D6() + rand.nextInt(3) - 1;
         if(jet <= 1) {
             System.out.println("Vous sentez quelques gouttes de pluie.");
         }
@@ -1312,7 +1311,7 @@ public class Sort {
      * @throws IOException toujours
      */
     public static void benir_soin() throws IOException {
-        int jet = input.D8() + rand.nextInt(3) - 1;
+        int jet = Input.D8() + rand.nextInt(3) - 1;
         if(jet <= 1) {
             System.out.println("La cible guérie de 2.");
         }
@@ -1335,7 +1334,7 @@ public class Sort {
      * @throws IOException toujours
      */
     public static void benir_vie() throws IOException {
-        int jet = input.D8() + rand.nextInt(3) - 1;
+        int jet = Input.D8() + rand.nextInt(3) - 1;
         if(jet <= 1) {
             System.out.println("La cible gagne temporairement 1 point de résistance.");
         }
@@ -1358,7 +1357,7 @@ public class Sort {
      * @throws IOException toujours
      */
     public static void benir_force() throws IOException {
-        int jet = input.D8() + rand.nextInt(3) - 1;
+        int jet = Input.D8() + rand.nextInt(3) - 1;
         if(jet <= 1) {
             System.out.println("La cible gagne temporairement 1 point d'attaque.");
         }
@@ -1381,7 +1380,7 @@ public class Sort {
      * @throws IOException toujours
      */
     public static void benir_def() throws IOException {
-        int jet = input.D8() + rand.nextInt(3) - 1;
+        int jet = Input.D8() + rand.nextInt(3) - 1;
         if(jet <= 3) {
             System.out.println("La cible gagne temporairement 1 point de résistance.");
         }
