@@ -1,5 +1,5 @@
 public class Tryharder extends Joueur {
-    Metier metier = Metier.RANGER;
+    Metier metier = Metier.AUCUN;
 
     public Tryharder(String nom, Position position, int ob_f) {
         super(nom, position, ob_f);
