@@ -9,11 +9,11 @@ public enum Action {
     DOMESTIQUER,
     ANALYSER,
     AUTRE,
+    F_SEUL,
     OFF,
     AVANCER,
     MAUDIR,
     SORT,
-    POTION_REZ,
     BERSERK,
     LAME_DAURA,
     MEDITATION,
@@ -25,8 +25,10 @@ public enum Action {
     INCANTATION,
     LIEN,
     CALME,
+    PROTEGER,
     END,
     RETOUR,
+    AUCUNE,
 
     //type de sort
     BDF,
