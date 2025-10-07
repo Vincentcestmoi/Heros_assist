@@ -140,7 +140,7 @@ public class Combat {
                     joueur.fin_tour_combat();
                     continue;
                 }
-                if(joueur.familier_peut_pas_jouer()) {
+                if(joueur.a_familier() && joueur.familier_peut_pas_jouer()) {
                     System.out.println("Le familier de " + joueur.getNom() + " ne peut pas réaliser d'action dans l'immédiat.");
                 }
 
@@ -375,6 +375,9 @@ public class Combat {
      * @implNote un joueur peut être entré avec une obéissance de 0.
      */
     private static Action familier_act(Joueur joueur, Action action) throws IOException {
+        if(!joueur.a_familier()){
+            return action;
+        }
         int temp = joueur.get_ob_f() + Input.D6() - 3 + rand.nextInt(2); //valeur d'obéissance à l'action
         if (temp <= 1) {
             System.out.println("Le familier de " + joueur.getNom() + " fuit le combat.");

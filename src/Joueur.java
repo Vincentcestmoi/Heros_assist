@@ -216,6 +216,9 @@ public abstract class Joueur {
     }
 
     public void f_essaie_reveil() throws IOException {
+        if(!f_est_assomme()){
+            return;
+        }
         if (Input.D6() + f_reveil >= 5) {
             System.out.println("Le familier de " + nom + " se réveille.\n");
             f_conscient = true;
@@ -616,6 +619,9 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     public void essaie_reveil() throws IOException {
+        if(!est_assomme()){
+            return;
+        }
         if (Input.D6() + reveil >= 6) {
             System.out.println(nom + " se réveille.\n");
             conscient = true;
