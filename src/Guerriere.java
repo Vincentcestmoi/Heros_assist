@@ -68,6 +68,21 @@ public class Guerriere extends Joueur {
     }
 
     @Override
+    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+        switch(action) {
+            case BERSERK -> {
+                //Sort.berserk(); TODO
+                return true;
+            }
+            case LAME_DAURA -> {
+                //Sort.sort(ennemi); TODO
+                return false;
+            }
+        }
+        return super.traite_action(action, ennemi);
+    }
+
+    @Override
     protected int berserk_fuite() throws IOException {
         if(!est_berserk()){
             return 0;

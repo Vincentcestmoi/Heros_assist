@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Objects;
 
 public class Archimage extends Joueur {
     Metier metier = Metier.ARCHIMAGE;
@@ -60,6 +61,21 @@ public class Archimage extends Joueur {
             }
         }
         return super.action(choix, false);
+    }
+
+    @Override
+    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+        switch(action) {
+            case MEDITATION -> {
+                Sort.meditation();
+                return false;
+            }
+            case SORT -> {
+                //Sort.sort(ennemi); TODO
+                return false;
+            }
+        }
+        return super.traite_action(action, ennemi);
     }
 
     @Override

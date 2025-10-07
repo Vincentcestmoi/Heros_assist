@@ -57,6 +57,25 @@ public class Ranger extends Joueur {
         return super.action(choix, false);
     }
 
+    @Override
+    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+        switch(action) {
+            case CRITIQUE -> {
+                Sort.coup_critique(ennemi);
+                return false;
+            }
+            case ASSAUT -> {
+                //Sort.assaut(ennemi); TODO
+                return false;
+            }
+            case ASSASSINAT -> {
+                Sort.assassinat(ennemi);
+                return false;
+            }
+        }
+        return super.traite_action(action, ennemi);
+    }
+
     public int bonus_exploration(){
         return rand.nextInt(2) /* eclaireur */ + rand.nextInt(3)/* explorateur */;
     }

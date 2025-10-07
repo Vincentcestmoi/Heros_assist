@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Objects;
 
 public class Necromancien extends Joueur {
     Metier metier = Metier.NECROMANCIEN;
@@ -51,6 +52,15 @@ public class Necromancien extends Joueur {
             return Action.MAUDIR;
         }
         return super.action(choix, false);
+    }
+
+    @Override
+    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+        if (Objects.requireNonNull(action) == Action.MAUDIR && !est_berserk()) {
+            Sort.fouille();
+            return false;
+        }
+        return super.traite_action(action, ennemi);
     }
 
     @Override

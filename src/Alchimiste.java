@@ -67,6 +67,25 @@ public class Alchimiste extends Joueur {
         return super.action(choix, false);
     }
 
+    @Override
+    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+        switch (action) {
+            case FOUILLE -> {
+                if (!est_berserk()) {
+                    Sort.fouille();
+                    return false;
+                }
+            }
+            case CONCOCTION -> {
+                if (!est_berserk()) {
+                    Sort.concocter();
+                    return false;
+                }
+            }
+        }
+        return super.traite_action(action, ennemi);
+    }
+
     public void fin_tour_combat(){
 
     }

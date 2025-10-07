@@ -608,6 +608,50 @@ public abstract class Joueur {
     }
 
     /**
+     * Extension du switch principal de Combat.combat, permet de réaliser des actions exclusives aux métiers
+     * @param action l'action à réaliser
+     * @return s'il faut encore réaliser l'action
+     */
+    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+        return true;
+        /* TODO
+                    //compétence de classe
+                    case BERSERK -> {
+                        System.out.println(n + " est prit d'une folie meurtrière !");
+                        berserk[i] = 0.2f + 0.1f * rand.nextInt(9);
+                        ennemi.dommage(Input.atk() + alter_attaque[0], berserk[i]);
+                    }
+                    case LAME_DAURA -> {
+                        if (berserk[i] > 0 && Input.D6() < 4) {
+                            int l;
+                            do {
+                                l = rand.nextInt(8);
+                            } while (!actif[l]);
+                            int temp = Input.atk() + alter_attaque[0];
+                            temp += Main.corriger(temp * (berserk[i] / 2));
+                            System.out.println("Prise de folie, " + n + " attaque " + nom[i] + " et lui infliges " + temp + " dommages !");
+                            berserk[i] += rand.nextInt(3) * 0.1f + 0.1f;
+                        } else {
+                            int temp = Input.atk() + alter_attaque[0];
+                            temp += Main.corriger(temp * berserk[i]);
+                            ennemi.dommage(temp, 2.7F);
+                            System.out.println("L'arme principale de " + n + " se brise !");
+                        }
+                    }
+                    case ASSASSINAT -> {
+                        if(Sort.assassinat(ennemi)){
+                            pr_l = i;
+                        }
+                    }
+                    case LIEN -> {
+                        if(Sort.lien(i, ennemi, mort, actif)){
+                            return;
+                        }
+                    }
+                    } TODO*/
+    }
+
+    /**
      * Contablise les bonus d'exploration des métiers
      * @return le bonus
      */

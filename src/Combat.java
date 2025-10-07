@@ -202,71 +202,11 @@ public class Combat {
                         ennemi.reset_encaisser();
                         competence_avance(ennemi, Main.joueurs[pr_l].getNom());
                     }
-
-                    /* TODO
-                    //compétence de classe
-                    case MAUDIR -> {
-                            Sort.maudir();
+                    default -> {
+                        if (joueur.traite_action(act, ennemi)) {
+                            joueur.attaquer(ennemi);
                         }
                     }
-                    case MEDITATION -> Sort.meditation();
-                    case SORT -> Sort.sort(actif, nom, assomme, reveil, ennemi, i);
-                    case POTION_REZ -> {
-                        int temp = Input.ask_rez(mort);
-                        if (temp != -1 && popo_rez(nom[temp], nom[i])) {
-                            mort[temp] = false;
-                            actif[temp] = true;
-                            assomme[temp] = false;
-                            berserk[temp] = 0F;
-                        }
-                        if (i == pr_l) { //premiere ligne
-                            System.out.println(n + "s'expose pour donner sa potion.");
-                            ennemi.part_soin += 0.4F;
-                        }
-                    }
-                    case BERSERK -> {
-                        System.out.println(n + " est prit d'une folie meurtrière !");
-                        berserk[i] = 0.2f + 0.1f * rand.nextInt(9);
-                        ennemi.dommage(Input.atk() + alter_attaque[0], berserk[i]);
-                    }
-                    case LAME_DAURA -> {
-                        if (berserk[i] > 0 && Input.D6() < 4) {
-                            int l;
-                            do {
-                                l = rand.nextInt(8);
-                            } while (!actif[l]);
-                            int temp = Input.atk() + alter_attaque[0];
-                            temp += Main.corriger(temp * (berserk[i] / 2));
-                            System.out.println("Prise de folie, " + n + " attaque " + nom[i] + " et lui infliges " + temp + " dommages !");
-                            berserk[i] += rand.nextInt(3) * 0.1f + 0.1f;
-                        } else {
-                            int temp = Input.atk() + alter_attaque[0];
-                            temp += Main.corriger(temp * berserk[i]);
-                            ennemi.dommage(temp, 2.7F);
-                            System.out.println("L'arme principale de " + n + " se brise !");
-                        }
-                    }
-                    case FOUILLE -> Sort.fouille();
-                    case CONCOCTION -> Sort.concocter();
-                    case ASSASSINAT -> {
-                        if(Sort.assassinat(ennemi)){
-                            pr_l = i;
-                        }
-                    }
-                    case ASSAUT -> Sort.assaut(ennemi, berserk[i]);
-                    case CRITIQUE -> Sort.coup_critique(ennemi);
-                    case LIEN -> {
-                        if(Sort.lien(i, ennemi, mort, actif)){
-                            return;
-                        }
-                    }
-                    case INCANTATION -> Sort.incantation(i, ennemi, berserk, assomme, reveil, alter_tir, alter_attaque);
-                    case CALME -> {
-                        System.out.println(n + " s'harmonise avec l'univers et laisse retomber sa rage.");
-                        berserk[i] = 0f;
-                    } TODO*/
-
-                    default -> joueur.attaquer(ennemi);
                 }
                 if(joueur.a_familier()) {
                     System.out.println("Le familier de " + joueur.getNom() + " agis.");

@@ -58,6 +58,25 @@ public class Shaman extends Joueur {
     }
 
     @Override
+    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+        switch(action) {
+            case INCANTATION -> {
+                //Sort.incantation(ennemi); TODO
+                return false;
+            }
+            case LIEN -> {
+                //Sort.lien(ennemi); TODO
+                return false;
+            }
+            case CALME -> {
+                calme();
+                return false;
+            }
+        }
+        return super.traite_action(action, ennemi);
+    }
+
+    @Override
     public int bonus_exploration(){
         return rand.nextInt(2) /* eclaireur */;
     }
@@ -107,6 +126,13 @@ public class Shaman extends Joueur {
             return 0;
         }
         return Math.min(0, Math.round(Input.D6() * 0.1f - berserk));
+    }
+
+    //*********************************************METHODE PERSO******************************************************//
+
+    private void calme() {
+        System.out.println(nom + " s'harmonise avec l'univers et laisse retomber sa rage.");
+        this.berserk = 0f;
     }
 
 }
