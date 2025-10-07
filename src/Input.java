@@ -1,64 +1,50 @@
 import java.io.File;
 import java.io.IOException;
-import java.io.BufferedReader;
 import java.io.FileReader;
+import javax.json.*;
 
 public class Input {
-
-    private static final String[] fichLoad = {"nbj", "enfers", "prairie", "vigne", "temple", "mer", "mont", "olympe", "rangO", "rangI", "rangII", "rangIII", "rangIV",
-            "promo_monture", "promo_artefact", "promo_renforcement"};
-
 
     // sauvegarde
 
     /**
-     * Sauvegarde les données enregistrées, ne touche rien si les données sont innaccessibles
-     * @return true si une sauvegarde a été chargée, false sinon
+     * Sauvegarde les données des précedéntes partie et propose aux joueurs de charger une sauvegarde
+     * @return true si la sauvegarde est complété, et false si elle doit être faite à la main
      */
     public static boolean load() throws IOException {
 
-        //choix save
-        boolean[] has_save = new boolean[Main.nb_save];
-        StringBuilder text = new StringBuilder("Choississez une sauvegarde : \n");
-        for (int i = 0; i < Main.nb_save; i++) {
-            File fichier = new File(Main.Path + i + "/" + fichLoad[0]);
-            text.append(i);
-            has_save[i] = (fichier.exists() && !read_log(i + "/" + fichLoad[0]).equals(";") && !read_log(i + "/" + fichLoad[0]).isEmpty());
-            if (!has_save[i]) {
-                text.append(" (vide)");
-            }
-            text.append("\n");
-        }
+        SaveManager.afficherSauvegardes();
         int reponse;
         do {
-            System.out.println(text);
+            System.out.print("Votre choix : ");
             reponse = readInt();
-        } while (reponse < 0 || reponse >= Main.nb_save);
+        } while (reponse < 0 || reponse >= SaveManager.SAVE_DIRS.length);
 
-        Main.Path += reponse + "/";
+        File infoFile = new File(SaveManager.SAVE_DIRS[reponse] + "/info.json");
+        boolean sauvegardeExiste = infoFile.exists();
+
+        Main.Path = reponse;
+
+
 
         // charger ou nouvelle partie
-        if (!has_save[reponse] || !yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la suppression")) {
-            for (String s : fichLoad) {
-                Output.delete_fichier(s);
+        if (!sauvegardeExiste || !yn("Sauvegarde détectée, charger cette sauvegarde ?")) {
+            if (yn("Confirmez la suppression")) {
+                    //Output.delete_fichier(s); //TODO
+                System.out.println("lancement du jeu.\n\n");
+                return false;
             }
-            System.out.println("lancement du jeu.\n\n");
-            return false;
         }
 
-        //charger
-        String temp = read_log("nbj");
-        Main.nbj = Integer.parseInt(temp);
-        Main.joueurs = new Joueur[Main.nbj];
+        // Chargement des joueurs
+        Main.Path = reponse;
+        Main.joueurs = SaveManager.chargerSauvegarde();
+        Main.nbj = Main.joueurs.length;
 
-        //joueurs
-        for (int i = 0; i < Main.nbj; i++) {
-            temp = Main.Path + "Joueur" + i + ".json";
-            Joueur joueur = Joueur.chargerJoueur(temp);
+        for (Joueur joueur : Main.joueurs) {
             System.out.print("Joueur chargé avec succès : ");
             joueur.presente();
             System.out.println();
-            Main.joueurs[i] = joueur;
         }
 
         //monstre nommé
@@ -74,89 +60,54 @@ public class Input {
      * Supprime les objets uniques déjà tirés
      */
     private static void corrige_item() {
-        String[] nomFichier = {"rangO", "rangI", "rangII", "rangIII", "rangIV", "promo_monture", "promo_artefact", "promo_renforcement"};
-        Rang[] rang = {Rang.O, Rang.I, Rang.II, Rang.III, Rang.IV, Rang.PROMOTION, Rang.PROMOTION, Rang.PROMOTION};
-        Promo_Type[] promo = {Promo_Type.QUIT, Promo_Type.QUIT, Promo_Type.QUIT, Promo_Type.QUIT, Promo_Type.QUIT,
-                Promo_Type.MONTURE, Promo_Type.ARTEFACT, Promo_Type.AMELIORATION};
-        String log;
-        for (int i = 0; i < promo.length; i++) {
-            log = read_log(nomFichier[i]);
-            if(log.equals(";") || log.isEmpty()) {
-                continue;
-            }
-            StringBuilder temp = new StringBuilder();
-            for (int j = 0; j < log.length(); j++) {
-                if (log.charAt(j) == ',') {
-                    Pre_Equipement.safe_delete(temp.toString(), rang[i], promo[i]);
-                    temp = new StringBuilder();
-                } else if (log.charAt(j) == ';' || log.charAt(j) == '\n') {
-                    Pre_Equipement.safe_delete(temp.toString(), rang[i], promo[i]);
-                    j = log.length() + 1;
+        try (JsonReader reader = Json.createReader(new FileReader("Save" + Main.Path + "/info.json"))) {
+            JsonObject info = reader.readObject();
+            JsonObject items = info.getJsonObject("items_uniques");
+            if (items == null) return;
+
+            for (String rangKey : items.keySet()) {
+                if (!rangKey.equals("PROMOTION")) {
+                    Rang rang = Rang.valueOf(rangKey);
+                    JsonArray noms = items.getJsonArray(rangKey);
+                    for (JsonValue val : noms) {
+                        Pre_Equipement.safe_delete(((JsonString) val).getString(), rang, Promo_Type.QUIT);
+                    }
                 } else {
-                    temp.append(log.charAt(j));
+                    JsonObject promoObj = items.getJsonObject("PROMOTION");
+                    for (String promoKey : promoObj.keySet()) {
+                        Promo_Type promo = Promo_Type.valueOf(promoKey);
+                        JsonArray noms = promoObj.getJsonArray(promoKey);
+                        for (JsonValue val : noms) {
+                            Pre_Equipement.safe_delete(((JsonString) val).getString(), Rang.PROMOTION, promo);
+                        }
+                    }
                 }
             }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture des items uniques : " + e.getMessage());
         }
     }
+
 
     /**
      * Supprime les monstres nommés enregistrés comme abscent
      */
     private static void corrige_nomme() {
-        String[] nomFichier = {"enfers", "prairie", "vigne", "temple", "mer", "mont", "olympe"};
-        String log;
-        for (String s : nomFichier) {
-            log = read_log(s);
-            if(log.equals(";") || log.isEmpty()) {
-                continue;
-            }
-            StringBuilder temp = new StringBuilder();
-            for (int j = 0; j < log.length(); j++) {
-                if (log.charAt(j) == ',') {
-                    Combat.delete_monstre(temp.toString());
-                    temp = new StringBuilder();
-                } else if (log.charAt(j) == ';' || log.charAt(j) == '\n') {
-                    Combat.delete_monstre(temp.toString());
-                    j = log.length() + 1;
-                } else {
-                    temp.append(log.charAt(j));
-                }
-            }
-        }
-    }
+        try (JsonReader reader = Json.createReader(new FileReader("Save" + Main.Path + "/info.json"))) {
+            JsonObject info = reader.readObject();
+            JsonArray monstres = info.getJsonArray("monstres_nommes");
 
-    /**
-     * Lis un fichoer
-     * @param cheminFichier le chemin du fichier
-     * @return le contenu du fichier
-     */
-    public static String read_log(String cheminFichier) {
-        File fichier = new File(Main.Path + cheminFichier);
-        StringBuilder text = new StringBuilder();
+            if (monstres == null) return;
 
-        if (!fichier.exists()) {
-            System.out.println("Le fichier '" + cheminFichier + "' n'existe pas.");
-            try {
-                if (fichier.createNewFile()) {
-                    System.out.println("✅ Fichier '" + cheminFichier + "' créé avec succès !");
-                    return text.toString();
-                }
-            }
-            catch (IOException e) {
-                System.out.println("Erreur : " + e.getMessage());
-            }
-        }
-
-        try (BufferedReader br = new BufferedReader(new FileReader(fichier))) {
-            String ligne;
-            while ((ligne = br.readLine()) != null) {
-                text.append(ligne);
+            for (JsonValue val : monstres) {
+                String nom = ((JsonString) val).getString();
+                Combat.delete_monstre(nom);
             }
         } catch (IOException e) {
-            System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
+            System.err.println("Erreur lors de la lecture des monstres nommés : " + e.getMessage());
         }
-        return text.toString();
     }
+
 
     // ********************************************************************************************************** //
 
