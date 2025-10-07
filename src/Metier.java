@@ -5,5 +5,5 @@ public enum Metier {
     GUERRIERE,
     RANGER,
     SHAMAN,
-    AUCUN,
+    TRYHARDER,
 }

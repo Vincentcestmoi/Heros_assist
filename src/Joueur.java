@@ -52,7 +52,7 @@ public abstract class Joueur {
             case GUERRIERE -> new Guerriere(nom, position, ob_f);
             case RANGER -> new Ranger(nom, position, ob_f);
             case SHAMAN -> new Shaman(nom, position, ob_f);
-            case AUCUN -> new Tryharder(nom, position, ob_f);
+            case TRYHARDER -> new Tryharder(nom, position, ob_f);
         };
     }
 
@@ -216,7 +216,7 @@ public abstract class Joueur {
     }
 
     public void f_essaie_reveil() throws IOException {
-        if(!f_est_assomme()){
+        if(!a_familier() || !f_est_assomme()){
             return;
         }
         if (Input.D6() + f_reveil >= 5) {
