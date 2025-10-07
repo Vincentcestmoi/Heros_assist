@@ -155,7 +155,7 @@ public abstract class Joueur {
     //************************************************METHODE INDEPENDANTE********************************************//
 
     public void init_affrontement(boolean force, Position pos) throws IOException {
-        if(!force && (pos != position || Input.yn("Est-ce que " + nom + " participe au combat ?"))){
+        if(!force && (pos != position || !Input.yn("Est-ce que " + nom + " participe au combat ?"))){
             return;
         }
         actif = true;
