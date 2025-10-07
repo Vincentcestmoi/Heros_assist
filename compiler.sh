@@ -20,5 +20,6 @@ mkdir -p bin
 # Compilation récursive de tous les .java
 find src -name "*.java" > sources.txt
 javac -cp "lib/*" -d bin @sources.txt
+rm sources.txt
 
 echo "✅ Compilation terminée. Les fichiers .class sont dans bin/"
