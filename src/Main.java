@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 
 import static java.lang.Math.max;
@@ -7,7 +8,7 @@ import static java.lang.Math.max;
 public class Main {
     
     static final Random rand = new Random();
-    static String Path = "../Save";
+    static String Path = "Save";
     static final int nb_save = 3;
     static final int f_max = 7;
     static final int nbj_max = 8;
@@ -16,6 +17,9 @@ public class Main {
     static public Joueur[] joueurs;
 
     public static void main(String[] args) throws IOException {
+
+        if(!Arrays.equals(args, new String[]{}))
+            Path = args[0];
 
         if (!Input.load()) {
             init_game();
