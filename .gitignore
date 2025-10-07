@@ -36,4 +36,5 @@ Save2/*
 .ods
 */ods
 */.ods
-*.ods
+*.ods*
+/table/.~lock.Vincent_ranger.ods#
