@@ -115,7 +115,7 @@ public class Combat {
         }
 
         int i;
-        Action act, act_f;
+        Action act, act_f = Action.AUCUNE;
         Joueur joueur;
         boolean run = ennemi.check_mort();
         while (run) {
@@ -131,12 +131,16 @@ public class Combat {
                 }
 
                 joueur.essaie_reveil();
-                joueur.f_essaie_reveil();
+                if(joueur.a_familier()) {
+                    joueur.f_essaie_reveil();
+                }
 
                 // resurection, être assommé, etc.
                 if (!joueur.peut_jouer()) {
                     System.out.println(joueur.getNom() + " ne peut pas réaliser d'action dans l'immédiat.");
-                    joueur.familier_seul(ennemi);
+                    if(joueur.a_familier()) {
+                        joueur.familier_seul(ennemi);
+                    }
                     joueur.fin_tour_combat();
                     continue;
                 }
@@ -147,7 +151,9 @@ public class Combat {
 
                 // action
                 act = Input.action(joueur, false);
-                act_f = familier_act(joueur, Input.action(joueur, true));
+                if(joueur.a_familier()) {
+                    act_f = familier_act(joueur, Input.action(joueur, true));
+                }
                 switch (act) {
                     case OFF -> {
                         alteration(joueur);
@@ -262,15 +268,16 @@ public class Combat {
 
                     default -> joueur.attaquer(ennemi);
                 }
-                System.out.println("Le familier de " + joueur.getNom() + " agis.");
-
-                switch (act_f) {
-                    case FUIR -> joueur.f_fuir();
-                    case AUTRE -> System.out.println("Le famillier de " + joueur.getNom() + " fait quelque chose.");
-                    case ENCAISSER -> ennemi.f_encaisser();
-                    case AVANCER -> joueur.f_faire_front();
-                    case PROTEGER -> joueur.f_proteger(ennemi);
-                    default -> joueur.f_attaque(ennemi);
+                if(joueur.a_familier()) {
+                    System.out.println("Le familier de " + joueur.getNom() + " agis.");
+                    switch (act_f) {
+                        case FUIR -> joueur.f_fuir();
+                        case AUTRE -> System.out.println("Le famillier de " + joueur.getNom() + " fait quelque chose.");
+                        case ENCAISSER -> ennemi.f_encaisser();
+                        case AVANCER -> joueur.f_faire_front();
+                        case PROTEGER -> joueur.f_proteger(ennemi);
+                        default -> joueur.f_attaque(ennemi);
+                    }
                 }
 
                 // s'assure qu'un participant est toujours en première ligne
