@@ -45,13 +45,13 @@ public class Combat {
         else {
             pr_l = getPrL(nb_part);
         }
+
         if(Main.joueurs[pr_l].a_familier_front()){
             System.out.println("Le familier de " + Main.joueurs[pr_l].getNom() + " se retrouve en première ligne.\n");
         }
         else{
             System.out.println(Main.joueurs[pr_l].getNom() + " se retrouve en première ligne.\n");
         }
-
 
         if (competence(ennemi, pr_l)) {
             return;
@@ -89,8 +89,8 @@ public class Combat {
         // z'avez plus le choix
         int i;
         do {
-            i = rand.nextInt(Main.nbj * 2);
-        } while (Main.joueurs[i].faire_front(true));
+            i = rand.nextInt(Main.nbj);
+        } while (!Main.joueurs[i].faire_front(true));
         return i;
     }
 
@@ -266,7 +266,7 @@ public class Combat {
 
                 switch (act_f) {
                     case FUIR -> joueur.f_fuir();
-                    case AUTRE -> System.out.println("Le famillier de" + joueur.getNom() + " fait quelque chose.");
+                    case AUTRE -> System.out.println("Le famillier de " + joueur.getNom() + " fait quelque chose.");
                     case ENCAISSER -> ennemi.f_encaisser();
                     case AVANCER -> joueur.f_faire_front();
                     case PROTEGER -> joueur.f_proteger(ennemi);
@@ -605,7 +605,7 @@ public class Combat {
             }
             case SUSPICIEUX -> {
                 int tolerance = ennemi.attaque * 2;
-                for (int i = 0; i < Main.nbj * 2; i++) {
+                for (int i = 0; i < Main.nbj; i++) {
                     if (Main.joueurs[i].est_actif()) {
                         System.out.print(Main.joueurs[i].getNom() + " ");
                         tolerance -= 2 * Input.def();
@@ -624,7 +624,7 @@ public class Combat {
             }
             case MEFIANT -> {
                 int tolerance = ennemi.vie + ennemi.armure * 3 + ennemi.attaque;
-                for (int i = 0; i < Main.nbj * 2; i++) {
+                for (int i = 0; i < Main.nbj; i++) {
                     if (Main.joueurs[i].est_actif()) {
                         System.out.print(Main.joueurs[i].getNom() + " ");
                         tolerance -= 3 * Input.def();
@@ -760,27 +760,16 @@ public class Combat {
         if (ennemi.competence == Competence.PRUDENT || ennemi.competence == Competence.MEFIANT || ennemi.competence == Competence.SUSPICIEUX ||
                 ennemi.competence == Competence.CHRONOS) {
             delete_monstre_nomme(ennemi.nom);
+            delete_monstre(ennemi.nom);
         }
     }
 
     /**
      * Supprime le monstre nommé donné de sa liste
-     *
      * @param monstre le nom du monstre à supprimer
-     * @implNote ne couvre que les monstres nommés, utiliser delete_montre sinon
      */
     static void delete_monstre_nomme(String monstre) {
-        Race[] list = getList(monstre);
-        if (list != null) {
-            for (int i = 0; i < list.length; i++) {
-                if (list[i] != null && Objects.equals(list[i].nom, monstre)) {
-                    list[i] = null;
-                    Output.dismiss_race(getListnom(monstre), monstre);
-                    return;
-                }
-            }
-        }
-        System.out.println(monstre + " non reconnu comme monstre nommé, utilisez delete_montre pour supprimer.");
+        Output.dismiss_race(monstre);
     }
 
     /**
@@ -977,7 +966,7 @@ public class Combat {
     }
 
     static private void gestion_mort_end() throws IOException {/* TODO
-        for (int i = 0; i < Main.nbj * 2; i++) {
+        for (int i = 0; i < Main.nbj; i++) {
             if (morts[i] && Input.yn(nom[i] + " est mort durant le combat, le reste-t-il/elle ?")) {
                 if ((Main.metier[i] == Metier.GUERRIERE && Input.D10() > 6)
                         || (Main.metier[i] == Metier.SHAMAN && Input.D10() > 8)) {
