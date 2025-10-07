@@ -193,6 +193,11 @@ public abstract class Joueur {
         f_front = true;
     }
 
+    /**
+     * Simule l'action d'un familer auquel on ne donne pas d'ordre
+     * @param ennemi le monstre ennemi
+     * @throws IOException toujours
+     */
     public void familier_seul(Monstre ennemi) throws IOException {
         if(!a_familier_actif() || ob_f <= 3 || f_est_assomme()){
             return;
@@ -215,8 +220,12 @@ public abstract class Joueur {
         f_actif = false;
     }
 
+    /**
+     * Le familier du joueur essaie de se réveiller, sans effet s'il est conscient
+     * @throws IOException toujours
+     */
     public void f_essaie_reveil() throws IOException {
-        if(!a_familier() || !f_est_assomme()){
+        if(!f_est_assomme()){
             return;
         }
         if (Input.D6() + f_reveil >= 5) {
