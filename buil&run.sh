@@ -1,0 +1,2 @@
+./compiler.sh
+./lancer.sh
