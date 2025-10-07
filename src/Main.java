@@ -8,8 +8,7 @@ import static java.lang.Math.max;
 public class Main {
     
     static final Random rand = new Random();
-    static String Path = "Save";
-    static final int nb_save = 3;
+    static int Path = -1; //-1 = vide
     static final int f_max = 7;
     static final int nbj_max = 8;
     static public int nbj;
@@ -19,7 +18,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         if(!Arrays.equals(args, new String[]{}))
-            Path = args[0];
+            Path = Integer.parseInt(args[0]);
 
         if (!Input.load()) {
             init_game();
@@ -61,15 +60,14 @@ public class Main {
                 }
                 case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
             }
-
-            Output.save_data();
+            SaveManager.sauvegarder(true);
             System.out.println();
             i++;
         }
         
         //arrêt
         System.out.println("Sauvegarde des données joueurs.");
-        Output.save_data();
+        SaveManager.sauvegarder(false);
         System.out.println("Fin du programme");
     }
 
@@ -401,29 +399,20 @@ public class Main {
         };
     }
 
-    /**
-     * Convertie un métier en texte
-     * @param m le métier
-     * @return un String associé
-     */
-    static public String texte_metier(Metier m){
-        return switch (m){
-            case NECROMANCIEN -> "nécromancien";
-            case ALCHIMISTE -> "alchimiste";
-            case ARCHIMAGE -> "archimage";
-            case GUERRIERE -> "guerrière";
-            case RANGER -> "ranger";
-            case SHAMAN -> "shaman";
-            case AUCUN -> Output.barrer("chomeur") + "tryhardeur";
-        };
-    }
-
 
     /**
      * Initialise les paramètres d'une partie de zéro
      * @throws IOException toujours
      */
     private static void init_game() throws IOException {
+        //titre
+        String titre;
+        do {
+            System.out.print("Entrez le nom de la sauvegarde :");
+            titre = Input.read();
+        }while(!Input.yn("Confirmez vous le titre : " + titre + "?"));
+
+        //nbj
         System.out.print("Entrez le nombre de joueur :");
         Main.nbj = Input.readInt();
         while(Main.nbj <= 0 || Main.nbj > Main.nbj_max) {
@@ -450,7 +439,7 @@ public class Main {
 
             // metier
             boolean run = true;
-            Metier metier = Metier.AUCUN;
+            Metier metier = Metier.TRYHARDER;
             String[] job = {"(ne)cromancien", "archi(ma)ge", "(al)chimiste", "(gu)erriere", "(ra)nger", "(sh)aman", "(au)cun"};
             while(run) {
                 run = false;
@@ -465,7 +454,7 @@ public class Main {
                     case "al" -> metier = Metier.ALCHIMISTE;
                     case "gu" -> metier = Metier.GUERRIERE;
                     case "sh" -> metier = Metier.SHAMAN;
-                    case "au" -> {} //on évite d'activer le default
+                    case "au" -> {}
                     default -> {
                         System.out.println("Unknow Input");
                         run = true;
@@ -477,6 +466,7 @@ public class Main {
             joueurs[i].presente();
             System.out.println();
         }
+        SaveManager.creerSauvegarde(titre, Main.nbj);
     }
 
     /**
@@ -496,13 +486,4 @@ public class Main {
         return max(Math.round(valeur), min);
     }
 
-    /**
-     * Renvoie l'arrondit de la valeur donnée
-     * @param min un minorant au résultat
-     * @param maj un majorant au résultat
-     * @param valeur le float à corriger
-     */
-    static int corriger(float valeur, int min, int maj){
-        return Math.min(max(Math.round(valeur), min), maj);
-    }
 }

@@ -7,6 +7,7 @@ public class Pre_Equipement {
     public Rang rang;
     public Effet_equip effet;
     public boolean is_unique;
+    public Promo_Type promo_type;
 
     Pre_Equipement(String nom, Base base, Rang rang, Effet_equip effet, boolean is_unique) {
         this.nom = nom;
@@ -14,9 +15,18 @@ public class Pre_Equipement {
         this.rang = rang;
         this.effet = effet;
         this.is_unique = is_unique;
+        this.promo_type = Promo_Type.QUIT;
     }
 
-    static Input input = new Input();
+    Pre_Equipement(String nom, Base base, Rang rang, Effet_equip effet, Promo_Type promo_type) {
+        this.nom = nom;
+        this.base = base;
+        this.rang = rang;
+        this.effet = effet;
+        this.is_unique = true;
+        this.promo_type = promo_type;
+    }
+
     static Random rand = new Random();
 
     /**
@@ -68,86 +78,13 @@ public class Pre_Equipement {
         };
     }
 
-/**
-     * S'assure que les équipements uniques ne peuvent être tiré plusieurs fois
+    /**
+     * Retire les objets uniques déjà droppés des listes de drops
      */
     private void safe_delete() {
-        if(!is_unique){
-            return;
+        if(this.is_unique) {
+            Output.dismiss_item(this);
         }
-        Pre_Equipement[] list;
-        String nom;
-        switch(rang){
-            case O -> {
-                list = rang0;
-                nom = "rangO";
-            }
-            case I -> {
-                list = rang1;
-                nom = "rangI";
-            }
-            case II -> {
-                list = rang2;
-                nom = "rangII";
-            }
-            case III -> {
-                list = rang3;
-                nom = "rangIII";
-            }
-            case IV -> {
-                list = rang4;
-                nom = "rangIV";
-            }
-            default -> {
-                System.out.println("Erreur : l'équipement " + this.nom + " n'a pas de liste correspondante.");
-                return;
-            }
-        }
-        for(int i = 0; i < list.length; i++){
-            if(list[i] != null && list[i].equals(this)){
-                Output.dismiss_item(nom, list[i]);
-                list[i] = null;
-                return;
-            }
-        }
-        System.out.println("Erreur : l'équipement " + nom + " n'existe pas dans la liste donnée.");
-    }
-
-    /**
-     * La méthode safe_delete mais pour les promotions
-     * @param type le type spécifique de promotion
-     */
-    private void safe_delete(Promo_Type type) {
-        Pre_Equipement[] list;
-        String nom;
-        switch (type) {
-            case MONTURE -> {
-                list = prom_list_mont;
-                nb_monture -= 1;
-                nom = "promo_monture";
-            }
-            case AMELIORATION -> {
-                list = prom_list_boost;
-                nb_boost -= 1;
-                nom = "promo_renforcement";
-            }
-            case ARTEFACT -> {
-                list = prom_list_arte;
-                nb_arte -= 1;
-                nom = "promo_artefact";
-            }
-            default -> {
-                return;
-            }
-        }
-        for(int i = 0; i < list.length; i++) {
-            if (list[i] != null && list[i].equals(this)) {
-                Output.dismiss_item(nom, list[i]);
-                list[i] = null;
-                return;
-            }
-        }
-        System.out.println("Erreur : Element " + nom + " introuvable dans la liste correspondante.");
     }
 
     /**
@@ -233,7 +170,7 @@ public class Pre_Equipement {
     public static Pre_Equipement drop_promo() throws IOException {
         System.out.println("Vous récupérez une promotion.");
         Pre_Equipement[] list;
-        Promo_Type type = input.promo();
+        Promo_Type type = Input.promo();
         switch (type){
             case MONTURE -> list = prom_list_mont;
             case AMELIORATION -> list = prom_list_boost;
@@ -249,7 +186,7 @@ public class Pre_Equipement {
             t = rand.nextInt(list.length);
             equip = list[t];
         }while(equip == null);
-        equip.safe_delete(type);
+        equip.safe_delete();
         return equip;
     }
 
@@ -458,40 +395,40 @@ public class Pre_Equipement {
     static Pre_Equipement[] rang4 = {nectar, ambroisie, fleche_plusIV, arcIV, main1IV, main2IV,
         armureIV, casqueIV, bouclierIV, ceintureIV, braceletIV, parch_volcan, parch_abso};
 
-    static Pre_Equipement pegase = new Pre_Equipement("Pégase", MONTURE, PROMOTION, Effet_equip.PEGASE, true);
-    static Pre_Equipement cheval = new Pre_Equipement("Cheval", MONTURE, PROMOTION, Effet_equip.CHEVAL, true);
-    static Pre_Equipement molosse = new Pre_Equipement("Molosse infernal", MONTURE, PROMOTION, Effet_equip.MOLOSSE, true);
-    static Pre_Equipement pie = new Pre_Equipement("Pie voleuse", MONTURE, PROMOTION, Effet_equip.PIE, true);
-    static Pre_Equipement sphinx = new Pre_Equipement("Sphinx", MONTURE, PROMOTION, Effet_equip.SPHINX, true);
+    static Pre_Equipement pegase = new Pre_Equipement("Pégase", MONTURE, PROMOTION, Effet_equip.PEGASE, Promo_Type.MONTURE);
+    static Pre_Equipement cheval = new Pre_Equipement("Cheval", MONTURE, PROMOTION, Effet_equip.CHEVAL, Promo_Type.MONTURE);
+    static Pre_Equipement molosse = new Pre_Equipement("Molosse infernal", MONTURE, PROMOTION, Effet_equip.MOLOSSE, Promo_Type.MONTURE);
+    static Pre_Equipement pie = new Pre_Equipement("Pie voleuse", MONTURE, PROMOTION, Effet_equip.PIE, Promo_Type.MONTURE);
+    static Pre_Equipement sphinx = new Pre_Equipement("Sphinx", MONTURE, PROMOTION, Effet_equip.SPHINX, Promo_Type.MONTURE);
 
     static Pre_Equipement[] prom_list_mont = {pegase, cheval, molosse, pie, sphinx};
     static public int nb_monture = prom_list_mont.length;
 
-    static Pre_Equipement broches = new Pre_Equipement("Broche souverraine", AUTRE, PROMOTION, Effet_equip.ALTRUISME, true);
-    static Pre_Equipement tal_ar = new Pre_Equipement("Talisman d'acier", AUTRE, PROMOTION, Effet_equip.ARMURE1, true);
-    static Pre_Equipement tal_a = new Pre_Equipement("Talisman offensif", AUTRE, PROMOTION, Effet_equip.ATTAQUE2, true);
-    static Pre_Equipement tal_r = new Pre_Equipement("Talisman défensif", AUTRE, PROMOTION, Effet_equip.RESISTANCE3, true);
-    static Pre_Equipement fleche_plusP = new Pre_Equipement("Tir assisté", AUTRE, PROMOTION, Effet_equip.ARCA, true);
-    static Pre_Equipement fleche_plusP2 = new Pre_Equipement("Bénédiction magique", AUTRE, PROMOTION, Effet_equip.ARCA, true);
-    static Pre_Equipement fleche_plusP3 = new Pre_Equipement("Flèches chamaniques", AUTRE, PROMOTION, Effet_equip.ARCA, true);
-    static Pre_Equipement rune_arca = new Pre_Equipement("Rune arcanique", RUNE, PROMOTION, Effet_equip.RUNE_ARCA, true);
-    static Pre_Equipement antidote = new Pre_Equipement("Vin d'Asclépios", CONSO_MAIN, PROMOTION,  Effet_equip.ANTIDODE, true);
+    static Pre_Equipement broches = new Pre_Equipement("Broche souverraine", AUTRE, PROMOTION, Effet_equip.ALTRUISME, Promo_Type.AMELIORATION);
+    static Pre_Equipement tal_ar = new Pre_Equipement("Talisman d'acier", AUTRE, PROMOTION, Effet_equip.ARMURE1, Promo_Type.AMELIORATION);
+    static Pre_Equipement tal_a = new Pre_Equipement("Talisman offensif", AUTRE, PROMOTION, Effet_equip.ATTAQUE2, Promo_Type.AMELIORATION);
+    static Pre_Equipement tal_r = new Pre_Equipement("Talisman défensif", AUTRE, PROMOTION, Effet_equip.RESISTANCE3, Promo_Type.AMELIORATION);
+    static Pre_Equipement fleche_plusP = new Pre_Equipement("Tir assisté", AUTRE, PROMOTION, Effet_equip.ARCA, Promo_Type.AMELIORATION);
+    static Pre_Equipement fleche_plusP2 = new Pre_Equipement("Bénédiction magique", AUTRE, PROMOTION, Effet_equip.ARCA, Promo_Type.AMELIORATION);
+    static Pre_Equipement fleche_plusP3 = new Pre_Equipement("Flèches chamaniques", AUTRE, PROMOTION, Effet_equip.ARCA, Promo_Type.AMELIORATION);
+    static Pre_Equipement rune_arca = new Pre_Equipement("Rune arcanique", RUNE, PROMOTION, Effet_equip.RUNE_ARCA, Promo_Type.AMELIORATION);
+    static Pre_Equipement antidote = new Pre_Equipement("Vin d'Asclépios", CONSO_MAIN, PROMOTION,  Effet_equip.ANTIDODE, Promo_Type.AMELIORATION);
 
     static Pre_Equipement[] prom_list_boost = {broches, tal_ar, tal_a, tal_r, fleche_plusP, fleche_plusP2, fleche_plusP3,
             rune_arca, antidote};
     static public int nb_boost = prom_list_boost.length;
 
 
-    static Pre_Equipement rune_anni = new Pre_Equipement("Inverteur de fision", AUTRE, PROMOTION, Effet_equip.ANNIHILITON, true);
-    static Pre_Equipement rez = new Pre_Equipement("Tatouage de Résurection", AUTRE, PROMOTION, Effet_equip.REZ, true);
-    static Pre_Equipement fuite = new Pre_Equipement("Téleporteur courte porté", AUTRE, PROMOTION, Effet_equip.FUITE, true);
-    static Pre_Equipement parch_lum = new Pre_Equipement("Parchemin de lumière", AUTRE, PROMOTION, Effet_equip.PARCH_LUMIERE, true);
-    static Pre_Equipement grenade = new Pre_Equipement("Grenades", CONSO_EX, PROMOTION, Effet_equip.GRENADE, true);
-    static Pre_Equipement popo_vitesse = new Pre_Equipement("Potion de vitesse", AUTRE, PROMOTION, Effet_equip.PROTECTION, true);
-    static Pre_Equipement popo_PP = new Pre_Equipement("Potion lente", CONSO_MAIN, PROMOTION, Effet_equip.PPL, true);
-    static Pre_Equipement barque = new Pre_Equipement("Navire magique", AUTRE, PROMOTION, Effet_equip.MER_EXP, true);
-    static Pre_Equipement barriere = new Pre_Equipement("Protection absolue", AUTRE, PROMOTION, Effet_equip.ITEM_IMMUN, true);
-    static Pre_Equipement seconde_chance = new Pre_Equipement("Sacoche temporelle", AUTRE, PROMOTION, Effet_equip.SAC_TEMP, true);
+    static Pre_Equipement rune_anni = new Pre_Equipement("Inverteur de fision", AUTRE, PROMOTION, Effet_equip.ANNIHILITON, Promo_Type.ARTEFACT);
+    static Pre_Equipement rez = new Pre_Equipement("Tatouage de Résurection", AUTRE, PROMOTION, Effet_equip.REZ, Promo_Type.ARTEFACT);
+    static Pre_Equipement fuite = new Pre_Equipement("Téleporteur courte porté", AUTRE, PROMOTION, Effet_equip.FUITE, Promo_Type.ARTEFACT);
+    static Pre_Equipement parch_lum = new Pre_Equipement("Parchemin de lumière", AUTRE, PROMOTION, Effet_equip.PARCH_LUMIERE, Promo_Type.ARTEFACT);
+    static Pre_Equipement grenade = new Pre_Equipement("Grenades", CONSO_EX, PROMOTION, Effet_equip.GRENADE, Promo_Type.ARTEFACT);
+    static Pre_Equipement popo_vitesse = new Pre_Equipement("Potion de vitesse", AUTRE, PROMOTION, Effet_equip.PROTECTION, Promo_Type.ARTEFACT);
+    static Pre_Equipement popo_PP = new Pre_Equipement("Potion lente", CONSO_MAIN, PROMOTION, Effet_equip.PPL, Promo_Type.ARTEFACT);
+    static Pre_Equipement barque = new Pre_Equipement("Navire magique", AUTRE, PROMOTION, Effet_equip.MER_EXP, Promo_Type.ARTEFACT);
+    static Pre_Equipement barriere = new Pre_Equipement("Protection absolue", AUTRE, PROMOTION, Effet_equip.ITEM_IMMUN, Promo_Type.ARTEFACT);
+    static Pre_Equipement seconde_chance = new Pre_Equipement("Sacoche temporelle", AUTRE, PROMOTION, Effet_equip.SAC_TEMP, Promo_Type.ARTEFACT);
 
     static Pre_Equipement[] prom_list_arte = {rune_anni, rez, fuite, parch_lum, grenade, fuite, popo_vitesse, popo_PP,
             barque, barriere, seconde_chance};
