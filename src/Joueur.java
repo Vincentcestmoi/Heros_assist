@@ -145,7 +145,7 @@ public abstract class Joueur {
      * Présente la condition et position du joueur
      */
     public void presente(){
-        System.out.print(this.nom + " est " + Main.texte_metier(getMetier()) + " et se trouve " + Main.texte_pos(getPosition()));
+        System.out.print(this.nom + " est " + getMetier().toString() + " et se trouve " + Main.texte_pos(getPosition()));
         if(a_familier()){
             System.out.print(" avec son familier");
         }
