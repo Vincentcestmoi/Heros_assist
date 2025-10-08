@@ -151,7 +151,7 @@ public class Output {
      */
     static void jouerSonDe() {
         try {
-            File fichierAudio = new File("son_des.wav");
+            File fichierAudio = new File("Audio/son_des.wav");
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(fichierAudio);
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
