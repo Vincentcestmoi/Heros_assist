@@ -25,9 +25,10 @@ public class Main {
         }
         
         boolean run = true;
-        int i = 0;
+        int i = nbj;
         while (run) {
             if (i == nbj) {
+                SaveManager.sauvegarder(true); // sauvegarde auto
                 i = 0;
             }
             
@@ -60,7 +61,6 @@ public class Main {
                 }
                 case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
             }
-            SaveManager.sauvegarder(true);
             System.out.println();
             i++;
         }
