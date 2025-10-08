@@ -553,7 +553,7 @@ public class Combat {
         if (ob < 1 || ob == Main.f_max) {
             return true;
         }
-        int temp = ob + input.D6() - 3 + rand.nextInt(2); //valeur d'obeisance à l'action
+        int temp = ob + input.D6() - 1 + rand.nextInt(2); //valeur d'obeisance à l'action
         if (temp <= 1) {
             System.out.println(n + " fuit le combat.");
             actif[index] = false;
