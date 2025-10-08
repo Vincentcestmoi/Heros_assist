@@ -267,15 +267,15 @@ public class Main {
                 System.out.println();
                 yield 0;
             }
-            case 2, 3 -> {
+            case 2 -> {
                 System.out.println("Vous familier n'a pas l'air très attentif...\n");
                 yield 0;
             }
-            case 4, 5 -> {
+            case 3, 4, 5 -> {
                 System.out.println("Votre familier vous respecte un peu plus.\n");
                 yield 1;
             }
-            case 6, 7 -> {
+            case 6, 7, 8 -> {
                 if (input.D4() >= 3) {
                     System.out.println("Votre familier semble particulièrement apprécier votre entrainement !\n");
                     yield 2;
