@@ -1,3 +1,14 @@
+package Metiers;
+
+import Exterieur.Input;
+
+import Enum.Metier;
+import Enum.Position;
+import Enum.Action;
+import Enum.Position;
+
+import Monstre.Monstre;
+
 import java.io.IOException;
 import java.util.Objects;
 
@@ -8,14 +19,14 @@ public class Necromancien extends Joueur {
         super(nom, position, ob_f);
     }
 
-    protected Metier getMetier() {
+    public Metier getMetier() {
         return metier;
     }
 
     @Override
     public void presente_base() {
-        System.out.println("Necromancien");
-        System.out.println("Base : Résistance : 4 ; attaque : 1 ; PP: 6/8");
+        System.out.println("Metiers.Necromancien");
+        System.out.println("Enum.Base : Résistance : 4 ; attaque : 1 ; PP: 6/8");
         System.out.println("Caractéristiques : Thaumaturge, Rite sacrificiel");
         System.out.println("Pouvoir : Appel des morts, Résurrection, Zombification, Malédiction");
     }
@@ -28,7 +39,7 @@ public class Necromancien extends Joueur {
     @Override
     public boolean tour(String choix) throws IOException {
         if(choix.equalsIgnoreCase("ap")){
-            Sort.necromancie(getPosition());
+            // TODO Sort.necromancie(getPosition());
             return true;
         }
         return false;

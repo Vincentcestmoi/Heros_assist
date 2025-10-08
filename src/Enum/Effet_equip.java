@@ -1,3 +1,5 @@
+package Enum;
+
 public enum Effet_equip {
     AUCUN,
     PASDP,

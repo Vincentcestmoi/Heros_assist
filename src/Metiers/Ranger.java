@@ -1,3 +1,11 @@
+package Metiers;
+
+import Enum.Metier;
+import Enum.Position;
+import Enum.Action;
+
+import Monstre.Monstre;
+
 import java.io.IOException;
 
 public class Ranger extends Joueur {
@@ -7,14 +15,14 @@ public class Ranger extends Joueur {
         super(nom, position, ob_f);
     }
 
-    protected Metier getMetier() {
+    public Metier getMetier() {
         return metier;
     }
 
     @Override
     public void presente_base() {
-        System.out.println("Ranger");
-        System.out.println("Base : Résistance : 4 ; attaque : 2 ; PP: 4/4");
+        System.out.println("Metiers.Ranger");
+        System.out.println("Enum.Base : Résistance : 4 ; attaque : 2 ; PP: 4/4");
         System.out.println("Caractéristiques : Explorateur, Eclaireur, Tireur d'élite, Assassin");
         System.out.println("Pouvoir : Assassinat, Coup critique, Assaut");
     }
@@ -65,7 +73,7 @@ public class Ranger extends Joueur {
                 return false;
             }
             case ASSAUT -> {
-                //Sort.assaut(ennemi); TODO
+                //Metiers.Sort.assaut(ennemi); TODO
                 return false;
             }
             case ASSASSINAT -> {

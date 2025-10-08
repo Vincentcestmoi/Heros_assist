@@ -1,3 +1,10 @@
+package Monstre;
+
+import Equipement.Equipement;
+import Exterieur.Input;
+import Enum.Competence;
+import main.Main;
+
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Random;
@@ -52,6 +59,113 @@ public class Monstre {
 
     static Random rand = new Random();
 
+    public String getNom() {
+        return nom;
+    }
+
+    public Competence getCompetence() {
+        return competence;
+    }
+
+    public int getVieMax(){
+        return vie_max;
+    }
+
+    public int getVie(){
+        return vie;
+    }
+
+    public int getAtk(){
+        return attaque;
+    }
+
+    public int getArmure(){
+        return armure;
+    }
+
+    /**
+     * Augmente/Modifie l'attaque
+     * @param value la modification à appliquer
+     * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
+     */
+    public void bostAtk(int value, boolean fondamental) {
+        this.attaque += value;
+        if(this.attaque < 0){
+            this.attaque = 0;
+        }
+        if(fondamental){
+            this.attaque_base += value;
+            if(this.attaque_base < 0){
+                this.attaque_base = 0;
+            }
+        }
+    }
+
+    /**
+     * Augmente/Modifie l'armure
+     * @param value la modification à appliquer
+     * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
+     */
+    public void bostArmure(int value, boolean fondamental) {
+        this.armure += value;
+        if(this.armure < 0){
+            this.armure = 0;
+        }
+        if(fondamental){
+            this.armure_base += value;
+            if(this.armure_base < 0){
+                this.armure_base = 0;
+            }
+        }
+    }
+
+    /**
+     * Augmente/Modifie la résistance
+     * @param value la modification à appliquer
+     * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
+     */
+    public void bostVie(int value, boolean fondamental) {
+        this.vie_max += value;
+        if(this.vie_max <= 0){
+            this.vie_max = 1;
+        }
+        this.vie += value;
+        if(fondamental){
+            this.vie_base += value;
+            if(this.vie_base <= 0){
+                this.vie_base = 1;
+            }
+        }
+    }
+
+    /**
+     * Augmente/Modifie la valeur d'encaissement
+     * @param value la modification à appliquer
+     */
+    public void bostEncaissement(float value){
+        this.encaissement += value;
+    }
+
+    /**
+     * Nomme le golem
+     * @param materieux le type de matériaux du golem
+     */
+    public void golemNom(String materieux){
+        this.nom = "golem" + materieux;
+    }
+
+    public void bostDropMax(int value){
+        this.niveau_drop_max += value;
+    }
+
+    public void bostDropMin(int value){
+        this.niveau_drop_min += value;
+    }
+
+    public void bostDrop(int value){
+        this.drop_quantite_max += value;
+    }
+
     /**
      * Maquille l'illusioniste en lui donnant le nom de l'illusion
      */
@@ -74,7 +188,7 @@ public class Monstre {
      * @param nom le nom de l'entité attaqué
      * @implNote Calcul les effet de "encaisser", "étourdit" et "assommé"
      */
-    void attaque(String nom) throws IOException {
+    public void attaque(String nom) throws IOException {
         float modificateur = 1 - encaissement + part_soin;
         if (assomme) {
             undo_assomme();
@@ -337,7 +451,7 @@ public class Monstre {
      * @implNote Considère l'armure et la compétence du monstre
      * gère le cas de mort du monstre
      */
-    void tir(int quantite) throws IOException {
+    public void tir(int quantite) throws IOException {
         if(quantite <= 0){
             return;
         }
@@ -352,7 +466,7 @@ public class Monstre {
      * @implNote Considère l'armure et la compétence du monstre
      * gère le cas de mort du monstre
      */
-    void tir(int quantite, float mult) throws IOException {
+    public void tir(int quantite, float mult) throws IOException {
         if(quantite <= 0){
             return;
         }
@@ -425,7 +539,7 @@ public class Monstre {
      * @implNote Considère l'armure et la compétence du monstre
      * gère le cas de mort du monstre
      */
-    void dommage_magique(int quantite) throws IOException {
+    public void dommage_magique(int quantite) throws IOException {
         if(quantite <= 0){
             return;
         }
@@ -518,7 +632,7 @@ public class Monstre {
      * @implNote Considère l'armure et la compétence du monstre
      * gère le cas de mort du monstre
      */
-    void dommage(int quantite) throws IOException {
+    public void dommage(int quantite) throws IOException {
         if(quantite <= 0){
             return;
         }
@@ -536,7 +650,7 @@ public class Monstre {
      * gère le cas de mort du monstre
      * @throws IOException toujours
      */
-    void dommage(int quantite, float mult) throws IOException {
+    public void dommage(int quantite, float mult) throws IOException {
         if(quantite <= 0){
             return;
         }
@@ -629,7 +743,7 @@ public class Monstre {
     /**
      * Règle l'état du monstre sur "assommé" ou "étourdit"
      */
-    void affecte() {
+    public void affecte() {
         Random rand = new Random();
         if (rand.nextBoolean()){
             do_assomme();
@@ -642,7 +756,7 @@ public class Monstre {
     /**
      * Règle l'état du monstre à "assommé"
      */
-    void do_assomme() {
+    public void do_assomme() {
         switch (competence){
             case GOLEM_ACIER, GOLEM_MITHRIL -> {
                 System.out.println(nom + " n'a pas de conscience, et ne peut pas être assommé(e).\n");
@@ -666,7 +780,7 @@ public class Monstre {
     /**
      * Règle l'état du monstre à "étourdi"
      */
-    void do_etourdi() {
+    public void do_etourdi() {
 
         switch (competence) {
             case GOLEM_ACIER, GOLEM_MITHRIL -> {
@@ -746,7 +860,7 @@ public class Monstre {
      * @throws IOException jsp mais sans ça, ça ne marche pas
      * @implNote On considère que le joueur qui utilise encaisser est en première ligne
      */
-    void encaisser() throws IOException {
+    public void encaisser() throws IOException {
         int attaque = Input.atk();
         switch (Input.D6()) {
             case 1:
@@ -777,7 +891,7 @@ public class Monstre {
         }
     }
 
-    void f_encaisser() throws IOException {
+    public void f_encaisser() throws IOException {
         int attaque = Input.atk();
         switch (Input.D4()) {
             case 1:
@@ -812,7 +926,7 @@ public class Monstre {
     /**
      * Remet à zéro l'encaissement de l'ennemi
      */
-    void reset_encaisser(){
+    public void reset_encaisser(){
         encaissement = 0;
     }
 
@@ -821,7 +935,7 @@ public class Monstre {
      * @param premiere_ligne si le lanceur ou la cible est en première ligne
      * @throws IOException jsp mais sans ça, ça ne marche pas
      */
-    void soigner(Boolean premiere_ligne) throws IOException {
+    public void soigner(Boolean premiere_ligne) throws IOException {
         int soin = Input.D6();
         switch (soin) {
             case 6 -> {
@@ -864,7 +978,7 @@ public class Monstre {
      * @throws IOException jsp mais sans ça, ça ne marche pas
      * @return si le monstre est domestiqué
      */
-    Boolean domestiquer() throws IOException {
+    public Boolean domestiquer() throws IOException {
         switch (competence){
             case COLERE, VIOLENT -> {
                 if(Input.D8() <= this.vie){
@@ -945,9 +1059,80 @@ public class Monstre {
     }
 
     /**
+     * Applique la compétence "assommer" sur le monstre
+     * Demande aux joueurs les informations nécessaires
+     * @throws IOException jsp mais sans ça, ça ne marche pas
+     */
+    public void assommer(float bonus) throws IOException {
+        // compétence ennemie
+        switch (getCompetence()) {
+            case VOL -> {
+                System.out.println("L'attaque n'atteint pas " + nom + ".");
+                competence = Competence.VOL_OFF;
+                System.out.println(nom + " se pose à terre.\n");
+                return;
+            }
+            case VOLAGE -> {
+                System.out.println("L'attaque n'atteint pas " + nom + ".");
+                competence = Competence.AUCUNE;
+                System.out.println(nom + " se pose à terre.\n");
+                return;
+            }
+            case FURTIF -> {
+                System.out.println("Vous ne parvenez plus à identifier où se trouve " + nom + " et renoncez à attaquer.\n");
+                competence = Competence.AUCUNE;
+                return;
+            }
+            default -> {
+            }
+
+        }
+        //action
+        int attaque = Input.atk();
+        int jet = Input.D6() + (int)bonus;
+        if(jet > 7){
+            jet = 7;
+        }
+        switch (jet) {
+            case 1:
+                System.out.print("Vous manquez votre cible.");
+                attaque = 0;
+                break;
+            case 2:
+                System.out.print("Vous frappez de justesse votre cible, au moins, vous l'avez touchée.");
+                attaque = 0;
+                affecte();
+                break;
+            case 3, 4 :
+                attaque = Main.corriger((float) attaque / 2);
+                affecte();
+                break;
+            case 5:
+                attaque = Main.corriger((float) attaque / 2);
+                do_assomme();
+                break;
+            case 6:
+                System.out.println("Vous frappez avec force !");
+                do_assomme();
+                break;
+            case 7:
+                System.out.println("Vous frappez à vous en blesser les bras !");
+                if(rand.nextBoolean()){
+                    System.out.println("Vous subissez 1 point de dommage");
+                }
+                do_assomme();
+                attaque = Main.corriger(attaque * bonus);
+
+            default:
+                System.out.println("Le résultat n'a pas été comprit, attaque classique appliquée.");
+        }
+        dommage(attaque);
+    }
+
+    /**
      * Affiche les statistiques de base du monstre
      */
-    void presente_familier() {
+    public void presente_familier() {
         System.out.println("nouveau familier : " + this.nom);
         System.out.println("attaque : " + this.attaque_base);
         System.out.println("vie : " + this.vie_base);

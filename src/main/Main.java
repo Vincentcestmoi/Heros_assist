@@ -1,3 +1,18 @@
+package main;
+
+import Exterieur.*;
+
+import Metiers.Joueur;
+
+import Enum.Metier;
+import Enum.Position;
+import Enum.Choix;
+
+import Monstre.Lieu;
+import Monstre.Monstre;
+
+import Equipement.Equipement;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
@@ -8,11 +23,10 @@ import static java.lang.Math.max;
 public class Main {
     
     static final Random rand = new Random();
-    static int Path = -1; //-1 = vide
-    static final int f_max = 7;
     static final int nbj_max = 8;
-    static public int nbj;
 
+    static public int nbj;
+    public static int Path = -1; //-1 = vide
     static public Joueur[] joueurs;
 
     public static void main(String[] args) throws IOException {
@@ -100,7 +114,7 @@ public class Main {
         }
         switch (jet) {
             case 1, 2, 3 -> {
-                System.out.println("Vous apercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.getNom());
                 if (Input.yn("Voulez vous l'attaquer ?")) {
                     Combat.affrontement(Position.ENFERS, -1, monstre);
                 } else {
@@ -112,7 +126,7 @@ public class Main {
                 if (rand.nextBoolean() || rand.nextBoolean()) {
                     Equipement.drop_0();
                 } else {
-                    System.out.println("Vous apercevez un(e) " + monstre.nom);
+                    System.out.println("Vous apercevez un(e) " + monstre.getNom());
                     if (Input.yn("Voulez vous l'attaquer ?")) {
                         Combat.affrontement(Position.ENFERS, -1, monstre);
                     } else {
@@ -121,7 +135,7 @@ public class Main {
                 }
             }
             default -> {
-                System.out.println(monstre.nom + " vous attaque");
+                System.out.println(monstre.getNom() + " vous attaque");
                 Combat.affrontement(Position.ENFERS, meneur, monstre);
             }
         }
@@ -138,7 +152,7 @@ public class Main {
         }
         switch (jet) {
             case 2, 3, 4, 5 -> {
-                System.out.println("Vous apercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.getNom());
                 if (Input.yn("Voulez vous l'attaquer ?")) {
                     Combat.affrontement(Position.PRAIRIE, -1, monstre);
                 } else {
@@ -154,7 +168,7 @@ public class Main {
                     Equipement.drop_0();
                 }
                 else {
-                    System.out.println("Vous apercevez un(e) " + monstre.nom);
+                    System.out.println("Vous apercevez un(e) " + monstre.getNom());
                     if (Input.yn("Voulez vous l'attaquer ?")) {
                         Combat.affrontement(Position.PRAIRIE, -1, monstre);
                     } else {
@@ -163,7 +177,7 @@ public class Main {
                 }
             }
             default -> { // 1
-                System.out.println(monstre.nom + " vous attaque");
+                System.out.println(monstre.getNom() + " vous attaque");
                 Combat.affrontement(Position.PRAIRIE, meneur, monstre);
             }
         }
@@ -180,7 +194,7 @@ public class Main {
         }
         switch (jet) {
             case 3, 4, 5 -> {
-                System.out.println("Vous apercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.getNom());
                 if (Input.yn("Voulez vous l'attaquer ?")) {
                     Combat.affrontement(Position.VIGNES, -1, monstre);
                 } else {
@@ -199,7 +213,7 @@ public class Main {
                     Equipement.drop_0();
                 }
                 else {
-                    System.out.println("Vous apercevez un(e) " + monstre.nom);
+                    System.out.println("Vous apercevez un(e) " + monstre.getNom());
                     if (Input.yn("Voulez vous l'attaquer ?")) {
                         Combat.affrontement(Position.VIGNES, -1, monstre);
                     } else {
@@ -215,7 +229,7 @@ public class Main {
                 }
             }
             default -> { // 1, 2
-                System.out.println(monstre.nom + " vous attaque");
+                System.out.println(monstre.getNom() + " vous attaque");
                 Combat.affrontement(Position.VIGNES, meneur, monstre);
             }
         }
@@ -232,7 +246,7 @@ public class Main {
         }
         switch (jet) {
             case 4, 5, 6, 7 -> {
-                System.out.println("Vous apercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.getNom());
                 if (Input.yn("Voulez vous l'attaquer ?")) {
                     Combat.affrontement(Position.TEMPLE, -1, monstre);
                 } else {
@@ -261,7 +275,7 @@ public class Main {
                 }
             }
             default -> { // 1, 2, 3
-                System.out.println(monstre.nom + " vous attaque");
+                System.out.println(monstre.getNom() + " vous attaque");
                 Combat.affrontement(Position.TEMPLE, meneur, monstre);
             }
         }
@@ -278,7 +292,7 @@ public class Main {
         }
         switch (jet) {
             case 5, 6, 7 -> {
-                System.out.println("Vous apercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.getNom());
                 if (Input.yn("Voulez vous l'attaquer ?")) {
                     Combat.affrontement(Position.MER, -1, monstre);
                 } else {
@@ -307,7 +321,7 @@ public class Main {
                 }
             }
             default -> { // 1, 2, 3, 4
-                System.out.println(monstre.nom + " vous attaque");
+                System.out.println(monstre.getNom() + " vous attaque");
                 Combat.affrontement(Position.MER, meneur, monstre);
             }
         }
@@ -324,7 +338,7 @@ public class Main {
         }
         switch (jet) {
             case 7, 8, 9, 10, 11 -> {
-                System.out.println("Vous apercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.getNom());
                 if (Input.yn("Voulez vous l'attaquer ?")) {
                     Combat.affrontement(Position.MONTS, -1, monstre);
                 } else {
@@ -346,7 +360,7 @@ public class Main {
                 }
             }
             default -> { // 1, 2, 3, 4, 5, 6
-                System.out.println(monstre.nom + " vous attaque");
+                System.out.println(monstre.getNom() + " vous attaque");
                 Combat.affrontement(Position.MONTS, meneur, monstre);
             }
         }
@@ -363,19 +377,19 @@ public class Main {
         }
         switch (jet) {
             case 19, 20, 21 -> {
-                System.out.println("Vous apercevez un(e) " + monstre.nom);
+                System.out.println("Vous apercevez un(e) " + monstre.getNom());
                 if (Input.yn("Voulez vous l'attaquer ?")) {
                     Combat.affrontement(Position.OLYMPE, -1, monstre);
                 } else if (rand.nextBoolean() || (jet > 20 && rand.nextBoolean())) {
                     System.out.println("Vous vous éloignez discrètement");
                 } else {
-                    System.out.println(monstre.nom + " vous remarque et vous fonce dessus !");
+                    System.out.println(monstre.getNom() + " vous remarque et vous fonce dessus !");
                     Combat.affrontement(Position.OLYMPE, -1, monstre);
                 }
 
             }
             default -> { // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
-                System.out.println(monstre.nom + " vous attaque");
+                System.out.println(monstre.getNom() + " vous attaque");
                 Combat.affrontement(Position.OLYMPE, meneur, monstre);
             }
         }
@@ -386,7 +400,7 @@ public class Main {
      * @param p la position à donner
      * @return un String nommant le lieu (avec un déterminant)
      */
-    static String texte_pos(Position p) {
+    public static String texte_pos(Position p) {
         return switch (p) {
             case ENFERS -> "aux enfers";
             case PRAIRIE -> "dans la prairie";
@@ -426,7 +440,7 @@ public class Main {
             // nom
             String nom;
             do{
-                System.out.println("Joueur " + (i + 1) + ", entrez votre nom :");
+                System.out.println("Metiers.Joueur " + (i + 1) + ", entrez votre nom :");
                 nom = Input.read();
                 if(nom.contains(",") || nom.contains(";")){
                     System.out.println("Le nom du joueur ne peut pas contenir les caractères ',' et ';' !");
@@ -456,7 +470,7 @@ public class Main {
                     case "sh" -> metier = Metier.SHAMAN;
                     case "au" -> {}
                     default -> {
-                        System.out.println("Unknow Input");
+                        System.out.println("Unknow Exterieur.Input");
                         run = true;
                     }
                 }
@@ -473,7 +487,7 @@ public class Main {
      * Renvoie l'arrondit de la valeur donnée minorée par 1.
      * @param valeur le float à corriger
      */
-    static int corriger(float valeur) {
+    public static int corriger(float valeur) {
         return corriger(valeur, 1);
     }
 
@@ -482,7 +496,7 @@ public class Main {
      * @param min un minorant au résultat
      * @param valeur le float à corriger
      */
-    static int corriger(float valeur, int min){
+    public static int corriger(float valeur, int min){
         return max(Math.round(valeur), min);
     }
 

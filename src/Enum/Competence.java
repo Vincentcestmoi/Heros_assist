@@ -1,3 +1,5 @@
+package Enum;
+
 public enum Competence {
     AUCUNE,     //done
     EXPLOSION,  //done

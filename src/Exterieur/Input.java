@@ -1,3 +1,16 @@
+package Exterieur;
+
+import Metiers.Joueur;
+import Enum.Position;
+import Equipement.Pre_Equipement;
+import Enum.Rang;
+import Enum.Promo_Type;
+import Enum.Action;
+import Enum.Choix;
+import Monstre.Race;
+import main.Main;
+import main.Combat;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.FileReader;
@@ -30,7 +43,7 @@ public class Input {
         // charger ou nouvelle partie
         if (!sauvegardeExiste || !yn("Sauvegarde détectée, charger cette sauvegarde ?")) {
             if (yn("Confirmez la suppression")) {
-                    //Output.delete_fichier(s); //TODO
+                    //Exterieur.Output.delete_fichier(s); //TODO
                 System.out.println("lancement du jeu.\n\n");
                 return false;
             }
@@ -42,7 +55,7 @@ public class Input {
         Main.nbj = Main.joueurs.length;
 
         for (Joueur joueur : Main.joueurs) {
-            System.out.print("Joueur chargé avec succès : ");
+            System.out.print("Metiers.Joueur chargé avec succès : ");
             joueur.presente();
             System.out.println();
         }
@@ -101,7 +114,7 @@ public class Input {
 
             for (JsonValue val : monstres) {
                 String nom = ((JsonString) val).getString();
-                Combat.delete_monstre(nom);
+                Race.delete_monstre(nom);
             }
         } catch (IOException e) {
             System.err.println("Erreur lors de la lecture des monstres nommés : " + e.getMessage());
@@ -414,35 +427,35 @@ public class Input {
                 if (!est_familier) {
                     yield Action.TIRER;
                 }
-                System.out.println("Action non reconnue.");
+                System.out.println("Enum.Action non reconnue.");
                 yield action(joueur, true);
             }
             case "m" -> {
                 if (!est_familier && !joueur.est_berserk()) {
                     yield Action.MAGIE;
                 }
-                System.out.println("Action non reconnue.");
+                System.out.println("Enum.Action non reconnue.");
                 yield action(joueur, est_familier);
             }
             case "p" -> {
                 if (!est_familier && !joueur.est_berserk()) {
                     yield Action.SOIGNER;
                 }
-                System.out.println("Action non reconnue.");
+                System.out.println("Enum.Action non reconnue.");
                 yield action(joueur, est_familier);
             }
             case "n" -> {
                 if (!est_familier && !joueur.est_berserk()) {
                     yield Action.ANALYSER;
                 }
-                System.out.println("Action non reconnue.");
+                System.out.println("Enum.Action non reconnue.");
                 yield action(joueur, est_familier);
             }
 
             // joueur en première ligne
             case "s" -> {
                 if(est_familier){
-                    System.out.println("Action non reconnue.");
+                    System.out.println("Enum.Action non reconnue.");
                     yield action(joueur, true);
                 }
                 if (joueur.est_front()) {
@@ -456,14 +469,14 @@ public class Input {
                         (joueur.est_front_f() && est_familier && !joueur.f_est_berserk())) {
                     yield Action.ENCAISSER;
                 }
-                System.out.println("Action non reconnue.");
+                System.out.println("Enum.Action non reconnue.");
                 yield action(joueur, est_familier);
             }
             case "d" -> {
                 if (joueur.est_front() && !est_familier &&!joueur.est_berserk()) {
                     yield Action.DOMESTIQUER;
                 }
-                System.out.println("Action non reconnue.");
+                System.out.println("Enum.Action non reconnue.");
                 yield action(joueur, est_familier);
             }
 
@@ -493,7 +506,7 @@ public class Input {
                 if(act != Action.AUCUNE){
                     yield act;
                 }
-                System.out.println("Action non reconnue.");
+                System.out.println("Enum.Action non reconnue.");
                 yield action(joueur, est_familier);
             }
         };
@@ -523,7 +536,7 @@ public class Input {
      * @param index l'index du joueur dont c'est le tour
      * @return : un choix correspondant
      */
-    static Choix tour(int index) throws IOException {
+    public static Choix tour(int index) throws IOException {
         Joueur joueur = Main.joueurs[index];
         Position position = joueur.getPosition();
         while (true) {
@@ -558,26 +571,26 @@ public class Input {
                     if(peut_descendre){
                         return Choix.DESCENDRE;
                     }
-                    System.out.println("Input unknow");
+                    System.out.println("Exterieur.Input unknow");
                 }
                 case "m", "M", "monter", "Monter" ->{
                     if(peut_monter){
                         return Choix.MONTER;
                     }
-                    System.out.println("Input unknow");
+                    System.out.println("Exterieur.Input unknow");
                 }
                 case "a", "A", "Aller au marche", "aller au marche", "Aller au marché", "aller au marché", "Aller",
                      "aller", "marche", "Marche", "Marché", "marché" -> {
                     if(market){
                         return Choix.MARCHE;
                     }
-                    System.out.println("Input unknow");
+                    System.out.println("Exterieur.Input unknow");
                 }
                 case "entrainer son familier", "Entrainer son familier", "en", "En", "EN", "eN" -> {
                     if(peut_entrainer) {
                         return Choix.DRESSER;
                     }
-                    System.out.println("Input unknow");
+                    System.out.println("Exterieur.Input unknow");
                 }
                 case "c", "C", "Custom", "custom" -> {
                     return Choix.ATTENDRE;
@@ -619,7 +632,7 @@ public class Input {
                     if (joueur.tour(readed)) {
                         return Choix.AUCUN;
                     }
-                    System.out.println("Input unknow");
+                    System.out.println("Exterieur.Input unknow");
                 }
             }
         }
@@ -646,7 +659,7 @@ public class Input {
             case "to", "TO", "To", "tO" -> Action.TOXIQUE;
             case "c", "C" -> Action.AUTRE;
             default -> {
-                System.out.println("Input unknow");
+                System.out.println("Exterieur.Input unknow");
                 yield concoction();
             }
         };
@@ -666,7 +679,7 @@ public class Input {
             case "fo", "FO", "Fo", "fO" -> Action.FOUDRE;
             case "c", "C" -> Action.AUTRE;
             default -> {
-                System.out.println("Input unknow");
+                System.out.println("Exterieur.Input unknow");
                 yield sort();
             }
         };
@@ -685,7 +698,7 @@ public class Input {
             case "be", "BE", "Be", "bE", "bé", "Bé" -> Action.BENIE;
             case "in", "IN", "In", "iN" -> Action.ELEMENTAIRE;
             default -> {
-                System.out.println("Input unknow");
+                System.out.println("Exterieur.Input unknow");
                 yield incantation();
             }
         };

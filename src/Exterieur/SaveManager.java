@@ -1,3 +1,8 @@
+package Exterieur;
+
+import Metiers.Joueur;
+import main.Main;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

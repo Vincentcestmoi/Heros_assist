@@ -30,7 +30,7 @@ fi
 
 # Lancement avec ou sans argument
 if [ $# -eq 0 ]; then
-    java -cp "bin${SEP}lib/*" Main
+    java -cp "bin${SEP}lib/*" main.Main
 else
-    java -cp "bin${SEP}lib/*" Main "$1"
+    java -cp "bin${SEP}lib/*" main.Main "$1"
 fi

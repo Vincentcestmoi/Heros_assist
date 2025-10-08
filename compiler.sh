@@ -3,6 +3,7 @@
 # À exécuter depuis la racine du projet
 
 set -e
+set -euo pipefail
 
 # Vérifie que les dossiers existent
 if [ ! -d "src" ]; then
@@ -16,6 +17,7 @@ if [ ! -d "lib" ]; then
 fi
 
 mkdir -p bin
+rm -rf bin/*
 
 # Compilation récursive de tous les .java
 find src -name "*.java" > sources.txt

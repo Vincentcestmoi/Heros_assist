@@ -1,3 +1,13 @@
+package Metiers;
+
+import Exterieur.Input;
+
+import Enum.Metier;
+import Enum.Position;
+import Enum.Action;
+
+import Monstre.Monstre;
+
 import java.io.IOException;
 
 public class Alchimiste extends Joueur {
@@ -7,14 +17,14 @@ public class Alchimiste extends Joueur {
         super(nom, position, ob_f);
     }
 
-    protected Metier getMetier() {
+    public Metier getMetier() {
         return metier;
     }
 
     @Override
     public void presente_base() {
-        System.out.println("Alchimiste");
-        System.out.println("Base : Résistance : 5 ; attaque : 1 ; PP: 0/0 ; ingrédient : 3/11");
+        System.out.println("Metiers.Alchimiste");
+        System.out.println("Enum.Base : Résistance : 5 ; attaque : 1 ; PP: 0/0 ; ingrédient : 3/11");
         System.out.println("Caractéristiques : Dextérité");
         System.out.println("Pouvoir : Fouille, Dissection, Concoction");
     }

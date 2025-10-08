@@ -1,3 +1,12 @@
+package Metiers;
+
+import Exterieur.Input;
+import Monstre.Monstre;
+
+import Enum.Competence;
+
+import main.Main;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
@@ -52,13 +61,13 @@ public class Sort {
         }
 
         // sur l'ennemi
-        System.out.println(ennemi.nom + " est frappé par l'onde de choc.");
+        System.out.println(ennemi.getNom() + " est frappé par l'onde de choc.");
         System.out.print(Main.joueurs[lanceur].getNom() + " : ");
         switch (Input.D6()){
             case 2 -> ennemi.do_etourdi();
             case 3, 4 -> ennemi.affecte();
             case 5, 6 -> ennemi.do_assomme();
-            default -> System.out.println(ennemi.nom + " n'a pas l'air très affecté...");
+            default -> System.out.println(ennemi.getNom() + " n'a pas l'air très affecté...");
         }
     }
 
@@ -67,36 +76,36 @@ public class Sort {
      * @param ennemi la cible de la malédiction
      * @throws IOException toujours
      */
-    public static void maudir(Monstre ennemi) throws IOException {
+    /* TODO public static void maudir(Monstre ennemi) throws IOException {
         int boost = rand.nextInt(3);
         switch (Input.D6()){
             case 2 -> {
-                System.out.println("Vous maudissez faiblement " + ennemi.nom + ".");
+                System.out.println("Vous maudissez faiblement " + ennemi.getNom() + ".");
                 ennemi.vie_max -= 1 + boost;
                 ennemi.vie -= 1 + boost;
                 ennemi.vie_base -= 1 + boost;
             }
             case 3, 4 -> {
-                System.out.println("Vous maudissez " + ennemi.nom + ".");
+                System.out.println("Vous maudissez " + ennemi.getNom() + ".");
                 ennemi.vie_max -= 2 + boost;
                 ennemi.vie -= 2 + boost;
                 ennemi.vie_base -= 2 + boost;
             }
             case 5 -> {
-                System.out.println("Vous maudissez agressivement " + ennemi.nom + ".");
+                System.out.println("Vous maudissez agressivement " + ennemi.getNom() + ".");
                 ennemi.vie_max -= 3 + boost;
                 ennemi.vie -= 3 + boost;
                 ennemi.vie_base -= 3 + boost;
             }
             case 6, 7 -> {
-                System.out.println("Vous maudissez puissament " + ennemi.nom + ".");
+                System.out.println("Vous maudissez puissament " + ennemi.getNom() + ".");
                 ennemi.vie_max -= 5 + boost;
                 ennemi.vie -= 5 + boost;
                 ennemi.vie_base -= 5 + boost;
             }
-            default -> System.out.println("vous n'arrivez pas à maudir " + ennemi.nom + ".");
+            default -> System.out.println("vous n'arrivez pas à maudir " + ennemi.getNom() + ".");
         }
-    }
+    }*/
 
     /**
      * Applique l'effet de la compétence "malédiction"
@@ -149,48 +158,48 @@ public class Sort {
             return;
         }
         else if (jet == 3) {
-            System.out.println("Vous lancez une pitoyable boule de feu sur " + ennemi.nom + ".");
+            System.out.println("Vous lancez une pitoyable boule de feu sur " + ennemi.getNom() + ".");
             dmg = 3;
         }
         else if (jet == 4) {
-            System.out.println("Vous lancez une boule de feu sur " + ennemi.nom + ".");
+            System.out.println("Vous lancez une boule de feu sur " + ennemi.getNom() + ".");
             dmg = 5;
         }
         else if (jet <= 6) {
-            System.out.println("Vous lancez une boule de feu sur " + ennemi.nom + ".");
+            System.out.println("Vous lancez une boule de feu sur " + ennemi.getNom() + ".");
             dmg = 6;
         }
         else if (jet <= 8) {
-            System.out.println("Vous lancez une impressionnante boule de feu sur " + ennemi.nom + ".");
+            System.out.println("Vous lancez une impressionnante boule de feu sur " + ennemi.getNom() + ".");
             dmg = 8;
         }
         else if (jet <= 10) {
-            System.out.println("Un brasier s'abat sur " + ennemi.nom + " !");
+            System.out.println("Un brasier s'abat sur " + ennemi.getNom() + " !");
             dmg = 11;
         }
         else if (jet == 11) {
-            System.out.println("Un brasier s'abat sur " + ennemi.nom + " !");
+            System.out.println("Un brasier s'abat sur " + ennemi.getNom() + " !");
             dmg = 13;
             if(rand.nextBoolean()){
                 ennemi.affecte();
             }
         }
         else if (jet == 12) {
-            System.out.println("Une tornade de flamme s'abat violement sur " + ennemi.nom + " !");
+            System.out.println("Une tornade de flamme s'abat violement sur " + ennemi.getNom() + " !");
             dmg = 15;
             if(rand.nextBoolean()){
                 ennemi.affecte();
             }
         }
         else if (jet == 13) {
-            System.out.println("Une tornade de flamme s'abat violement sur " + ennemi.nom + " !");
+            System.out.println("Une tornade de flamme s'abat violement sur " + ennemi.getNom() + " !");
             dmg = 16;
             if(rand.nextBoolean()){
                 ennemi.affecte();
             }
         }
         else{
-            System.out.println("Les flammes de l'enfers brûlent intensemment " + ennemi.nom + ".");
+            System.out.println("Les flammes de l'enfers brûlent intensemment " + ennemi.getNom() + ".");
             dmg = 18;
             ennemi.affecte();
         }
@@ -242,44 +251,44 @@ public class Sort {
             return;
         }
         else if (jet <= 10) {
-            System.out.println("Un arc électrique vient frapper " + ennemi.nom + ".");
+            System.out.println("Un arc électrique vient frapper " + ennemi.getNom() + ".");
             dmg = 12;
         }
         else if (jet <= 12) {
-            System.out.println("Un arc électrique vient frapper " + ennemi.nom + ".");
+            System.out.println("Un arc électrique vient frapper " + ennemi.getNom() + ".");
             dmg = 13;
         }
         else if (jet <= 14) {
-            System.out.println("Un éclair s'abat sur " + ennemi.nom + ".");
+            System.out.println("Un éclair s'abat sur " + ennemi.getNom() + ".");
             dmg = 16;
             if(rand.nextBoolean()){
                 ennemi.affecte();
             }
         }
         else if (jet <= 16) {
-            System.out.println("Un puissant éclair s'abat sur " + ennemi.nom + ".");
+            System.out.println("Un puissant éclair s'abat sur " + ennemi.getNom() + ".");
             dmg = 18;
             if(rand.nextBoolean()){
                 ennemi.affecte();
             }
         }
         else if (jet <= 18) {
-            System.out.println("Un puissant éclair s'abat sur " + ennemi.nom + ".");
+            System.out.println("Un puissant éclair s'abat sur " + ennemi.getNom() + ".");
             dmg = 20;
             ennemi.affecte();
         }
         else if (jet == 19){
-            System.out.println("Le ciel s'illumine un instant et un gigantesque éclair s'abat sur  " + ennemi.nom + " dans un immense fracas.");
+            System.out.println("Le ciel s'illumine un instant et un gigantesque éclair s'abat sur  " + ennemi.getNom() + " dans un immense fracas.");
             dmg = 22;
             ennemi.affecte();
         }
         else if (jet == 20){
-            System.out.println("Le ciel s'illumine un instant et un gigantesque éclair s'abat sur  " + ennemi.nom + " dans un immense fracas.");
+            System.out.println("Le ciel s'illumine un instant et un gigantesque éclair s'abat sur  " + ennemi.getNom() + " dans un immense fracas.");
             dmg = 24;
             ennemi.affecte();
         }
         else if (jet == 21) {
-            System.out.println("Un déchainement de pure énergie fend l'espace entre les cieux et la terre et vient percuter " + ennemi.nom + " de plein fouet.");
+            System.out.println("Un déchainement de pure énergie fend l'espace entre les cieux et la terre et vient percuter " + ennemi.getNom() + " de plein fouet.");
             dmg = 25;
             if(rand.nextBoolean()){
                 ennemi.affecte();
@@ -289,7 +298,7 @@ public class Sort {
             }
         }
         else{
-            System.out.println("Un déchainement de pure énergie fend l'espace entre les cieux et la terre et vient percuter " + ennemi.nom + " de plein fouet.");
+            System.out.println("Un déchainement de pure énergie fend l'espace entre les cieux et la terre et vient percuter " + ennemi.getNom() + " de plein fouet.");
             dmg = 27;
             ennemi.do_assomme();
         }
@@ -340,7 +349,7 @@ public class Sort {
      * @return si le nécromancien a réussi à appeler un mort
      * @throws IOException toujours
      */
-    public static boolean necromancie(Position position) throws IOException {
+    /* TODO public static boolean necromancie(Position position) throws IOException {
         Monstre l1, l2;
         //invocation selon le lieu
         switch (position) {
@@ -431,7 +440,7 @@ public class Sort {
             System.out.println("armure : " + (int)(max(rez.armure * 1.2, 1)));
         }
         return true;
-    }
+    } */
 
     /**
      * Indique le résultat de la compétence "dissection"
@@ -531,7 +540,7 @@ public class Sort {
             }
             case 2, 3 -> ennemi.tir(Input.tir());
             case 4, 5 -> {
-                System.out.println("Votre flèche file droit sur " + ennemi.nom + " et lui porte un coup puissant.");
+                System.out.println("Votre flèche file droit sur " + ennemi.getNom() + " et lui porte un coup puissant.");
                 ennemi.tir(Input.tir(), 2F);
             }
             default -> {
@@ -549,7 +558,7 @@ public class Sort {
      */
     public static boolean assassinat(Monstre ennemi) throws IOException {
         if(Input.D6() + rand.nextInt(3) - 1 > 3){
-            System.out.println("Vous vous faufilez derrière " + ennemi.nom + " sans qu'il ne vous remarque.");
+            System.out.println("Vous vous faufilez derrière " + ennemi.getNom() + " sans qu'il ne vous remarque.");
             ennemi.dommage(Input.atk() * 2 + 7);
             return true;
         }
@@ -564,10 +573,10 @@ public class Sort {
      * @throws IOException toujours
      */
     public static void assaut(Monstre ennemi, float berserk) throws IOException {
-        System.out.println("Vous chargez brutalement " + ennemi.nom);
+        System.out.println("Vous chargez brutalement " + ennemi.getNom());
         int jet = Input.D8() + rand.nextInt(3) - 1;
         ennemi.dommage(Input.atk(), 0.1f * jet + berserk);
-        ennemi.part_soin += berserk;
+        // ennemi.part_soin += berserk; TODO
     }
 
     /**
@@ -856,28 +865,28 @@ public class Sort {
      * @throws IOException toujours
      */
     public static boolean lien(int i, Monstre ennemi, boolean[] mort, boolean[] actif) throws IOException {
-        if (ennemi.competence == Competence.CHRONOS) {
+        if (ennemi.getCompetence() == Competence.CHRONOS) {
             System.out.println("Les esprits de vos ancêtres vous arretes avant que vous ne fassiez quelques choses de stupides.");
             return false;
         }
-        int ratio = (int) ((float) ennemi.vie / ennemi.vie_max * 12);
-        if (ennemi.competence == Competence.PRUDENT || ennemi.competence == Competence.MEFIANT || ennemi.competence == Competence.SUSPICIEUX) {
+        int ratio = (int) ((float) ennemi.getVie() / ennemi.getVieMax() * 12);
+        if (ennemi.getCompetence() == Competence.PRUDENT || ennemi.getCompetence() == Competence.MEFIANT || ennemi.getCompetence() == Competence.SUSPICIEUX) {
             ratio += 4 + rand.nextInt(3);
         }
-        System.out.println(Main.joueurs[i].getNom() + " tente de lier son âme à " + ennemi.nom);
+        System.out.println(Main.joueurs[i].getNom() + " tente de lier son âme à " + ennemi.getNom());
         int result = Input.D12() - ratio + rand.nextInt(3) - 1;
         if (result <= 1) {
-            System.out.println("L'âme de " + Main.joueurs[i].getNom() + " est violemment rejeté par celle de " + ennemi.nom + " !");
+            System.out.println("L'âme de " + Main.joueurs[i].getNom() + " est violemment rejeté par celle de " + ennemi.getNom() + " !");
             mort[i] = true;
             actif[i] = false;
             return false;
         }
         if (result <= 4) {
-            System.out.println(Main.joueurs[i].getNom() + " n'est pas parvenu à se lier à " + ennemi.nom);
+            System.out.println(Main.joueurs[i].getNom() + " n'est pas parvenu à se lier à " + ennemi.getNom());
             return false;
         }
         else {
-            System.out.println("Les âmes de " + ennemi.nom + " et de " + Main.joueurs[i].getNom() + " entre en communion !");
+            System.out.println("Les âmes de " + ennemi.getNom() + " et de " + Main.joueurs[i].getNom() + " entre en communion !");
             Main.joueurs[i].setOb(min(7, rand.nextInt(result) + 1));
             return true;
         }
@@ -949,7 +958,7 @@ public class Sort {
      * @throws IOException toujours
      */
     public static void colere_attaque(Monstre ennemi) throws IOException {
-        System.out.println("Les esprits de vos ancêtres déchainent leur colère sur " + ennemi.nom);
+        System.out.println("Les esprits de vos ancêtres déchainent leur colère sur " + ennemi.getNom());
         int attaque;
         int jet = Input.D10() + rand.nextInt(3) - 1;
         if(jet <= 3){
@@ -1081,25 +1090,19 @@ public class Sort {
         else if (jet <= 5) {
             System.out.println("La brûme commence à vous encercler.");
             System.out.println("Chaque joueur et familier perds temporairement 1 point d'attaque.");
-            if(ennemi.attaque > 0){
-                ennemi.attaque = min(1, ennemi.attaque - 2);
-            }
+            ennemi.bostAtk(-2, false);
         }
         else if (jet <= 7) {
             System.out.println("Un épais brouillard vous recouvre.");
             System.out.println("Chaque joueur et familier perds temporairement 3 points d'attaque.");
-            if(ennemi.attaque > 0){
-                ennemi.attaque = min(1, ennemi.attaque - 5);
-            }
+            ennemi.bostAtk(-5, false);
         }
         else{
             System.out.println("Une brûme vous entoure, si dense que vous ne vous voyez presque plus.");
             System.out.println("Il est désormais impossible de tirer.");
             System.out.println("Il est désormais impossible de lancer un sort ciblé sur une autre cible que soit-même.");
             System.out.println("Chaque joueur et familier perds temporairement 8 points d'attaque.");
-            if(ennemi.attaque > 0){
-                ennemi.attaque = min(1, ennemi.attaque - 15);
-            }
+            ennemi.bostAtk(-15, false);
         }
     }
 
@@ -1127,9 +1130,7 @@ public class Sort {
             System.out.println("Le nuage s'abat sur le monstre ennemi, suivi d'un éclair.");
             ennemi.dommage(jet + rand.nextInt(5) - 3);
             ennemi.affecte();
-            if(ennemi.attaque > 0){
-                ennemi.attaque = min(1, ennemi.attaque - 2);
-            }
+            ennemi.bostAtk(-2, false);
         }
     }
 

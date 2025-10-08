@@ -1,5 +1,14 @@
+package Metiers;
+
+import Exterieur.Input;
+
+import Enum.Metier;
+import Enum.Position;
+import Enum.Action;
+
+import Monstre.Monstre;
+
 import java.io.IOException;
-import java.util.Objects;
 
 public class Archimage extends Joueur {
     Metier metier = Metier.ARCHIMAGE;
@@ -8,14 +17,14 @@ public class Archimage extends Joueur {
         super(nom, position, ob_f);
     }
 
-    protected Metier getMetier() {
+    public Metier getMetier() {
         return metier;
     }
 
     @Override
     public void presente_base() {
-        System.out.println("Archimage");
-        System.out.println("Base : Résistance : 4 ; attaque : 0 ; PP: 10/10");
+        System.out.println("Metiers.Archimage");
+        System.out.println("Enum.Base : Résistance : 4 ; attaque : 0 ; PP: 10/10");
         System.out.println("Caractéristiques : Addiction au mana, Maitre de l'énergie, Double incantateur, Manchot, Bruyant");
         System.out.println("Pouvoir : Méditation, Boule de feu, Armure de glace, Foudre, Onde de choc, Purge");
     }
@@ -71,7 +80,7 @@ public class Archimage extends Joueur {
                 return false;
             }
             case SORT -> {
-                //Sort.sort(ennemi); TODO
+                //Metiers.Sort.sort(ennemi); TODO
                 return false;
             }
         }

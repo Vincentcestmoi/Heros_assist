@@ -1,3 +1,9 @@
+package Equipement;
+
+import Enum.Rang;
+import Enum.Base;
+import Enum.Effet_equip;
+
 import java.io.IOException;
 import java.util.Random;
 
@@ -576,7 +582,7 @@ public class Equipement {
         Equipement equipement = new Equipement(Pre_Equipement.drop_promo());
         equipement.presente();
     }
-    //Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix, String effet)
+    //Equipement.Equipement(String nom, Enum.Rang rang, Enum.Base base, int attaque, int resistance, int armure, int prix, String effet)
 
     static Equipement lotterie = new Equipement("ticket de lotterie", Rang.O, Base.AUTRE, 0, 0, 0, 3,
             "Lancez un dé à 6 face, si vous faite 6, gagnez 15PO. Jetez ce ticket.");

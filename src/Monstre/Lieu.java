@@ -1,3 +1,7 @@
+package Monstre;
+
+import Enum.Position;
+
 import java.util.Random;
 
 public class Lieu {

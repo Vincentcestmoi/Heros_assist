@@ -1,3 +1,9 @@
+package Exterieur;
+
+import Equipement.Pre_Equipement;
+import main.Main;
+import Enum.Rang;
+
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.FileWriter;

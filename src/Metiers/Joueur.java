@@ -1,9 +1,25 @@
+package Metiers;
+
+import Exterieur.Input;
+
+import Enum.Metier;
+import Enum.Position;
+import Enum.Action;
+import Equipement.Equipement;
+
+import Monstre.Lieu;
+import Monstre.Monstre;
+
+import main.Main;
+import main.Combat;
+
 import java.io.IOException;
 import java.util.Random;
 import javax.json.*;
 import java.io.*;
 
 public abstract class Joueur {
+    static final int f_max = 7;
     protected final String nom;
     private Position position;
     private int ob_f;
@@ -56,13 +72,13 @@ public abstract class Joueur {
         };
     }
 
-    abstract protected Metier getMetier();
+    abstract public Metier getMetier();
 
     static Random rand = new Random();
 
     //************************************************GETTER**********************************************************//
 
-    public void setOb(int value){ //TODO temp, delete
+    protected void setOb(int value){ //TODO temp, delete
         this.ob_f = value;
     }
 
@@ -71,7 +87,7 @@ public abstract class Joueur {
     }
 
     public boolean familier_loyalmax(){
-        return ob_f >= Main.f_max;
+        return ob_f >= f_max;
     }
 
     public Position getPosition() {
@@ -134,12 +150,16 @@ public abstract class Joueur {
         return !est_actif() || !est_vivant();
     }
 
+    public float getBerserk(){
+        return berserk;
+    }
+
     //************************************************PRESENTATION****************************************************//
 
     /**
      * Présente les caractéristiques et statistiques du joueur
      */
-    abstract void presente_base();
+    abstract public void presente_base();
 
     /**
      * Présente la condition et position du joueur
@@ -238,6 +258,11 @@ public abstract class Joueur {
         f_reveil += 1;
     }
 
+    /**
+     * Calcule et applique les effets d'une attaque à distance
+     * @param ennemi le monstre ennemi
+     * @throws IOException toujours
+     */
     public void tirer(Monstre ennemi) throws IOException {
         int base = Input.tir();
         float bonus = 0;
@@ -253,6 +278,11 @@ public abstract class Joueur {
         ennemi.tir(base + Main.corriger(bonus, 0));
     }
 
+    /**
+     * Calcule et applique les effets d'une attaque classique sur un monstre
+     * @param ennemi le monstre ennemi
+     * @throws IOException toujours
+     */
     public void attaquer(Monstre ennemi) throws IOException {
         int base = Input.atk();
         float bonus = 0;
@@ -268,7 +298,12 @@ public abstract class Joueur {
         ennemi.dommage(base + Main.corriger(bonus, 0));
     }
 
-    public void rendre_vivant(int malus){
+    /**
+     * Rends la vie à un mort
+     * peut l'assommer
+     * @param malus une augmentation de la probabilité d'être assommé longtemps
+     */
+    public void do_ressucite(int malus){
         vivant = true;
         int luck = rand.nextInt(4) - malus;
         if(luck < 0){
@@ -276,22 +311,42 @@ public abstract class Joueur {
         }
     }
 
+    /**
+     * Met à jour les données d'un joueur qui vient de perdre un familier
+     * réinitialise ses états à l'exception de la mort
+     */
     public void rendre_mort(){
         vivant = false;
+        reveil = 0;
+        conscient = true;
+        berserk = 0;
     }
 
+    /**
+     * Met à jour les données d'un joueur qui vient de perdre un familier
+     */
     public void f_rendre_mort(){
         ob_f = 0;
         f_actif = false;
     }
 
+    /**
+     * Assomme le joueur
+     * Annule son état de berserk
+     */
     public void assomme(){
         assomme(0);
     }
 
+    /**
+     * Assomme le joueur
+     * Annule son état de berserk
+     * @param reveil le bonus (ou malus) de réveil
+     */
     public void assomme(int reveil){
         conscient = false;
         this.reveil = reveil;
+        berserk = 0;
     }
 
     public void f_assomme(){
@@ -311,7 +366,7 @@ public abstract class Joueur {
         this.f_berserk = rage;
     }
 
-    protected void f_attaque(Monstre ennemi) throws IOException {
+    public void f_attaque(Monstre ennemi) throws IOException {
         // berserk
         if (f_est_berserk()) {
 
@@ -411,7 +466,7 @@ public abstract class Joueur {
                 return;
             }
             default -> {
-                System.out.println("Erreur : résultat inatendu. Action annulée.");
+                System.out.println("Erreur : résultat inatendu. Enum.Action annulée.");
                 position = pos;
                 return;
             }
@@ -500,8 +555,8 @@ public abstract class Joueur {
         if (ob_f < 0){
            ob_f = 0;
         }
-        else if(ob_f > Main.f_max){
-            ob_f = Main.f_max;
+        else if(ob_f > f_max){
+            ob_f = f_max;
         }
     }
 
@@ -541,7 +596,7 @@ public abstract class Joueur {
     //************************************************METHODE METIER**************************************************//
 
     /**
-     * Extension de la fonction Input.tour, annonce les choix de métier possibles
+     * Extension de la fonction Exterieur.Input.tour, annonce les choix de métier possibles
      * @return le texte à ajouter
      */
     public String text_tour() {
@@ -549,7 +604,7 @@ public abstract class Joueur {
     }
 
     /**
-     * Extension de la fonction Input.tour, permet de jouer les choix de métier
+     * Extension de la fonction Exterieur.Input.tour, permet de jouer les choix de métier
      * @param choix le choix fait par le joueur
      * @return si le tour a été joué
      */
@@ -558,7 +613,7 @@ public abstract class Joueur {
     }
 
     /**
-     * Extension de la fonction Input.action, annonce les actions possibles du joueur
+     * Extension de la fonction Exterieur.Input.action, annonce les actions possibles du joueur
      * @return le texte à ajouter
      */
     public String text_action(){
@@ -583,7 +638,7 @@ public abstract class Joueur {
     }
 
     /**
-     * Extension de la fonction Input.action, annonce les actions possibles du familier
+     * Extension de la fonction Exterieur.Input.action, annonce les actions possibles du familier
      * @return le texte à ajouter
      */
     public String f_text_action(){
@@ -598,7 +653,7 @@ public abstract class Joueur {
     }
 
     /**
-     * Extension de la fonction Input.action, permet de jouer les action de métier
+     * Extension de la fonction Exterieur.Input.action, permet de jouer les action de métier
      * @param choix le choix fait par le joueur (en lowercase)
      * @param est_familier s'il s'agit d'un familier ou d'un joueur
      * @return si le tour a été joué
@@ -608,7 +663,7 @@ public abstract class Joueur {
     }
 
     /**
-     * Extension du switch principal de Combat.combat, permet de réaliser des actions exclusives aux métiers
+     * Extension du switch principal de main.Combat.combat, permet de réaliser des actions exclusives aux métiers
      * @param action l'action à réaliser
      * @return s'il faut encore réaliser l'action
      */
@@ -619,32 +674,32 @@ public abstract class Joueur {
                     case BERSERK -> {
                         System.out.println(n + " est prit d'une folie meurtrière !");
                         berserk[i] = 0.2f + 0.1f * rand.nextInt(9);
-                        ennemi.dommage(Input.atk() + alter_attaque[0], berserk[i]);
+                        ennemi.dommage(Exterieur.Input.atk() + alter_attaque[0], berserk[i]);
                     }
                     case LAME_DAURA -> {
-                        if (berserk[i] > 0 && Input.D6() < 4) {
+                        if (berserk[i] > 0 && Exterieur.Input.D6() < 4) {
                             int l;
                             do {
                                 l = rand.nextInt(8);
                             } while (!actif[l]);
-                            int temp = Input.atk() + alter_attaque[0];
+                            int temp = Exterieur.Input.atk() + alter_attaque[0];
                             temp += Main.corriger(temp * (berserk[i] / 2));
                             System.out.println("Prise de folie, " + n + " attaque " + nom[i] + " et lui infliges " + temp + " dommages !");
                             berserk[i] += rand.nextInt(3) * 0.1f + 0.1f;
                         } else {
-                            int temp = Input.atk() + alter_attaque[0];
+                            int temp = Exterieur.Input.atk() + alter_attaque[0];
                             temp += Main.corriger(temp * berserk[i]);
                             ennemi.dommage(temp, 2.7F);
                             System.out.println("L'arme principale de " + n + " se brise !");
                         }
                     }
                     case ASSASSINAT -> {
-                        if(Sort.assassinat(ennemi)){
+                        if(Metiers.Sort.assassinat(ennemi)){
                             pr_l = i;
                         }
                     }
                     case LIEN -> {
-                        if(Sort.lien(i, ennemi, mort, actif)){
+                        if(Metiers.Sort.lien(i, ennemi, mort, actif)){
                             return;
                         }
                     }
@@ -778,9 +833,9 @@ public abstract class Joueur {
     /**Nombre spécifique indiquant qu'un joueur berserk a tiré sur un allié**/
     static float berserk_atk_alliee = -256;
     /**
-     * Gère les effets de la folie du berserk lors de tir à l'arc
-     * @param base la puissance de tir originale
-     * @return le bonus de dommages, ou -1000 si le joueur attaque un allié
+     * Gère les effets de la folie du berserk lors d'attaque
+     * @param base la puissance de frappe
+     * @return le bonus de dommages, ou berserk_atk_alliee si le joueur attaque un allié
      * @throws IOException toujours
      */
     protected float berserk_atk(int base) throws IOException {
@@ -894,19 +949,19 @@ public abstract class Joueur {
     public void f_proteger(Monstre ennemi) throws IOException {
         switch (Input.D6() + get_ob_f() / 3) {
             case 1, 2:
-                ennemi.encaissement += 0.1F;
+                ennemi.bostEncaissement(0.1F);
                 System.out.println("Votre familier vous protège maladroitement.");
                 break;
             case 3, 4:
-                ennemi.encaissement += 0.3F;
+                ennemi.bostEncaissement(0.3F);
                 System.out.println("Votre familier vous protège.");
                 break;
             case 5, 6:
-                ennemi.encaissement += 0.5F;
+                ennemi.bostEncaissement(0.5F);
                 System.out.println("Votre familier vous protège.");
                 break;
             case 7, 8, 9, 10:
-                ennemi.encaissement += 0.7F;
+                ennemi.bostEncaissement(0.7F);
                 System.out.println("Votre familier concentre chaque fibre de son être à se préparer à vous preoteger.");
                 break;
             default:

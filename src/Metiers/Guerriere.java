@@ -1,3 +1,15 @@
+package Metiers;
+
+import Exterieur.Input;
+
+import Enum.Metier;
+import Enum.Position;
+import Enum.Action;
+
+import Monstre.Monstre;
+
+import main.Main;
+
 import java.io.IOException;
 
 public class Guerriere extends Joueur {
@@ -7,14 +19,14 @@ public class Guerriere extends Joueur {
         super(nom, position, ob_f);
     }
 
-    protected Metier getMetier() {
+    public Metier getMetier() {
         return metier;
     }
 
     @Override
     public void presente_base() {
         System.out.println("Guerrier");
-        System.out.println("Base : Résistance : 6 ; attaque : 2 ; PP: 1/5");
+        System.out.println("Enum.Base : Résistance : 6 ; attaque : 2 ; PP: 1/5");
         System.out.println("Caractéristiques : Invincible");
         System.out.println("Pouvoir : Berserk, Lame d'aura");
     }
@@ -71,11 +83,11 @@ public class Guerriere extends Joueur {
     public boolean traite_action(Action action, Monstre ennemi) throws IOException {
         switch(action) {
             case BERSERK -> {
-                //Sort.berserk(); TODO
+                //Metiers.Sort.berserk(); TODO
                 return true;
             }
             case LAME_DAURA -> {
-                //Sort.sort(ennemi); TODO
+                //Metiers.Sort.sort(ennemi); TODO
                 return false;
             }
         }
@@ -97,19 +109,36 @@ public class Guerriere extends Joueur {
 
     @Override
     protected float berserk_atk(int base) throws IOException {
+        if(berserk + 1.5f >= 5.5f){
+            return burst(base);
+        }
         if (Input.D6() < 1.5f + berserk) {
             int i;
             do {
-                i = rand.nextInt(Main.nbj);
-            } while (!Main.joueurs[i].est_actif());
-            int temp = Input.atk();
-            temp += Main.corriger(temp * (berserk * 0.7f));
-            System.out.println("Pris(e) de folie, " + nom + " attaque " + Main.joueurs[i].getNom() + " et lui inflige " + temp + " dommages !");
+                i = rand.nextInt(Main.nbj + 1);
+            } while (i != Main.nbj || !Main.joueurs[i].est_actif());
+            int bonus = Main.corriger(base * (berserk * 0.7f));
             berserk += 0.2f + rand.nextInt(7) * 0.1f; //0.2 à 0.8 de boost
+            if(i == Main.nbj){
+                return bonus;
+            }
+            System.out.println("Pris(e) de folie, " + nom + " attaque " + Main.joueurs[i].getNom() + " et lui inflige " + (base + bonus) + " dommages !");
             return berserk_atk_alliee;
         }
         berserk += 0.1f + rand.nextInt(5) * 0.1f; //0.1 à 0.5 de boost
         return base * berserk;
+    }
+
+    /**
+     * Extension de la méthode berserk_atk, version amplifiée
+     * @param base la puissance de frappe
+     * @return le bonus de dommages, ou berserk_atk_alliee si le joueur attaque un allié
+     */
+    private float burst(int base) {
+        System.out.println(getNom() + " éclate dans une rage prodigieuse !");
+        int contrecoup = rand.nextInt(Main.corriger(berserk), 6) + 2; //2~8 normalement
+        assomme(2 - contrecoup);
+        return base * berserk * 1.5f;
     }
 
     @Override

@@ -1,3 +1,13 @@
+package Metiers;
+
+import Exterieur.Input;
+
+import Enum.Metier;
+import Enum.Position;
+import Enum.Action;
+
+import Monstre.Monstre;
+
 import java.io.IOException;
 
 public class Shaman extends Joueur {
@@ -7,14 +17,14 @@ public class Shaman extends Joueur {
         super(nom, position, ob_f);
     }
 
-    protected Metier getMetier() {
+    public Metier getMetier() {
         return metier;
     }
 
     @Override
     public void presente_base() {
-        System.out.println("Shaman");
-        System.out.println("Base : Résistance : 4 ; attaque : 1 ; PP: 0/0");
+        System.out.println("Metiers.Shaman");
+        System.out.println("Enum.Base : Résistance : 4 ; attaque : 1 ; PP: 0/0");
         System.out.println("Caractéristiques : Ancien esprit, Eclaireur, Calme");
         System.out.println("Pouvoir : Lien, Incantation, Paix intérieure");
     }
@@ -61,11 +71,11 @@ public class Shaman extends Joueur {
     public boolean traite_action(Action action, Monstre ennemi) throws IOException {
         switch(action) {
             case INCANTATION -> {
-                //Sort.incantation(ennemi); TODO
+                //Metiers.Sort.incantation(ennemi); TODO
                 return false;
             }
             case LIEN -> {
-                //Sort.lien(ennemi); TODO
+                //Metiers.Sort.lien(ennemi); TODO
                 return false;
             }
             case CALME -> {

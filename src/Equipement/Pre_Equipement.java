@@ -1,3 +1,12 @@
+package Equipement;
+
+import Enum.Base;
+import Enum.Rang;
+import Enum.Promo_Type;
+import Enum.Effet_equip;
+import Exterieur.Output;
+import Exterieur.Input;
+
 import java.io.IOException;
 import java.util.Random;
 
@@ -176,7 +185,7 @@ public class Pre_Equipement {
             case AMELIORATION -> list = prom_list_boost;
             case ARTEFACT -> list = prom_list_arte;
             default -> {
-                System.out.println("Erreur : Equipement non reconnu.");
+                System.out.println("Erreur : Equipement.Equipement non reconnu.");
                 return new Pre_Equipement("Erreur", AUTRE, PROMOTION, AUCUN, false);
             }
         }
