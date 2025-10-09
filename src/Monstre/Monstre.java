@@ -63,6 +63,10 @@ public class Monstre {
         return nom;
     }
 
+    public void rename(String nom) {
+        this.nom = nom;
+    }
+
     public Competence getCompetence() {
         return competence;
     }
