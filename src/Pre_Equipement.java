@@ -384,8 +384,8 @@ public class Pre_Equipement {
     static Pre_Equipement bracelet_a2 = new Pre_Equipement("Bracelet de puissance", BRACELET, II, Effet_equip.ATTAQUE2, true);
     static Pre_Equipement bracelet_r2 = new Pre_Equipement("Bracelet défensif", BRACELET, II, Effet_equip.RESISTANCE4, true);
     static Pre_Equipement fleche_plusII3 = new Pre_Equipement("flèche explosives", AUTRE, II, Effet_equip.ARCEXP, true);
-    static Pre_Equipement parchemin_dodo = new Pre_Equipement("Parchemin de sommeil", AUTRE, I, Effet_equip.PARCH_DODO, true);
-    static Pre_Equipement rune_feu2 = new Pre_Equipement("Rune incinérante", AUTRE, I, Effet_equip.RUNE_ARDENTE2, true);
+    static Pre_Equipement parchemin_dodo = new Pre_Equipement("Parchemin de sommeil", AUTRE, II, Effet_equip.PARCH_DODO, true);
+    static Pre_Equipement rune_feu2 = new Pre_Equipement("Rune incinérante", AUTRE, II, Effet_equip.RUNE_ARDENTE2, true);
     static Pre_Equipement medail_protect = new Pre_Equipement("Médaillon de protection", AUTRE, II, Effet_equip.PROTECTION, true);
     static Pre_Equipement lunette = new Pre_Equipement("Lunette magique", AUTRE, II, Effet_equip.LUNETTE, true);
     static Pre_Equipement rune_veng = new Pre_Equipement("Rune vengeresse", RUNE, II, Effet_equip.RUNE_VENGEANCE, true);
