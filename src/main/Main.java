@@ -424,7 +424,14 @@ public class Main {
         do {
             System.out.print("Entrez le nom de la sauvegarde :");
             titre = Input.read();
-        }while(!Input.yn("Confirmez vous le titre : " + titre + "?"));
+            if(titre.contains(":") || titre.contains("\"") || titre.contains("}") || titre.contains("{")){
+                System.out.println("Le titre ne peut pas contenir les caractères ':', '\"', et '}' !");
+                titre = ":";
+            }
+            if(titre.isEmpty() || titre.equals("\n")){
+                titre = ":";
+            }
+        }while(titre.equals(":") || !Input.yn("Confirmez vous le titre : " + titre + "?"));
 
         //nbj
         System.out.print("Entrez le nombre de joueur :");
@@ -440,16 +447,16 @@ public class Main {
             // nom
             String nom;
             do{
-                System.out.println("Metiers.Joueur " + (i + 1) + ", entrez votre nom :");
+                System.out.println("Joueur " + (i + 1) + ", entrez votre nom :");
                 nom = Input.read();
-                if(nom.contains(",") || nom.contains(";")){
-                    System.out.println("Le nom du joueur ne peut pas contenir les caractères ',' et ';' !");
-                    nom = ";";
+                if(nom.contains(":") || nom.contains("\"") || nom.contains("}") || nom.contains("{")){
+                    System.out.println("Le nom du joueur ne peut pas contenir les caractères ':', '\"', et '}' !");
+                    nom = ":";
                 }
                 if(nom.isEmpty() || nom.equals("\n")){
-                    nom = ";";
+                    nom = ":";
                 }
-            }while(nom.equals(";") || !Input.yn("Voulez vous confirmer le pseudo " + nom + " ?"));
+            }while(nom.equals(":") || !Input.yn("Voulez vous confirmer le pseudo " + nom + " ?"));
 
             // metier
             boolean run = true;
