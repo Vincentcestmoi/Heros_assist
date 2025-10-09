@@ -13,18 +13,21 @@ public class Ranger extends Joueur {
 
     public Ranger(String nom, Position position, int ob_f) {
         super(nom, position, ob_f);
+        vie = 4;
+        attaque = 2;
+        PP = "mana";
+        PP_value = 3;
+        PP_max = 4;
+        caracteristique = "Eclaireur, Explorateur, Oeil d'aigle";
+        competences = "Assassinat, Coup critique";
     }
 
     public Metier getMetier() {
         return metier;
     }
 
-    @Override
-    public void presente_base() {
-        System.out.println("Metiers.Ranger");
-        System.out.println("Enum.Base : Résistance : 4 ; attaque : 2 ; PP: 4/4");
-        System.out.println("Caractéristiques : Explorateur, Eclaireur, Tireur d'élite, Assassin");
-        System.out.println("Pouvoir : Assassinat, Coup critique, Assaut");
+    protected String nomMetier(){
+        return "ranger";
     }
 
     @Override
@@ -77,7 +80,7 @@ public class Ranger extends Joueur {
                 return false;
             }
             case ASSASSINAT -> {
-                Sort.assassinat(ennemi);
+                Sort.assassinat(ennemi); //TODO faire passer première ligne
                 return false;
             }
         }

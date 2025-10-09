@@ -15,18 +15,21 @@ public class Shaman extends Joueur {
 
     public Shaman(String nom, Position position, int ob_f) {
         super(nom, position, ob_f);
+        vie = 4;
+        attaque = 1;
+        PP = "mana";
+        PP_value = 0;
+        PP_max = 0;
+        caracteristique = "Ame errante, Second souffle, Eclaireur";
+        competences = "Incantation, Lien, Paix intérieure";
     }
 
     public Metier getMetier() {
         return metier;
     }
 
-    @Override
-    public void presente_base() {
-        System.out.println("Metiers.Shaman");
-        System.out.println("Enum.Base : Résistance : 4 ; attaque : 1 ; PP: 0/0");
-        System.out.println("Caractéristiques : Ancien esprit, Eclaireur, Calme");
-        System.out.println("Pouvoir : Lien, Incantation, Paix intérieure");
+    protected String nomMetier(){
+        return "shaman";
     }
 
     @Override

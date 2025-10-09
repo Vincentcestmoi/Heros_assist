@@ -5,42 +5,62 @@ import Exterieur.Input;
 import Enum.Metier;
 import Enum.Position;
 import Enum.Action;
-import Enum.Position;
+import Monstre.Lieu;
 
 import Monstre.Monstre;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class Necromancien extends Joueur {
     Metier metier = Metier.NECROMANCIEN;
+    private boolean a_maudit;
 
     public Necromancien(String nom, Position position, int ob_f) {
         super(nom, position, ob_f);
+        vie = 4;
+        attaque = 1;
+        PP = "mana";
+        PP_value = 5;
+        PP_max = 8;
+        caracteristique = "Taumaturge";
+        competences = "Sacrifice, Ressurection, Zombification, Appel des morts";
     }
 
     public Metier getMetier() {
         return metier;
     }
 
+    protected String nomMetier(){
+        return "necromancien";
+    }
+
     @Override
-    public void presente_base() {
-        System.out.println("Metiers.Necromancien");
-        System.out.println("Enum.Base : Résistance : 4 ; attaque : 1 ; PP: 6/8");
-        System.out.println("Caractéristiques : Thaumaturge, Rite sacrificiel");
-        System.out.println("Pouvoir : Appel des morts, Résurrection, Zombification, Malédiction");
+    public void init_affrontement(boolean force, Position pos) throws IOException {
+        super.init_affrontement(force, pos);
+        a_maudit = false;
     }
 
     @Override
     public String text_tour(){
-        return  "/(ap)pel des morts";
+        String text = "/(ap)pel des morts";
+        if(a_familier()){
+            text += "/(sa)crifier son familier";
+        }
+        return text;
     }
 
     @Override
     public boolean tour(String choix) throws IOException {
-        if(choix.equalsIgnoreCase("ap")){
-            // TODO Sort.necromancie(getPosition());
-            return true;
+        switch(choix) {
+            case "ap" -> {
+                necromancie();
+                return true;
+            }
+            case "sa" -> {
+                System.out.println("Vous récuperez 4PP");
+                perdre_familier();
+                return false;
+            }
         }
         return false;
     }
@@ -48,7 +68,7 @@ public class Necromancien extends Joueur {
     @Override
     public String text_action() {
         String text = super.text_action();
-        if (!est_berserk()) {
+        if (!est_berserk() && !a_maudit) {
             text += "/(ma)udir";
         }
         return text;
@@ -59,7 +79,7 @@ public class Necromancien extends Joueur {
         if(est_familier){
             return super.action(choix, true);
         }
-        if(choix.equals("ma") && !est_berserk()) {
+        if(choix.equals("ma") && !est_berserk() && !a_maudit) {
             return Action.MAUDIR;
         }
         return super.action(choix, false);
@@ -67,8 +87,8 @@ public class Necromancien extends Joueur {
 
     @Override
     public boolean traite_action(Action action, Monstre ennemi) throws IOException {
-        if (Objects.requireNonNull(action) == Action.MAUDIR && !est_berserk()) {
-            Sort.fouille();
+        if (action == Action.MAUDIR && !est_berserk()) {
+            maudir(ennemi);
             return false;
         }
         return super.traite_action(action, ennemi);
@@ -77,6 +97,25 @@ public class Necromancien extends Joueur {
     @Override
     public void fin_tour_combat(){
 
+    }
+
+    @Override
+    public void ajouter_familier(int obeissance) throws IOException {
+        if (a_familier()){
+            if(Input.yn(nom + " possède déjà un familier, voulez vous ...'remplacer' l'ancien ? ")) {
+                System.out.println("Vous recupérez 4PP grâce au sacrifice de votre ancien compagnon.\n");
+                setOb(obeissance);
+            }
+            else{
+                System.out.println("Le nouveau venu a été convertie en 4PP.");
+            }
+        }
+        else if(Input.yn("Voulez vous sacrifier votre nouveau familier ?")) {
+            System.out.println("Le nouveau venu a été convertie en 4PP.");
+        }
+        else{
+            setOb(obeissance);
+        }
     }
 
     @Override
@@ -102,6 +141,97 @@ public class Necromancien extends Joueur {
             System.out.println("Résurection avec 12 (max) points de vie");
         }
         return true;
+    }
+
+    /**
+     * Applique l'effet de la compétence "malédiction"
+     * @param ennemi la cible de la malédiction
+     * @throws IOException toujours
+     */
+    private void maudir(Monstre ennemi) throws IOException {
+        a_maudit = true;
+        int boost = rand.nextInt(3);
+        switch (Input.D6()){
+            case 2 -> {
+                System.out.println("Vous maudissez faiblement " + ennemi.getNom() + ".");
+                ennemi.bostVie(-(1 + boost), true);
+            }
+            case 3, 4 -> {
+                System.out.println("Vous maudissez " + ennemi.getNom() + ".");
+                ennemi.bostVie(-(2 + boost), true);
+            }
+            case 5 -> {
+                System.out.println("Vous maudissez agressivement " + ennemi.getNom() + ".");
+                ennemi.bostVie(-(3 + boost), true);
+            }
+            case 6, 7, 8 -> {
+                System.out.println("Vous maudissez puissament " + ennemi.getNom() + ".");
+                ennemi.bostVie(-(5 + boost), true);
+            }
+            default -> {
+                System.out.println("vous n'arrivez pas à maudir " + ennemi.getNom() + ".");
+                a_maudit = false;
+            }
+        }
+    }
+
+    /**
+     * Indique le résultat de la compétence "appel des morts"
+     * @throws IOException toujours
+     */
+    private void necromancie() throws IOException {
+        Monstre m = Lieu.true_monstre(getPosition());
+        System.out.println("Vous rappelez à la vie les cadavres de ces terres.");
+        System.out.println("Combien de PP mettez vous dans le sort ? (min 4) : ");
+        int mana = Input.readInt();
+        int jet = Input.D8() + mana + rand.nextInt(2) - 1;
+        String monstre_nom;
+        int ob;
+        if (jet <= 6) {
+            monstre_nom = "carcasse putréfié";
+            m.bostAtk(-7, true);
+            m.bostVie(-9, true);
+            m.bostArmure(-4, true);
+            ob = 1 + rand.nextInt(2);
+        }
+        else if (jet <= 8) {
+            monstre_nom = "zombie écorché";
+            m.bostAtk(-5, true);
+            m.bostVie(-7, true);
+            m.bostArmure(-4, true);
+            ob = 1 + rand.nextInt(2);
+        }
+        else if (jet <= 11) {
+            monstre_nom = "esprit vengeur";
+            m.bostAtk(3, true);
+            m.bostVie(-7, true);
+            m.bostArmure(-4, true);
+            ob = 2 + rand.nextInt(3);
+        }
+        else if (jet <= 13) {
+            monstre_nom = "squellette blindé";
+            m.bostAtk(-3, true);
+            m.bostVie(4, true);
+            m.bostArmure(1, true);
+            ob = 3 + rand.nextInt(4);
+        }
+        else if (jet <= 15) {
+            monstre_nom = "abomination vengeresse";
+            m.bostAtk(2, true);
+            m.bostVie(4, true);
+            m.bostArmure(0, true);
+            ob = 3 + rand.nextInt(4);
+        }
+        else {
+            monstre_nom = "Ancien gardien";
+            m.bostAtk(3, true);
+            m.bostVie(7, true);
+            m.bostArmure(2, true);
+            ob = 4 + rand.nextInt(3);
+        }
+        m.rename(monstre_nom);
+        m.presente_familier();
+        ajouter_familier(ob);
     }
 
 }

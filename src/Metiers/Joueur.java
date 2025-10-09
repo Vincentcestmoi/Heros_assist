@@ -24,6 +24,15 @@ public abstract class Joueur {
     private Position position;
     private int ob_f;
 
+    // stat
+    protected int vie;
+    protected int attaque;
+    protected String PP;
+    protected int PP_value;
+    protected int PP_max;
+    protected String caracteristique;
+    protected String competences;
+
     // en combat
     protected boolean front;
     protected boolean actif;
@@ -74,11 +83,13 @@ public abstract class Joueur {
 
     abstract public Metier getMetier();
 
+    abstract protected String nomMetier();
+
     static Random rand = new Random();
 
     //************************************************GETTER**********************************************************//
 
-    protected void setOb(int value){ //TODO temp, delete
+    protected void setOb(int value){
         this.ob_f = value;
     }
 
@@ -159,13 +170,18 @@ public abstract class Joueur {
     /**
      * Présente les caractéristiques et statistiques du joueur
      */
-    abstract public void presente_base();
+    public void presente_base() {
+     System.out.println(nomMetier());
+     System.out.println("Base : Résistance : " + vie + " ; attaque : " + attaque + " ; " + PP + " : " + PP_value + "/" + PP_max);
+     System.out.println("Caractéristiques : " + caracteristique);
+     System.out.println("Pouvoir : " + competences);
+     }
 
     /**
      * Présente la condition et position du joueur
      */
     public void presente(){
-        System.out.print(this.nom + " est " + getMetier().toString() + " et se trouve " + Main.texte_pos(getPosition()));
+        System.out.print(this.nom + " est " + nomMetier() + " et se trouve " + Main.texte_pos(getPosition()));
         if(a_familier()){
             System.out.print(" avec son familier");
         }
@@ -174,6 +190,12 @@ public abstract class Joueur {
 
     //************************************************METHODE INDEPENDANTE********************************************//
 
+    /**
+     * Met le joueur en condition de début de combat (avec le choix de participer)
+     * @param force si le joueur est forcé de se battre
+     * @param pos la position du combat
+     * @throws IOException toujours
+     */
     public void init_affrontement(boolean force, Position pos) throws IOException {
         if(!force && (pos != position || !Input.yn("Est-ce que " + nom + " participe au combat ?"))){
             return;
@@ -566,16 +588,32 @@ public abstract class Joueur {
         position = Position.ENFERS;
     }
 
+    /**
+     * Traite l'ajout d'un nouveau familier
+     * @throws IOException toujours
+     */
     public void ajouter_familier() throws IOException {
+        ajouter_familier(1);
+    }
+
+    /**
+     * Traite l'ajout d'un nouveau familier
+     * @param obeissance l'obéissance du nouveau familier
+     * @throws IOException toujours
+     */
+    public void ajouter_familier(int obeissance) throws IOException {
         if (a_familier() && !Input.yn(nom + " possède déjà un familier, le remplacer ? ")) {
             System.out.println("Ancien familier conservé.\n");
         }
         else {
             System.out.println(nom + " a un nouveau familier.\n");
-            ob_f = 1;
+            ob_f = obeissance;
         }
     }
 
+    /**
+     * Tue le familier du joueur
+     */
     public void perdre_familier() {
         System.out.println("Le familier de " + nom + " est mort.");
         ob_f = 0;
@@ -596,7 +634,7 @@ public abstract class Joueur {
     //************************************************METHODE METIER**************************************************//
 
     /**
-     * Extension de la fonction Exterieur.Input.tour, annonce les choix de métier possibles
+     * Extension de la fonction tour, annonce les choix de métier possibles
      * @return le texte à ajouter
      */
     public String text_tour() {
@@ -604,7 +642,7 @@ public abstract class Joueur {
     }
 
     /**
-     * Extension de la fonction Exterieur.Input.tour, permet de jouer les choix de métier
+     * Extension de la fonction Input.tour, permet de jouer les choix de métier
      * @param choix le choix fait par le joueur
      * @return si le tour a été joué
      */
@@ -613,7 +651,7 @@ public abstract class Joueur {
     }
 
     /**
-     * Extension de la fonction Exterieur.Input.action, annonce les actions possibles du joueur
+     * Extension de la fonction Input.action, annonce les actions possibles du joueur
      * @return le texte à ajouter
      */
     public String text_action(){
@@ -638,7 +676,7 @@ public abstract class Joueur {
     }
 
     /**
-     * Extension de la fonction Exterieur.Input.action, annonce les actions possibles du familier
+     * Extension de la fonction Input.action, annonce les actions possibles du familier
      * @return le texte à ajouter
      */
     public String f_text_action(){
@@ -653,7 +691,7 @@ public abstract class Joueur {
     }
 
     /**
-     * Extension de la fonction Exterieur.Input.action, permet de jouer les action de métier
+     * Extension de la fonction Input.action, permet de jouer les action de métier
      * @param choix le choix fait par le joueur (en lowercase)
      * @param est_familier s'il s'agit d'un familier ou d'un joueur
      * @return si le tour a été joué
@@ -669,41 +707,6 @@ public abstract class Joueur {
      */
     public boolean traite_action(Action action, Monstre ennemi) throws IOException {
         return true;
-        /* TODO
-                    //compétence de classe
-                    case BERSERK -> {
-                        System.out.println(n + " est prit d'une folie meurtrière !");
-                        berserk[i] = 0.2f + 0.1f * rand.nextInt(9);
-                        ennemi.dommage(Exterieur.Input.atk() + alter_attaque[0], berserk[i]);
-                    }
-                    case LAME_DAURA -> {
-                        if (berserk[i] > 0 && Exterieur.Input.D6() < 4) {
-                            int l;
-                            do {
-                                l = rand.nextInt(8);
-                            } while (!actif[l]);
-                            int temp = Exterieur.Input.atk() + alter_attaque[0];
-                            temp += Main.corriger(temp * (berserk[i] / 2));
-                            System.out.println("Prise de folie, " + n + " attaque " + nom[i] + " et lui infliges " + temp + " dommages !");
-                            berserk[i] += rand.nextInt(3) * 0.1f + 0.1f;
-                        } else {
-                            int temp = Exterieur.Input.atk() + alter_attaque[0];
-                            temp += Main.corriger(temp * berserk[i]);
-                            ennemi.dommage(temp, 2.7F);
-                            System.out.println("L'arme principale de " + n + " se brise !");
-                        }
-                    }
-                    case ASSASSINAT -> {
-                        if(Metiers.Sort.assassinat(ennemi)){
-                            pr_l = i;
-                        }
-                    }
-                    case LIEN -> {
-                        if(Metiers.Sort.lien(i, ennemi, mort, actif)){
-                            return;
-                        }
-                    }
-                    } TODO*/
     }
 
     /**
@@ -738,6 +741,38 @@ public abstract class Joueur {
         }
         System.out.println(nom + " est toujours inconscient.");
         reveil += 1;
+    }
+
+    /**
+     * Subit la compétence "Onde ce choc" de l'archimage
+     */
+    protected void choc() throws IOException {
+        System.out.println(nom + " est frappé par l'onde de choc.");
+        int jet = Input.D6() - rand.nextInt(4) - 2;
+        if(est_assomme()){
+            reveil -= Math.max(1, jet);
+        }
+        else if (jet < 0) {
+            System.out.println(nom + " perd connaissance.");
+            assomme();
+        } 
+        else {
+            System.out.println(nom + " parvient à rester conscient.");
+        }
+        //familier
+        if(!a_familier_actif()){
+            return;
+        }
+        jet = Input.D4() - 2 - rand.nextInt(2);
+        if(f_est_assomme()){
+            f_reveil -= Math.max(1, jet);
+        }
+        else if (jet < 0) {
+            System.out.println("Le familier de " + nom + " perd connaissance.");
+            f_assomme();
+        } else {
+            System.out.println("Le familier de " + nom + " parvient à rester conscient.");
+        }
     }
 
     /**

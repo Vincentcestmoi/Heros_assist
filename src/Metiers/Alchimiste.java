@@ -15,20 +15,22 @@ public class Alchimiste extends Joueur {
 
     public Alchimiste(String nom, Position position, int ob_f) {
         super(nom, position, ob_f);
+        vie = 4;
+        attaque = 1;
+        PP = "ingredient";
+        PP_value = 3;
+        PP_max = 11;
+        caracteristique = "Dextérité";
+        competences = "Fouille, Concoction";
     }
 
     public Metier getMetier() {
         return metier;
     }
 
-    @Override
-    public void presente_base() {
-        System.out.println("Metiers.Alchimiste");
-        System.out.println("Enum.Base : Résistance : 5 ; attaque : 1 ; PP: 0/0 ; ingrédient : 3/11");
-        System.out.println("Caractéristiques : Dextérité");
-        System.out.println("Pouvoir : Fouille, Dissection, Concoction");
+    protected String nomMetier(){
+        return "alchimiste";
     }
-
 
     @Override
     public String text_tour(){

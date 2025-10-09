@@ -8,18 +8,21 @@ public class Tryharder extends Joueur {
 
     public Tryharder(String nom, Position position, int ob_f) {
         super(nom, position, ob_f);
+        vie = 5;
+        attaque = 1;
+        PP = "mana";
+        PP_value = 6;
+        PP_max = 6;
+        caracteristique = "Déterminé";
+        competences = "Aucune";
     }
 
     public Metier getMetier() {
         return metier;
     }
 
-    @Override
-    public void presente_base() {
-        System.out.println("tryharder");
-        System.out.println("Enum.Base : Résistance : 5 ; attaque : 1 ; PP: 5/5");
-        System.out.println("Caractéristiques : Determiné");
-        System.out.println("Pouvoir : Aucun");
+    protected String nomMetier(){
+        return "tryharder";
     }
 
 }

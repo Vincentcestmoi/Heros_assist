@@ -14,26 +14,43 @@ import java.io.IOException;
 
 public class Guerriere extends Joueur {
     Metier metier = Metier.GUERRIERE;
+    private boolean lame_break;
 
     public Guerriere(String nom, Position position, int ob_f) {
         super(nom, position, ob_f);
+        vie = 6;
+        attaque = 2;
+        PP = "aura";
+        PP_value = 1;
+        PP_max = 5;
+        caracteristique = "Force naturelle, Invincibilité";
+        competences = "Berserk, Lame d'aura";
     }
 
     public Metier getMetier() {
         return metier;
     }
 
+    protected String nomMetier(){
+        return "guerrière";
+    }
+
     @Override
-    public void presente_base() {
-        System.out.println("Guerrier");
-        System.out.println("Enum.Base : Résistance : 6 ; attaque : 2 ; PP: 1/5");
-        System.out.println("Caractéristiques : Invincible");
-        System.out.println("Pouvoir : Berserk, Lame d'aura");
+    public void init_affrontement(boolean force, Position pos) throws IOException {
+        super.init_affrontement(force, pos);
+        lame_break = false;
     }
 
     @Override
     public void fin_tour_combat(){
+    }
 
+    @Override
+    public void fin_affrontement(){
+        super.fin_affrontement();
+        if(lame_break){
+            System.out.println("Vos armes se brisent");
+        }
     }
 
     @Override
@@ -57,7 +74,9 @@ public class Guerriere extends Joueur {
         if (!est_berserk()) {
             text += "/(be)rserker";
         }
-        text += "/(la)me d'aura";
+        if(!lame_break) {
+            text += "/(la)me d'aura";
+        }
         return text;
     }
 
@@ -73,7 +92,9 @@ public class Guerriere extends Joueur {
                 }
             }
             case "la" -> {
-                return Action.LAME_DAURA;
+                if(!lame_break) {
+                    return Action.LAME_DAURA;
+                }
             }
         }
         return super.action(choix, false);
@@ -83,11 +104,11 @@ public class Guerriere extends Joueur {
     public boolean traite_action(Action action, Monstre ennemi) throws IOException {
         switch(action) {
             case BERSERK -> {
-                //Metiers.Sort.berserk(); TODO
+                berserk();
                 return true;
             }
             case LAME_DAURA -> {
-                //Metiers.Sort.sort(ennemi); TODO
+                lame_aura(ennemi);
                 return false;
             }
         }
@@ -147,6 +168,40 @@ public class Guerriere extends Joueur {
             return base * 0.25f * (rand.nextInt(4) + 1); //25% à 100% de bonus
         }
         return 0;
+    }
+
+    /**
+     * Lance le sort berserk : rand le joueur berserk
+     */
+    private void berserk(){
+        System.out.println(nom + " est prit d'une folie meurtrière !");
+        berserk = 0.2f + 0.1f * rand.nextInt(9); //0.2 à 1
+    }
+
+
+    /**
+     * Compétence "lame d'aura", une attaque classique avec d'énorme dommage bonus
+     * @param ennemi le monstre ennemi
+     */
+    private void lame_aura(Monstre ennemi) throws IOException {
+        int base = Input.atk();
+        float bonus = 0;
+        if (est_berserk()) {
+            bonus = berserk_atk(base);
+            if (bonus == berserk_atk_alliee) {
+                return;
+            }
+        }
+        bonus += critique_atk(base);
+        bonus += bonus_atk();
+        //bonus += modificateur; TODO
+
+        //capacité d'aura
+        float total = base + bonus;
+        total *= 2.7f;
+        lame_break = true;
+
+        ennemi.dommage(Main.corriger(total, 3));
     }
 
 }

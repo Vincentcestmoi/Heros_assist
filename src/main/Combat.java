@@ -698,7 +698,7 @@ public class Combat {
      * @param ennemi le monstre à ressuciter
      * @param etat la qualité du cadavre
      * @return la variation de l'état du familier, ou 0 si le sort a échoué
-     * @throws IOException pour l'Exterieur.Input
+     * @throws IOException toujours
      */
     private static int ressuciter(Monstre ennemi, int etat) throws IOException {
         int jet = Input.D8() + (etat - 10) / 2;

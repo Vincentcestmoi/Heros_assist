@@ -7,6 +7,7 @@ import Enum.Position;
 import Enum.Action;
 
 import Monstre.Monstre;
+import main.Main;
 
 import java.io.IOException;
 
@@ -15,18 +16,21 @@ public class Archimage extends Joueur {
 
     public Archimage(String nom, Position position, int ob_f) {
         super(nom, position, ob_f);
+        vie = 4;
+        attaque = 0;
+        PP = "mana";
+        PP_value = 8;
+        PP_max = 10;
+        caracteristique = "Double sort, Manchot, Bruyant";
+        competences = "Sort, Méditation, Purge";
     }
 
     public Metier getMetier() {
         return metier;
     }
 
-    @Override
-    public void presente_base() {
-        System.out.println("Metiers.Archimage");
-        System.out.println("Enum.Base : Résistance : 4 ; attaque : 0 ; PP: 10/10");
-        System.out.println("Caractéristiques : Addiction au mana, Maitre de l'énergie, Double incantateur, Manchot, Bruyant");
-        System.out.println("Pouvoir : Méditation, Boule de feu, Armure de glace, Foudre, Onde de choc, Purge");
+    protected String nomMetier(){
+        return "archimage";
     }
 
     @Override
@@ -110,6 +114,27 @@ public class Archimage extends Joueur {
         }
         if(est_assomme()){
             System.out.println(nom + " récupère 1 point de mana.");
+        }
+    }
+
+    private void onde_choc(Monstre ennemi) throws IOException {
+
+        // sur les participants sauf le lanceur
+        for(int i = 0; i < Main.nbj; i++) {
+            Joueur joueur = Main.joueurs[i];
+            if (joueur != this && joueur.est_actif()) {
+                joueur.choc();
+            }
+        }
+
+        // sur l'ennemi
+        System.out.println(ennemi.getNom() + " est frappé par l'onde de choc.");
+        System.out.print(this.getNom() + " : ");
+        switch (Input.D6()){
+            case 2 -> ennemi.do_etourdi();
+            case 3, 4 -> ennemi.affecte();
+            case 5, 6 -> ennemi.do_assomme();
+            default -> System.out.println(ennemi.getNom() + " n'a pas l'air très affecté...");
         }
     }
 
