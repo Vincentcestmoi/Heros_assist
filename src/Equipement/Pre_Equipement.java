@@ -330,8 +330,8 @@ public class Pre_Equipement {
     static Pre_Equipement bracelet_a2 = new Pre_Equipement("Bracelet de puissance", BRACELET, II, Effet_equip.ATTAQUE2, true);
     static Pre_Equipement bracelet_r2 = new Pre_Equipement("Bracelet défensif", BRACELET, II, Effet_equip.RESISTANCE4, true);
     static Pre_Equipement fleche_plusII3 = new Pre_Equipement("flèche explosives", AUTRE, II, Effet_equip.ARCEXP, true);
-    static Pre_Equipement parchemin_dodo = new Pre_Equipement("Parchemin de sommeil", AUTRE, I, Effet_equip.PARCH_DODO, true);
-    static Pre_Equipement rune_feu2 = new Pre_Equipement("Rune incinérante", AUTRE, I, Effet_equip.RUNE_ARDENTE2, true);
+    static Pre_Equipement parchemin_dodo = new Pre_Equipement("Parchemin de sommeil", AUTRE, II, Effet_equip.PARCH_DODO, true);
+    static Pre_Equipement rune_feu2 = new Pre_Equipement("Rune incinérante", AUTRE, II, Effet_equip.RUNE_ARDENTE2, true);
     static Pre_Equipement medail_protect = new Pre_Equipement("Médaillon de protection", AUTRE, II, Effet_equip.PROTECTION, true);
     static Pre_Equipement lunette = new Pre_Equipement("Lunette magique", AUTRE, II, Effet_equip.LUNETTE, true);
     static Pre_Equipement rune_veng = new Pre_Equipement("Rune vengeresse", RUNE, II, Effet_equip.RUNE_VENGEANCE, true);
@@ -387,8 +387,8 @@ public class Pre_Equipement {
             casque_III_r, bouclierIII_r, main1III_ba, main1III_ba, main2III_ba, main2III_ga, lame_mont, armureIII_ar,
             main1III_a, bracelet_max};
 
-    static Pre_Equipement nectar = new Pre_Equipement("nectar", AUTRE, IV, Effet_equip.NECTAR, true);
-    static Pre_Equipement ambroisie = new Pre_Equipement("ambroisie", AUTRE, IV, Effet_equip.AMBROISIE, true);
+    static Pre_Equipement nectar = new Pre_Equipement("nectar", AUTRE, IV, Effet_equip.NECTAR, false);
+    static Pre_Equipement ambroisie = new Pre_Equipement("ambroisie", AUTRE, IV, Effet_equip.AMBROISIE, false);
     static Pre_Equipement arcIV = new Pre_Equipement("Arc d'Apollon", ARC, IV, AUCUN, true);
     static Pre_Equipement main1IV = new Pre_Equipement("Glaives divins", MAIN1, IV, AUCUN, true);
     static Pre_Equipement main2IV = new Pre_Equipement("Lame divine", MAIN2, IV, AUCUN, true);

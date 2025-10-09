@@ -663,7 +663,7 @@ public abstract class Joueur {
     }
 
     /**
-     * Extension du switch principal de main.Combat.combat, permet de réaliser des actions exclusives aux métiers
+     * Extension du switch principal de main.combat, permet de réaliser des actions exclusives aux métiers
      * @param action l'action à réaliser
      * @return s'il faut encore réaliser l'action
      */
