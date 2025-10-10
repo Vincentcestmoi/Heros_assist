@@ -1,15 +1,18 @@
 package Exterieur;
 
 import Metiers.Joueur;
-import Enum.Position;
 import Equipement.Pre_Equipement;
+import Monstre.Race;
+import main.Main;
+
+import Enum.Position;
 import Enum.Rang;
 import Enum.Promo_Type;
 import Enum.Action;
 import Enum.Choix;
-import Monstre.Race;
-import main.Main;
-import main.Combat;
+import Enum.Sort;
+import Enum.Concoction;
+import Enum.Incantation;
 
 import java.io.File;
 import java.io.IOException;
@@ -643,21 +646,21 @@ public class Input {
      * @return le type de potion
      * @throws IOException toujours
      */
-    public static Action concoction() throws IOException {
+    public static Concoction concoction() throws IOException {
         System.out.println("Quel type de potion voulez vous concocter : (re)sistance/(al)éatoire/(di)vine/en (se)rie/" +
                 "(en)ergie/(fo)rce/(in)stable/(mi)racle/(so)in/(to)xique/(c)ustom ?");
-        return switch(read()){
-            case "re", "RE", "Re", "rE" -> Action.RESISTANCE;
-            case "al", "AL", "Al", "aL" -> Action.ALEATOIRE;
-            case "di", "DI", "Di", "dI" -> Action.DIVINE;
-            case "se", "SE", "Se", "sE" -> Action.SERIE;
-            case "en", "EN", "En", "enE" -> Action.ENERGIE;
-            case "fo", "FO", "Fo", "fO" -> Action.FORCE;
-            case "in", "IN", "In", "iN" -> Action.INSTABLE;
-            case "mi", "MI", "Mi", "mI" -> Action.MIRACLE;
-            case "so", "SO", "So", "sO" -> Action.SOIN;
-            case "to", "TO", "To", "tO" -> Action.TOXIQUE;
-            case "c", "C" -> Action.AUTRE;
+        return switch(read().toLowerCase()){
+            case "re" -> Concoction.RESISTANCE;
+            case "al" -> Concoction.ALEATOIRE;
+            case "di" -> Concoction.DIVINE;
+            case "se" -> Concoction.SERIE;
+            case "en" -> Concoction.ENERGIE;
+            case "fo" -> Concoction.FORCE;
+            case "in" -> Concoction.INSTABLE;
+            case "mi" -> Concoction.MIRACLE;
+            case "so" -> Concoction.SOIN;
+            case "to" -> Concoction.TOXIQUE;
+            case "c" -> Concoction.AUTRE;
             default -> {
                 System.out.println("Exterieur.Input unknow");
                 yield concoction();
@@ -670,16 +673,16 @@ public class Input {
      * @return le sort à lancer
      * @throws IOException toujours
      */
-    public static Action sort() throws IOException {
+    public static Sort sort() throws IOException {
         System.out.println("Quel sort voulez vous lancer : (bo)ule de feu/(ar)mure de glace/(on)de de choc/(fo)udre/(c)ustom ?");
-        return switch(read()){
-            case "bo", "BO", "Bo", "bO" -> Action.BDF;
-            case "ar", "AR", "Ar", "aR" -> Action.ADG;
-            case "on", "ON", "On", "oN" -> Action.ONDE_CHOC;
-            case "fo", "FO", "Fo", "fO" -> Action.FOUDRE;
-            case "c", "C" -> Action.AUTRE;
+        return switch(read().toLowerCase()){
+            case "bo" -> Sort.BDF;
+            case "ar" -> Sort.ADG;
+            case "on" -> Sort.ONDE_CHOC;
+            case "fo" -> Sort.FOUDRE;
+            case "c" -> Sort.AUTRE;
             default -> {
-                System.out.println("Exterieur.Input unknow");
+                System.out.println("Input unknow");
                 yield sort();
             }
         };
@@ -690,13 +693,13 @@ public class Input {
      * @return l'incantation à lancer
      * @throws IOException toujours
      */
-    public static Action incantation() throws IOException {
+    public static Incantation incantation() throws IOException {
         System.out.println("Quel type d'incantation voulez-vous réciter : (ap)pelle des nuages/(ch)ant de colère/(be)nédiction/(in)vocation des éléments ?");
-        return switch(read()){
-            case "ap", "AP", "Ap", "aP" -> Action.NUAGE;
-            case "ch", "CH", "Ch", "cH" -> Action.COLERE;
-            case "be", "BE", "Be", "bE", "bé", "Bé" -> Action.BENIE;
-            case "in", "IN", "In", "iN" -> Action.ELEMENTAIRE;
+        return switch(read().toLowerCase()){
+            case "ap" -> Incantation.NUAGE;
+            case "ch" -> Incantation.COLERE;
+            case "be", "bé" -> Incantation.BENIE;
+            case "in" -> Incantation.ELEMENTAIRE;
             default -> {
                 System.out.println("Exterieur.Input unknow");
                 yield incantation();

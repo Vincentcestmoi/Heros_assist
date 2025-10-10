@@ -334,7 +334,7 @@ public abstract class Joueur {
     }
 
     /**
-     * Met à jour les données d'un joueur qui vient de perdre un familier
+     * Met à jour les données d'un joueur qui vient de mourir
      * réinitialise ses états à l'exception de la mort
      */
     public void rendre_mort(){

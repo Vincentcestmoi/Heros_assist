@@ -4,7 +4,9 @@ import Enum.Metier;
 import Enum.Position;
 import Enum.Action;
 
+import Exterieur.Input;
 import Monstre.Monstre;
+import main.Main;
 
 import java.io.IOException;
 
@@ -72,15 +74,15 @@ public class Ranger extends Joueur {
     public boolean traite_action(Action action, Monstre ennemi) throws IOException {
         switch(action) {
             case CRITIQUE -> {
-                Sort.coup_critique(ennemi);
+                coup_critique(ennemi);
                 return false;
             }
             case ASSAUT -> {
-                //Metiers.Sort.assaut(ennemi); TODO
+                assaut(ennemi);
                 return false;
             }
             case ASSASSINAT -> {
-                Sort.assassinat(ennemi); //TODO faire passer première ligne
+                assassinat(ennemi);
                 return false;
             }
         }
@@ -131,6 +133,67 @@ public class Ranger extends Joueur {
     @Override
     protected int bonus_fuite() {
         return 2;
+    }
+
+    /**
+     * Applique la compétence "coup critique" sur un tir classique
+     * @param ennemi le monstre ennemi
+     * @throws IOException toujours
+     */
+    public static void coup_critique(Monstre ennemi) throws IOException {
+        switch(Input.D4()){
+            case 1 -> {
+                System.out.println("La pointe de votre flèche éclate en plein vol.");
+                ennemi.tir(Input.tir(), 0.5F);
+            }
+            case 2, 3 -> ennemi.tir(Input.tir());
+            case 4, 5 -> {
+                System.out.println("Votre flèche file droit sur " + ennemi.getNom() + " et lui porte un coup puissant.");
+                ennemi.tir(Input.tir(), 2F);
+            }
+            default -> {
+                System.out.println("Entré invalide, tir classique appliqué.");
+                ennemi.tir(Input.tir());
+            }
+        }
+    }
+
+    /**
+     * Appliques les effets de la compétence "assassinat"
+     * @param ennemi le monstre adverse
+     * @throws IOException toujours
+     */
+    private void assassinat(Monstre ennemi) throws IOException {
+        if(Input.D6() + rand.nextInt(3) - 1 > 3){
+            System.out.println("Vous vous faufilez derrière " + ennemi.getNom() + " sans qu'il ne vous remarque.");
+            ennemi.dommage(Main.corriger(Input.atk() * 1.3f + 6.5f));
+        }
+        else {
+            System.out.println("Vous jugez plus prudent de ne pas engagez pour l'instant...");
+        }
+    }
+
+    /**
+     * Applique la compétence "assaut"
+     * @param ennemi le monstre ennemi
+     * @throws IOException toujours
+     */
+    private void assaut(Monstre ennemi) throws IOException {
+        System.out.println("Vous chargez brutalement " + ennemi.getNom());
+        int jet = Input.D8() + rand.nextInt(3) - 1;
+        int base = Input.atk();
+        float bonus = 0.1f * jet * base;
+        if (est_berserk()) {
+            bonus = berserk_atk(base);
+            if (bonus == berserk_atk_alliee) {
+                return;
+            }
+        }
+        bonus += critique_atk(base);
+        bonus += bonus_atk();
+        //bonus += modificateur; TODO
+        ennemi.dommage(base + Main.corriger(bonus, 0));
+        ennemi.attaque(getNom());
     }
 
 }
