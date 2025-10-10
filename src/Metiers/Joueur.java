@@ -321,6 +321,13 @@ public abstract class Joueur {
     }
 
     /**
+     * Gère le cas où le joueur à un problème de dépendance quelconque
+     */
+    public void addiction() throws IOException {
+
+    }
+
+    /**
      * Rends la vie à un mort
      * peut l'assommer
      * @param malus une augmentation de la probabilité d'être assommé longtemps

@@ -48,6 +48,13 @@ public class Archimage extends Joueur {
     }
 
     @Override
+    public void addiction() throws IOException {
+        if(Input.yn("Votre mana est-il descendu à 0 ?")){
+            mana_addiction();
+        }
+    }
+
+    @Override
     public String text_action() {
         String text = super.text_action();
         if (!est_berserk()) {
@@ -128,14 +135,14 @@ public class Archimage extends Joueur {
             return;
         }
         if(Input.yn("Votre mana est-il tombé à 0 ?")){
-            if(addiction()){
+            if(mana_addiction()){
                 return;
             }
         }
         System.out.println("Vous préparez votre second sort.");
         extracted(ennemi);
         if(Input.yn("Votre mana est-il tombé à 0 ?")){
-            addiction();
+            mana_addiction();
         }
     }
 
@@ -365,7 +372,7 @@ public class Archimage extends Joueur {
      * Applique les compétences "addiction au mana" et "maitre du mana" de l'archimage
      * @throws IOException toujours
      */
-    private boolean addiction() throws IOException {
+    private boolean mana_addiction() throws IOException {
         int jet = Input.D4() + rand.nextInt(3) - 1;
         if (jet < 4) {
             System.out.println("Vous perdez connaissance.");

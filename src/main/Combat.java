@@ -4,7 +4,6 @@ import Exterieur.Input;
 import Exterieur.Output;
 import Metiers.Joueur;
 import Enum.Metier;
-import Metiers.Sort;
 import Monstre.Monstre;
 import Monstre.Race;
 import Enum.Position;
@@ -14,7 +13,6 @@ import Enum.Competence;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.Objects;
 import java.util.Random;
 
 public class Combat {
@@ -363,6 +361,8 @@ public class Combat {
      */
     private static void alteration(Joueur joueur) throws IOException {
 
+        joueur.addiction();
+
         //mort
         if (Input.yn(joueur.getNom() + " est-il/elle mort(e) ?")) {
             //on regarde si on peut le ressuciter immédiatement
@@ -382,16 +382,9 @@ public class Combat {
             }
             joueur.rendre_mort();
         }
-        if(Input.yn("Le familier de " + joueur.getNom() + " est-il mort ?")){
+        if(Input.yn("Le familier de " + joueur.getNom() + " est-il mort ?")) {
             joueur.f_rendre_mort();
             return;
-        }
-
-        // TODO : déplacer
-        if (joueur.getMetier() == Metier.ARCHIMAGE && Input.yn("Le mana de " + joueur.getNom() + " est-il tombé à 0 ?")) {
-            if(Sort.addiction()){
-                joueur.assomme();
-            }
         }
 
         // assommé
