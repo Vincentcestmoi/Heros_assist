@@ -31,28 +31,4 @@ public enum Action {
     END,
     RETOUR,
     AUCUNE,
-
-    //type de sort
-    BDF,
-    ADG,
-    FOUDRE,
-    ONDE_CHOC,
-
-    //type de potion
-    RESISTANCE,
-    ALEATOIRE,
-    DIVINE,
-    SERIE,
-    ENERGIE,
-    FORCE,
-    INSTABLE,
-    MIRACLE,
-    SOIN,
-    TOXIQUE,
-
-    //type d'incantation
-    COLERE,
-    NUAGE,
-    BENIE,
-    ELEMENTAIRE,
 }
