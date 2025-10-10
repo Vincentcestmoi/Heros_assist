@@ -41,12 +41,10 @@ public class Input {
 
         Main.Path = reponse;
 
-
-
         // charger ou nouvelle partie
         if (!sauvegardeExiste || !yn("Sauvegarde détectée, charger cette sauvegarde ?")) {
             if (yn("Confirmez la suppression")) {
-                    //Exterieur.Output.delete_fichier(s); //TODO
+                Output.viderSauvegarde(reponse);
                 System.out.println("lancement du jeu.\n\n");
                 return false;
             }
@@ -58,7 +56,7 @@ public class Input {
         Main.nbj = Main.joueurs.length;
 
         for (Joueur joueur : Main.joueurs) {
-            System.out.print("Metiers.Joueur chargé avec succès : ");
+            System.out.print("Joueur chargé avec succès : ");
             joueur.presente();
             System.out.println();
         }

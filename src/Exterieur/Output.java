@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FileReader;
 import javax.json.*;
+import java.util.Objects;
 import java.util.Set;
 import java.util.LinkedHashSet;
 
@@ -167,5 +168,18 @@ public class Output {
             System.err.println("Erreur lors de la lecture du son : " + e.getMessage());
         }
     }
+
+    public static void viderSauvegarde(int index) throws IOException {
+        File dossier = new File("Save" + index);
+        if (!dossier.exists()) throw new IOException("Dossier introuvable.");
+
+        for (File f : Objects.requireNonNull(dossier.listFiles())) {
+            if (!f.delete()) {
+                throw new IOException("Impossible de supprimer : " + f.getName());
+            }
+            System.out.println("Fichier supprimé : " + f.getName());
+        }
+    }
+
 
 }
