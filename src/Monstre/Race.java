@@ -197,8 +197,8 @@ public class Race {
     static Race coquillage = new Race("coquillage", 0, 15, 5, 2, 2, 1, coqu_perle);
     static Competence[] symb_comp = {Competence.VOL, Competence.VOL_OFF, Competence.VOLAGE, Competence.VIOLENT, Competence.RAPIDE};
     static Race symbalien = new Race("oiseau de symbale", 8, 21, 1, 2, 2, 1, symb_comp);
-    static Race charibe = new Race("Charibe", 10, 30, 3, 5, 5, 1, nomme_comp);
-    static Race scylla = new Race("Scylla", 12, 21, 4, 5, 5, 1, nomme_comp);
+    static Race charibe = new Race("Charibe", 10, 38, 3, 5, 5, 1, nomme_comp);
+    static Race scylla = new Race("Scylla", 12, 29, 4, 5, 5, 1, nomme_comp);
 
     public static Race[] mer = {kraken, leviathan, hippocampe, griffon, sirene, triton, coquillage, symbalien, charibe, scylla};
 
@@ -224,16 +224,16 @@ public class Race {
     static Competence[] illu_comp = {Competence.ILLU_VENTI, Competence.ILLU_SIRENE, Competence.ILLU_CYCLOPE, Competence.ILLU_AURAI,
             Competence.ILLU_ROCHE, Competence.ILLU_DULLA, Competence.ILLU_TRITON, Competence.ILLU_GOLEM};
     static Race illusioniste = new Race("illusioniste", 8, 30, 2, 2, 3, 2, illu_comp);
-    static Race typhon = new Race("Typhon", 17, 38, 2, 5, 5, 1, nomme_comp);
-    static Race caucase = new Race("l'Aigle du Caucase", 16, 35, 3, 5, 5, 1, nomme_comp);
+    static Race typhon = new Race("Typhon", 19, 48, 2, 5, 5, 1, nomme_comp);
+    static Race caucase = new Race("l'Aigle du Caucase", 18, 40, 3, 5, 5, 1, nomme_comp);
 
     public static Race[] mont = {venti, cyclope, aurai_malefique, roche_maudite, dullahan, golem, archliche, illusioniste, typhon, caucase};
 
     static Competence[] tita_comp = {Competence.CUIR_MAGIQUE, Competence.SPELL_IMMUNE, Competence.GEANT, Competence.FORCE_NATURELLE3,
         Competence.VITALITE_NATURELLE3, Competence.ARMURE_NATURELLE3};
-    static Race titan = new Race("titan", 20, 50, 3, 3, 4, 2, tita_comp);
+    static Race titan = new Race("titan", 25, 58, 4, 3, 4, 2, tita_comp);
     static Competence[] chro_comp = {Competence.CHRONOS};
-    static Race chronos = new Race("Chronos", 35, 83, 5, 4, 4, 6, chro_comp);
+    static Race chronos = new Race("Chronos", 35, 83, 7, 4, 4, 6, chro_comp);
 
     public static Race[] olympe = {titan, titan, titan, chronos};
 }
