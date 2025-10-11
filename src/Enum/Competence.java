@@ -69,6 +69,7 @@ public enum Competence {
     ESQUIVE,        //done
     EQUIPE,         //done
     DUO,        //done
+    DUO_PASSED, //done
     FOLIE_MEURTRIERE,   //done
     ASSAUT,     //done
     SACRE,      //done
