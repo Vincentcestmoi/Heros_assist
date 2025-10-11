@@ -98,10 +98,6 @@ public class Alchimiste extends Joueur {
         return super.traite_action(action, ennemi);
     }
 
-    public void fin_tour_combat(){
-
-    }
-
     @Override
     public boolean peut_ressuciter() {
         return true;

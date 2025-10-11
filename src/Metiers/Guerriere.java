@@ -42,10 +42,6 @@ public class Guerriere extends Joueur {
     }
 
     @Override
-    public void fin_tour_combat(){
-    }
-
-    @Override
     public void fin_affrontement(){
         super.fin_affrontement();
         if(lame_break){

@@ -18,6 +18,7 @@ import static java.lang.Math.min;
 
 public class Shaman extends Joueur {
     Metier metier = Metier.SHAMAN;
+    private int possession_atk;
 
     public Shaman(String nom, Position position, int ob_f) {
         super(nom, position, ob_f);
@@ -28,6 +29,7 @@ public class Shaman extends Joueur {
         PP_max = 0;
         caracteristique = "Ame errante, Second souffle, Eclaireur";
         competences = "Incantation, Lien, Paix intérieure";
+        possession_atk = 0;
     }
 
     public Metier getMetier() {
@@ -36,6 +38,12 @@ public class Shaman extends Joueur {
 
     protected String nomMetier(){
         return "shaman";
+    }
+
+    @Override
+    public void init_affrontement(boolean force, Position pos) throws IOException {
+        possession_atk = 0;
+        super.init_affrontement(force, pos);
     }
 
     @Override
@@ -96,13 +104,13 @@ public class Shaman extends Joueur {
     }
 
     @Override
-    public int bonus_exploration(){
-        return rand.nextInt(2) /* eclaireur */;
+    protected int bonus_atk(){
+        return possession_atk;
     }
 
     @Override
-    public void fin_tour_combat(){
-
+    public int bonus_exploration(){
+        return rand.nextInt(2) /* eclaireur */;
     }
 
     @Override
@@ -203,10 +211,20 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void colere(Monstre ennemi) throws IOException {
-        switch(rand.nextInt(5)){
-            case 0 -> colere_boost();
-            case 1, 2, 3 -> colere_attaque(ennemi);
-            case 4 -> colere_berserk();
+        System.out.println("""
+                De nombreux esprits en colère répondent à vos chants, donnez leur des ordres :\
+                
+                \t1: ≠‼∴α
+                \t2: ≠‼ψχ
+                \t3: ≠‼∅δ""");
+        switch(Input.read()){
+            case "1" -> colere_boost();
+            case "2" -> colere_attaque(ennemi);
+            case "3" -> colere_berserk();
+            default -> {
+                System.out.println("Input unknow");
+                colere(ennemi);
+            }
         }
     }
 
@@ -218,19 +236,19 @@ public class Shaman extends Joueur {
         int jet = Input.D8() + rand.nextInt(3) - 1;
         if(jet <= 3){
             System.out.println("Les esprits des ancients guerriers exalte vos actes.");
-            System.out.println("Votre attaque augmente temporairement de 1 point.");
+            possession_atk += 1;
         }
         else if (jet <= 5){
             System.out.println("Les âmes de vos ancestres guerriers renforcent vos actes.");
-            System.out.println("Votre attaque augmente temporairement de 2 points.");
+            possession_atk += 2;
         }
         else if (jet <= 8){
             System.out.println("L'âme d'un ancien guerrier guide votre main.");
-            System.out.println("Votre attaque augmente temporairement de 4 points.");
+            possession_atk += 4;
         }
         else{
             System.out.println("Votre âme entre en symbiose avec celle de vos ancestres belliqueux.");
-            System.out.println("Votre attaque augmente temporairement de 7 points.");
+            possession_atk += 7;
         }
     }
 
@@ -286,11 +304,22 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void nuage(Monstre ennemi) throws IOException {
-        switch(rand.nextInt(6)){
-            case 0 -> nuage_pluie();
-            case 1, 2 -> nuage_grele(ennemi);
-            case 3, 4 -> nuage_brume(ennemi);
-            case 5 -> nuage_foudre(ennemi);
+        System.out.println("""
+                Plusieurs nuages répondent à votre appel, choississez celui que vous voulez faire venir :\
+                
+                \t1: ↥☁∿λ
+                \t2: ↥☁∘χ
+                \t3: ↥☁≋θ
+                \t4: ↥☁∇Ω""");
+        switch(Input.read()){
+            case "1" -> nuage_pluie();
+            case "2" -> nuage_grele(ennemi);
+            case "3" -> nuage_brume(ennemi);
+            case "4" -> nuage_foudre(ennemi);
+            default -> {
+                System.out.println("Input unknow");
+                nuage(ennemi);
+            }
         }
     }
 
@@ -420,11 +449,22 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void element(Monstre ennemi) throws IOException {
-        switch(rand.nextInt(7)){
-            case 0, 4 -> vent(ennemi);
-            case 1, 5 -> terre(ennemi);
-            case 2, 6 -> feu(ennemi);
-            case 3 -> eau(ennemi);
+        System.out.println("""
+                Choississez un élément à invoquer :\
+                
+                \t1: ∆Ψ≋ξ
+                \t2: ∆Ψ∴φ
+                \t3: ∆Ψ⊡τ
+                \t4: ∆Ψ∿μ""");
+        switch(Input.read()){
+            case "1" -> vent(ennemi);
+            case "2" -> feu(ennemi);
+            case "3" -> terre(ennemi);
+            case "4" -> eau(ennemi);
+            default -> {
+                System.out.println("Input unknow");
+                element(ennemi);
+            }
         }
     }
 
@@ -574,11 +614,22 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void benir() throws IOException {
-        switch(rand.nextInt(7)){
-            case 0, 1, 2 -> benir_soin();
-            case 3, 4 -> benir_vie();
-            case 5 -> benir_force();
-            case 6 -> benir_def();
+        System.out.println("""
+                Cibler un allié (ou vous même) et choississez une bénédiction :\
+                
+                \t1: ¤✧▣ζ
+                \t2: ¤✧∿η
+                \t3: ¤✧⊕ρ
+                \t4: ¤✧↑κ""");
+        switch(Input.read()){
+            case "1" -> benir_def();
+            case "2" -> benir_soin();
+            case "3" -> benir_vie();
+            case "4" -> benir_force();
+            default -> {
+                System.out.println("Input unknow");
+                benir();
+            }
         }
     }
 

@@ -95,11 +95,6 @@ public class Necromancien extends Joueur {
     }
 
     @Override
-    public void fin_tour_combat(){
-
-    }
-
-    @Override
     public boolean ajouter_familier(int obeissance) throws IOException {
         if (a_familier()){
             if(Input.yn(nom + " possède déjà un familier, voulez vous ...'remplacer' l'ancien ? ")) {

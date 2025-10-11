@@ -692,17 +692,22 @@ public class Input {
      * @throws IOException toujours
      */
     public static Incantation incantation() throws IOException {
-        System.out.println("Quel type d'incantation voulez-vous réciter : (ap)pelle des nuages/(ch)ant de colère/(be)nédiction/(in)vocation des éléments ?");
-        return switch(read().toLowerCase()){
-            case "ap" -> Incantation.NUAGE;
-            case "ch" -> Incantation.COLERE;
-            case "be", "bé" -> Incantation.BENIE;
-            case "in" -> Incantation.ELEMENTAIRE;
+        System.out.println("""
+                Quel type d'incantation voulez-vous réciter ?\
+                
+                \t1: ↥☁
+                \t2: ≠‼
+                \t3: ¤✧
+                \t4: ∆Ψ""");
+        return switch(read()){
+            case "1" -> Incantation.NUAGE;
+            case "2" -> Incantation.COLERE;
+            case "3" -> Incantation.BENIE;
+            case "4" -> Incantation.ELEMENTAIRE;
             default -> {
-                System.out.println("Exterieur.Input unknow");
+                System.out.println("Input unknow");
                 yield incantation();
             }
         };
-
     }
 }

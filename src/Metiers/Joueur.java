@@ -772,7 +772,7 @@ public abstract class Joueur {
     }
 
     /**
-     * Réalise les actions de fin de combat
+     * Réalise les actions de fin de tour (en combat)
      */
     public void fin_tour_combat(){
         skip = false;

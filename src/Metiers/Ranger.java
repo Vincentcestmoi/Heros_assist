@@ -94,11 +94,6 @@ public class Ranger extends Joueur {
     }
 
     @Override
-    public void fin_tour_combat(){
-
-    }
-
-    @Override
     public float critique_tir(int base){
         if(rand.nextInt(8) == 0) { //12.5%
             return base * 0.15f * (rand.nextInt(6) + 1); //15% à 90% de bonus

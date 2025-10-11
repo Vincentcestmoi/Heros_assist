@@ -104,11 +104,6 @@ public class Archimage extends Joueur {
     }
 
     @Override
-    public void fin_tour_combat(){
-
-    }
-
-    @Override
     public void essaie_reveil() throws IOException {
         // l'archimage peut se réveiller via un sort
         if (Input.yn("Utiliser purge (3PP) pour reprendre conscience ?")) {
