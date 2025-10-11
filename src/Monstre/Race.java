@@ -196,7 +196,7 @@ public class Race {
         Competence.AQUAJET2};
     static Race coquillage = new Race("coquillage", 0, 15, 5, 2, 2, 1, coqu_perle);
     static Competence[] symb_comp = {Competence.VOL, Competence.VOL_OFF, Competence.VOLAGE, Competence.VIOLENT, Competence.RAPIDE};
-    static Race symbalien = new Race("oiseau de Symbale", 8, 21, 1, 2, 2, 1, symb_comp);
+    static Race symbalien = new Race("oiseau de symbale", 8, 21, 1, 2, 2, 1, symb_comp);
     static Race charibe = new Race("Charibe", 10, 30, 3, 5, 5, 1, nomme_comp);
     static Race scylla = new Race("Scylla", 12, 21, 4, 5, 5, 1, nomme_comp);
 
