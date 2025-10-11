@@ -35,6 +35,13 @@ public class Necromancien extends Joueur {
     }
 
     @Override
+    public void mort_def(){
+        super.mort_def();
+        System.out.println("Grace à vos talent de thaumaturge, vous conservez vos modifications physiques et emportez" +
+                "avec vous la moitié de votre or (arrondie inférieur) et 4 de vos items de votre choix.");
+    }
+
+    @Override
     public void init_affrontement(boolean force, Position pos) throws IOException {
         super.init_affrontement(force, pos);
         a_maudit = false;
