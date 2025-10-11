@@ -443,7 +443,7 @@ public class Monstre {
                 System.out.println("Le corp de " + this.nom + " s'agite !");
                 System.out.println(this.nom + " vous (pl) inflige" + this.attaque + " dommages.");
             }
-            case DUO -> {
+            case DUO_PASSED -> {
                 competence = Competence.AUCUNE;
                 System.out.println("Vous vous dirigez vers le deuxième " + nom);
                 drop();
@@ -640,18 +640,22 @@ public class Monstre {
                     this.nom = "illusioniste";
                     this.competence = Competence.AUCUNE;
                 }
+                case DUO -> {
+                    System.out.println("Un des " + this.nom + " est mort(e).");
+                    this.competence = Competence.DUO_PASSED;
+                }
                 default -> System.out.println(this.nom + " est mort(e).");
             }
             drop();
+            etat += vie; //on retire les dégats en trop
+            Joueur.monstre_mort(this);
+
+            if (etat <= 0 || pos == Position.ENFERS || pos == Position.OLYMPE || pos == Position.ASCENDANT) {
+                return true;
+            }
+            System.out.println("Vous pouvez vendre le cadavre de " + nom + " pour " + (1 + (etat - 1) / 10) + " PO.");
             return false;
         }
-        etat += vie; //on retire les dégats en trop
-        Joueur.monstre_mort(this);
-
-        if (etat <= 0 || pos == Position.ENFERS || pos == Position.OLYMPE || pos == Position.ASCENDANT) {
-            return true;
-        }
-        System.out.println("Vous pouvez vendre le cadavre de " + nom + " pour " + (1 + (etat - 1) / 10) + " PO.");
         return true;
     }
 
