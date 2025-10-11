@@ -70,7 +70,6 @@ public class Race {
         for (Race[] l : lists) {
             for (int i = 0; i < l.length; i++) {
                 if (l[i] != null && Objects.equals(l[i].get_nom(), monstre)) {
-                    System.out.println(monstre + " supprimé(e).");
                     l[i] = null;
                     return;
                 }
