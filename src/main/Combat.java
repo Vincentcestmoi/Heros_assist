@@ -3,7 +3,6 @@ package main;
 import Exterieur.Input;
 import Exterieur.Output;
 import Metiers.Joueur;
-import Enum.Metier;
 import Monstre.Monstre;
 import Monstre.Race;
 import Enum.Position;
@@ -18,6 +17,7 @@ import java.util.Random;
 public class Combat {
     
     static Random rand = new Random();
+    private static boolean run;
 
     /**
      * Lance un combat entre les joueur et un monstres
@@ -73,10 +73,10 @@ public class Combat {
         }
 
         System.out.println();
-        combat(ennemi, pr_l);
+        combat(ennemi, pr_l, position);
 
         System.out.println("Fin du combat\n");
-        gestion_mort_end();
+        gestion_mort_fin();
     }
 
     /**
@@ -111,7 +111,7 @@ public class Combat {
      * @param pr_l   index du participant de première ligne
      * @throws IOException et oui
      */
-    private static void combat(Monstre ennemi, int pr_l) throws IOException {
+    private static void combat(Monstre ennemi, int pr_l, Position pos) throws IOException {
 
         // on prépare une bijection aléatoire pour l'ordre de jeu
         int[] t = new int[Main.nbj];
@@ -124,14 +124,15 @@ public class Combat {
             }
         }
 
+        combat_start(ennemi, pos);
+
         int i;
         Action act, act_f = Action.AUCUNE;
         Joueur joueur;
-        boolean run = ennemi.check_mort();
         while (run) {
 
             //chaque joueur
-            for (int j = 0; j < Main.nbj; j++) {
+            for (int j = 0; j < Main.nbj && run; j++) {
                 i = t[j];
                 joueur = Main.joueurs[j];
 
@@ -242,7 +243,7 @@ public class Combat {
                         }
                     }
                     if (!is_active) { // plus de joueur participant
-                        run = false;
+                        stop_run();
                         System.out.println("Aucun joueur détecté en combat.");
                         // break inutile, car actif[i] toujours à false
                     } else {
@@ -254,75 +255,48 @@ public class Combat {
                     }
                 }
 
-                int temp = verifie_mort(ennemi);
+                int temp = verifie_mort(ennemi, pos);
                 if(temp != -2){
-                    return;
+                    stop_run();
                 }
             }
 
             // tour de l'adversaire
             if (run) {
-                ennemi.attaque(Main.joueurs[pr_l].getNom());
-                int temp = verifie_mort(ennemi);
+                ennemi.attaque(Main.joueurs[pr_l].getFrontNom());
+                int temp = verifie_mort(ennemi, pos);
                 if(temp != -2){
-                    return;
+                    stop_run();
                 }
             }
         }
     }
 
+    private static void combat_start(Monstre ennemi, Position pos) throws IOException {
+        run = ennemi.check_mort(pos);
+    }
+
+    /**
+     * Stop le combat
+     */
+    public static void stop_run() {
+        run = false;
+    }
+
     /**
      * Vérifie si le monstre est mort et en gère les aprés coup
      * @param ennemi le monstre adverse
-     * @return -2 si le monstre est en vie, -1 s'il est mort, l'index du joueur qui l'a domestiqué sinon
+     * @return -2 si le monstre est en vie, -1 s'il est mort
      * @throws IOException toujours
      */
-    private static int verifie_mort(Monstre ennemi) throws IOException {
-        if (ennemi.check_mort()) {
+    private static int verifie_mort(Monstre ennemi, Position pos) throws IOException {
+        if (ennemi.check_mort(pos)) {
             return -2;
         }
         // la mort est donné par les méthodes de dommage
         gestion_nomme(ennemi);
         return -1;
-    }/*
-
-        //le nécromancien peut tenter de ressuciter le monstre
-        int etat = 15 + rand.nextInt(12);
-        for (int k = 0; k < Main.nbj; k++) {
-            if (etat > 0 && actif[k] && Main.metier[k] == Enum.Metier.NECROMANCIEN) {
-                if (Exterieur.Input.yn("Voulez vous tenter de ressuciter " + ennemi.nom + " en tant que familier pour 2PP ?")) {
-                    int temp = ressuciter(ennemi, etat);
-                    etat = etat + temp;
-                    if (temp != 0) {
-                        if (!Exterieur.Input.yn("Tuez vous le familier que vous venez de ramener à la vie pour gagner 4PP ?")) {
-                            return k;
-                        }
-                        etat -= rand.nextInt(4) + 3;
-                        if (etat < 0) {
-                            System.out.println("Le cadavre du monstre n'est plus qu'une masse informe et inutilisable.");
-                            return -1;
-                        }
-                    }
-                }
-            }
-        }
-        for (int k = 0; k < Main.nbj; k++) {
-            if (etat > 0 && actif[k] && Main.metier[k] == Enum.Metier.ALCHIMISTE) {
-                if (Exterieur.Input.yn("Voulez vous dissequer le cadavre ?")) {
-                    etat += Metiers.Sort.dissection(etat);
-                    if (etat < 0) {
-                        System.out.println("Le cadavre du monstre n'est plus qu'une masse informe et inutilisable.");
-                        return -1;
-                    }
-                }
-            }
-        }
-        if (etat == 0 || pos == Enum.Position.ENFERS || pos == Enum.Position.OLYMPE || pos == Enum.Position.ASCENDANT) {
-            return -1;
-        }
-        System.out.println("Vous pouvez vendre le cadavre de " + ennemi.nom + " pour " + (1 + (etat - 1) / 10) + " PO.");
-        return -1;
-    }*/
+    }
 
     /**
      * Simule le comportement d'un familier en fonction de son niveau d'obéissance
@@ -642,99 +616,6 @@ public class Combat {
     }
 
     /**
-     * Fournie la liste à laquelle appartient le monstre
-     *
-     * @param ennemi le nom du monstre à identifier
-     * @return sa liste de référence
-     * @implNote ne regarde que les monstres nommés
-     */
-    private static Race[] getList(String ennemi) {
-        Race[] list = null;
-        switch (ennemi) {
-            case "Cerbère" -> list = Race.enfers;
-            case "Lycaon", "Mormo" -> list = Race.prairie;
-            case "Laton", "Empousa" -> list = Race.vigne;
-            case "Python", "Echidna" -> list = Race.temple;
-            case "Scylla", "Charibe" -> list = Race.mer;
-            case "Typhon", "l'Aigle du Caucase" -> list = Race.mont;
-            case "Chronos" -> list = Race.olympe;
-        }
-        return list;
-    }
-
-    /**
-     * Fournie le nom de la liste à laquelle appartient le monstre
-     *
-     * @param ennemi le nom du monstre à identifier
-     * @return le nom de sa liste de référence
-     * @implNote ne regarde que les monstres nommés
-     */
-    private static String getListnom(String ennemi) {
-        return switch (ennemi) {
-            case "Cerbère" -> "enfers";
-            case "Lycaon", "Mormo" -> "prairie";
-            case "Laton", "Empousa" -> "vigne";
-            case "Python", "Echidna" -> "temple";
-            case "Scylla", "Charibe" -> "mer";
-            case "Typhon", "l'Aigle du Caucase" -> "mont";
-            case "Chronos" -> "olympe";
-            default -> {
-                System.out.println(ennemi + " non reconnu.");
-                yield "erreur";
-            }
-        };
-    }
-
-    /**
-     * Tente de ressuciter un ennemi par nécromancie
-     *
-     * @param ennemi le monstre à ressuciter
-     * @param etat la qualité du cadavre
-     * @return la variation de l'état du familier, ou 0 si le sort a échoué
-     * @throws IOException toujours
-     */
-    private static int ressuciter(Monstre ennemi, int etat) throws IOException {
-        int jet = Input.D8() + (etat - 10) / 2;
-        if(jet > 8){
-            jet = 8;
-        }
-        int retour;
-        switch (jet) {
-            case 3 -> { //-8
-                System.out.println(ennemi.getNom() + " a été... rapellé");
-                ennemi.bostAtk(-6, true);
-                ennemi.bostVie(-8, true);
-                ennemi.bostArmure(-3, true);
-                retour = -rand.nextInt(6) - 7;
-            }
-            case 4, 5 -> { //-5
-                System.out.println(ennemi.getNom() + " a été partiellement ressucité");
-                ennemi.bostAtk(-3, true);
-                ennemi.bostVie(-5, true);
-                ennemi.bostArmure(-2, true);
-                retour = -rand.nextInt(6) - 4;
-            }
-            case 6, 7 -> { // -2
-                System.out.println(ennemi.getNom() + " a été ressucité");
-                ennemi.bostAtk(-1, true);
-                ennemi.bostVie(-2, true);
-                retour = -rand.nextInt(6) - 1;
-            }
-            case 8 -> { //+2
-                System.out.println(ennemi.getNom() + " a été parfaitement ressucité");
-                ennemi.bostAtk(1, true);
-                ennemi.bostVie(2, true);
-                retour = 1;
-            }
-            default -> {
-                System.out.println("échec du sort.");
-                retour = 0;
-            }
-        }
-        return retour;
-    }
-
-    /**
      * Analyse le monstre ennemi et écrit ses stats aux joueurs
      *
      * @param is_prl booléan indiquant si l'analyste est en première ligne
@@ -810,26 +691,22 @@ public class Combat {
         System.out.println("armure : " + (temp >= 7 ? arm : "???"));
     }
 
-    static private void gestion_mort_end() throws IOException {/* TODO
+    /**
+     * Traite les joueurs morts durant la bataille
+     * @throws IOException toujours
+     */
+    static private void gestion_mort_fin() throws IOException {
         for (int i = 0; i < Main.nbj; i++) {
-            if (morts[i] && Exterieur.Input.yn(nom[i] + " est mort durant le combat, le reste-t-il/elle ?")) {
-                if ((Main.metier[i] == Enum.Metier.GUERRIERE && Exterieur.Input.D10() > 6)
-                        || (Main.metier[i] == Enum.Metier.SHAMAN && Exterieur.Input.D10() > 8)) {
-                    System.out.println(nom[i] + " résiste à la mort.\n");
+            Joueur joueur = Main.joueurs[i];
+            if (!joueur.est_vivant() && Exterieur.Input.yn(joueur.getNom() + " est mort durant le combat, le reste-t-il/elle ?")) {
+                if (joueur.auto_ressuciter(0)) {
+                    System.out.println(joueur.getNom() + " résiste à la mort.\n");
                     return;
                 }
-                int t;
-                if (i < Main.nbj) {
-                    System.out.println(nom[i] + " se retrouve aux enfers.\n");
-                    Main.positions[i] = Enum.Position.ENFERS;
-                    t = i;
+                else{
+                    joueur.mort_def();
                 }
-                else {
-                    System.out.println(nom[i] + " a rendu l'âme.\n");
-                    t = i - Main.nbj;
-                }
-                Main.f[t] = 0;
             }
-        }*/
+        }
     }
 }

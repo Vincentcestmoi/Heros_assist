@@ -8,6 +8,7 @@ import Enum.Action;
 import Enum.Competence;
 
 import Monstre.Monstre;
+import main.Combat;
 import main.Main;
 
 import java.io.IOException;
@@ -154,7 +155,6 @@ public class Shaman extends Joueur {
     /**
      * Applique la compétence "lien" du shaman
      * @param ennemi le Monstre à lier
-     * @return si le combat s'arrète
      * @throws IOException toujours
      */
     private void lien(Monstre ennemi) throws IOException {
@@ -178,7 +178,7 @@ public class Shaman extends Joueur {
         else {
             System.out.println("Les âmes de " + ennemi.getNom() + " et de " + getNom() + " entre en communion !");
             setOb(min(7, rand.nextInt(result) + 1));
-            //TODO : identifier le familier comme domestiqué
+            Combat.stop_run();
         }
     }
 
@@ -669,6 +669,11 @@ public class Shaman extends Joueur {
         else{
             System.out.println("La cible gagne temporairement 1 pont d'armure.");
         }
+    }
+
+    @Override
+    public boolean auto_ressuciter(int malus) throws IOException{
+        return (Input.D20() > 17); //15%
     }
 
 }

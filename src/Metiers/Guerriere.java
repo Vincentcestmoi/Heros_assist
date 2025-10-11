@@ -184,6 +184,7 @@ public class Guerriere extends Joueur {
      * @param ennemi le monstre ennemi
      */
     private void lame_aura(Monstre ennemi) throws IOException {
+        //noinspection DuplicatedCode C'est globalement une attaque classique
         int base = Input.atk();
         float bonus = 0;
         if (est_berserk()) {
@@ -202,6 +203,11 @@ public class Guerriere extends Joueur {
         lame_break = true;
 
         ennemi.dommage(Main.corriger(total, 3));
+    }
+
+    @Override
+    public boolean auto_ressuciter(int malus) throws IOException{
+        return (Input.D10() > 7); //30%
     }
 
 }

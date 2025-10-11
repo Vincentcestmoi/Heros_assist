@@ -3,7 +3,10 @@ package Monstre;
 import Equipement.Equipement;
 import Exterieur.Input;
 import Enum.Competence;
+import Enum.Position;
+import main.Combat;
 import main.Main;
+import Metiers.Joueur;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -26,6 +29,7 @@ public class Monstre {
     protected int drop_quantite_max;
     protected float encaissement;   // quand l'adversaire utilise "encaisser"
     protected float part_soin;      // quand l'adversaire utilise "premier soin" en première ligne.
+    protected int etat;         //l'état du corps du monstre
 
     // stats de base à concerver
     protected int vie_base;
@@ -52,12 +56,25 @@ public class Monstre {
         this.attaque_base = this.attaque;
         this.armure_base = this.armure;
 
+        this.etat = 20 + rand.nextInt(11);
         if(Objects.equals(this.nom, "illusioniste")){
             illu_check();
         }
     }
 
     static Random rand = new Random();
+
+    public boolean corps_utilisable(){
+        return etat > 0;
+    }
+
+    public int getEtat(){
+        return etat;
+    }
+
+    public void alterEtat(int valeur){
+        etat += valeur;
+    }
 
     public String getNom() {
         return nom;
@@ -284,7 +301,7 @@ public class Monstre {
             case VOLEUR_CASQUE -> {
                 if (Input.yn(nom + " porte-iel un casque ?") && Input.D6() <= 4){
                     System.out.println(this.nom + " vole votre casque et part avec.");
-                    this.competence = Competence.CASQUE_VOLE;
+                    Combat.stop_run();
                     return false;
                 }
             }
@@ -362,7 +379,7 @@ public class Monstre {
                 this.attaque -= 18;
             }
             case FRAPPE_SPECTRALE -> System.out.println("L'attaque traverse partiellement l'armure de " + nom + " et ignore " + rand.nextInt(4) + " point(s) de défense.");
-            case KAMICASE, CASQUE_VOLE -> this.vie = 0;
+            case KAMICASE -> this.vie = 0;
             case CHRONOS -> {
                 if(Input.yn("L'attaque a-t-elle touchée ?")){
                     System.out.println(nom + " perd définitivement 1 équipement de son choix.");
@@ -433,7 +450,7 @@ public class Monstre {
             }
         }
         Random rand = new Random();
-        int q_drop = rand.nextInt(this.drop_quantite_max) + 1;
+        int q_drop = this.drop_quantite_max;
         for(int i = 0; i < q_drop; i++) {
             int temp = this.niveau_drop_min + rand.nextInt(this.niveau_drop_max - this.niveau_drop_min + 1);
             switch(temp){
@@ -461,6 +478,7 @@ public class Monstre {
         }
         int degat = applique_competence_tir(max(quantite - this.armure, 1));
         this.vie -= degat;
+        this.etat -= 1;
     }
 
     /**
@@ -549,6 +567,7 @@ public class Monstre {
         }
         int degas = applique_competence_magie(quantite);
         this.vie -= degas;
+        this.etat -= 1;
     }
 
     /**
@@ -612,7 +631,7 @@ public class Monstre {
      * Regarde si le monstre est mort et agit en conséquence
      * @return si le monstre est vivant
      */
-    public boolean check_mort() throws IOException {
+    public boolean check_mort(Position pos) throws IOException {
         if (est_mort()) {
             switch(competence) {
                 case ILLU_AURAI, ILLU_CYCLOPE, ILLU_DULLA, ILLU_GOLEM, ILLU_ROCHE, ILLU_SIRENE, ILLU_TRITON,
@@ -626,6 +645,13 @@ public class Monstre {
             drop();
             return false;
         }
+        etat += vie; //on retire les dégats en trop
+        Joueur.monstre_mort(this);
+
+        if (etat <= 0 || pos == Position.ENFERS || pos == Position.OLYMPE || pos == Position.ASCENDANT) {
+            return true;
+        }
+        System.out.println("Vous pouvez vendre le cadavre de " + nom + " pour " + (1 + (etat - 1) / 10) + " PO.");
         return true;
     }
 
@@ -642,6 +668,7 @@ public class Monstre {
         }
         int degas = applique_competence_dommage(max(quantite - this.armure, 1));
         this.vie -= degas;
+        this.etat -= 1;
         if(!est_mort()) {
             applique_competence_post_dommage();
         }
@@ -660,6 +687,7 @@ public class Monstre {
         }
         int degas = applique_competence_dommage((Main.corriger(quantite * mult) - this.armure));
         this.vie -= degas;
+        this.etat -= 1;
         if(!est_mort()) {
             applique_competence_post_dommage();
         }

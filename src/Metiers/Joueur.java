@@ -190,6 +190,17 @@ public abstract class Joueur {
 
     //************************************************METHODE INDEPENDANTE********************************************//
 
+    
+    public static void monstre_mort(Monstre ennemi) throws IOException {
+        for(int i = 0; i < Main.nbj; i++){
+            Main.joueurs[i].monstre_mort_perso(ennemi);
+            if (!ennemi.corps_utilisable()) {
+                System.out.println("Le cadavre du monstre n'est plus qu'une masse informe et inutilisable.");
+                return;
+            }
+        }
+    }
+    
     /**
      * Met le joueur en condition de début de combat (avec le choix de participer)
      * @param force si le joueur est forcé de se battre
@@ -233,6 +244,16 @@ public abstract class Joueur {
 
     public void f_faire_front(){
         f_front = true;
+    }
+
+    /**
+     * Renvoie le nom de l'entité de front (le joueur ou le familier)
+     */
+    public String getFrontNom(){
+        if(f_actif){
+            return "Le familier de " + nom;
+        }
+        return nom;
     }
 
     /**
@@ -306,6 +327,7 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     public void attaquer(Monstre ennemi) throws IOException {
+        //noinspection DuplicatedCode
         int base = Input.atk();
         float bonus = 0;
         if (est_berserk()) {
@@ -349,6 +371,15 @@ public abstract class Joueur {
         reveil = 0;
         conscient = true;
         berserk = 0;
+    }
+
+    /**
+     * Met à jour les données d'un joueur mort hors combat
+     */
+    public void mort_def(){
+        System.out.println(nom + " est mort.");
+        ob_f = 0;
+        position = Position.ENFERS;
     }
 
     /**
@@ -589,12 +620,6 @@ public abstract class Joueur {
         }
     }
 
-    public void suicider(){
-        System.out.println(nom + " est mort.");
-        ob_f = 0;
-        position = Position.ENFERS;
-    }
-
     /**
      * Traite l'ajout d'un nouveau familier
      * @throws IOException toujours
@@ -605,17 +630,21 @@ public abstract class Joueur {
 
     /**
      * Traite l'ajout d'un nouveau familier
+     *
      * @param obeissance l'obéissance du nouveau familier
+     * @return si le familier a été réellement ajouté
      * @throws IOException toujours
      */
-    public void ajouter_familier(int obeissance) throws IOException {
+    public boolean ajouter_familier(int obeissance) throws IOException {
         if (a_familier() && !Input.yn(nom + " possède déjà un familier, le remplacer ? ")) {
             System.out.println("Ancien familier conservé.\n");
+            return false;
         }
         else {
             System.out.println(nom + " a un nouveau familier.\n");
             ob_f = obeissance;
         }
+        return true;
     }
 
     /**
@@ -805,6 +834,16 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     public boolean ressuciter(int malus) throws IOException{
+        return false;
+    }
+
+    /**
+     * Tente de ressuciter tout seul
+     * @param malus un malus à appliquer à la tentative
+     * @return true si la résurection est un succès, false sinon
+     * @throws IOException toujours
+     */
+    public boolean auto_ressuciter(int malus) throws IOException{
         return false;
     }
 
@@ -1011,4 +1050,9 @@ public abstract class Joueur {
         }
     }
 
+    /**
+     * Propose les actions métiers sur un cadavre
+     */
+    protected void monstre_mort_perso(Monstre ennemi) throws IOException{
+    }
 }

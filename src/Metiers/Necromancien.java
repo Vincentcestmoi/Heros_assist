@@ -100,21 +100,25 @@ public class Necromancien extends Joueur {
     }
 
     @Override
-    public void ajouter_familier(int obeissance) throws IOException {
+    public boolean ajouter_familier(int obeissance) throws IOException {
         if (a_familier()){
             if(Input.yn(nom + " possède déjà un familier, voulez vous ...'remplacer' l'ancien ? ")) {
                 System.out.println("Vous recupérez 4PP grâce au sacrifice de votre ancien compagnon.\n");
                 setOb(obeissance);
+                return true;
             }
             else{
                 System.out.println("Le nouveau venu a été convertie en 4PP.");
+                return false;
             }
         }
         else if(Input.yn("Voulez vous sacrifier votre nouveau familier ?")) {
             System.out.println("Le nouveau venu a été convertie en 4PP.");
+            return false;
         }
         else{
             setOb(obeissance);
+            return true;
         }
     }
 
@@ -232,6 +236,68 @@ public class Necromancien extends Joueur {
         m.rename(monstre_nom);
         m.presente_familier();
         ajouter_familier(ob);
+    }
+
+
+
+    /**
+     * Tente de ressuciter un ennemi par nécromancie, et l'ajoute en tant que familier le cas échéant
+     * @param ennemi le monstre à ressuciter
+     * @return la variation de l'état du familier
+     * @throws IOException toujours
+     */
+    private int zombifier (Monstre ennemi) throws IOException {
+        int jet = Input.D8() + (ennemi.getEtat() - 10) / 2;
+        if(jet > 8){
+            jet = 8;
+        }
+        int retour;
+        switch (jet) {
+            case 3 -> { //-8
+                System.out.println(ennemi.getNom() + " a été... rapellé");
+                ennemi.bostAtk(-6, true);
+                ennemi.bostVie(-8, true);
+                ennemi.bostArmure(-3, true);
+                retour = -rand.nextInt(6) - 7;
+            }
+            case 4, 5 -> { //-5
+                System.out.println(ennemi.getNom() + " a été partiellement ressucité");
+                ennemi.bostAtk(-3, true);
+                ennemi.bostVie(-5, true);
+                ennemi.bostArmure(-2, true);
+                retour = -rand.nextInt(6) - 4;
+            }
+            case 6, 7 -> { // -2
+                System.out.println(ennemi.getNom() + " a été ressucité");
+                ennemi.bostAtk(-1, true);
+                ennemi.bostVie(-2, true);
+                retour = -rand.nextInt(6) - 1;
+            }
+            case 8 -> { //+2
+                System.out.println(ennemi.getNom() + " a été parfaitement ressucité");
+                ennemi.bostAtk(1, true);
+                ennemi.bostVie(2, true);
+                retour = 1;
+            }
+            default -> {
+                System.out.println("échec du sort.");
+                return 0;
+            }
+        }
+        ennemi.presente_familier();
+        if(ajouter_familier(2)) {
+            return -100;
+        }
+        return retour - rand.nextInt(4); //pénalité de sacrifice
+    }
+
+    @Override
+    protected void monstre_mort_perso(Monstre ennemi) throws IOException {
+        if (ennemi.corps_utilisable() && est_actif() && est_vivant()) {
+            if (Exterieur.Input.yn("Voulez vous tenter de ressuciter " + ennemi.getNom() + " en tant que familier pour 2PP ?")) {
+                ennemi.alterEtat(zombifier(ennemi));
+            }
+        }
     }
 
 }

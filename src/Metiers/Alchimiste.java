@@ -472,5 +472,14 @@ public class Alchimiste extends Joueur {
             System.out.println("Vous avez produit un élixir (ALCRESALTPVRES).");
         }
     }
+    
+    @Override
+    protected void monstre_mort_perso(Monstre ennemi) throws IOException{
+        if (ennemi.corps_utilisable() && est_actif() && est_vivant()) {
+            if (Exterieur.Input.yn("Voulez vous dissequer le cadavre ?")) {
+                ennemi.alterEtat(dissection(ennemi.getEtat()));
+            }
+        }
+    }
 
 }
