@@ -63,7 +63,7 @@ public class Main {
                 case ATTENDRE -> System.out.println(joueur.getNom() + " passe son tour.");
 
                 // action caché
-                case SUICIDE -> joueur.suicider();
+                case SUICIDE -> joueur.mort_def();
                 case QUITTER -> run = false;
                 case FAMILIER_PLUS -> {
                     joueur.ajouter_familier();
