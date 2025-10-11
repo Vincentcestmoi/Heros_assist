@@ -434,8 +434,6 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void vent(Monstre ennemi) throws IOException {
-        System.out.println("Pas encore implémenté");
-        /* TODO
         System.out.println("Le vent se lève...");
         int jet = Input.D6() + rand.nextInt(3) - 1;
         if(jet <= 1) {
@@ -443,33 +441,32 @@ public class Shaman extends Joueur {
         }
         else if (jet <= 4) {
             System.out.println("Une puissant vent souffle.");
-            if(alter_tir[0] <= 2){
-                alter_tir[0] = 2;
-                alter_tir[1] = Main.nbj * 2;
+            if(tir_bonus <= 2){
+                tir_bonus = 2;
+                tour_modif = rand.nextInt(3) -1 + Main.nbj;
             }
             System.out.println("Tous les tirs sont temporairement boostés.");
         }
         else if (jet <= 6) {
             System.out.println("De violente rafale se prononce.");
-            if(alter_tir[0] <= 3){
-                alter_tir[0] = 3;
-                alter_tir[1] = Main.nbj * 2 + rand.nextInt(Main.nbj);
+            if(tir_bonus <= 3){
+                tir_bonus = 3;
+                tour_modif = Main.nbj + rand.nextInt(3) -1 + rand.nextInt(Main.nbj);
             }
             System.out.println("Tous les tirs sont temporairement boostés.");
             ennemi.dommage(2);
         }
         else{
             System.out.println("Le vent est si puissant que vous avez du mal à ne pas être emporté.");
-            if(alter_tir[0] <= 5){
-                alter_tir[0] = 5;
-                alter_tir[1] = Main.nbj * 2 + rand.nextInt(Main.nbj * 3);
-                alter_attaque[0] = -3;
-                alter_attaque[1] = Main.nbj * 2;
+            if(tir_bonus <= 5){
+                tir_bonus = 5;
+                attaque_bonus = -3;
+                tour_modif = Main.nbj * 2 + rand.nextInt(Main.nbj * 3);
             }
             System.out.println("Tous les tirs sont temporairement boostés.");
             System.out.println("Toutes les attaques sont temporairement baissés.");
             ennemi.dommage(5);
-        }*/
+        }
     }
 
     /**

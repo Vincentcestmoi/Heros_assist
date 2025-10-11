@@ -50,6 +50,11 @@ public abstract class Joueur {
     protected int f_reveil;
     protected float f_berserk;
 
+    //modificateur
+    protected static int attaque_bonus = 0;
+    protected static int tir_bonus = 0;
+    protected static int tour_modif = 0;
+
     Joueur(String nom, Position position, int ob_f){
         this.nom = nom;
         this.position = position;
@@ -190,6 +195,19 @@ public abstract class Joueur {
 
     //************************************************METHODE INDEPENDANTE********************************************//
 
+    /**
+     * Compte les tours pour arrêter les bonus de vent du shaman
+     */
+    public static void debut_tour(){
+        if(tour_modif > 0){
+            tour_modif--;
+            if(tour_modif == 0){
+                tir_bonus = 0;
+                attaque_bonus = 0;
+                System.out.println("Le vent se couche.");
+            }
+        }
+    }
     
     public static void monstre_mort(Monstre ennemi) throws IOException {
         for(int i = 0; i < Main.nbj; i++){
@@ -317,7 +335,7 @@ public abstract class Joueur {
         }
         bonus += critique_tir(base);
         bonus += bonus_tir();
-        //tir += modificateur; TODO
+        bonus += tir_bonus;
         ennemi.tir(base + Main.corriger(bonus, 0));
     }
 
@@ -338,7 +356,7 @@ public abstract class Joueur {
         }
         bonus += critique_atk(base);
         bonus += bonus_atk();
-        //bonus += modificateur; TODO
+        bonus += attaque_bonus;
         ennemi.dommage(base + Main.corriger(bonus, 0));
     }
 
