@@ -428,64 +428,66 @@ public class Input {
                 if (!est_familier) {
                     yield Action.TIRER;
                 }
-                System.out.println("Enum.Action non reconnue.");
+                System.out.println("Action non reconnue.");
                 yield action(joueur, true);
             }
             case "m" -> {
                 if (!est_familier && !joueur.est_berserk()) {
                     yield Action.MAGIE;
                 }
-                System.out.println("Enum.Action non reconnue.");
+                System.out.println("Action non reconnue.");
                 yield action(joueur, est_familier);
             }
             case "p" -> {
                 if (!est_familier && !joueur.est_berserk()) {
                     yield Action.SOIGNER;
                 }
-                System.out.println("Enum.Action non reconnue.");
+                System.out.println("Action non reconnue.");
                 yield action(joueur, est_familier);
             }
             case "n" -> {
                 if (!est_familier && !joueur.est_berserk()) {
                     yield Action.ANALYSER;
                 }
-                System.out.println("Enum.Action non reconnue.");
+                System.out.println("Action non reconnue.");
                 yield action(joueur, est_familier);
             }
 
-            // joueur en première ligne
+            // première ligne
             case "s" -> {
-                if(est_familier){
-                    System.out.println("Enum.Action non reconnue.");
-                    yield action(joueur, true);
+                if (!est_familier) {
+                    if (joueur.est_front()) {
+                        yield Action.ASSOMER;
+                    } else {
+                        yield Action.AVANCER;
+                    }
                 }
-                if (joueur.est_front()) {
-                    yield Action.ASSOMER;
-                } else {
+                if (joueur.est_front() && !joueur.a_familier_front()){
                     yield Action.AVANCER;
                 }
+                System.out.println("Action non reconnue.");
+                yield action(joueur, true);
             }
             case "e" -> {
                 if (joueur.est_front() && (!est_familier && !joueur.est_berserk()) ||
                         (joueur.est_front_f() && est_familier && !joueur.f_est_berserk())) {
                     yield Action.ENCAISSER;
                 }
-                System.out.println("Enum.Action non reconnue.");
+                System.out.println("Action non reconnue.");
                 yield action(joueur, est_familier);
             }
             case "d" -> {
                 if (joueur.est_front() && !est_familier &&!joueur.est_berserk()) {
                     yield Action.DOMESTIQUER;
                 }
-                System.out.println("Enum.Action non reconnue.");
+                System.out.println("Action non reconnue.");
                 yield action(joueur, est_familier);
             }
-
             case "v" -> {
-                if(est_familier){
+                if(est_familier && joueur.est_front() && !joueur.a_familier_front()){
                     yield Action.PROTEGER;
                 }
-                yield action(joueur, false);
+                yield action(joueur, est_familier);
             }
 
             // actions particulières

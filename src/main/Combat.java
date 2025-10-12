@@ -57,10 +57,10 @@ public class Combat {
         }
 
         if(Main.joueurs[pr_l].a_familier_front()){
-            System.out.println("Le familier de " + Main.joueurs[pr_l].getNom() + " se retrouve en première ligne.\n");
+            System.out.println("Le familier de " + Main.joueurs[pr_l].getNom() + " se retrouve en première ligne.");
         }
         else{
-            System.out.println(Main.joueurs[pr_l].getNom() + " se retrouve en première ligne.\n");
+            System.out.println(Main.joueurs[pr_l].getNom() + " se retrouve en première ligne.");
         }
 
         if (competence(ennemi, pr_l)) {
@@ -72,7 +72,6 @@ public class Combat {
             ennemi.attaque(Main.joueurs[pr_l].getNom());
         }
 
-        System.out.println();
         combat(ennemi, pr_l, position);
 
         System.out.println("Fin du combat\n");
@@ -89,7 +88,7 @@ public class Combat {
 
         // demander gentimment
         if (nbp > 1) {
-            for (int i = 0; i <= Main.nbj ; i++) {
+            for (int i = 0; i < Main.nbj ; i++) {
                 if (Main.joueurs[i].faire_front(false)) {
                     return i;
                 }
@@ -127,7 +126,7 @@ public class Combat {
         combat_start(ennemi, pos);
 
         int i;
-        Action act, act_f = Action.AUCUNE;
+        Action act, act_f;
         Joueur joueur;
         while (run) {
 
@@ -138,54 +137,44 @@ public class Combat {
                 Joueur.debut_tour();
 
                 // on ne joue que les participants actifs
-                if (joueur.est_pas_activable()) {
+                if (!run || joueur.est_pas_activable()) {
                     continue;
                 }
 
                 joueur.essaie_reveil();
-                if(joueur.a_familier()) {
+                if(joueur.a_familier_actif()) {
                     joueur.f_essaie_reveil();
                 }
 
                 // resurection, être assommé, etc.
                 if (!joueur.peut_jouer()) {
                     System.out.println(joueur.getNom() + " ne peut pas réaliser d'action dans l'immédiat.");
-                    if(joueur.a_familier()) {
+                    if(joueur.a_familier_actif()) {
                         joueur.familier_seul(ennemi);
                     }
                     joueur.fin_tour_combat();
                     continue;
                 }
-                if(joueur.a_familier() && joueur.familier_peut_pas_jouer()) {
+                if(joueur.a_familier_actif() && joueur.familier_peut_pas_jouer()) {
                     System.out.println("Le familier de " + joueur.getNom() + " ne peut pas réaliser d'action dans l'immédiat.");
                 }
 
 
                 // action
-                act = Input.action(joueur, false);
-                if(joueur.a_familier()) {
-                    act_f = familier_act(joueur, Input.action(joueur, true));
-                }
+                do {
+                    act = Input.action(joueur, false);
+                    if(act == Action.OFF){
+                        alteration(joueur, pr_l);
+                    }
+                }while(act == Action.OFF);
                 switch (act) {
-                    case OFF -> {
-                        alteration(joueur);
-                        System.out.println();
-                        if (i != pr_l) {
-                            alteration(Main.joueurs[pr_l]);
-                            if (joueur.est_actif()) {
-                                j--;
-                            }
-                        }
-                    }
-                    case END -> {
-                        return;
-                    }
+                    case END -> stop_run();
                     case RETOUR -> {
                         int k = j;
                         do {
-                            k = k == 0 ? 7 : k - 1;
+                            k = k == 0 ? Main.nbj - 1 : k - 1;
                         } while (Main.joueurs[t[k]].est_pas_activable());
-                        j = t[k];
+                        j = t[k] - 1;
                     }
 
                     case TIRER -> joueur.tirer(ennemi);
@@ -220,8 +209,9 @@ public class Combat {
                         }
                     }
                 }
-                if(joueur.a_familier()) {
-                    System.out.println("Le familier de " + joueur.getNom() + " agis.");
+                System.out.println();
+                if(joueur.a_familier_actif() && run) {
+                    act_f = familier_act(joueur, Input.action(joueur, true));
                     switch (act_f) {
                         case FUIR -> joueur.f_fuir();
                         case AUTRE -> System.out.println("Le famillier de " + joueur.getNom() + " fait quelque chose.");
@@ -230,10 +220,11 @@ public class Combat {
                         case PROTEGER -> joueur.f_proteger(ennemi);
                         default -> joueur.f_attaque(ennemi);
                     }
+                    System.out.println();
                 }
 
                 // s'assure qu'un participant est toujours en première ligne
-                if (!Main.joueurs[pr_l].est_actif() || !Main.joueurs[pr_l].est_vivant()) {
+                if (run && (!Main.joueurs[pr_l].est_actif() || !Main.joueurs[pr_l].est_vivant())) {
                     boolean is_active = false;
                     int k = 0;
                     for (; k < Main.nbj; k++) {
@@ -246,7 +237,6 @@ public class Combat {
                     if (!is_active) { // plus de joueur participant
                         stop_run();
                         System.out.println("Aucun joueur détecté en combat.");
-                        // break inutile, car actif[i] toujours à false
                     } else {
                         do {
                             k = rand.nextInt(Main.nbj);
@@ -256,9 +246,11 @@ public class Combat {
                     }
                 }
 
-                int temp = verifie_mort(ennemi, pos);
-                if(temp != -2){
-                    stop_run();
+                if(run) {
+                    int temp = verifie_mort(ennemi, pos);
+                    if (temp != -2) {
+                        stop_run();
+                    }
                 }
             }
 
@@ -269,6 +261,7 @@ public class Combat {
                 if(temp != -2){
                     stop_run();
                 }
+                System.out.println();
             }
         }
     }
@@ -304,12 +297,12 @@ public class Combat {
      *
      * @param joueur le propriétaire du familier
      * @return si le familier joue l'action, un false remplace l'action
-     * @implNote un joueur peut être entré avec une obéissance de 0.
      */
     private static Action familier_act(Joueur joueur, Action action) throws IOException {
-        if(!joueur.a_familier()){
+        if(!joueur.a_familier_actif() || joueur.familier_loyalmax()){
             return action;
         }
+        System.out.println("Vous donnez un ordre à votre familier.");
         int temp = joueur.get_ob_f() + Input.D6() - 3 + rand.nextInt(2); //valeur d'obéissance à l'action
         if (temp <= 1) {
             System.out.println("Le familier de " + joueur.getNom() + " fuit le combat.");
@@ -331,16 +324,53 @@ public class Combat {
      * Gère le retour OFF de l'action, c.-à-d. la mort, l'inconscience ou le retrait du joueur actif ou de celui
      * de première ligne
      *
-     * @param joueur le joueur auquel on s'intéresse
+     * @param joueur le joueur actif
+     * @param prl l'index du joueur de première ligne
      * @throws IOException mon poto
      */
-    private static void alteration(Joueur joueur) throws IOException {
+    private static void alteration(Joueur joueur, int prl) throws IOException {
 
-        joueur.addiction();
+        String text = "L'alteration concerne-t-elle :\n\t1: " + joueur.getNom();
+        if(joueur.a_familier_actif()){
+            text += "\n\t2: Le familier de " + joueur.getNom();
+        }
+        Joueur front = Main.joueurs[prl];
+        if(front != joueur){
+            text += "\n\t3: " + front.getNom();
+            if(front.a_familier_actif()){
+                text += "\n\t4: Le familier de " + front.getNom();
+            }
+        }
+
+        int reponse;
+        do{
+            System.out.println(text);
+            reponse = Input.readInt();
+        }while(reponse < 1 || reponse > 4);
+        String nom = "";
+        switch (reponse){
+            case 1 -> nom = joueur.getNom();
+            case 2 -> nom = "le familier de " + joueur.getNom();
+            case 3 -> {
+                nom = front.getNom();
+                joueur = front;
+            }
+            case 4 -> {
+                nom = "le familier de " + front.getNom();
+                joueur = front;
+            }
+        }
+        if(reponse == 1 || reponse == 3){
+            joueur.addiction();
+        }
 
         //mort
-        if (Input.yn(joueur.getNom() + " est-il/elle mort(e) ?")) {
+        if (Input.yn(nom + " est-il/elle mort(e) ?")) {
             //on regarde si on peut le ressuciter immédiatement
+            if (reponse == 2 || reponse == 4) {
+                joueur.f_rendre_mort();
+                return;
+            }
             int malus = 0;
             for (int k = 0; k < Main.nbj; k++) {
                 Joueur j_temp = Main.joueurs[k];
@@ -357,33 +387,33 @@ public class Combat {
             }
             joueur.rendre_mort();
         }
-        if(Input.yn("Le familier de " + joueur.getNom() + " est-il mort ?")) {
-            joueur.f_rendre_mort();
-            return;
-        }
 
         // assommé
-        else if (Input.yn(joueur.getNom() + " est-il/elle inconscient(e) ?")) {
-            joueur.assomme();
-        }
-        if (Input.yn("Le familier de " + joueur.getNom() + " est-il inconscient ?")) {
-            joueur.f_assomme();
+        else if (Input.yn(nom + " est-il/elle inconscient(e) ?")) {
+            if(reponse ==2 || reponse == 4){
+                joueur.f_assomme();
+            }
+            else {
+                joueur.assomme();
+            }
         }
 
         // berserk
-        else if (!joueur.est_berserk() && Input.yn(joueur.getNom() + " devient-il/elle berserk ?")) {
+        else if ((reponse == 1 || reponse == 3) && !joueur.est_berserk() && Input.yn(nom + " devient-il/elle berserk ?")) {
             joueur.berserk(0.1f + 0.1f * rand.nextInt(3));
         }
-        else if (!joueur.f_est_berserk() && Input.yn("Le familier de " + joueur.getNom() + " devient-il berserk ?")) {
+        else if ((reponse == 2 || reponse == 4) && !joueur.f_est_berserk() && Input.yn(nom + " devient-il berserk ?")) {
             joueur.f_berserk(0.1f + 0.1f * rand.nextInt(3));
         }
 
         // off
-        else if (Input.yn(joueur.getNom() + " est-il/elle hors du combat ?")) {
-            joueur.inactiver();
-        }
-        else if (Input.yn("Le familier de " + joueur.getNom() + " est-il/elle hors du combat ?")) {
-            joueur.f_inactiver();
+        else if (Input.yn(nom + " est-il/elle hors du combat ?")) {
+            if(reponse == 2 || reponse == 4){
+                joueur.f_inactiver();
+            }
+            else {
+                joueur.inactiver();
+            }
         }
     }
 
@@ -699,9 +729,9 @@ public class Combat {
     static private void gestion_mort_fin() throws IOException {
         for (int i = 0; i < Main.nbj; i++) {
             Joueur joueur = Main.joueurs[i];
-            if (!joueur.est_vivant() && Exterieur.Input.yn(joueur.getNom() + " est mort durant le combat, le reste-t-il/elle ?")) {
+            if (!joueur.est_vivant() && Input.yn(joueur.getNom() + " est mort durant le combat, le reste-t-il/elle ?")) {
                 if (joueur.auto_ressuciter(0)) {
-                    System.out.println(joueur.getNom() + " résiste à la mort.\n");
+                    System.out.println(joueur.getNom() + " résiste à la mort.");
                     return;
                 }
                 else{

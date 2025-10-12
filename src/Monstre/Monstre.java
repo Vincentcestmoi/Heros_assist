@@ -795,7 +795,7 @@ public class Monstre {
     public void do_assomme() {
         switch (competence){
             case GOLEM_ACIER, GOLEM_MITHRIL -> {
-                System.out.println(nom + " n'a pas de conscience, et ne peut pas être assommé(e).\n");
+                System.out.println(nom + " n'a pas de conscience, et ne peut pas être assommé(e).");
                 return;
             }
             case GOLEM_PIERRE, GOLEM_FER -> {
@@ -805,12 +805,12 @@ public class Monstre {
                 return;
             }
             case CHRONOS -> {
-                System.out.println(nom + " n'a pas l'air prêt de perdre connaissance.\n");
+                System.out.println(nom + " n'a pas l'air prêt de perdre connaissance.");
                 return;
             }
         }
         this.assomme = true;
-        System.out.println(this.nom + " est assommé(e).\n");
+        System.out.println(this.nom + " est assommé(e).");
     }
 
     /**
@@ -820,12 +820,12 @@ public class Monstre {
 
         switch (competence) {
             case GOLEM_ACIER, GOLEM_MITHRIL -> {
-                System.out.println(nom + " est trop solide pour être étourdi(e).\n");
+                System.out.println(nom + " est trop solide pour être étourdi(e).");
                 return;
             }
             case GOLEM_PIERRE, GOLEM_FER -> {
                 if(rand.nextBoolean()){
-                    System.out.println(nom + " laisse tomber des fragments de son corps pour ne pas être désavantagé(e).\n");
+                    System.out.println(nom + " laisse tomber des fragments de son corps pour ne pas être désavantagé(e).");
                     this.vie -= rand.nextInt(5) + 1;
                     if (est_mort()){
                         return;
@@ -833,13 +833,13 @@ public class Monstre {
                 }
             }
             case CHRONOS -> {
-                System.out.println(nom + " n'a pas l'air prêt de perdre connaissance.\n");
+                System.out.println(nom + " n'a pas l'air prêt de perdre connaissance.");
                 return;
             }
         }
         if(!assomme){
             this.etourdi = true;
-            System.out.println(this.nom + " est étourdi(e).\n");
+            System.out.println(this.nom + " est étourdi(e).");
         }
     }
 
@@ -856,11 +856,11 @@ public class Monstre {
         Random rand = new Random();
         if (rand.nextBoolean()){
             this.etourdi = true;
-            System.out.println("encore étourdi(e).\n");
+            System.out.println("encore étourdi(e).");
         }
         else{
             this.etourdi = false;
-            System.out.println("en pleine possession de ses moyens.\n");
+            System.out.println("en pleine possession de ses moyens.");
         }
     }
 
@@ -872,7 +872,7 @@ public class Monstre {
             return;
         }
         this.etourdi = false;
-        System.out.println(this.nom + " n'est plus étourdi(e).\n");
+        System.out.println(this.nom + " n'est plus étourdi(e).");
     }
 
     /**
@@ -882,7 +882,7 @@ public class Monstre {
     public boolean est_mort(){
         if(competence == Competence.REVENANT){
             System.out.println("Une sombre brûme s'abat sur vous, vous perdez (tous) 1 point d'attaque pour la durée du combat.");
-            System.out.println(this.nom + " se relève !\n");
+            System.out.println(this.nom + " se relève !");
             this.vie = rand.nextInt(this.vie_max - 5) + 5;
             this.competence = Competence.AUCUNE;
             return false;
@@ -1018,39 +1018,39 @@ public class Monstre {
         switch (competence){
             case COLERE, VIOLENT -> {
                 if(Input.D8() <= this.vie){
-                    System.out.println(this.nom + " réagit très agressivement.\n");
+                    System.out.println(this.nom + " réagit très agressivement.");
                     return false;
                 }
             }
             case SAUVAGE -> {
-                System.out.println(this.nom + " est trop sauvage pour être domestiqué.\n");
+                System.out.println(this.nom + " est trop sauvage pour être domestiqué.");
                 return false;
             }
             case PRUDENT, SUSPICIEUX, MEFIANT, CHRONOS -> {  //monstre nommé
-                System.out.println(this.nom + " est une force de la nature, une puissance indomptable.\n");
+                System.out.println(this.nom + " est une force de la nature, une puissance indomptable.");
                 return false;
             }
             case GOLEM_PIERRE, GOLEM_FER -> {
                 if(Input.D8() <= this.vie * 2) {
-                    System.out.println(this.nom + " n'est pas très réceptif à votre tentative.\n");
+                    System.out.println(this.nom + " n'est pas très réceptif à votre tentative.");
                     return false;
                 }
             }
             case GOLEM_ACIER -> {
                 if(Input.D6() <= this.vie * 2) {
-                    System.out.println(this.nom + " n'est pas très réceptif à votre tentative.\n");
+                    System.out.println(this.nom + " n'est pas très réceptif à votre tentative.");
                     return false;
                 }
             }
             case GOLEM_MITHRIL -> {
                 if(Input.D8() <= this.vie * 2) {
-                    System.out.println(this.nom + " ne remarque même pas votre présence.\n");
+                    System.out.println(this.nom + " ne remarque même pas votre présence.");
                     return false;
                 }
                 else {
                     System.out.println(this.nom + " vous remarque.");
                     if(Input.D20() <= this.vie){
-                        System.out.println(this.nom + " ne vous accorde aucune importance.\n");
+                        System.out.println(this.nom + " ne vous accorde aucune importance.");
                         return false;
                     }
                     else{
@@ -1060,13 +1060,13 @@ public class Monstre {
             }
             case ILLU_AURAI, ILLU_CYCLOPE, ILLU_DULLA, ILLU_GOLEM, ILLU_ROCHE, ILLU_SIRENE, ILLU_TRITON,
                  ILLU_VENTI -> {
-                System.out.println(this.nom + " réagit très étrangement à votre tentative.\n");
+                System.out.println(this.nom + " réagit très étrangement à votre tentative.");
                 return false;
             }
         }
         int ratio = (this.vie * 100 / this.vie_max);
         if (ratio >= 85) {
-            System.out.println(this.nom + " réagit agressivement.\n");
+            System.out.println(this.nom + " réagit agressivement.");
             return false;
         }
         Random rand = new Random();
@@ -1082,15 +1082,15 @@ public class Monstre {
             }
             else{
 
-                System.out.println(this.nom + " réagit agressivement.\n");
+                System.out.println(this.nom + " réagit agressivement.");
                 return false;
             }
         }
         if (ratio - Input.D6() * 10 < 0){
-            System.out.println(this.nom + " vous accorde sa confiance.\n");
+            System.out.println(this.nom + " vous accorde sa confiance.");
             return true;
         }
-        System.out.println(this.nom + " réagit agressivement.\n");
+        System.out.println(this.nom + " réagit agressivement.");
         return false;
     }
 
@@ -1105,17 +1105,17 @@ public class Monstre {
             case VOL -> {
                 System.out.println("L'attaque n'atteint pas " + nom + ".");
                 competence = Competence.VOL_OFF;
-                System.out.println(nom + " se pose à terre.\n");
+                System.out.println(nom + " se pose à terre.");
                 return;
             }
             case VOLAGE -> {
                 System.out.println("L'attaque n'atteint pas " + nom + ".");
                 competence = Competence.AUCUNE;
-                System.out.println(nom + " se pose à terre.\n");
+                System.out.println(nom + " se pose à terre.");
                 return;
             }
             case FURTIF -> {
-                System.out.println("Vous ne parvenez plus à identifier où se trouve " + nom + " et renoncez à attaquer.\n");
+                System.out.println("Vous ne parvenez plus à identifier où se trouve " + nom + " et renoncez à attaquer.");
                 competence = Competence.AUCUNE;
                 return;
             }

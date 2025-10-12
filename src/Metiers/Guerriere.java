@@ -51,6 +51,7 @@ public class Guerriere extends Joueur {
 
     @Override
     protected float berserk_tir(int base) throws IOException {
+        System.out.println("Vous êtes pris(e) de folie mertrière et distinguez mal vos alliés de vos ennemis.");
         if (Input.D6() < 1.5f + berserk) {
             int i;
             do {
@@ -126,6 +127,7 @@ public class Guerriere extends Joueur {
 
     @Override
     protected float berserk_atk(int base) throws IOException {
+        System.out.println("Vous êtes pris(e) de folie mertrière et distinguez mal vos alliés de vos ennemis.");
         if(berserk + 1.5f >= 5.5f){
             return burst(base);
         }

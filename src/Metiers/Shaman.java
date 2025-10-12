@@ -48,6 +48,9 @@ public class Shaman extends Joueur {
 
     @Override
     public String text_action() {
+        if(est_assomme()){
+            return "(in)cantation/(c)ustom/(o)ff";
+        }
         String text = super.text_action();
         if (!est_berserk()) {
             if (!a_familier()) {
@@ -65,6 +68,12 @@ public class Shaman extends Joueur {
     public Action action(String choix, boolean est_familier) throws IOException {
         if(est_familier){
             return super.action(choix, true);
+        }
+        if(est_assomme()){
+            if (choix.equals("in")) {
+                return Action.INCANTATION;
+            }
+            return super.action(choix, false);
         }
         switch (choix) {
             case "in" -> {
@@ -187,6 +196,7 @@ public class Shaman extends Joueur {
             System.out.println("Les âmes de " + ennemi.getNom() + " et de " + getNom() + " entre en communion !");
             setOb(min(7, rand.nextInt(result) + 1));
             Combat.stop_run();
+            ennemi.presente_familier();
         }
     }
 
@@ -715,7 +725,7 @@ public class Shaman extends Joueur {
             System.out.println("La cible gagne temporairement 3 points de résistance..");
         }
         else{
-            System.out.println("La cible gagne temporairement 1 pont d'armure.");
+            System.out.println("La cible gagne temporairement 1 point d'armure.");
         }
     }
 

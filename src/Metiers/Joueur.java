@@ -127,7 +127,7 @@ public abstract class Joueur {
     }
 
     public boolean a_familier_front() {
-        return f_front;
+        return a_familier_actif() && front && f_front;
     }
 
     public boolean est_berserk(){
@@ -241,6 +241,9 @@ public abstract class Joueur {
             f_skip = false;
             f_reveil = 0;
         }
+        else{
+            f_actif = false;
+        }
     }
 
     /**
@@ -252,7 +255,7 @@ public abstract class Joueur {
     public boolean faire_front(boolean force) throws IOException {
         if(force || Input.yn(nom + " veut-il passer en première ligne ?")){
             front = true;
-            if(a_familier_actif() && Input.yn(nom + "envoit-il/elle son familier devant lui ?")){
+            if(a_familier_actif() && Input.yn(nom + " envoit-il/elle son familier devant lui ?")){
                  f_front = true;
             }
             return true;
@@ -268,7 +271,7 @@ public abstract class Joueur {
      * Renvoie le nom de l'entité de front (le joueur ou le familier)
      */
     public String getFrontNom(){
-        if(f_actif){
+        if(a_familier_front()){
             return "Le familier de " + nom;
         }
         return nom;
@@ -302,6 +305,25 @@ public abstract class Joueur {
     }
 
     /**
+     * Essaie de se réveiller (assommé)
+     * @throws IOException toujours
+     */
+    public void essaie_reveil() throws IOException {
+        if(!est_assomme()){
+            return;
+        }
+        System.out.println(getNom() + " est inconscient(e).");
+        if (Input.D6() + reveil >= 6) {
+            System.out.println(nom + " se réveille.\n");
+            conscient = true;
+            reveil = 0;
+            return;
+        }
+        System.out.println(nom + " est toujours inconscient.");
+        reveil += 1;
+    }
+
+    /**
      * Le familier du joueur essaie de se réveiller, sans effet s'il est conscient
      * @throws IOException toujours
      */
@@ -309,6 +331,7 @@ public abstract class Joueur {
         if(!f_est_assomme()){
             return;
         }
+        System.out.println("Le familier de " + getNom() + " est inconscient(e).");
         if (Input.D6() + f_reveil >= 5) {
             System.out.println("Le familier de " + nom + " se réveille.\n");
             f_conscient = true;
@@ -406,6 +429,7 @@ public abstract class Joueur {
     public void f_rendre_mort(){
         ob_f = 0;
         f_actif = false;
+        f_front = false;
     }
 
     /**
@@ -544,7 +568,7 @@ public abstract class Joueur {
                 return;
             }
             default -> {
-                System.out.println("Erreur : résultat inatendu. Enum.Action annulée.");
+                System.out.println("Erreur : résultat inatendu. Action annulée.");
                 position = pos;
                 return;
             }
@@ -709,6 +733,9 @@ public abstract class Joueur {
      * @return le texte à ajouter
      */
     public String text_action(){
+        if(est_assomme()){
+            return nom + " entrez votre action : ";
+        }
         String text = nom + " entrez votre action : (A)ttaquer/(t)irer";
         if(!est_berserk() && getMetier() != Metier.ARCHIMAGE){
             text += "/(m)agie";
@@ -734,7 +761,7 @@ public abstract class Joueur {
      * @return le texte à ajouter
      */
     public String f_text_action(){
-        String text = "Donnez un ordre au familier de " + nom + " (A)ttaquer/(f)uir/(c)ustom";
+        String text = "Donnez un ordre au familier de " + nom + " : (A)ttaquer/(f)uir/(c)ustom";
         if(est_front_f()){
             text += "/(e)ncaisser";
         }
@@ -777,24 +804,6 @@ public abstract class Joueur {
     public void fin_tour_combat(){
         skip = false;
         f_skip = false;
-    }
-
-    /**
-     * Essaie de se réveiller (assommé)
-     * @throws IOException toujours
-     */
-    public void essaie_reveil() throws IOException {
-        if(!est_assomme()){
-            return;
-        }
-        if (Input.D6() + reveil >= 6) {
-            System.out.println(nom + " se réveille.\n");
-            conscient = true;
-            reveil = 0;
-            return;
-        }
-        System.out.println(nom + " est toujours inconscient.");
-        reveil += 1;
     }
 
     /**
@@ -894,6 +903,7 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     protected float berserk_tir(int base) throws IOException {
+        System.out.println("Vous êtes pris(e) de folie mertrière et distinguez mal vos alliés de vos ennemis.");
         if (Input.D6() < 2 + berserk) {
             int i;
             do {
@@ -938,6 +948,7 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     protected float berserk_atk(int base) throws IOException {
+        System.out.println("Vous êtes pris(e) de folie mertrière et distinguez mal vos alliés de vos ennemis.");
         if (Input.D6() < 2 + berserk) {
             int i;
             do {
@@ -1061,7 +1072,7 @@ public abstract class Joueur {
                 break;
             case 7, 8, 9, 10:
                 ennemi.bostEncaissement(0.7F);
-                System.out.println("Votre familier concentre chaque fibre de son être à se préparer à vous preoteger.");
+                System.out.println("Votre familier concentre chaque fibre de son être à se préparer à vous proteger.");
                 break;
             default:
                 System.out.println("Le résultat n'a pas été comprit, compétence ignorée.");
