@@ -164,7 +164,12 @@ public class Monstre {
      * @param value la modification à appliquer
      */
     public void bostEncaissement(float value){
-        this.encaissement += value;
+        if(this.encaissement == 0){
+            this.encaissement = value;
+        }
+        else{
+            this.encaissement += Math.min(0.35f * value, 1f);
+        }
     }
 
     /**
@@ -206,28 +211,31 @@ public class Monstre {
 
     /**
      * Écris la quantité de dommage infligé par le monstre à l'adversaire
-     * @param nom le nom de l'entité attaqué
+     * @param joueur l'entité attaquée
      * @implNote Calcul les effet de "encaisser", "étourdit" et "assommé"
      */
-    public void attaque(String nom) throws IOException {
+    public void attaque(Joueur joueur) throws IOException {
+        if (encaissement > 0.95f){
+            encaissement = 0.95f;
+        }
         float modificateur = 1 - encaissement + part_soin;
         if (assomme) {
             undo_assomme();
         }
         else if (etourdi){
-            if(applique_competence_pre(nom) && this.attaque > 0){
-                System.out.println(this.nom + " est étourdit et inflige " + Main.corriger(this.attaque * 0.5F * modificateur) + " dommages à " + nom + ".");
-                applique_competence_post(nom);
+            if(applique_competence_pre(joueur) && this.attaque > 0){
+                System.out.println(this.nom + " est étourdit et inflige " + Main.corriger(this.attaque * 0.5F * modificateur) + " dommages à " + joueur.getFrontNom() + ".");
+                applique_competence_post(joueur);
             }
             undo_etourdi();
         }
         else{
-            if(applique_competence_pre(nom) && this.attaque > 0){
-                System.out.println(this.nom + " inflige " + Main.corriger(this.attaque * modificateur) + " dommages à " + nom + ".");
-                applique_competence_post(nom);
+            if(applique_competence_pre(joueur) && this.attaque > 0){
+                System.out.println(this.nom + " inflige " + Main.corriger(this.attaque * modificateur) + " dommages à " + joueur.getFrontNom() + ".");
+                applique_competence_post(joueur);
             }
         }
-        fin_combat(nom);
+        fin_combat(joueur);
         System.out.println();
     }
 
@@ -236,11 +244,11 @@ public class Monstre {
      * @throws IOException comme ça, ça marche
      * @return si l'attaque a bien lieu après application de la compétence
      */
-    private boolean applique_competence_pre(String nom) throws IOException {
+    private boolean applique_competence_pre(Joueur joueur) throws IOException {
         switch (competence) {
             case EXPLOSION -> {
                 this.attaque += 6;
-                System.out.println(nom + " s'apprête à causer une explosion !");
+                System.out.println(this.nom + " s'apprête à causer une explosion !");
             }
             case GEL -> {
                 if(Input.yn("Portez vous (pl) une armure ?")){
@@ -252,9 +260,9 @@ public class Monstre {
                 }
             }
             case REGARD_MORTEL -> {
-                System.out.println(this.nom + " regarde " + nom + " droit dans les yeux.");
+                System.out.println(this.nom + " regarde " + joueur.getFrontNom() + " droit dans les yeux.");
                 if(Input.D6() <= 4){
-                    System.out.println(nom + " sent son âme se faire assaillir et perd " + Main.corriger(this.attaque + 2) + " points de vie.");
+                    System.out.println(joueur.getFrontNom() + " sent son âme se faire assaillir et perd " + (this.attaque + 2) + " points de vie.");
                     competence = Competence.AUCUNE;
                     encaissement = 0F;
                     part_soin = 0F;
@@ -263,10 +271,10 @@ public class Monstre {
                 competence = Competence.AUCUNE;
             }
             case REGARD_PETRIFIANT -> {
-                System.out.println(this.nom + " regarde " + nom + " droit dans les yeux.");
+                System.out.println(this.nom + " regarde " + joueur.getFrontNom() + " droit dans les yeux.");
                 if(Input.D6() <= 4){
-                    System.out.println(nom + "se change partiellement en pierre.");
-                    System.out.println(nom + " perd définitivement 4 points de résistance et gagne définitivement 1 point de défense.");
+                    System.out.println(joueur.getFrontNom() + "se change partiellement en pierre.");
+                    System.out.println(joueur.getFrontNom() + " perd définitivement 4 points de résistance et gagne définitivement 1 point de défense.");
                     competence = Competence.AUCUNE;
                     encaissement = 0F;
                     part_soin = 0F;
@@ -280,12 +288,12 @@ public class Monstre {
             }
             case VIOLENT -> {
                 if(rand.nextBoolean()){
-                    System.out.println(this.nom + " attaque violemment " + nom + " et lui inflige " + Main.corriger(attaque * 1.5F) + " dommages.");
+                    System.out.println(this.nom + " attaque violemment " + joueur.getFrontNom() + " et lui inflige " + Main.corriger(attaque * 1.5F) + " dommages.");
                     return false;
                 }
             }
             case ASSASSINAT -> {
-                System.out.println(this.nom + " se glisse discrètement derrière " + nom + " sans que personne ne l'aperçoive.");
+                System.out.println(this.nom + " se glisse discrètement derrière " + joueur.getFrontNom() + " sans que personne ne l'aperçoive.");
                 this.attaque *= 2;
                 this.encaissement = 0F;
             }
@@ -293,13 +301,9 @@ public class Monstre {
                 System.out.println(this.nom + " explose !!!");
                 this.attaque *= 3;
             }
-            case AQUAJET -> {
-                System.out.println(this.nom + " prépare quelque chose...");
-                this.attaque += 18;
-            }
-
+            case AQUAJET -> this.attaque += 18;
             case VOLEUR_CASQUE -> {
-                if (Input.yn(nom + " porte-iel un casque ?") && Input.D6() <= 4){
+                if (Input.yn(joueur.getFrontNom() + " porte-iel un casque ?") && Input.D6() <= 4){
                     System.out.println(this.nom + " vole votre casque et part avec.");
                     Combat.stop_run();
                     return false;
@@ -313,7 +317,7 @@ public class Monstre {
      * Applique la compétence du monstre après son attaque
      * @throws IOException comme ça, ça marche
      */
-    private void applique_competence_post(String nom) throws IOException {
+    private void applique_competence_post(Joueur joueur) throws IOException {
         switch (competence) {
             case EXPLOSION -> {
                 this.attaque -= 6;
@@ -333,34 +337,31 @@ public class Monstre {
                 }
             }
             case POISON_CECITE -> {
-                if(Input.yn("L'attaque a-t-elle touchée ?")){
-                    System.out.println(nom + " est empoisonné(e) et subit cécité pour le combat.");
-                    competence = Competence.AUCUNE;
+                if(!joueur.front_a_cecite() && Input.yn("L'attaque a-t-elle touchée ?")){
+                    joueur.prend_cecite();
                 }
             }
             case GEL -> competence = Competence.AUCUNE;
             case MORSURE_MALADIVE -> {
-                System.out.println("La morsure provoque une grave infection qui fait définitivement perdre 1 point de résistance à " + nom + ".");
+                System.out.println("La morsure provoque une grave infection qui fait définitivement perdre 1 point de résistance à " + joueur.getFrontNom() + ".");
                 competence = Competence.AUCUNE;
             }
             case MORSURE_SAUVAGE -> {
-                System.out.println("La morsure infecte " + nom + " avec un parasite qui lui draine 1 PP.");
+                System.out.println("La morsure infecte " + joueur.getFrontNom() + " avec un parasite qui lui draine 1 PP.");
                 competence = Competence.AUCUNE;
             }
             case MORSURE_EREINTANTE -> {
-                System.out.println("La morsure provoque chez " + nom + " une grave réaction et lui fait perdre 1 point d'attaque définitivement.");
+                System.out.println("La morsure provoque chez " + joueur.getFrontNom() + " une grave réaction et lui fait perdre 1 point d'attaque définitivement.");
                 competence = Competence.AUCUNE;
             }
             case POISON -> {
-                if(Input.yn("L'attaque a-t-elle touchée ?")) {
-                    System.out.println(nom + " est légèrement empoisonné(e).");
-                    competence = Competence.A_POISON;
+                if(!joueur.front_a_poison1() && Input.yn("L'attaque a-t-elle touchée ?")) {
+                    joueur.prend_poison1();
                 }
             }
             case POISON2 -> {
-                if(Input.yn("L'attaque a-t-elle touchée ?")) {
-                    System.out.println(nom + " est empoisonné");
-                    competence = Competence.A_POISON2;
+                if(!joueur.front_a_poison2() && Input.yn("L'attaque a-t-elle touchée ?")) {
+                    joueur.prend_poison2();
                 }
             }
             case CHARGE -> {
@@ -373,16 +374,20 @@ public class Monstre {
             }
             case AQUAJET3 -> this.competence = Competence.AQUAJET2;
             case AQUAJET2 -> this.competence = Competence.AQUAJET1;
-            case AQUAJET1 -> this.competence = Competence.AQUAJET;
+            case AQUAJET1 -> {
+                this.competence = Competence.AQUAJET;
+                System.out.println(this.nom + " prépare quelque chose...");
+            }
             case AQUAJET -> {
                 this.competence = Competence.AQUAJET3;
                 this.attaque -= 18;
             }
-            case FRAPPE_SPECTRALE -> System.out.println("L'attaque traverse partiellement l'armure de " + nom + " et ignore " + rand.nextInt(4) + " point(s) de défense.");
+            case FRAPPE_SPECTRALE -> System.out.println("L'attaque traverse partiellement l'armure de " + joueur.getFrontNom()
+                    + " et ignore " + rand.nextInt(4) + " point(s) de défense.");
             case KAMICASE -> this.vie = 0;
             case CHRONOS -> {
                 if(Input.yn("L'attaque a-t-elle touchée ?")){
-                    System.out.println(nom + " perd définitivement 1 équipement de son choix.");
+                    System.out.println(joueur.getFrontNom() + " perd définitivement 1 équipement de son choix.");
                 }
             }
         }
@@ -391,7 +396,7 @@ public class Monstre {
     /**
      * Gère les compétences intervenant après l'attaque
      */
-    private void fin_combat(String nom) throws IOException {
+    private void fin_combat(Joueur joueur) throws IOException {
         reset_encaisser();
         this.part_soin = 0F;
         switch (competence){
@@ -400,15 +405,13 @@ public class Monstre {
                 vie -= 1;
             }
             case PHOTOSYNTHESE -> vie = vie == vie_max ? vie + 1 : vie;
-            case A_POISON -> System.out.println("La victime du poison subit " + rand.nextInt(3) + " dommage(s).");
-            case A_POISON2 -> System.out.println("La victime du poison subit " + rand.nextInt(4) + 1 + " dommage(s).");
             case BLESSE -> {
                 System.out.println(this.nom + " saigne abondamment.");
                 vie -= 3;
             }
             case DUO -> {
                 competence = Competence.AUCUNE; // pour éviter une boucle
-                attaque(nom);
+                attaque(joueur);
                 competence = Competence.DUO;
             }
             case VOL_OFF -> competence = Competence.VOL_OFF2;
@@ -651,7 +654,7 @@ public class Monstre {
             Joueur.monstre_mort(this);
 
             if (etat <= 0 || pos == Position.ENFERS || pos == Position.OLYMPE || pos == Position.ASCENDANT) {
-                return true;
+                return false;
             }
             System.out.println("Vous pouvez vendre le cadavre de " + nom + " pour " + (1 + (etat - 1) / 10) + " PO.");
             return false;
@@ -900,25 +903,25 @@ public class Monstre {
         int attaque = Input.atk();
         switch (Input.D6()) {
             case 1:
-                encaissement = 0.5F;
+                encaissement = 0.4F;
                 System.out.println("Vous vous préparer à encaisser en oubliant d'attaquer !");
                 break;
             case 2, 3, 4:
                 attaque = Main.corriger(attaque * 0.1f);
-                encaissement = 0.5F;
+                encaissement = 0.4F;
                 System.out.println("Vous vous préparez à encaisser.");
                 dommage(attaque);
                 break;
             case 5:
                 attaque = Main.corriger(attaque * 0.5f);
                 dommage(attaque);
-                encaissement = 0.65F;
+                encaissement = 0.55F;
                 System.out.println("Vous vous préparez à encaisser.");
                 break;
             case 6, 7:
                 attaque = Main.corriger(attaque * 0.5f);
                 dommage(attaque);
-                encaissement = 0.9F;
+                encaissement = 0.7F;
                 System.out.println("Vous vous préparez fermement à encaisser, solide comme un roc.");
                 break;
             default:
@@ -1131,11 +1134,11 @@ public class Monstre {
         }
         switch (jet) {
             case 1:
-                System.out.print("Vous manquez votre cible.");
+                System.out.println("Vous manquez votre cible.");
                 attaque = 0;
                 break;
             case 2:
-                System.out.print("Vous frappez de justesse votre cible, au moins, vous l'avez touchée.");
+                System.out.println("Vous frappez de justesse votre cible, au moins, vous l'avez touchée.");
                 attaque = 0;
                 affecte();
                 break;

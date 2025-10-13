@@ -49,7 +49,7 @@ public enum Competence {
     REGARD_APPEURANT,   //done
     RAPIDE,     //done
     POISON,     //done
-    A_POISON,   //done
+    POISON2,    //done
     VITALITE_NATURELLE, //done
     VITALITE_NATURELLE2,    //done
     VITALITE_NATURELLE3,    //done
@@ -77,8 +77,6 @@ public enum Competence {
     FORCE_NATURELLE,    //done
     FORCE_NATURELLE2,   //done
     FORCE_NATURELLE3,   //done
-    POISON2,    //done
-    A_POISON2,  //done
     KAMICASE,   //done
     FURTIF,     //done
     GEANT,      //done
