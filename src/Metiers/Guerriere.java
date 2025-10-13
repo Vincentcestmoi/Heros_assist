@@ -42,10 +42,10 @@ public class Guerriere extends Joueur {
     }
 
     @Override
-    public void fin_affrontement(){
+    public void fin_affrontement() throws IOException {
         super.fin_affrontement();
         if(lame_break){
-            System.out.println("Vos armes se brisent");
+            System.out.println("Les armes de " + nom + " se brisent");
         }
     }
 
@@ -122,7 +122,8 @@ public class Guerriere extends Joueur {
 
     @Override
     protected int bonus_atk(){
-        return 1;
+        int base = super.bonus_atk();
+        return base + 1;
     }
 
     @Override
@@ -193,7 +194,7 @@ public class Guerriere extends Joueur {
         }
         bonus += critique_atk(base);
         bonus += bonus_atk();
-        //bonus += modificateur; TODO
+        bonus += attaque_bonus;
 
         //capacité d'aura
         float total = base + bonus;

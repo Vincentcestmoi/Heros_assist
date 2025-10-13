@@ -41,6 +41,9 @@ public abstract class Joueur {
     protected boolean skip;
     protected int reveil;
     protected float berserk;
+    protected boolean cecite;
+    protected boolean poison1;
+    protected boolean poison2;
 
     //familier en combat
     protected boolean f_front;
@@ -49,6 +52,9 @@ public abstract class Joueur {
     protected boolean f_skip;
     protected int f_reveil;
     protected float f_berserk;
+    protected boolean f_cecite;
+    protected boolean f_poison1;
+    protected boolean f_poison2;
 
     //modificateur
     protected static int attaque_bonus = 0;
@@ -170,6 +176,108 @@ public abstract class Joueur {
         return berserk;
     }
 
+    public boolean front_a_cecite(){
+        if(a_familier_front()){
+            return f_a_cecite();
+        }
+        return a_cecite();
+    }
+
+    public boolean a_cecite(){
+        return cecite;
+    }
+
+    private boolean f_a_cecite(){
+        return f_cecite;
+    }
+
+    public void prend_cecite(){
+        if(a_familier_front()){
+            f_prend_cecite();
+        }
+        else{
+            p_prend_cecite();
+        }
+    }
+
+    private void p_prend_cecite(){
+        cecite = true;
+        System.out.println(nom + " est empoisonné(e) et atteint(e) de cécité.");
+    }
+
+    private void f_prend_cecite(){
+        f_cecite = true;
+        System.out.println("Le familier de " + nom + " est empoisonné et atteint de cécité.");
+    }
+
+    public boolean front_a_poison1(){
+        if(a_familier_front()){
+            return f_a_poison1();
+        }
+        return a_poison1();
+    }
+
+    private boolean a_poison1(){
+        return poison1;
+    }
+
+    private boolean f_a_poison1(){
+        return f_poison1;
+    }
+
+    public void prend_poison1(){
+        if(a_familier_front()){
+            f_prend_poison1();
+        }
+        else{
+            p_prend_poison1();
+        }
+    }
+
+    private void p_prend_poison1(){
+        poison1 = true;
+        System.out.println(nom + " est empoisonné(e).");
+    }
+
+    private void f_prend_poison1(){
+        f_poison1 = true;
+        System.out.println("Le familier de " + nom + " est empoisonné.");
+    }
+
+    public void prend_poison2(){
+        if(a_familier_front()){
+            f_prend_poison2();
+        }
+        else{
+            p_prend_poison2();
+        }
+    }
+
+    private void p_prend_poison2(){
+        poison2 = true;
+        System.out.println(nom + " est empoisonné(e).");
+    }
+
+    private void f_prend_poison2(){
+        System.out.println("Le familier de " + nom + " est empoisonné.");
+        f_poison2 = true;
+    }
+
+    public boolean front_a_poison2(){
+        if(a_familier_front()){
+            return f_a_poison2();
+        }
+        return a_poison2();
+    }
+
+    private boolean a_poison2(){
+        return poison2;
+    }
+
+    private boolean f_a_poison2(){
+        return f_poison2;
+    }
+
     //************************************************PRESENTATION****************************************************//
 
     /**
@@ -227,6 +335,8 @@ public abstract class Joueur {
      */
     public void init_affrontement(boolean force, Position pos) throws IOException {
         if(!force && (pos != position || !Input.yn("Est-ce que " + nom + " participe au combat ?"))){
+            actif = false;
+            f_actif = false;
             return;
         }
         actif = true;
@@ -235,11 +345,22 @@ public abstract class Joueur {
         skip = false;
         reveil = 0;
         berserk = 0;
+        cecite = false;
+        poison1 = false;
+        poison2 = false;
+        front = false;
+        f_front = false;
+        attaque_bonus = 0;
+        tir_bonus = 0;
+        tour_modif = 0;
         if(a_familier() && Input.yn("Est-ce que votre familier participe au combat ?")){
             f_actif = true;
             f_conscient = true;
             f_skip = false;
             f_reveil = 0;
+            f_cecite = false;
+            f_poison1 = false;
+            f_poison2 = false;
         }
         else{
             f_actif = false;
@@ -253,6 +374,9 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     public boolean faire_front(boolean force) throws IOException {
+        if(!est_actif()){
+            return false;
+        }
         if(force || Input.yn(nom + " veut-il passer en première ligne ?")){
             front = true;
             if(a_familier_actif() && Input.yn(nom + " envoit-il/elle son familier devant lui ?")){
@@ -299,7 +423,19 @@ public abstract class Joueur {
         f_actif = false;
     }
 
-    public void fin_affrontement(){
+    /**
+     * Traite la fin de combat des joueurs
+     * @throws IOException toujours
+     */
+    public void fin_affrontement() throws IOException{
+        if (est_actif() && !est_vivant() && Input.yn(getNom() + " est mort durant le combat, le reste-t-il/elle ?")) {
+            if (auto_ressuciter(0)) {
+                System.out.println(getNom() + " résiste à la mort.");
+            }
+            else{
+                mort_def();
+            }
+        }
         actif = false;
         f_actif = false;
     }
@@ -736,7 +872,10 @@ public abstract class Joueur {
         if(est_assomme()){
             return nom + " entrez votre action : ";
         }
-        String text = nom + " entrez votre action : (A)ttaquer/(t)irer";
+        String text = nom + " entrez votre action : (A)ttaquer";
+        if(!a_cecite()){
+            text += "/(t)irer";
+        }
         if(!est_berserk() && getMetier() != Metier.ARCHIMAGE){
             text += "/(m)agie";
         }
@@ -804,6 +943,18 @@ public abstract class Joueur {
     public void fin_tour_combat(){
         skip = false;
         f_skip = false;
+        if(a_poison1()){
+            System.out.println(nom + " souffre d'empoisonnement et subit " + (rand.nextInt(3) + 1) + " dommage(s).");
+        }
+        if(a_poison2()){
+            System.out.println(nom + " souffre d'empoisonnement et subit " + (rand.nextInt(4) + 2) + " dommages.");
+        }
+        if(f_a_poison1()){
+            System.out.println("Le familier de " + nom + " souffre d'empoisonnement et subit " + (rand.nextInt(3) + 1) + " dommage(s).");
+        }
+        if(f_a_poison2()){
+            System.out.println("Le familier de " + nom + " souffre d'empoisonnement et subit " + (rand.nextInt(4) + 2) + " dommages.");
+        }
     }
 
     /**
@@ -843,7 +994,7 @@ public abstract class Joueur {
      * @return true si le joueur peut jouer
      */
     public boolean peut_jouer() {
-        return est_actif() && conscient && !skip;
+        return est_actif() && conscient && !skip && vivant;
     }
 
     /**
@@ -969,6 +1120,9 @@ public abstract class Joueur {
      * @return la quantité de dommages aditionnel
      */
     protected int bonus_atk(){
+        if(a_cecite()){
+            return -1;
+        }
         return 0;
     }
 

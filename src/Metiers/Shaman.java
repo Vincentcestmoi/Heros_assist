@@ -114,7 +114,8 @@ public class Shaman extends Joueur {
 
     @Override
     protected int bonus_atk(){
-        return possession_atk;
+        int base = super.bonus_atk();
+        return base + possession_atk;
     }
 
     @Override

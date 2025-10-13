@@ -40,7 +40,7 @@ public class Ranger extends Joueur {
             }
             if(!est_berserk()) {
                 if (!est_front()) {
-                    text += "(as)sassinat";
+                    text += "/(as)sassinat";
                 }
                 text += "/(co)ut critique";
             }
@@ -186,9 +186,9 @@ public class Ranger extends Joueur {
         }
         bonus += critique_atk(base);
         bonus += bonus_atk();
-        //bonus += modificateur; TODO
+        bonus += attaque_bonus;
         ennemi.dommage(base + Main.corriger(bonus, 0));
-        ennemi.attaque(getNom());
+        ennemi.attaque(this);
     }
 
 }
