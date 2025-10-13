@@ -425,7 +425,7 @@ public class Input {
 
             // actions joueur
             case "t" -> {
-                if (!est_familier) {
+                if (!est_familier && ! joueur.a_cecite()) {
                     yield Action.TIRER;
                 }
                 System.out.println("Action non reconnue.");
@@ -497,19 +497,13 @@ public class Input {
                 }
                 yield action(joueur, est_familier);
             }
-            case "r" -> {
-                if (yn("Confirmez ")) {
-                    yield Action.RETOUR;
-                }
-                yield action(joueur, est_familier);
-            }
 
             default -> {
                 Action act = joueur.action(input, est_familier);
                 if(act != Action.AUCUNE){
                     yield act;
                 }
-                System.out.println("Enum.Action non reconnue.");
+                System.out.println("Action non reconnue.");
                 yield action(joueur, est_familier);
             }
         };
@@ -530,7 +524,7 @@ public class Input {
                     return i == premier_ligne;
                 }
             }
-            i = i == Main.nbj ? 0 : i + 1;
+            i = i == Main.nbj - 1 ? 0 : i + 1;
         }
     }
 
