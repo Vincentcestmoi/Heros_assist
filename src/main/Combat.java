@@ -69,13 +69,13 @@ public class Combat {
 
         // si l'ennemi à l'avantage de la surprise
         if (joueur_force != -1) {
-            ennemi.attaque(Main.joueurs[pr_l].getNom());
+            ennemi.attaque(Main.joueurs[pr_l]);
         }
 
         combat(ennemi, pr_l, position);
 
-        System.out.println("Fin du combat\n");
-        gestion_mort_fin();
+        System.out.println("Fin du combat");
+        gestion_fin_combat();
     }
 
     /**
@@ -166,17 +166,12 @@ public class Combat {
                     if(act == Action.OFF){
                         alteration(joueur, pr_l);
                     }
-                }while(act == Action.OFF);
+                }while(act == Action.OFF && joueur.peut_jouer());
+                if(!joueur.peut_jouer()){
+                    act = Action.AUCUNE;
+                }
                 switch (act) {
                     case END -> stop_run();
-                    case RETOUR -> {
-                        int k = j;
-                        do {
-                            k = k == 0 ? Main.nbj - 1 : k - 1;
-                        } while (Main.joueurs[t[k]].est_pas_activable());
-                        j = t[k] - 1;
-                    }
-
                     case TIRER -> joueur.tirer(ennemi);
                     case MAGIE -> {
                         System.out.println("Vous utilisez votre magie sur " + ennemi.getNom());
@@ -192,7 +187,8 @@ public class Combat {
                     case DOMESTIQUER -> {
                         if (ennemi.domestiquer()) {
                             ennemi.presente_familier();
-                            return;
+                            joueur.ajouter_familier();
+                            stop_run();
                         }
                     }
                     case ANALYSER -> analyser(i == pr_l, ennemi);
@@ -201,8 +197,9 @@ public class Combat {
                         pr_l = i;
                         joueur.faire_front(true);
                         ennemi.reset_encaisser();
-                        competence_avance(ennemi, Main.joueurs[pr_l].getNom());
+                        competence_avance(ennemi, Main.joueurs[pr_l]);
                     }
+                    case AUCUNE -> {}
                     default -> {
                         if (joueur.traite_action(act, ennemi)) {
                             joueur.attaquer(ennemi);
@@ -218,8 +215,10 @@ public class Combat {
                         case ENCAISSER -> ennemi.f_encaisser();
                         case AVANCER -> joueur.f_faire_front();
                         case PROTEGER -> joueur.f_proteger(ennemi);
+                        case AUCUNE -> {}
                         default -> joueur.f_attaque(ennemi);
                     }
+                    joueur.fin_tour_combat();
                     System.out.println();
                 }
 
@@ -256,7 +255,7 @@ public class Combat {
 
             // tour de l'adversaire
             if (run) {
-                ennemi.attaque(Main.joueurs[pr_l].getFrontNom());
+                ennemi.attaque(Main.joueurs[pr_l]);
                 int temp = verifie_mort(ennemi, pos);
                 if(temp != -2){
                     stop_run();
@@ -307,11 +306,11 @@ public class Combat {
         if (temp <= 1) {
             System.out.println("Le familier de " + joueur.getNom() + " fuit le combat.");
             joueur.f_inactiver();
-            return Action.AUTRE;
+            return Action.AUCUNE;
         }
         else if (temp == 2) {
             System.out.println("Le familier de " + joueur.getNom() + " n'écoute pas vos ordres.");
-            return Action.AUTRE;
+            return Action.AUCUNE;
         }
         else if (temp <= 4 && action != Action.ATTAQUER) {
             System.out.println("Le familier de " + joueur.getNom() + " ignore vos directives et attaque l'ennemi.");
@@ -619,17 +618,17 @@ public class Combat {
      * Gère les compétences de l'ennemi lors d'un changement de position
      *
      * @param ennemi   le monstre ennemi
-     * @param nom_pr_l le nom de l'unité en première ligne
+     * @param joueur l'unité en première ligne
      * @throws IOException ça va mon pote ?
      */
-    static void competence_avance(Monstre ennemi, String nom_pr_l) throws IOException {
+    static void competence_avance(Monstre ennemi, Joueur joueur) throws IOException {
         switch (ennemi.getCompetence()) {
             case ASSAUT -> {
-                System.out.println(ennemi.getNom() + " se jete sur " + nom_pr_l + " avant que vous ne vous en rendiez compte");
-                ennemi.attaque(nom_pr_l);
+                System.out.println(ennemi.getNom() + " se jete sur " + joueur.getNom() + " avant que vous ne vous en rendiez compte");
+                ennemi.attaque(joueur);
             }
             case CHANT_SIRENE ->
-                    System.out.println("Le chant de " + ennemi.getNom() + " perturbe " + nom_pr_l + " qui perd 1 point d'attaque pour la durée du combat.");
+                    System.out.println("Le chant de " + ennemi.getNom() + " perturbe " + joueur.getNom() + " qui perd 1 point d'attaque pour la durée du combat.");
         }
     }
 
@@ -723,21 +722,12 @@ public class Combat {
     }
 
     /**
-     * Traite les joueurs morts durant la bataille
+     * Traite les joueurs après la fin du combat
      * @throws IOException toujours
      */
-    static private void gestion_mort_fin() throws IOException {
+    static private void gestion_fin_combat() throws IOException {
         for (int i = 0; i < Main.nbj; i++) {
-            Joueur joueur = Main.joueurs[i];
-            if (!joueur.est_vivant() && Input.yn(joueur.getNom() + " est mort durant le combat, le reste-t-il/elle ?")) {
-                if (joueur.auto_ressuciter(0)) {
-                    System.out.println(joueur.getNom() + " résiste à la mort.");
-                    return;
-                }
-                else{
-                    joueur.mort_def();
-                }
-            }
+            Main.joueurs[i].fin_affrontement();
         }
     }
 }
