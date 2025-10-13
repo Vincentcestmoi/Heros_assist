@@ -29,6 +29,5 @@ public enum Action {
     CALME,
     PROTEGER,
     END,
-    RETOUR,
     AUCUNE,
 }
