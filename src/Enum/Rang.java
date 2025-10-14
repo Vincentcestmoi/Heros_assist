@@ -1,3 +1,5 @@
+package Enum;
+
 public enum Rang {
     O,
     I,

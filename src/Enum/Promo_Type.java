@@ -1,3 +1,5 @@
+package Enum;
+
 public enum Promo_Type {
     MONTURE,
     ARTEFACT,

@@ -1,3 +1,5 @@
+package Enum;
+
 public enum Action {
     ATTAQUER,
     TIRER,
@@ -9,11 +11,11 @@ public enum Action {
     DOMESTIQUER,
     ANALYSER,
     AUTRE,
+    F_SEUL,
     OFF,
     AVANCER,
     MAUDIR,
     SORT,
-    POTION_REZ,
     BERSERK,
     LAME_DAURA,
     MEDITATION,
@@ -25,30 +27,7 @@ public enum Action {
     INCANTATION,
     LIEN,
     CALME,
+    PROTEGER,
     END,
-    RETOUR,
-
-    //type de sort
-    BDF,
-    ADG,
-    FOUDRE,
-    ONDE_CHOC,
-
-    //type de potion
-    RESISTANCE,
-    ALEATOIRE,
-    DIVINE,
-    SERIE,
-    ENERGIE,
-    FORCE,
-    INSTABLE,
-    MIRACLE,
-    SOIN,
-    TOXIQUE,
-
-    //type d'incantation
-    COLERE,
-    NUAGE,
-    BENIE,
-    ELEMENTAIRE,
+    AUCUNE,
 }

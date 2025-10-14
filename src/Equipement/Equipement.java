@@ -1,3 +1,9 @@
+package Equipement;
+
+import Enum.Rang;
+import Enum.Base;
+import Enum.Effet_equip;
+
 import java.io.IOException;
 import java.util.Random;
 
@@ -179,11 +185,11 @@ public class Equipement {
         this.armure = 0;
         this.resistance = 0;
         switch(rang){
-            case O -> this.attaque = 0; // 1 * +1
-            case I -> this.attaque = 1; // 3 * +1
-            case II -> this.attaque = rand.nextInt(3) + 1; //2 * +3
-            case III -> this.attaque = rand.nextInt(4) + 2; //2 * +4
-            case IV -> this.attaque = rand.nextInt(10) + 15; //1 * +10
+            case O -> this.attaque = rand.nextInt(2); // 2 * +1
+            case I -> this.attaque = 1 + rand.nextInt(3); // 5 * +1
+            case II -> this.attaque = rand.nextInt(3) + 2; // 4 * +3
+            case III -> this.attaque = rand.nextInt(4) + 3; // 3 * +4
+            case IV -> this.attaque = rand.nextInt(10) + 15; // 1 * +15
         }
     }
 
@@ -305,12 +311,11 @@ public class Equipement {
                     case O, I -> this.effet = "Augmente de 1 l'attaque des arcs.";
                     case II -> this.effet = "Augmente de 3 l'attaque des arcs.";
                     case III -> this.effet = "Augmente de 4 l'attaque des arcs.";
-                    case IV -> this.effet = "Augmente de 10 l'attaque des arcs.";
+                    case IV -> this.effet = "Augmente de 15 l'attaque des arcs.";
                     case PROMOTION -> this.effet = "Augmente de " + (rand.nextInt(4) + 1) + " l'attaque des arcs.";
                 }
             }
             case ARCEXP -> this.effet = "Augmente de 6 une attaque à l'arc, se consomme à l'usage.";
-            case PASDP -> this.effet = "Pas encore dev, piochez une promotion.";
             case RESISTANCE1 -> this.resistance += 1;
             case RESISTANCE2 -> this.resistance += 2;
             case RESISTANCE3 -> this.resistance += 3;
@@ -576,7 +581,7 @@ public class Equipement {
         Equipement equipement = new Equipement(Pre_Equipement.drop_promo());
         equipement.presente();
     }
-    //Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix, String effet)
+    //Equipement.Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix, String effet)
 
     static Equipement lotterie = new Equipement("ticket de lotterie", Rang.O, Base.AUTRE, 0, 0, 0, 3,
             "Lancez un dé à 6 face, si vous faite 6, gagnez 15PO. Jetez ce ticket.");

@@ -23,10 +23,18 @@ hs_err_pid*
 replay_pid*
 
 # Local choice
-*Save*
+Save0/*
+Save1/*
+Save2/*
 /table/Micky.ods
 /table/Joueur_A.ods
 /table/Vincent.ods
 /table/Lucien.ods
 /table/Aloyse.ods
-/table/Vincent_ranger.ods
+
+.idea
+.ods
+*/ods
+*/.ods
+*.ods*
+/table/.~lock.Vincent_ranger.ods#

@@ -1,3 +1,5 @@
+package Enum;
+
 public enum Metier {
     NECROMANCIEN,
     ARCHIMAGE,
@@ -5,5 +7,5 @@ public enum Metier {
     GUERRIERE,
     RANGER,
     SHAMAN,
-    AUCUN,
+    TRYHARDER,
 }
