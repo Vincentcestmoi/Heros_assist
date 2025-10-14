@@ -6,24 +6,35 @@ import java.util.Random;
 
 public class Lieu {
 
-    //TODO : docstrings everywhere
     static Random random = new Random();
+    static int proba_inf = 5; // 5%
+    static int proba_sup = 95; // 4%
 
+    /**
+     * Recherche un monstre des enfers
+     * légère probabilité qu'il vienne de la pririe
+     * @return un monstre
+     */
     public static Monstre enfers(){
-        if(random.nextInt(100) > 97){
+        if(random.nextInt(100) > proba_sup){
             return true_prairie();
         }
         else{
             return true_enfers();
         }
     }
-
+    
+    /**
+     * Recherche un monstre dans la prairie
+     * légère probabilité qu'il vienne des enfers ou de vignes
+     * @return un monstre
+     */
     public static Monstre prairie(){
         int tirage = random.nextInt(100);
-        if(tirage < 3){
+        if(tirage < proba_inf){
             return true_enfers();
         }
-        else if (tirage > 97){
+        else if (tirage > proba_sup){
             return true_vigne();
         }
         else{
@@ -31,12 +42,17 @@ public class Lieu {
         }
     }
 
+    /**
+     * Recherche un monstre dans les vignes
+     * légère probabilité qu'il vienne de la prairie ou du temple
+     * @return un monstre
+     */
     public static Monstre vigne(){
         int tirage = random.nextInt(100);
-        if(tirage < 3){
+        if(tirage < proba_inf){
             return true_prairie();
         }
-        else if (tirage > 97){
+        else if (tirage > proba_sup){
             return true_temple();
         }
         else{
@@ -44,12 +60,17 @@ public class Lieu {
         }
     }
 
+    /**
+     * Recherche un monstre dans le temple
+     * légère probabilité qu'il vienne de la vigne ou de la mer
+     * @return un monstre
+     */
     public static Monstre temple(){
         int tirage = random.nextInt(100);
-        if(tirage < 3){
+        if(tirage < proba_inf){
             return true_vigne();
         }
-        else if (tirage > 97){
+        else if (tirage > proba_sup){
             return true_mer();
         }
         else{
@@ -57,12 +78,17 @@ public class Lieu {
         }
     }
 
+    /**
+     * Recherche un monstre dans la mer
+     * légère probabilité qu'il vienne des monts ou du temple
+     * @return un monstre
+     */
     public static Monstre mer(){
         int tirage = random.nextInt(100);
-        if(tirage < 3){
+        if(tirage < proba_inf){
             return true_temple();
         }
-        else if (tirage > 97){
+        else if (tirage > proba_sup){
             return true_mont();
         }
         else{
@@ -70,15 +96,24 @@ public class Lieu {
         }
     }
 
+    /**
+     * Recherche un monstre dans les monts
+     * légère probabilité qu'il vienne de la mer
+     * @return un monstre
+     */
     public static Monstre mont(){
-        if(random.nextInt(100) < 3){
+        if(random.nextInt(100) < proba_inf){
             return true_mer();
         }
         else{
             return true_mont();
         }
     }
-
+    
+    /**
+     * Prélève un monstre dans les enfers
+     * @return un monstre
+     */
     public static Monstre true_enfers() {
         Race race;
         do {
@@ -86,7 +121,11 @@ public class Lieu {
         }while (race == null);
         return new Monstre(race);
     }
-
+    
+    /**
+     * Prélève un monstre dans la prairie
+     * @return un monstre
+     */
     public static Monstre true_prairie() {
         Race race;
         do {
@@ -95,6 +134,10 @@ public class Lieu {
         return new Monstre(race);
     }
 
+    /**
+     * Prélève un monstre dans la vigne
+     * @return un monstre
+     */
     public static Monstre true_vigne() {
         Race race;
         do {
@@ -103,6 +146,10 @@ public class Lieu {
         return new Monstre(race);
     }
 
+    /**
+     * Prélève un monstre dans le temple
+     * @return un monstre
+     */
     public static Monstre true_temple() {
         Race race;
         do {
@@ -111,6 +158,10 @@ public class Lieu {
         return new Monstre(race);
     }
 
+    /**
+     * Prélève un monstre dans la mer
+     * @return un monstre
+     */
     public static Monstre true_mer() {
         Race race;
         do {
@@ -119,6 +170,10 @@ public class Lieu {
         return new Monstre(race);
     }
 
+    /**
+     * Prélève un monstre dans les monts
+     * @return un monstre
+     */
     public static Monstre true_mont() {
         Race race;
         do {
@@ -127,6 +182,10 @@ public class Lieu {
         return new Monstre(race);
     }
 
+    /**
+     * Prélève un monstre dans l'Olympe
+     * @return un monstre
+     */
     public static Monstre olympe() {
         Race race;
         do {
