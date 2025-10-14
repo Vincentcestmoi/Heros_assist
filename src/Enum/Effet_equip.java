@@ -2,7 +2,6 @@ package Enum;
 
 public enum Effet_equip {
     AUCUN,
-    PASDP,
     ARCA,
     ARCEXP,
     SAC0,

@@ -238,10 +238,11 @@ public class Pre_Equipement {
     static Pre_Equipement lam_enf = new Pre_Equipement("Lame infernale", MAIN1, O, Effet_equip.ENFERS4, true);
     static Pre_Equipement lam_herbe = new Pre_Equipement("Lame végétale", MAIN1, O, Effet_equip.PRAIRIE3, true);
     static Pre_Equipement fleche_plus0 = new Pre_Equipement("plumes d'oie", AUTRE, O, Effet_equip.ARCA, true);
+    static Pre_Equipement fleche_plus02 = new Pre_Equipement("plumes d'aigle", AUTRE, O, Effet_equip.ARCA, true);
     static Pre_Equipement rune0 = new Pre_Equipement("rune résiduelle", RUNE, O, Effet_equip.RUNE_RESIDU, true);
 
     static Pre_Equipement[] rang0 = {ceinture0, arc0, dague0, epee0, armure0, casque0, heal0, healPP0, bouclier0,
-            bracelet0, fleche_plus0, lam_enf, lam_herbe, sac0, rune0};
+            bracelet0, fleche_plus0, fleche_plus02, lam_enf, lam_herbe, sac0, rune0};
 
     static Pre_Equipement ceintureI = new Pre_Equipement("ceinture", CEINTURE, I, AUCUN, false);
     static Pre_Equipement arcI = new Pre_Equipement("arc simple", ARC, I, AUCUN, false);
@@ -257,6 +258,8 @@ public class Pre_Equipement {
     static Pre_Equipement fleche_plusI = new Pre_Equipement("pointe en fer", AUTRE, I, Effet_equip.ARCA, true);
     static Pre_Equipement fleche_plusI2 = new Pre_Equipement("hance d'acier", AUTRE, I, Effet_equip.ARCA, true);
     static Pre_Equipement fleche_plusI3 = new Pre_Equipement("viseur", AUTRE, I, Effet_equip.ARCA, true);
+    static Pre_Equipement fleche_plusI4 = new Pre_Equipement("pointe affutée", AUTRE, I, Effet_equip.ARCA, true);
+    static Pre_Equipement fleche_plusI5 = new Pre_Equipement("monocle de précision", AUTRE, I, Effet_equip.ARCA, true);
     static Pre_Equipement armure_w = new Pre_Equipement("armure de guerre", ARMURE, I, Effet_equip.GUERRE, true);
     static Pre_Equipement casque_w = new Pre_Equipement("casque de guerre", CASQUE, I, Effet_equip.GUERRE, true);
     static Pre_Equipement bouclier_w = new Pre_Equipement("bouclier de guerre", BOUCLIER, I, Effet_equip.GUERRE, true);
@@ -293,8 +296,8 @@ public class Pre_Equipement {
     static Pre_Equipement rune_dodo = new Pre_Equipement("Rune endormie", AUTRE, I, Effet_equip.RUNE_DODO, true);
     static Pre_Equipement popoI = new Pre_Equipement("Soupe magique", CONSO_MAIN, I, Effet_equip.SOUPE_MAGIQUE, true);
 
-    static Pre_Equipement[] rang1 = {fleche_plusI, fleche_plusI2, fleche_plusI3, ceintureI, arcI,
-            dagueI, epeeI, armureI, casqueI, bouclierI, healPPI, healI, sacI, armure_w, casque_w,
+    static Pre_Equipement[] rang1 = {fleche_plusI, fleche_plusI2, fleche_plusI3, fleche_plusI4, fleche_plusI5, ceintureI,
+            arcI, dagueI, epeeI, armureI, casqueI, bouclierI, healPPI, healI, sacI, armure_w, casque_w,
             bouclier_w, armure_a, casque_a, bouclier_a, main1_a, main1_a, main2_a, armure_r,
             casque_r, bouclier_r, main2_r, main1_ba, main1_ba, main2_ba, armure_ar, elem_main,
             elem_casque, elem_armure, elem_bouclier, bracelet_r1, bracelet_r1, bracelet_ar1,
@@ -314,6 +317,8 @@ public class Pre_Equipement {
 
     static Pre_Equipement fleche_plusII = new Pre_Equipement("poison à flèche", AUTRE, II, Effet_equip.ARCA, true);
     static Pre_Equipement fleche_plusII2 = new Pre_Equipement("encoche renforcée", AUTRE, II, Effet_equip.ARCA, true);
+    static Pre_Equipement fleche_plusII3 = new Pre_Equipement("projectile incendiare", AUTRE, II, Effet_equip.ARCA, true);
+    static Pre_Equipement fleche_plusII4 = new Pre_Equipement("acide à flèche", AUTRE, II, Effet_equip.ARCA, true);
     static Pre_Equipement armureII_ar = new Pre_Equipement("armure renforcée", ARMURE, II, Effet_equip.ARMURE1, true);
     static Pre_Equipement casque_II_ar = new Pre_Equipement("casque renforcé", CASQUE, II, Effet_equip.ARMURE1, true);
     static Pre_Equipement bouclierII_ar = new Pre_Equipement("bouclier renforcé", BOUCLIER, II, Effet_equip.ARMURE1, true);
@@ -329,7 +334,7 @@ public class Pre_Equipement {
     static Pre_Equipement bracelet_ra2 = new Pre_Equipement("Bracelet de rage", BRACELET, II, Effet_equip.RAGE2, true);
     static Pre_Equipement bracelet_a2 = new Pre_Equipement("Bracelet de puissance", BRACELET, II, Effet_equip.ATTAQUE2, true);
     static Pre_Equipement bracelet_r2 = new Pre_Equipement("Bracelet défensif", BRACELET, II, Effet_equip.RESISTANCE4, true);
-    static Pre_Equipement fleche_plusII3 = new Pre_Equipement("flèche explosives", AUTRE, II, Effet_equip.ARCEXP, true);
+    static Pre_Equipement fleche_plusIIex = new Pre_Equipement("flèche explosives", AUTRE, II, Effet_equip.ARCEXP, true);
     static Pre_Equipement parchemin_dodo = new Pre_Equipement("Parchemin de sommeil", AUTRE, II, Effet_equip.PARCH_DODO, true);
     static Pre_Equipement rune_feu2 = new Pre_Equipement("Rune incinérante", AUTRE, II, Effet_equip.RUNE_ARDENTE2, true);
     static Pre_Equipement medail_protect = new Pre_Equipement("Médaillon de protection", AUTRE, II, Effet_equip.PROTECTION, true);
@@ -341,11 +346,11 @@ public class Pre_Equipement {
     static Pre_Equipement alchi = new Pre_Equipement("équipement d'alchimiste", AUTRE, II, Effet_equip.ALCHI, true);
     static Pre_Equipement bourdon = new Pre_Equipement("bâton magique", MAIN1, II, Effet_equip.BOURDON, true);
 
-    static Pre_Equipement[] rang2 = {fleche_plusII, fleche_plusII2, ceintureII, arcII,
+    static Pre_Equipement[] rang2 = {fleche_plusII, fleche_plusII2, fleche_plusII3, fleche_plusII4, ceintureII, arcII,
             dagueII, epeeII, armureII, casqueII, bouclierII, sacII, casque_II_ar, armureII_ar, bouclierII_ar,
             armureII_r, casque_II_r, bouclierII_r, main1II_ba, main1II_ba, main2II_ba, main2II_ga, lame_mer,
-            bracelet_energie, bracelet_energie, bracelet_soin, bracelet_ra2, bracelet_a2, bracelet_r2, fleche_plusII3,
-            fleche_plusII3, parchemin_dodo, rune_feu2, rune_feu2, popoII, healII, medail_protect, lunette, rune_veng,
+            bracelet_energie, bracelet_energie, bracelet_soin, bracelet_ra2, bracelet_a2, bracelet_r2, fleche_plusIIex,
+            fleche_plusIIex, parchemin_dodo, rune_feu2, rune_feu2, popoII, healII, medail_protect, lunette, rune_veng,
             rune_necro, bracelet_maudit, dissect, alchi, bourdon};
 
     static Pre_Equipement ceintureIII = new Pre_Equipement("ceinture des champions", CEINTURE, III, AUCUN, false);
@@ -362,6 +367,7 @@ public class Pre_Equipement {
 
     static Pre_Equipement fleche_plusIII = new Pre_Equipement("pointe torsadée", AUTRE, III, Effet_equip.ARCA, true);
     static Pre_Equipement fleche_plusIII2 = new Pre_Equipement("structure enchantée", AUTRE, III, Effet_equip.ARCA, true);
+    static Pre_Equipement fleche_plusIII3 = new Pre_Equipement("pointe électrique", AUTRE, III, Effet_equip.ARCA, true);
     static Pre_Equipement bracelet_ar3 = new Pre_Equipement("Bracelet d'invincibilité", BRACELET, III, Effet_equip.ARMURE2, true);
     static Pre_Equipement bracelet_r3 = new Pre_Equipement("Bracelet de l'immortel", BRACELET, III, Effet_equip.RESISTANCE6, true);
     static Pre_Equipement bracelet_ra3 = new Pre_Equipement("Bracelet du guerrier fou", BRACELET, III, Effet_equip.RAGE3, true);
@@ -381,7 +387,7 @@ public class Pre_Equipement {
     static Pre_Equipement bracelet_max = new Pre_Equipement("Bracelet suprême", BRACELET, III, Effet_equip.BRACELETMAX, true);
 
 
-    static Pre_Equipement[] rang3 = {fleche_plusIII, fleche_plusIII2, ceintureIII, arcIII,
+    static Pre_Equipement[] rang3 = {fleche_plusIII, fleche_plusIII2, fleche_plusIII3, ceintureIII, arcIII,
             dagueIII, epeeIII, armureIII, casqueIII, bouclierIII, sacIII, bracelet_ar3, bracelet_r3, bracelet_ra3,
             parchemin_folie, popo_max, popoIII, healIII, healPPIII, casque_III_ar, bouclierIII_ar, armureIII_r,
             casque_III_r, bouclierIII_r, main1III_ba, main1III_ba, main2III_ba, main2III_ga, lame_mont, armureIII_ar,
