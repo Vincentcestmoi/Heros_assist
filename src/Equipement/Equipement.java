@@ -125,11 +125,11 @@ public class Equipement {
         this.armure = 0;
         this.resistance = 0;
         switch(rang){
-            case O -> this.attaque = 1;
-            case I -> this.attaque = 2;
-            case II -> this.attaque = rand.nextInt(2) + 3;
-            case III -> this.attaque = rand.nextInt(2) + 5;
-            case IV -> this.attaque = rand.nextInt(6) + 11;
+            case O -> this.attaque = 2;
+            case I -> this.attaque = 3;
+            case II -> this.attaque = rand.nextInt(2) + 4;
+            case III -> this.attaque = rand.nextInt(2) + 6;
+            case IV -> this.attaque = rand.nextInt(6) + 13;
         }
     }
 
