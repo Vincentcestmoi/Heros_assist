@@ -56,7 +56,7 @@ public class Monstre {
         this.attaque_base = this.attaque;
         this.armure_base = this.armure;
 
-        this.etat = 20 + rand.nextInt(11);
+        this.etat = 18 + rand.nextInt(11);
         if(Objects.equals(this.nom, "illusioniste")){
             illu_check();
         }
@@ -207,6 +207,49 @@ public class Monstre {
             case ILLU_VENTI -> "venti";
             default -> this.nom;
         };
+    }
+
+    /**
+     * Inflige des dommages au monstre et renvoie un message informatif
+     * @param quantite la force des dommages
+     * @param silence si l'on peut ou non commenter le résultat
+     */
+    private void subit_dommage(int quantite, boolean silence){
+        this.vie -= quantite;
+        if(vie <= 0){
+            return;
+        }
+        String text = "";
+        if(vie <= vie_max * 0.2){
+            text += nom + " a l'air sur le point de s'effondrer.";
+            etat -= 1;
+        }
+        else if(quantite >= vie_max * 0.65){
+            text += nom + " souffre sévèrement sous l'impact.";
+            etat -= 2 + rand.nextInt(3);
+        }
+        else if (quantite >= vie_max * 0.5){
+            text += nom + " a prit un sacré coup .";
+            etat -= 2 + rand.nextInt(2);
+        }
+        else if(quantite >= vie_max * 0.35){
+            text += nom + " semble en mauvaise posture.";
+            etat -= 2;
+        }
+        else if(quantite <= vie_max * 0.1){
+            text += nom + " ne réagit même pas à l'assaut.";
+            etat -= rand.nextInt(2) * rand.nextInt(2);
+        }
+        else if (quantite <= vie_max * 0.2){
+            text += nom + " ne semble pas souffir de l'impact.";
+            etat -= rand.nextInt(2);
+        }
+        else{
+            etat -= 1;
+        }
+        if(!silence){
+            System.out.println(text);
+        }
     }
 
     /**
@@ -402,12 +445,12 @@ public class Monstre {
         switch (competence){
             case POURRI -> {
                 System.out.println(this.nom + " tombe en morceau.");
-                vie -= 1;
+                subit_dommage(1, true);
             }
             case PHOTOSYNTHESE -> vie = vie == vie_max ? vie + 1 : vie;
             case BLESSE -> {
                 System.out.println(this.nom + " saigne abondamment.");
-                vie -= 3;
+                subit_dommage(3, true);
             }
             case DUO -> {
                 competence = Competence.AUCUNE; // pour éviter une boucle
@@ -480,8 +523,7 @@ public class Monstre {
             return;
         }
         int degat = applique_competence_tir(max(quantite - this.armure, 1));
-        this.vie -= degat;
-        this.etat -= 1;
+        subit_dommage(degat, false);
     }
 
     /**
@@ -569,8 +611,7 @@ public class Monstre {
             return;
         }
         int degas = applique_competence_magie(quantite);
-        this.vie -= degas;
-        this.etat -= 1;
+        subit_dommage(degas, false);
     }
 
     /**
@@ -674,8 +715,7 @@ public class Monstre {
             return;
         }
         int degas = applique_competence_dommage(max(quantite - this.armure, 1));
-        this.vie -= degas;
-        this.etat -= 1;
+        subit_dommage(degas, false);
         if(!est_mort()) {
             applique_competence_post_dommage();
         }
@@ -693,8 +733,7 @@ public class Monstre {
             return;
         }
         int degas = applique_competence_dommage((Main.corriger(quantite * mult) - this.armure));
-        this.vie -= degas;
-        this.etat -= 1;
+        subit_dommage(degas, false);
         if(!est_mort()) {
             applique_competence_post_dommage();
         }
@@ -829,7 +868,7 @@ public class Monstre {
             case GOLEM_PIERRE, GOLEM_FER -> {
                 if(rand.nextBoolean()){
                     System.out.println(nom + " laisse tomber des fragments de son corps pour ne pas être désavantagé(e).");
-                    this.vie -= rand.nextInt(5) + 1;
+                    subit_dommage(rand.nextInt(5) + 1, true);
                     if (est_mort()){
                         return;
                     }
