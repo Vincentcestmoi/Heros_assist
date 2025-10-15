@@ -7,6 +7,7 @@ import Monstre.Monstre;
 import Monstre.Race;
 import Enum.Position;
 import Enum.Action;
+import Enum.Action_extra;
 import Enum.Competence;
 
 import java.io.IOException;
@@ -127,6 +128,7 @@ public class Combat {
 
         int i;
         Action act, act_f;
+        Action_extra act_ex;
         Joueur joueur;
         while (run) {
 
@@ -170,12 +172,37 @@ public class Combat {
                 if(!joueur.peut_jouer()){
                     act = Action.AUCUNE;
                 }
+                act_ex = Input.extra(joueur, act);
+                int dps_popo = 0;
+                switch(act_ex){
+                    case AUCUNE, AUTRE -> {}
+                    case RAGE -> joueur.rage();
+                    case ANALYSER -> analyser(joueur.est_front(), ennemi);
+                    case POTION -> {
+                        dps_popo = joueur.popo();
+                        if(dps_popo < 0){ //poison sur lame
+                            if(act == Action.ATTAQUER){
+                                dps_popo = -dps_popo;
+                            }
+                            else{
+                                dps_popo = 0;
+                            }
+                        }
+                        if(dps_popo >= 10){ //seule la bombe ou la popo explosive au max peuvent atteindre
+                            ennemi.affecte();
+                        }
+                    }
+                }
                 switch (act) {
                     case END -> stop_run();
-                    case TIRER -> joueur.tirer(ennemi);
+                    case TIRER -> {
+                        joueur.tirer(ennemi, dps_popo);
+                        dps_popo = 0;
+                    }
                     case MAGIE -> {
                         System.out.println("Vous utilisez votre magie sur " + ennemi.getNom());
-                        ennemi.dommage_magique(Input.magie());
+                        ennemi.dommage_magique(Input.magie() + dps_popo);
+                        dps_popo = 0;
                     }
                     case FUIR -> joueur.fuir();
                     case ASSOMER -> ennemi.assommer(joueur.getBerserk());
@@ -191,7 +218,6 @@ public class Combat {
                             stop_run();
                         }
                     }
-                    case ANALYSER -> analyser(i == pr_l, ennemi);
                     case AUTRE -> System.out.println(joueur.getNom() + " fait quelque chose.");
                     case AVANCER -> {
                         pr_l = i;
@@ -201,10 +227,17 @@ public class Combat {
                     }
                     case AUCUNE -> {}
                     default -> {
-                        if (joueur.traite_action(act, ennemi)) {
-                            joueur.attaquer(ennemi);
+                        if (joueur.traite_action(act, ennemi, dps_popo)) {
+                            joueur.attaquer(ennemi, dps_popo);
+                            dps_popo = 0;
+                        }
+                        else if(joueur.action_consomme_popo(act)){
+                            dps_popo = 0;
                         }
                     }
+                }
+                if(dps_popo > 0){
+                    ennemi.dommage(dps_popo);
                 }
                 System.out.println();
                 if(joueur.a_familier_actif() && run) {

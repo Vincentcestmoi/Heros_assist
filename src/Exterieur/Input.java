@@ -9,6 +9,7 @@ import Enum.Position;
 import Enum.Rang;
 import Enum.Promo_Type;
 import Enum.Action;
+import Enum.Action_extra;
 import Enum.Choix;
 import Enum.Sort;
 import Enum.Concoction;
@@ -445,13 +446,6 @@ public class Input {
                 System.out.println("Action non reconnue.");
                 yield action(joueur, est_familier);
             }
-            case "n" -> {
-                if (!est_familier && !joueur.est_berserk()) {
-                    yield Action.ANALYSER;
-                }
-                System.out.println("Action non reconnue.");
-                yield action(joueur, est_familier);
-            }
 
             // première ligne
             case "s" -> {
@@ -505,6 +499,30 @@ public class Input {
                 }
                 System.out.println("Action non reconnue.");
                 yield action(joueur, est_familier);
+            }
+        };
+    }
+
+    public static Action_extra extra(Joueur joueur, Action action) throws IOException {
+        if(action == Action.AUCUNE || action == Action.END || action == Action.CONCOCTION || action == Action.DOMESTIQUER
+        || action == Action.DEXTERITE || action == Action.LIEN || action == Action.MEDITATION || action == Action.CALME){
+            return Action_extra.AUCUNE;
+        }
+        String text = joueur.text_extra(action);
+        System.out.println(text);
+        String reponse = read().toLowerCase();
+        return switch (reponse) {
+            case "c" -> Action_extra.AUTRE;
+            case "a", "", "\n" -> Action_extra.AUCUNE;
+            case "n" -> Action_extra.ANALYSER;
+            case "p" -> Action_extra.POTION;
+            default -> {
+                Action_extra temp = joueur.extra(reponse);
+                if(temp != Action_extra.AUCUNE){
+                    yield temp;
+                }
+                System.out.println("Unkown input.");
+                yield extra(joueur, action);
             }
         };
     }

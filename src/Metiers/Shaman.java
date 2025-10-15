@@ -94,9 +94,10 @@ public class Shaman extends Joueur {
     }
 
     @Override
-    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+    public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         switch(action) {
             case INCANTATION -> {
+                ennemi.dommage(bonus_popo);
                 incantation(ennemi);
                 return false;
             }
@@ -109,7 +110,15 @@ public class Shaman extends Joueur {
                 return false;
             }
         }
-        return super.traite_action(action, ennemi);
+        return super.traite_action(action, ennemi, bonus_popo);
+    }
+
+    @Override
+    public boolean action_consomme_popo(Action action){
+        if(action == Action.INCANTATION){
+            return true;
+        }
+        return super.action_consomme_popo(action);
     }
 
     @Override

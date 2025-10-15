@@ -54,7 +54,7 @@ public class Alchimiste extends Joueur {
     public String text_action() {
         String text = super.text_action();
         if (!est_berserk()) {
-            text += "/(co)ncocter des potions/(fo)uiller";
+            text += "/(co)ncocter des potions/(fo)uiller/(de)xterité";
         }
         return text;
     }
@@ -75,12 +75,17 @@ public class Alchimiste extends Joueur {
                     return Action.CONCOCTION;
                 }
             }
+            case "de", "dé" -> {
+                if (!est_berserk()) {
+                    return Action.DEXTERITE;
+                }
+            }
         }
         return super.action(choix, false);
     }
 
     @Override
-    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+    public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         switch (action) {
             case FOUILLE -> {
                 if (!est_berserk()) {
@@ -95,7 +100,7 @@ public class Alchimiste extends Joueur {
                 }
             }
         }
-        return super.traite_action(action, ennemi);
+        return super.traite_action(action, ennemi, bonus_popo);
     }
 
     @Override
@@ -192,6 +197,9 @@ public class Alchimiste extends Joueur {
             return -20 - rand.nextInt(25);
         }
     }
+    // TODO traiter dextérité
+    // TODO : Masquer les effets véritables des popo et remplacer par le contennue de Joueur.popo
+    // TODO : mettre des #x aux popo pour les identifier
 
     /**
      * Laisse l'alchimiste concoter ses potions

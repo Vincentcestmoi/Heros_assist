@@ -71,24 +71,33 @@ public class Ranger extends Joueur {
     }
 
     @Override
-    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+    public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         switch(action) {
             case CRITIQUE -> {
-                coup_critique(ennemi);
+                coup_critique(ennemi, bonus_popo);
                 return false;
             }
             case ASSAUT -> {
-                assaut(ennemi);
+                assaut(ennemi, bonus_popo);
                 return false;
             }
             case ASSASSINAT -> {
-                assassinat(ennemi);
+                assassinat(ennemi, bonus_popo);
                 return false;
             }
         }
-        return super.traite_action(action, ennemi);
+        return super.traite_action(action, ennemi, bonus_popo);
     }
 
+    @Override
+    public boolean action_consomme_popo(Action action){
+        if(action == Action.CRITIQUE || action == Action.ASSAUT || action == Action.ASSASSINAT){
+            return true;
+        }
+        return super.action_consomme_popo(action);
+    }
+
+    @Override
     public int bonus_exploration(){
         return rand.nextInt(2) /* eclaireur */ + rand.nextInt(3)/* explorateur */;
     }
@@ -135,20 +144,21 @@ public class Ranger extends Joueur {
      * @param ennemi le monstre ennemi
      * @throws IOException toujours
      */
-    public static void coup_critique(Monstre ennemi) throws IOException {
+    public static void coup_critique(Monstre ennemi, int bonus_popo) throws IOException {
+        int tir = Input.tir() + bonus_popo;
         switch(Input.D4()){
             case 1 -> {
                 System.out.println("La pointe de votre flèche éclate en plein vol.");
-                ennemi.tir(Input.tir(), 0.5F);
+                ennemi.tir(tir, 0.5F);
             }
-            case 2, 3 -> ennemi.tir(Input.tir());
+            case 2, 3 -> ennemi.tir(tir);
             case 4, 5 -> {
                 System.out.println("Votre flèche file droit sur " + ennemi.getNom() + " et lui porte un coup puissant.");
-                ennemi.tir(Input.tir(), 2F);
+                ennemi.tir(tir, 2F);
             }
             default -> {
                 System.out.println("Entré invalide, tir classique appliqué.");
-                ennemi.tir(Input.tir());
+                ennemi.tir(tir);
             }
         }
     }
@@ -158,12 +168,13 @@ public class Ranger extends Joueur {
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
-    private void assassinat(Monstre ennemi) throws IOException {
+    private void assassinat(Monstre ennemi, int bonus_popo) throws IOException {
         if(Input.D6() + rand.nextInt(3) - 1 > 3){
             System.out.println("Vous vous faufilez derrière " + ennemi.getNom() + " sans qu'il ne vous remarque.");
-            ennemi.dommage(Main.corriger(Input.atk() * 1.3f + 6.5f));
+            ennemi.dommage(Main.corriger(Input.atk() * 1.3f + 6.5f + bonus_popo));
         }
         else {
+            ennemi.dommage(bonus_popo);
             System.out.println("Vous jugez plus prudent de ne pas engagez pour l'instant...");
         }
     }
@@ -173,7 +184,7 @@ public class Ranger extends Joueur {
      * @param ennemi le monstre ennemi
      * @throws IOException toujours
      */
-    private void assaut(Monstre ennemi) throws IOException {
+    private void assaut(Monstre ennemi, int bonus_popo) throws IOException {
         System.out.println("Vous chargez brutalement " + ennemi.getNom());
         int jet = Input.D8() + rand.nextInt(3) - 1;
         int base = Input.atk();
@@ -187,7 +198,8 @@ public class Ranger extends Joueur {
         bonus += critique_atk(base);
         bonus += bonus_atk();
         bonus += attaque_bonus;
-        ennemi.dommage(base + Main.corriger(bonus, 0));
+        bonus += bonus_popo;
+        ennemi.dommage(base + Main.corriger(bonus, 2));
         ennemi.attaque(this);
     }
 

@@ -5,6 +5,8 @@ import Exterieur.Input;
 import Enum.Metier;
 import Enum.Position;
 import Enum.Action;
+import Enum.Action_extra;
+
 import Equipement.Equipement;
 
 import Monstre.Lieu;
@@ -61,7 +63,7 @@ public abstract class Joueur {
     protected static int tir_bonus = 0;
     protected static int tour_modif = 0;
 
-    Joueur(String nom, Position position, int ob_f){
+    Joueur(String nom, Position position, int ob_f) {
         this.nom = nom;
         this.position = position;
         this.ob_f = ob_f;
@@ -100,15 +102,15 @@ public abstract class Joueur {
 
     //************************************************GETTER**********************************************************//
 
-    protected void setOb(int value){
+    protected void setOb(int value) {
         this.ob_f = value;
     }
 
-    public boolean a_familier(){
+    public boolean a_familier() {
         return ob_f > 0;
     }
 
-    public boolean familier_loyalmax(){
+    public boolean familier_loyalmax() {
         return ob_f >= f_max;
     }
 
@@ -128,7 +130,7 @@ public abstract class Joueur {
         return actif;
     }
 
-    public boolean a_familier_actif(){
+    public boolean a_familier_actif() {
         return a_familier() && f_actif;
     }
 
@@ -136,145 +138,142 @@ public abstract class Joueur {
         return a_familier_actif() && front && f_front;
     }
 
-    public boolean est_berserk(){
+    public boolean est_berserk() {
         return berserk > 0;
     }
 
-    public boolean f_est_berserk(){
+    public boolean f_est_berserk() {
         return f_berserk > 0;
     }
 
-    public boolean familier_peut_pas_jouer(){
+    public boolean familier_peut_pas_jouer() {
         return !a_familier_actif() || f_skip || f_est_assomme();
     }
 
-    public boolean est_assomme(){
+    public boolean est_assomme() {
         return !conscient;
     }
 
-    public boolean f_est_assomme(){
+    public boolean f_est_assomme() {
         return !f_conscient;
     }
 
-    public boolean est_front(){
+    public boolean est_front() {
         return front;
     }
 
-    public boolean est_front_f(){
+    public boolean est_front_f() {
         return f_front;
     }
 
-    public boolean est_vivant(){
+    public boolean est_vivant() {
         return vivant;
     }
 
-    public boolean est_pas_activable(){
+    public boolean est_pas_activable() {
         return !est_actif() || !est_vivant();
     }
 
-    public float getBerserk(){
+    public float getBerserk() {
         return berserk;
     }
 
-    public boolean front_a_cecite(){
-        if(a_familier_front()){
+    public boolean front_a_cecite() {
+        if (a_familier_front()) {
             return f_a_cecite();
         }
         return a_cecite();
     }
 
-    public boolean a_cecite(){
+    public boolean a_cecite() {
         return cecite;
     }
 
-    private boolean f_a_cecite(){
+    private boolean f_a_cecite() {
         return f_cecite;
     }
 
-    public void prend_cecite(){
-        if(a_familier_front()){
+    public void prend_cecite() {
+        if (a_familier_front()) {
             f_prend_cecite();
-        }
-        else{
+        } else {
             p_prend_cecite();
         }
     }
 
-    private void p_prend_cecite(){
+    private void p_prend_cecite() {
         cecite = true;
         System.out.println(nom + " est empoisonné(e) et atteint(e) de cécité.");
     }
 
-    private void f_prend_cecite(){
+    private void f_prend_cecite() {
         f_cecite = true;
         System.out.println("Le familier de " + nom + " est empoisonné et atteint de cécité.");
     }
 
-    public boolean front_a_poison1(){
-        if(a_familier_front()){
+    public boolean front_a_poison1() {
+        if (a_familier_front()) {
             return f_a_poison1();
         }
         return a_poison1();
     }
 
-    private boolean a_poison1(){
+    private boolean a_poison1() {
         return poison1;
     }
 
-    private boolean f_a_poison1(){
+    private boolean f_a_poison1() {
         return f_poison1;
     }
 
-    public void prend_poison1(){
-        if(a_familier_front()){
+    public void prend_poison1() {
+        if (a_familier_front()) {
             f_prend_poison1();
-        }
-        else{
+        } else {
             p_prend_poison1();
         }
     }
 
-    private void p_prend_poison1(){
+    private void p_prend_poison1() {
         poison1 = true;
         System.out.println(nom + " est empoisonné(e).");
     }
 
-    private void f_prend_poison1(){
+    private void f_prend_poison1() {
         f_poison1 = true;
         System.out.println("Le familier de " + nom + " est empoisonné.");
     }
 
-    public void prend_poison2(){
-        if(a_familier_front()){
+    public void prend_poison2() {
+        if (a_familier_front()) {
             f_prend_poison2();
-        }
-        else{
+        } else {
             p_prend_poison2();
         }
     }
 
-    private void p_prend_poison2(){
+    private void p_prend_poison2() {
         poison2 = true;
         System.out.println(nom + " est empoisonné(e).");
     }
 
-    private void f_prend_poison2(){
+    private void f_prend_poison2() {
         System.out.println("Le familier de " + nom + " est empoisonné.");
         f_poison2 = true;
     }
 
-    public boolean front_a_poison2(){
-        if(a_familier_front()){
+    public boolean front_a_poison2() {
+        if (a_familier_front()) {
             return f_a_poison2();
         }
         return a_poison2();
     }
 
-    private boolean a_poison2(){
+    private boolean a_poison2() {
         return poison2;
     }
 
-    private boolean f_a_poison2(){
+    private boolean f_a_poison2() {
         return f_poison2;
     }
 
@@ -284,18 +283,18 @@ public abstract class Joueur {
      * Présente les caractéristiques et statistiques du joueur
      */
     public void presente_base() {
-     System.out.println(nomMetier());
-     System.out.println("Base : Résistance : " + vie + " ; attaque : " + attaque + " ; " + PP + " : " + PP_value + "/" + PP_max);
-     System.out.println("Caractéristiques : " + caracteristique);
-     System.out.println("Pouvoir : " + competences);
-     }
+        System.out.println(nomMetier());
+        System.out.println("Base : Résistance : " + vie + " ; attaque : " + attaque + " ; " + PP + " : " + PP_value + "/" + PP_max);
+        System.out.println("Caractéristiques : " + caracteristique);
+        System.out.println("Pouvoir : " + competences);
+    }
 
     /**
      * Présente la condition et position du joueur
      */
-    public void presente(){
+    public void presente() {
         System.out.print(this.nom + " est " + nomMetier() + " et se trouve " + Main.texte_pos(getPosition()));
-        if(a_familier()){
+        if (a_familier()) {
             System.out.print(" avec son familier");
         }
         System.out.println(".");
@@ -306,19 +305,19 @@ public abstract class Joueur {
     /**
      * Compte les tours pour arrêter les bonus de vent du shaman
      */
-    public static void debut_tour(){
-        if(tour_modif > 0){
+    public static void debut_tour() {
+        if (tour_modif > 0) {
             tour_modif--;
-            if(tour_modif == 0){
+            if (tour_modif == 0) {
                 tir_bonus = 0;
                 attaque_bonus = 0;
                 System.out.println("Le vent se couche.");
             }
         }
     }
-    
+
     public static void monstre_mort(Monstre ennemi) throws IOException {
-        for(int i = 0; i < Main.nbj; i++){
+        for (int i = 0; i < Main.nbj; i++) {
             Main.joueurs[i].monstre_mort_perso(ennemi);
             if (!ennemi.corps_utilisable()) {
                 System.out.println("Le cadavre du monstre n'est plus qu'une masse informe et inutilisable.");
@@ -326,15 +325,16 @@ public abstract class Joueur {
             }
         }
     }
-    
+
     /**
      * Met le joueur en condition de début de combat (avec le choix de participer)
+     *
      * @param force si le joueur est forcé de se battre
-     * @param pos la position du combat
+     * @param pos   la position du combat
      * @throws IOException toujours
      */
     public void init_affrontement(boolean force, Position pos) throws IOException {
-        if(!force && (pos != position || !Input.yn("Est-ce que " + nom + " participe au combat ?"))){
+        if (!force && (pos != position || !Input.yn("Est-ce que " + nom + " participe au combat ?"))) {
             actif = false;
             f_actif = false;
             return;
@@ -353,7 +353,7 @@ public abstract class Joueur {
         attaque_bonus = 0;
         tir_bonus = 0;
         tour_modif = 0;
-        if(a_familier() && Input.yn("Est-ce que votre familier participe au combat ?")){
+        if (a_familier() && Input.yn("Est-ce que votre familier participe au combat ?")) {
             f_actif = true;
             f_conscient = true;
             f_skip = false;
@@ -361,41 +361,41 @@ public abstract class Joueur {
             f_cecite = false;
             f_poison1 = false;
             f_poison2 = false;
-        }
-        else{
+        } else {
             f_actif = false;
         }
     }
 
     /**
      * Demande au joueur d'aller en première ligne et gère les résultats
+     *
      * @param force si le joueur DOIT passer en première ligne
      * @return si le joueur passe en première ligne
      * @throws IOException toujours
      */
     public boolean faire_front(boolean force) throws IOException {
-        if(!est_actif()){
+        if (!est_actif()) {
             return false;
         }
-        if(force || Input.yn(nom + " veut-il passer en première ligne ?")){
+        if (force || Input.yn(nom + " veut-il passer en première ligne ?")) {
             front = true;
-            if(a_familier_actif() && Input.yn(nom + " envoit-il/elle son familier devant lui ?")){
-                 f_front = true;
+            if (a_familier_actif() && Input.yn(nom + " envoit-il/elle son familier devant lui ?")) {
+                f_front = true;
             }
             return true;
         }
         return false;
     }
 
-    public void f_faire_front(){
+    public void f_faire_front() {
         f_front = true;
     }
 
     /**
      * Renvoie le nom de l'entité de front (le joueur ou le familier)
      */
-    public String getFrontNom(){
-        if(a_familier_front()){
+    public String getFrontNom() {
+        if (a_familier_front()) {
             return "Le familier de " + nom;
         }
         return nom;
@@ -403,36 +403,37 @@ public abstract class Joueur {
 
     /**
      * Simule l'action d'un familer auquel on ne donne pas d'ordre
+     *
      * @param ennemi le monstre ennemi
      * @throws IOException toujours
      */
     public void familier_seul(Monstre ennemi) throws IOException {
-        if(!a_familier_actif() || ob_f <= 3 || f_est_assomme()){
+        if (!a_familier_actif() || ob_f <= 3 || f_est_assomme()) {
             return;
         }
         System.out.println("Votre familier attaque l'ennemi pour proteger " + nom + ".");
         f_attaque(ennemi);
     }
 
-    public void inactiver(){
+    public void inactiver() {
         actif = false;
         f_actif = false;
     }
 
-    public void f_inactiver(){
+    public void f_inactiver() {
         f_actif = false;
     }
 
     /**
      * Traite la fin de combat des joueurs
+     *
      * @throws IOException toujours
      */
-    public void fin_affrontement() throws IOException{
+    public void fin_affrontement() throws IOException {
         if (est_actif() && !est_vivant() && Input.yn(getNom() + " est mort durant le combat, le reste-t-il/elle ?")) {
             if (auto_ressuciter(0)) {
                 System.out.println(getNom() + " résiste à la mort.");
-            }
-            else{
+            } else {
                 mort_def();
             }
         }
@@ -442,10 +443,11 @@ public abstract class Joueur {
 
     /**
      * Essaie de se réveiller (assommé)
+     *
      * @throws IOException toujours
      */
     public void essaie_reveil() throws IOException {
-        if(!est_assomme()){
+        if (!est_assomme()) {
             return;
         }
         System.out.println(getNom() + " est inconscient(e).");
@@ -461,10 +463,11 @@ public abstract class Joueur {
 
     /**
      * Le familier du joueur essaie de se réveiller, sans effet s'il est conscient
+     *
      * @throws IOException toujours
      */
     public void f_essaie_reveil() throws IOException {
-        if(!f_est_assomme()){
+        if (!f_est_assomme()) {
             return;
         }
         System.out.println("Le familier de " + getNom() + " est inconscient(e).");
@@ -480,10 +483,12 @@ public abstract class Joueur {
 
     /**
      * Calcule et applique les effets d'une attaque à distance
+     *
      * @param ennemi le monstre ennemi
+     * @param bonus_popo les dommages additionel des popo (ici uniquement les instables)
      * @throws IOException toujours
      */
-    public void tirer(Monstre ennemi) throws IOException {
+    public void tirer(Monstre ennemi, int bonus_popo) throws IOException {
         int base = Input.tir();
         float bonus = 0;
         if (est_berserk()) {
@@ -495,15 +500,17 @@ public abstract class Joueur {
         bonus += critique_tir(base);
         bonus += bonus_tir();
         bonus += tir_bonus;
+        bonus += bonus_popo;
         ennemi.tir(base + Main.corriger(bonus, 0));
     }
 
     /**
      * Calcule et applique les effets d'une attaque classique sur un monstre
+     *
      * @param ennemi le monstre ennemi
      * @throws IOException toujours
      */
-    public void attaquer(Monstre ennemi) throws IOException {
+    public void attaquer(Monstre ennemi, int bonus_popo) throws IOException {
         //noinspection DuplicatedCode
         int base = Input.atk();
         float bonus = 0;
@@ -516,6 +523,7 @@ public abstract class Joueur {
         bonus += critique_atk(base);
         bonus += bonus_atk();
         bonus += attaque_bonus;
+        bonus += bonus_popo;
         ennemi.dommage(base + Main.corriger(bonus, 0));
     }
 
@@ -529,12 +537,13 @@ public abstract class Joueur {
     /**
      * Rends la vie à un mort
      * peut l'assommer
+     *
      * @param malus une augmentation de la probabilité d'être assommé longtemps
      */
-    public void do_ressucite(int malus){
+    public void do_ressucite(int malus) {
         vivant = true;
         int luck = rand.nextInt(4) - malus;
-        if(luck < 0){
+        if (luck < 0) {
             assomme(4 - malus);
         }
     }
@@ -543,7 +552,7 @@ public abstract class Joueur {
      * Met à jour les données d'un joueur qui vient de mourir
      * réinitialise ses états à l'exception de la mort
      */
-    public void rendre_mort(){
+    public void rendre_mort() {
         vivant = false;
         reveil = 0;
         conscient = true;
@@ -553,7 +562,7 @@ public abstract class Joueur {
     /**
      * Met à jour les données d'un joueur mort hors combat
      */
-    public void mort_def(){
+    public void mort_def() {
         System.out.println(nom + " est mort.");
         ob_f = 0;
         position = Position.ENFERS;
@@ -562,7 +571,7 @@ public abstract class Joueur {
     /**
      * Met à jour les données d'un joueur qui vient de perdre un familier
      */
-    public void f_rendre_mort(){
+    public void f_rendre_mort() {
         ob_f = 0;
         f_actif = false;
         f_front = false;
@@ -572,35 +581,36 @@ public abstract class Joueur {
      * Assomme le joueur
      * Annule son état de berserk
      */
-    public void assomme(){
+    public void assomme() {
         assomme(0);
     }
 
     /**
      * Assomme le joueur
      * Annule son état de berserk
+     *
      * @param reveil le bonus (ou malus) de réveil
      */
-    public void assomme(int reveil){
+    public void assomme(int reveil) {
         conscient = false;
         this.reveil = reveil;
         berserk = 0;
     }
 
-    public void f_assomme(){
+    public void f_assomme() {
         f_assomme(0);
     }
 
-    public void f_assomme(int reveil){
+    public void f_assomme(int reveil) {
         f_conscient = false;
         f_reveil = reveil;
     }
 
-    public void berserk(float rage){
+    public void berserk(float rage) {
         this.berserk = rage;
     }
 
-    public void f_berserk(float rage){
+    public void f_berserk(float rage) {
         this.f_berserk = rage;
     }
 
@@ -618,9 +628,7 @@ public abstract class Joueur {
                 temp += Main.corriger(temp * (f_berserk / 2));
                 System.out.println("Pris(e) de folie, le familier de " + nom + " attaque " + Main.joueurs[l].getNom()
                         + " et lui inflige " + temp + " dommages !");
-            }
-
-            else {
+            } else {
                 ennemi.dommage(Input.atk(), f_berserk + 1);
             }
             f_berserk += rand.nextInt(3) * 0.1f;
@@ -652,7 +660,7 @@ public abstract class Joueur {
 
     //************************************************MAIN************************************************************//
 
-    public void descendre(){
+    public void descendre() {
         this.position = switch (position) {
             case VIGNES -> Position.PRAIRIE;
             case TEMPLE -> Position.VIGNES;
@@ -668,7 +676,7 @@ public abstract class Joueur {
             }
         };
     }
-    
+
     public void ascendre(int index) throws IOException {
         Position pos = position;
         position = Position.ASCENDANT;  //on isole le joueur
@@ -677,10 +685,9 @@ public abstract class Joueur {
         Monstre m;
         int bonus = bonus_exploration();
         int jet = Input.D4() + bonus;
-        if (jet > 4){
+        if (jet > 4) {
             jet = 4;
-        }
-        else if (jet < 1){
+        } else if (jet < 1) {
             jet = 1;
         }
         switch (jet) {
@@ -711,7 +718,7 @@ public abstract class Joueur {
         }
         System.out.println(text);
         Combat.affrontement(Position.ASCENDANT, lead, m);
-        if(position == Position.ENFERS){ //le joueur est mort.
+        if (position == Position.ENFERS) { //le joueur est mort.
             return;
         }
         position = pos;
@@ -722,8 +729,8 @@ public abstract class Joueur {
             System.out.println(nom + " est resté " + Main.texte_pos(position));
         }
     }
-    
-    protected void monter(){
+
+    protected void monter() {
         position = switch (position) {
             case ENFERS -> Position.PRAIRIE;
             case PRAIRIE -> Position.VIGNES;
@@ -789,17 +796,17 @@ public abstract class Joueur {
         };
     }
 
-    protected void corrige_ob(){
-        if (ob_f < 0){
-           ob_f = 0;
-        }
-        else if(ob_f > f_max){
+    protected void corrige_ob() {
+        if (ob_f < 0) {
+            ob_f = 0;
+        } else if (ob_f > f_max) {
             ob_f = f_max;
         }
     }
 
     /**
      * Traite l'ajout d'un nouveau familier
+     *
      * @throws IOException toujours
      */
     public void ajouter_familier() throws IOException {
@@ -817,8 +824,7 @@ public abstract class Joueur {
         if (a_familier() && !Input.yn(nom + " possède déjà un familier, le remplacer ? ")) {
             System.out.println("Ancien familier conservé.\n");
             return false;
-        }
-        else {
+        } else {
             System.out.println(nom + " a un nouveau familier.\n");
             ob_f = obeissance;
         }
@@ -849,6 +855,7 @@ public abstract class Joueur {
 
     /**
      * Extension de la fonction tour, annonce les choix de métier possibles
+     *
      * @return le texte à ajouter
      */
     public String text_tour() {
@@ -857,6 +864,7 @@ public abstract class Joueur {
 
     /**
      * Extension de la fonction Input.tour, permet de jouer les choix de métier
+     *
      * @param choix le choix fait par le joueur
      * @return si le tour a été joué
      */
@@ -866,30 +874,30 @@ public abstract class Joueur {
 
     /**
      * Extension de la fonction Input.action, annonce les actions possibles du joueur
+     *
      * @return le texte à ajouter
      */
-    public String text_action(){
-        if(est_assomme()){
+    public String text_action() {
+        if (est_assomme()) {
             return nom + " entrez votre action : ";
         }
         String text = nom + " entrez votre action : (A)ttaquer";
-        if(!a_cecite()){
+        if (!a_cecite()) {
             text += "/(t)irer";
         }
-        if(!est_berserk() && getMetier() != Metier.ARCHIMAGE){
+        if (!est_berserk() && getMetier() != Metier.ARCHIMAGE) {
             text += "/(m)agie";
         }
-        if(est_front()){
+        if (est_front()) {
             text += "/a(s)sommer";
-            if(!est_berserk()){
+            if (!est_berserk()) {
                 text += "/(e)ncaisser/(d)omestiquer";
             }
-        }
-        else {
+        } else {
             text += "/(s)'avancer";
         }
-        if(!est_berserk()){
-            text += "/(p)remier soin/a(n)alyser";
+        if (!est_berserk()) {
+            text += "/(p)remier soin";
         }
         text += "/(f)uir/(c)ustom/(o)ff";
         return text;
@@ -897,14 +905,14 @@ public abstract class Joueur {
 
     /**
      * Extension de la fonction Input.action, annonce les actions possibles du familier
+     *
      * @return le texte à ajouter
      */
-    public String f_text_action(){
+    public String f_text_action() {
         String text = "Donnez un ordre au familier de " + nom + " : (A)ttaquer/(f)uir/(c)ustom";
-        if(est_front_f()){
+        if (est_front_f()) {
             text += "/(e)ncaisser";
-        }
-        else if(est_front()){
+        } else if (est_front()) {
             text += "/pa(s)ser devant/(v)eiller";
         }
         return text;
@@ -912,7 +920,8 @@ public abstract class Joueur {
 
     /**
      * Extension de la fonction Input.action, permet de jouer les action de métier
-     * @param choix le choix fait par le joueur (en lowercase)
+     *
+     * @param choix        le choix fait par le joueur (en lowercase)
      * @param est_familier s'il s'agit d'un familier ou d'un joueur
      * @return si le tour a été joué
      */
@@ -925,8 +934,179 @@ public abstract class Joueur {
      * @param action l'action à réaliser
      * @return s'il faut encore réaliser l'action
      */
-    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+    public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         return true;
+    }
+
+    /**
+     * Extension du switch principal de main.combat, indique si les dommages de potion ont été utilisés
+     * @param action l'action réalisée
+     * @return s'il faut annuler les dégats des potions (s'ils ont déjà été appliqués).
+     */
+    public boolean action_consomme_popo(Action action){
+        return false;
+    }
+
+    /**
+     * Extension de la fonction Input.extra, annonce les actions bonus possibles du joueur
+     *
+     * @return le texte à ajouter
+     */
+    public String text_extra(Action action) {
+        String text = "choississez une action bonus : ";
+        if (!est_berserk()) {
+            text += "a(n)alyser/";
+            if (getMetier() != Metier.ARCHIMAGE || action != Action.SORT) {
+                text += "(p)otion/";
+            }
+        }
+        text += "(c)ustom/(a)ucune";
+        return text;
+    }
+
+    /**
+     * Extension de la fonction Input.extra, permet de jouer les actions bonus de métier
+     *
+     * @param choix le choix fait par le joueur (en lowercase)
+     * @return si le tour a été joué
+     */
+    public Action_extra extra(String choix) {
+        return Action_extra.AUCUNE;
+    }
+
+    /**
+     * Traite l'action bonus rage (initialement exclusive à la guerrière)
+     */
+    public void rage() {
+        System.out.println(nom + " s'enrage !");
+        berserk += 0.1f + 0.1f * rand.nextInt(5); //0.1 à 0.5
+    }
+
+    /**
+     * Traite l'action bonus potion
+     *
+     * @return les dégats additionnel des potions (en négatif si les dommages ne s'appliquent qu'à l'attaque au corps à corps)
+     */
+    public int popo() throws IOException {
+        System.out.println(nom + ", quelle type de potion utilisez vous : PV/RES/ATK/CD/D");
+        return switch (Input.read().toLowerCase()) {
+            case "pv", "res", "atk" -> 0; //TODO : afficher les effets de ces popo
+            case "cd" -> popo_cd();
+            case "d" -> popo_instable();
+            default -> {
+                System.out.println("Unknow input");
+                yield popo();
+            }
+        };
+    }
+
+    /**
+     * Calcule et traite les dommage au corps à corps
+     *
+     * @return le négatif du bonus de dommage
+     * @throws IOException toujours
+     */
+    private int popo_cd() throws IOException {
+        // TODO : randomiser et booster un peu
+        // TODO marquer les id des popo
+        System.out.println("""
+                Entrez la potion que vous utilisez :
+                1 : potion douteuse
+                2 : potion toxique
+                3 : potion de poison
+                4 : flasque nécrosé
+                5 : potion nécrotyque
+                6 : aucune (reviens au choix des potions))""");
+        int temp = Input.readInt();
+        if (temp <= 0 || temp > 6) {
+            System.out.println("Unknow input");
+            return popo_cd();
+        }
+        if (temp == 6) {
+            System.out.println("Vous enduisez votre lame d'une substance étrange.");
+            return popo();
+        }
+        return -temp;
+    }
+
+    /**
+     * Calcule et traite les dommages des potions instables
+     *
+     * @return les dommages infligés
+     * @throws IOException toujours
+     */
+    private int popo_instable() throws IOException {
+        // TODO marquer les id des popo
+        System.out.println("""
+                Entrez la potion que vous utilisez :
+                1 : potion instable
+                2 : potion de feu
+                3 : potion explosive
+                4 : bombe
+                5 : aucune (reviens au choix des potions))""");
+        return switch (Input.readInt()) {
+            case 1 -> explo_instable();
+            case 2 -> explo_feu();
+            case 3 -> explo_explo();
+            case 4 -> explo_bombe();
+            case 5 -> popo();
+            default -> {
+                System.out.println("Unknow input");
+                yield popo_instable();
+            }
+        };
+    }
+
+    private int explo_instable() throws IOException {
+        int temp = Input.D4();
+        if (temp > 2) {
+            System.out.println("Le potion explose en vol et frappe légèrement l'ennemi.");
+            return temp - 2;
+        }
+        System.out.println("La potion se brise par terre sans rien déclencher.");
+        return 0;
+    }
+
+    private int explo_feu() throws IOException {
+        int temp = Input.D4();
+        if (temp <= 1) {
+            System.out.println("La potion prends feu en touchant l'ennemi.");
+            return 2;
+        } else if (temp != 4) {
+            System.out.println("La potion éclate au contacte de l'ennemi et le brûle.");
+            return temp + 2;
+        }
+        System.out.println("La potion explose en une gerbe de flamme qui frappe violemment l'ennemi.");
+        return 7;
+    }
+
+    private int explo_explo() throws IOException {
+        int temp = Input.D6();
+        if (temp <= 1) {
+            System.out.println("La potion explose en l'air et et frappe légèrement l'ennemi.");
+            return 4;
+        } else if (temp != 6) {
+            System.out.println("La potion détone au contacte de l'ennemi.");
+            return temp + 4;
+        }
+        System.out.println("La potion herte violemment l'ennemi avant de lui exploser à la face.");
+        return 12;
+    }
+
+    private int explo_bombe() throws IOException {
+        int temp = Input.D8();
+        if (temp <= 1) {
+            System.out.println("La bombe détonne violemment en plein vol.");
+            return 6;
+        } else if (temp < 4) {
+            System.out.println("La bombe explose devant l'ennemi.");
+            return temp + 6;
+        } else if (temp < 8) {
+            System.out.println("La bombe percute l'ennemi et lui explose dessus.");
+            return temp + 8;
+        }
+        System.out.println("La bombe herte violement l'ennemi avant de lui exploser violement au village.");
+        return 18;
     }
 
     /**

@@ -84,7 +84,7 @@ public class Archimage extends Joueur {
     }
 
     @Override
-    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+    public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         switch(action) {
             case MEDITATION -> {
                 meditation();
@@ -95,7 +95,7 @@ public class Archimage extends Joueur {
                 return false;
             }
         }
-        return super.traite_action(action, ennemi);
+        return super.traite_action(action, ennemi, bonus_popo);
     }
 
     @Override

@@ -5,6 +5,7 @@ import Exterieur.Input;
 import Enum.Metier;
 import Enum.Position;
 import Enum.Action;
+import Enum.Action_extra;
 
 import Monstre.Monstre;
 
@@ -24,7 +25,7 @@ public class Guerriere extends Joueur {
         PP_value = 1;
         PP_max = 5;
         caracteristique = "Force naturelle, Invincibilité";
-        competences = "Berserk, Lame d'aura";
+        competences = "Berserk, Lame d'aura, Rage";
     }
 
     public Metier getMetier() {
@@ -98,18 +99,40 @@ public class Guerriere extends Joueur {
     }
 
     @Override
-    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+    public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         switch(action) {
             case BERSERK -> {
                 berserk();
                 return true;
             }
             case LAME_DAURA -> {
-                lame_aura(ennemi);
+                lame_aura(ennemi, bonus_popo);
                 return false;
             }
         }
-        return super.traite_action(action, ennemi);
+        return super.traite_action(action, ennemi, bonus_popo);
+    }
+
+    @Override
+    public boolean action_consomme_popo(Action action){
+        if(action == Action.LAME_DAURA) {
+            return true;
+        }
+        return super.action_consomme_popo(action);
+    }
+
+    @Override
+    public String text_extra(Action action) {
+        String text = super.text_extra(action);
+        text += "/(ra)ge";
+        return text;
+    }
+    @Override
+    public Action_extra extra(String choix){
+        if(choix.equals("ra")){
+            return Action_extra.RAGE;
+        }
+        return super.extra(choix);
     }
 
     @Override
@@ -170,19 +193,18 @@ public class Guerriere extends Joueur {
     }
 
     /**
-     * Lance le sort berserk : rand le joueur berserk
+     * Lance le sort berserk : rend le joueur berserk
      */
     private void berserk(){
         System.out.println(nom + " est prit d'une folie meurtrière !");
         berserk = 0.2f + 0.1f * rand.nextInt(9); //0.2 à 1
     }
 
-
     /**
      * Compétence "lame d'aura", une attaque classique avec d'énorme dommage bonus
      * @param ennemi le monstre ennemi
      */
-    private void lame_aura(Monstre ennemi) throws IOException {
+    private void lame_aura(Monstre ennemi, int bonus_popo) throws IOException {
         //noinspection DuplicatedCode C'est globalement une attaque classique
         int base = Input.atk();
         float bonus = 0;
@@ -200,6 +222,8 @@ public class Guerriere extends Joueur {
         float total = base + bonus;
         total *= 2.7f;
         lame_break = true;
+
+        total += bonus_popo; // indépendant des dommages de cac donc pas améliorés
 
         ennemi.dommage(Main.corriger(total, 3));
     }

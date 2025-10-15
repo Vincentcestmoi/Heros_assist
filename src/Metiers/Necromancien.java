@@ -93,12 +93,21 @@ public class Necromancien extends Joueur {
     }
 
     @Override
-    public boolean traite_action(Action action, Monstre ennemi) throws IOException {
+    public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         if (action == Action.MAUDIR && !est_berserk()) {
+            ennemi.dommage(bonus_popo);
             maudir(ennemi);
             return false;
         }
-        return super.traite_action(action, ennemi);
+        return super.traite_action(action, ennemi, bonus_popo);
+    }
+
+    @Override
+    public boolean action_consomme_popo(Action action){
+        if(action == Action.MAUDIR){
+            return true;
+        }
+        return super.action_consomme_popo(action);
     }
 
     @Override
