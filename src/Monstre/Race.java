@@ -123,8 +123,8 @@ public class Race {
     static Race corneille = new Race("corneille", 2, 8, 0, 0, 1, 1, corn_comp);
     static Competence[] oursa_comp = {Competence.FRAGILE, Competence.BLESSE, Competence.FAIBLE};
     static Race ours_agonisant = new Race("ours agonisant", 5, 15, 1, 1, 1, 2, oursa_comp);
-    static Race lycaon = new Race("Lycaon", 5, 12, 1, 5, 5, 1, nomme_comp);
-    static Race mormo = new Race("Mormo", 6, 10, 0, 5, 5, 1, nomme_comp);
+    static Race lycaon = new Race("Lycaon", 5, 15, 1, 5, 5, 1, nomme_comp);
+    static Race mormo = new Race("Mormo", 7, 12, 0, 5, 5, 1, nomme_comp);
 
     public static Race[] prairie = {loup, karpoi, basilic, serpent, serpent_geant, sanglier, sanglier_feu, corneille, ours_agonisant, lycaon, mormo};
 
@@ -145,87 +145,87 @@ public class Race {
     static Race satyre = new Race("satyre", 5, 13, 0, 1, 1, 1, saty_comp);
     static Competence[] mena_comp = {Competence.ESQUIVE, Competence.FOLIE_MEURTRIERE,
             Competence.VIOLENT, Competence.POISON, Competence.ARNAQUE, Competence.HATE_DYONISOS, Competence.FEAR_DYONISOS};
-    static Race menade = new Race("ménade", 7, 19, 2, 1, 2, 1, mena_comp);
-    static Race empousa = new Race("Empousa", 8, 17, 1, 5, 5, 1, nomme_comp);
-    static Race laton = new Race("Laton", 9, 17, 1, 5, 5, 1, nomme_comp);
+    static Race menade = new Race("ménade", 7, 15, 2, 1, 2, 1, mena_comp);
+    static Race empousa = new Race("Empousa", 9, 21, 1, 5, 5, 1, nomme_comp);
+    static Race laton = new Race("Laton", 10, 23, 1, 5, 5, 1, nomme_comp);
 
     public static Race[] vigne = {herbe_folle, ours, laton, manticore, pillard, corbeau, bacchante, satyre, menade, empousa};
 
     static Competence[] lier_comp = {Competence.BENEDICTION, Competence.ARNAQUE, Competence.AUCUNE, Competence.SACRE};
     static Race lierre_sacre = new Race("lierre sacré", 1, 1, 0, 1, 1, 1, lier_comp);
     static Competence[] band_comp = {Competence.DUO, Competence.EQUIPE, Competence.ASSAUT, Competence.ASSASSINAT};
-    static Race bandit = new Race("bandit", 5, 23, 1, 1, 2, 2, band_comp);
+    static Race bandit = new Race("bandit", 5, 27, 1, 1, 2, 2, band_comp);
     static Competence[] harp_comp = {Competence.VOL, Competence.VOL_OFF, Competence.VOLAGE, Competence.RAPIDE};
-    static Race harpie = new Race("harpie", 6, 17, 1, 1, 2, 1, harp_comp);
+    static Race harpie = new Race("harpie", 7, 19, 1, 1, 2, 1, harp_comp);
     static Competence[] pegan_comp = {Competence.VOL, Competence.VOL_OFF, Competence.VOLAGE, Competence.RAPIDE,
             Competence.CHARGE, Competence.VIOLENT, Competence.VITALITE_NATURELLE, Competence.COLERE, Competence.FORCE_NATURELLE};
-    static Race pegase_noir = new Race("pégase noir", 6, 20, 2, 1, 2, 2, pegan_comp);
+    static Race pegase_noir = new Race("pégase noir", 9, 22, 2, 1, 2, 2, pegan_comp);
     static Competence[] pega_comp = {Competence.VOL, Competence.VOL_OFF, Competence.VOLAGE, Competence.RAPIDE,
             Competence.VITALITE_NATURELLE, Competence.ARMURE_NATURELLE};
-    static Race pegase = new Race("pégase", 6, 23, 1, 1, 2, 2, pega_comp);
+    static Race pegase = new Race("pégase", 6, 26, 1, 1, 2, 2, pega_comp);
     static Competence[] gorg_comp = {Competence.POISON2, Competence.REGARD_PETRIFIANT, Competence.REGARD_MORTEL, Competence.POISON_CECITE};
-    static Race gorgone = new Race("gorgone", 5, 16, 1, 1, 2, 1, gorg_comp);
+    static Race gorgone = new Race("gorgone", 6, 21, 1, 1, 2, 1, gorg_comp);
     static Competence[] fana_comp = {Competence.FOLIE_MEURTRIERE, Competence.VIOLENT, Competence.EXPLOSION, Competence.KAMICASE};
-    static Race fanatique = new Race("fanatique", 5, 15, 1, 1, 1, 2, fana_comp);
+    static Race fanatique = new Race("fanatique", 9, 15, 1, 1, 1, 2, fana_comp);
     static Competence[] serv_comp = {Competence.ESQUIVE, Competence.FURTIF, Competence.RAPIDE, Competence.ASSAUT};
-    static Race servante_dorion = new Race("servante d'Orion", 5, 15, 1, 1, 1, 2, serv_comp);
-    static Race python = new Race("Python", 7, 20, 3, 5, 5, 1, nomme_comp);
-    static Race echidna = new Race("Echidna", 9, 17, 1, 5, 5, 1, nomme_comp);
+    static Race servante_dorion = new Race("servante d'Orion", 7, 19, 1, 1, 1, 2, serv_comp);
+    static Race python = new Race("Python", 7, 29, 3, 5, 5, 1, nomme_comp);
+    static Race echidna = new Race("Echidna", 13, 26, 1, 5, 5, 1, nomme_comp);
 
     public static Race[] temple = {lierre_sacre, bandit, harpie, pegase_noir, pegase, gorgone, fanatique, servante_dorion, python, echidna};
 
     static Competence[] krak_comp = {Competence.GEANT, Competence.PEAU_DURE, Competence.PEAU_MAGIQUE,
             Competence.PARTIELLE_SPELL_IMMUNIE, Competence.HATE_POSEIDON, Competence.FEAR_POSEIDON};
-    static Race kraken = new Race("kraken", 9, 22, 1, 2, 2, 1, krak_comp);
+    static Race kraken = new Race("kraken", 10, 25, 1, 2, 2, 1, krak_comp);
     static Competence[] levi_comp = {Competence.GEANT, Competence.PEAU_MAGIQUE, Competence.PARTIELLE_SPELL_IMMUNIE,
             Competence.HATE_POSEIDON, Competence.FEAR_POSEIDON, Competence.CUIR_MAGIQUE, Competence.ARMURE_NATURELLE, Competence.VITALITE_NATURELLE};
-    static Race leviathan = new Race("leviathan", 5, 30, 3, 2, 2, 2, levi_comp);
+    static Race leviathan = new Race("leviathan", 5, 43, 4, 2, 3, 2, levi_comp);
     static Competence[] hipp_comp = {Competence.RAPIDE, Competence.FEAR_POSEIDON, Competence.HATE_POSEIDON,
             Competence.VITALITE_NATURELLE, Competence.BRUME};
-    static Race hippocampe = new Race("hippocampe", 8, 26, 1, 2, 2, 1, hipp_comp);
+    static Race hippocampe = new Race("hippocampe", 11, 30, 1, 2, 2, 2, hipp_comp);
     static Competence[] grif_comp = {Competence.VOL, Competence.VOL_OFF, Competence.CUIR_MAGIQUE, Competence.ARMURE_NATURELLE,
             Competence.POISON_CECITE, Competence.RAPIDE, Competence.POISON2, Competence.ESQUIVE, Competence.VIOLENT, Competence.VITALITE_NATURELLE};
-    static Race griffon = new Race("griffon", 9, 25, 2, 2, 2, 2, grif_comp);
+    static Race griffon = new Race("griffon", 13, 25, 2, 2, 2, 2, grif_comp);
     static Competence[] sire_comp = {Competence.POISON, Competence.PEAU_MAGIQUE, Competence.FEAR_POSEIDON, Competence.HATE_POSEIDON,
-            Competence.POISON_CECITE, Competence.CHANT_SIRENE, Competence.RAPIDE};
+            Competence.POISON_CECITE, Competence.CHANT_SIRENE, Competence.CHANT_SIRENE, Competence.CHANT_SIRENE};
     public static Race sirene = new Race("sirène", 7, 23, 1, 2, 2, 1, sire_comp);
     static Competence[] trit_comp = {Competence.PEAU_DURE, Competence.PEAU_MAGIQUE, Competence.VITALITE_NATURELLE,
             Competence.VIOLENT, Competence.ARMURE_NATURELLE, Competence.FEAR_POSEIDON, Competence.HATE_POSEIDON, Competence.SAUVAGE};
-    public static Race triton = new Race("triton", 9, 25, 1, 2, 2, 2, trit_comp);
+    public static Race triton = new Race("triton", 12, 25, 1, 2, 2, 2, trit_comp);
     static Competence[] coqu_perle = {Competence.ARMURE_NATURELLE4, Competence.ARNAQUE, Competence.PEAU_DACIER, Competence.PERLE, Competence.AQUAJET3,
-            Competence.AQUAJET2};
-    static Race coquillage = new Race("coquillage", 0, 15, 5, 2, 2, 1, coqu_perle);
+            Competence.AQUAJET2, Competence.AQUAJET3, Competence.AQUAJET2};
+    static Race coquillage = new Race("coquillage", 0, 25, 5, 2, 2, 1, coqu_perle);
     static Competence[] symb_comp = {Competence.VOL, Competence.VOL_OFF, Competence.VOLAGE, Competence.VIOLENT, Competence.RAPIDE};
     static Race symbalien = new Race("oiseau de symbale", 8, 21, 1, 2, 2, 1, symb_comp);
-    static Race charibe = new Race("Charibe", 10, 38, 3, 5, 5, 1, nomme_comp);
-    static Race scylla = new Race("Scylla", 12, 29, 4, 5, 5, 1, nomme_comp);
+    static Race charibe = new Race("Charibe", 13, 44, 3, 5, 5, 1, nomme_comp);
+    static Race scylla = new Race("Scylla", 15, 39, 4, 5, 5, 1, nomme_comp);
 
     public static Race[] mer = {kraken, leviathan, hippocampe, griffon, sirene, triton, coquillage, symbalien, charibe, scylla};
 
     static Competence[] vent_comp = {Competence.ESPRIT, Competence.VOL, Competence.VOL_OFF, Competence.HATE_ZEUS,
             Competence.FEAR_ZEUS, Competence.INTANGIBLE, Competence.ARMURE_FOUDRE};
-    public static Race venti = new Race("venti", 9, 28, 1, 2, 3, 1, vent_comp);
+    public static Race venti = new Race("venti", 13, 33, 1, 3, 3, 1, vent_comp);
     static Competence[] cycl_comp = {Competence.GEANT, Competence.ARMURE_NATURELLE2, Competence.VITALITE_NATURELLE2,
             Competence.FORCE_NATURELLE2, Competence.VIOLENT, Competence.AUCUNE};
-    public static Race cyclope = new Race("cyclope", 12, 35, 3, 3, 3, 2, cycl_comp);
+    public static Race cyclope = new Race("cyclope", 15, 36, 3, 3, 3, 2, cycl_comp);
     static Competence[] aura_comp = {Competence.ESPRIT, Competence.VOL, Competence.VOL_OFF,
             Competence.VOLAGE, Competence.INTANGIBLE, Competence.SPELL_IMMUNE};
-    public static Race aurai_malefique = new Race("aurai maléfique", 10, 29, 1, 3, 3, 1, aura_comp);
+    public static Race aurai_malefique = new Race("aurai maléfique", 10, 29, 1, 2, 3, 1, aura_comp);
     static Competence[] roch_comp = {Competence.VOLEUR_CASQUE, Competence.ARMURE_NATURELLE4,
             Competence.PEAU_DACIER, Competence.PEAU_MAGIQUE, Competence.ARNAQUE, Competence.DETESTE, Competence.KAMICASE};
     public static Race roche_maudite = new Race("roche maudite", 0, 38, 8, 2, 3, 1, roch_comp);
     static Competence[] dulh_comp = {Competence.PEAU_DURE, Competence.PEAU_MAGIQUE, Competence.CUIR_MAGIQUE, Competence.VAMPIRISME4,
             Competence.REVENANT, Competence.FRAPPE_SPECTRALE};
-    public static Race dullahan  = new Race("dullahan", 11, 31, 3, 3, 3, 2, dulh_comp);
+    public static Race dullahan  = new Race("dullahan", 14, 37, 3, 3, 3, 2, dulh_comp);
     static Competence[] gole_comp = {Competence.GOLEM_PIERRE, Competence.GOLEM_FER, Competence.GOLEM_ACIER, Competence.GOLEM_MITHRIL};
-    public static Race golem = new Race("golem", 6, 20, 1, 2, 2, 1, gole_comp);
+    public static Race golem = new Race("golem", 9, 25, 2, 2, 2, 2, gole_comp);
     static Competence[] arch_comp = {Competence.GEL, Competence.ARMURE_GLACE2, Competence.SPELL_IMMUNE};
-    static Race archliche = new Race("archliche", 12, 30, 2, 3, 3, 2, arch_comp);
+    static Race archliche = new Race("archliche", 12, 35, 2, 3, 3, 2, arch_comp);
     static Competence[] illu_comp = {Competence.ILLU_VENTI, Competence.ILLU_SIRENE, Competence.ILLU_CYCLOPE, Competence.ILLU_AURAI,
             Competence.ILLU_ROCHE, Competence.ILLU_DULLA, Competence.ILLU_TRITON, Competence.ILLU_GOLEM};
     static Race illusioniste = new Race("illusioniste", 8, 30, 2, 2, 3, 2, illu_comp);
-    static Race typhon = new Race("Typhon", 19, 48, 2, 5, 5, 1, nomme_comp);
-    static Race caucase = new Race("l'Aigle du Caucase", 18, 40, 3, 5, 5, 1, nomme_comp);
+    static Race typhon = new Race("Typhon", 19, 56, 2, 5, 5, 1, nomme_comp);
+    static Race caucase = new Race("l'Aigle du Caucase", 21, 45, 3, 5, 5, 1, nomme_comp);
 
     public static Race[] mont = {venti, cyclope, aurai_malefique, roche_maudite, dullahan, golem, archliche, illusioniste, typhon, caucase};
 
