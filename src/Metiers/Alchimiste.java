@@ -154,14 +154,13 @@ public class Alchimiste extends Joueur {
      * @throws IOException toujours
      */
     protected int local_popo_soin() throws IOException {
-        // TODO marquer les id des popo
         System.out.println("""
                 Ciblez une joueur ou familier (ou vous même) et entrez la potion que vous utilisez :
-                1 : potion insipide
-                2 : potion de vie
-                3 : potion de santé
-                4 : fortifiant
-                5 : potion de régénération
+                1 : potion insipide         (PV#1)
+                2 : potion de vie           (PV#2)
+                3 : potion de santé         (PV#3)
+                4 : fortifiant              (PV#4)
+                5 : potion de régénération  (PV#5)
                 6 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 7) {
@@ -191,12 +190,11 @@ public class Alchimiste extends Joueur {
      * @throws IOException toujours
      */
     protected int local_popo_res() throws IOException {
-        // TODO marquer les id des popo
         System.out.println("""
                 Ciblez une joueur (ou vous même) et entrez la potion que vous utilisez :
-                1 : potion de vigueur
-                2 : potion de résistance
-                3 : potion de solidification
+                1 : potion de vigueur           (RES#1)
+                2 : potion de résistance        (RES#2)
+                3 : potion de solidification    (RES#3)
                 4 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 4) {
@@ -225,12 +223,11 @@ public class Alchimiste extends Joueur {
      * @throws IOException toujours
      */
     protected int local_popo_force() throws IOException {
-        // TODO marquer les id des popo
         System.out.println("""
                 Ciblez une joueur (ou vous même) et entrez la potion que vous utilisez :
-                1 : potion de force
-                2 : potion de puissance
-                3 : potion du colosse
+                1 : potion de force     (ATK#1)
+                2 : potion de puissance (ATK#2)
+                3 : potion du colosse   (ATK#3)
                 4 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 4) {
@@ -255,13 +252,12 @@ public class Alchimiste extends Joueur {
      * @throws IOException toujours
      */
     protected int local_popo_mana() throws IOException {
-        // TODO marquer les id des popo
         System.out.println("""
                 Ciblez une joueur et entrez la potion que vous utilisez :
-                1 : potion énergétique
-                2 : potion d'énergie
-                3 : potion de mana
-                4 : potion ancestrale
+                1 : potion énergétique  (PP#1)
+                2 : potion d'énergie    (PP#2)
+                3 : potion de mana      (PP#3)
+                4 : potion ancestrale   (PP#4)
                 5 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 5) {
@@ -273,7 +269,10 @@ public class Alchimiste extends Joueur {
             case 1 -> PP = 1 + rand.nextInt(3);
             case 2 -> PP = 3 + rand.nextInt(3);
             case 3 -> PP = 5 + rand.nextInt(3);
-            case 4 -> PP = 8 + rand.nextInt(5);
+            case 4 -> {
+                PP = 8 + rand.nextInt(7);
+                System.out.println("Le système de mana de la cible s'agrandit temporairement et peut stocker 5PP supplémentaires.");
+            }
             case 5 -> {
                 return popo();
             }
@@ -287,11 +286,10 @@ public class Alchimiste extends Joueur {
      * @throws IOException toujours
      */
     protected int local_popo_divine() throws IOException {
-        // TODO marquer les id des popo
         System.out.println("""
                 Ciblez une joueur et entrez la potion que vous utilisez :
-                1 : potion divine
-                2 : potion élixir
+                1 : potion divine   (Div#A)
+                2 : potion élixir   (Div#B)
                 3 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 3) {
@@ -427,8 +425,6 @@ public class Alchimiste extends Joueur {
         ennemi.dommage(popo_bonus);
     }
 
-    // TODO : mettre des #x aux popo pour les identifier
-
     /**
      * Laisse l'alchimiste concoter ses potions
      * @throws IOException toujours
@@ -458,16 +454,16 @@ public class Alchimiste extends Joueur {
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 11 || ingre < 5) {
-            System.out.println("Vous avez produit une potion insipide (EX1PV).");
+            System.out.println("Vous avez produit une potion insipide (PV#1).");
         }
         else if (jet < 14) {
-            System.out.println("Vous avez produit une potion de vigeur (EX3RES).");
+            System.out.println("Vous avez produit une potion de vigeur (RES#1).");
         }
         else if (jet < 19) {
-            System.out.println("Vous avez produit une potion de résistance (EX4RES).");
+            System.out.println("Vous avez produit une potion de résistance (RES#2).");
         }
         else{
-            System.out.println("Vous avez produit une potion de solidification (M4RES1DEF).");
+            System.out.println("Vous avez produit une potion de solidification (RES#3).");
         }
     }
 
@@ -478,9 +474,9 @@ public class Alchimiste extends Joueur {
     public static void concoc_alea() throws IOException {
 
         int[] popo_cost = {1, 1, 5, 8, 4, 9, 9, 6, 10};
-        String[] popo = {"potion douteuse (EXC1D)", "potion insipide (EX1PV)", "potion toxique (EXC2D)",
-                "potion de poison (EXC3D)", "potion instable (EXD)", "potion de feu (EXD)", "de force (EX2ATK)",
-                "potion de vie (EX4PV)", "potion énergétique (M2PP)"};
+        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "potion toxique (P#2)",
+                "potion de poison (P#3)", "potion instable (E#1)", "potion de feu (E#2)", "de force (ATK#1)",
+                "potion de vie (PV#2)", "potion énergétique (PP#1)"};
 
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (max 4): ");
         int ingre = Input.readInt();
@@ -512,13 +508,13 @@ public class Alchimiste extends Joueur {
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 10 || ingre < 7) {
-            System.out.println("Vous avez produit une potion insipide (EX1PV).");
+            System.out.println("Vous avez produit une potion insipide (PV#1).");
         }
         else if (jet < 15) {
-            System.out.println("Vous avez produit une potion de santé (EX6PV).");
+            System.out.println("Vous avez produit une potion de santé (PV#3).");
         }
         else {
-            System.out.println("Vous avez produit une potion divine (ALC5PV7RES3ATK).");
+            System.out.println("Vous avez produit une potion divine (Div#A).");
         }
     }
 
@@ -529,11 +525,11 @@ public class Alchimiste extends Joueur {
     public static void concoc_serie() throws IOException {
 
         int[] popo_cost = {1, 1, 5, 8, 4, 9, 9, 6, 10, 11, 13, 11, 14, 14, 11, 14, 15, 15};
-        String[] popo = {"potion douteuse (EXC1D)", "potion insipide (EX1PV)", "potion toxique (EXC2D)", "potion de poison (EXC3D)",
-                "potion instable (EXD)", "potion de feu (EXD)", "potion de force (EX2ATK)", "potion de vie (EX4PV)",
-                "potion énergétique (M2PP)", "potion de santé (EX6PV)", "potion d'énergie (M4PP)", "potion de vigeur (EX3RES)",
-                "potion de résistance (EX4RES)", "potion de puissance (EX3ATK)", "flasque nécrosé (EXC4D)", "potion nécrotyque (EXC5D)",
-                "potion explosive (EXD)", "potion divine (ALC5PV7RES3ATK)"};
+        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "potion toxique (P#2)", "potion de poison (P#3)",
+                "potion instable (E#1)", "potion de feu (E#2)", "potion de force (ATK#1)", "potion de vie (PV#2)",
+                "potion énergétique (PP#1)", "potion de santé (PV#3)", "potion d'énergie (PP#2)", "potion de vigeur (RES#1)",
+                "potion de résistance (RES#2)", "potion de puissance (ATK#2)", "flasque nécrosé (P#4)", "potion nécrotyque (P#5)",
+                "potion explosive (E#4)", "potion divine (Div#A)"};
 
 
         System.out.println("Combien d'ingrédient allez-vous utiliser ? ");
@@ -573,19 +569,19 @@ public class Alchimiste extends Joueur {
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 10 || ingre < 5) {
-            System.out.println("Vous avez produit une potion insipide (EX1PV).");
+            System.out.println("Vous avez produit une potion insipide (PV#1).");
         }
         else if (jet < 13) {
-            System.out.println("Vous avez produit une potion énergétique (M2PP).");
+            System.out.println("Vous avez produit une potion énergétique (PP#1).");
         }
         else if (jet < 18) {
-            System.out.println("Vous avez produit une potion d'énergie (M4PP).");
+            System.out.println("Vous avez produit une potion d'énergie (PP#2).");
         }
         else if (jet < 20) {
-            System.out.println("Vous avez produit une potion de mana (M6PP).");
+            System.out.println("Vous avez produit une potion de mana (PP#3).");
         }
         else {
-            System.out.println("Vous avez produit une potion ancestrale (MM+PP).");
+            System.out.println("Vous avez produit une potion ancestrale (PP#4).");
         }
     }
 
@@ -598,16 +594,16 @@ public class Alchimiste extends Joueur {
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 9 || ingre < 4) {
-            System.out.println("Vous avez produit une potion insipide (EX1PV).");
+            System.out.println("Vous avez produit une potion insipide (PV#1).");
         }
         else if (jet < 14) {
-            System.out.println("Vous avez produit une potion de force (EX2ATK).");
+            System.out.println("Vous avez produit une potion de force (ATK#1).");
         }
         else if (jet < 16) {
-            System.out.println("Vous avez produit une potion de puissance (EX3ATK).");
+            System.out.println("Vous avez produit une potion de puissance (ATK#2).");
         }
         else {
-            System.out.println("Vous avez produit une potion du colosse (EX4ATK).");
+            System.out.println("Vous avez produit une potion du colosse (ATK#3).");
         }
     }
 
@@ -620,19 +616,19 @@ public class Alchimiste extends Joueur {
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 4 || ingre < 2) {
-            System.out.println("Vous avez produit une potion douteuse (EXC1D).");
+            System.out.println("Vous avez produit une potion douteuse (P#1).");
         }
         else if (jet < 9) {
-            System.out.println("Vous avez produit une potion instable (EXD).");
+            System.out.println("Vous avez produit une potion instable (E#1).");
         }
         else if (jet < 15) {
-            System.out.println("Vous avez produit une potion de feu (EXD).");
+            System.out.println("Vous avez produit une potion de feu (E#2).");
         }
         else if (jet < 18) {
-            System.out.println("Vous avez produit une potion explosive (EXD).");
+            System.out.println("Vous avez produit une potion explosive (E#3).");
         }
         else {
-            System.out.println("Vous avez produit une bombe (EXD).");
+            System.out.println("Vous avez produit une bombe (E#4).");
         }
     }
 
@@ -645,19 +641,19 @@ public class Alchimiste extends Joueur {
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 6 || ingre < 3) {
-            System.out.println("Vous avez produit une potion insipide (EX1PV).");
+            System.out.println("Vous avez produit une potion insipide (PV#1).");
         }
         else if (jet < 11) {
-            System.out.println("Vous avez produit une potion de vie (EX4PV).");
+            System.out.println("Vous avez produit une potion de vie (PV#2).");
         }
         else if (jet < 16) {
-            System.out.println("Vous avez produit une potion de santé (EX6PV).");
+            System.out.println("Vous avez produit une potion de santé (PV#3).");
         }
         else if (jet < 20) {
-            System.out.println("Vous avez produit un fortifiant (EX8PV).");
+            System.out.println("Vous avez produit un fortifiant (PV#4).");
         }
         else {
-            System.out.println("Vous avez produit une potion de regénération (M10PV).");
+            System.out.println("Vous avez produit une potion de régénération (PV#5).");
         }
     }
 
@@ -670,19 +666,19 @@ public class Alchimiste extends Joueur {
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 5 || ingre < 2) {
-            System.out.println("Vous avez produit une potion douteuse (EXC1D).");
+            System.out.println("Vous avez produit une potion douteuse (P#1).");
         }
         else if (jet < 8) {
-            System.out.println("Vous avez produit une potion toxique (EXC2D).");
+            System.out.println("Vous avez produit une potion toxique (P#2).");
         }
         else if (jet < 11) {
-            System.out.println("Vous avez produit une potion de poison (EXC3D).");
+            System.out.println("Vous avez produit une potion de poison (P#3).");
         }
         else if (jet < 14) {
-            System.out.println("Vous avez produit une flasque nécrosé (EXC4D).");
+            System.out.println("Vous avez produit une flasque nécrosé (P#4).");
         }
         else {
-            System.out.println("Vous avez produit une potion nécrotyque (EXC5D).");
+            System.out.println("Vous avez produit une potion nécrotyque (P#5).");
         }
     }
 
@@ -695,13 +691,13 @@ public class Alchimiste extends Joueur {
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1;
         if (jet < 12 || ingre < 9) {
-            System.out.println("Vous avez produit une potion insipide (EX1PV).");
+            System.out.println("Vous avez produit une potion insipide (PV#1).");
         }
         else if (jet < 21) {
-            System.out.println("Vous avez produit une potion de santé (EX6PV).");
+            System.out.println("Vous avez produit une potion de santé (PV#3).");
         }
         else {
-            System.out.println("Vous avez produit un élixir (ALCRESALTPVRES).");
+            System.out.println("Vous avez produit un élixir (Div#B).");
         }
     }
     

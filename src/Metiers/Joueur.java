@@ -1021,13 +1021,12 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     protected int popo_soin() throws IOException {
-        // TODO marquer les id des popo
         System.out.println("""
                 Entrez la potion que vous utilisez :
-                1 : potion insipide
-                2 : potion de vie
-                3 : potion de santé
-                4 : fortifiant
+                1 : potion insipide (PV#1)
+                2 : potion de vie   (PV#2)
+                3 : potion de santé (PV#3)
+                4 : fortifiant      (PV#4)
                 5 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 6) {
@@ -1054,11 +1053,10 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     protected int popo_res() throws IOException {
-        // TODO marquer les id des popo
         System.out.println("""
                 Entrez la potion que vous utilisez :
-                1 : potion de vigueur
-                2 : potion de résistance
+                1 : potion de vigueur       (RES#1)
+                2 : potion de résistance    (RES#2)
                 3 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 3) {
@@ -1083,12 +1081,11 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     protected int popo_force() throws IOException {
-        // TODO marquer les id des popo
         System.out.println("""
                 Entrez la potion que vous utilisez :
-                1 : potion de force
-                2 : potion de puissance
-                3 : potion du colosse
+                1 : potion de force     (ATK#1)
+                2 : potion de puissance (ATK#2)
+                3 : potion du colosse   (ATK#3)
                 4 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 4) {
@@ -1115,14 +1112,13 @@ public abstract class Joueur {
      */
     protected int popo_cd() throws IOException {
         // TODO : randomiser et booster un peu
-        // TODO marquer les id des popo
         System.out.println("""
                 Entrez la potion que vous utilisez :
-                1 : potion douteuse
-                2 : potion toxique
-                3 : potion de poison
-                4 : flasque nécrosé
-                5 : potion nécrotyque
+                1 : potion douteuse     (P#1)
+                2 : potion toxique      (P#2)
+                3 : potion de poison    (P#3)
+                4 : flasque nécrosé     (P#4)
+                5 : potion nécrotyque   (P#5)
                 6 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 6) {
@@ -1143,13 +1139,12 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     protected int popo_instable() throws IOException {
-        // TODO marquer les id des popo
         System.out.println("""
                 Entrez la potion que vous utilisez :
-                1 : potion instable
-                2 : potion de feu
-                3 : potion explosive
-                4 : bombe
+                1 : potion instable     (E#1)
+                2 : potion de feu       (E#2)
+                3 : potion explosive    (E#3)
+                4 : bombe               (E#4)
                 5 : aucune (reviens au choix des potions))""");
         return switch (Input.readInt()) {
             case 1 -> explo_instable();
