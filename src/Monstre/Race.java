@@ -100,31 +100,31 @@ public class Race {
     static Race zombie = new Race("zombie", 1, 6, 0, 0, 0, 2, zomb_comp);
     static Competence[] lich_comp = {Competence.ARMURE_GLACE, Competence.GEL};
     static Race liche = new Race("liche", 3, 8, 0, 0, 1, 2, lich_comp);
-    static Race cerbere = new Race("Cerbère", 3, 7, 1, 5, 5, 1, nomme_comp);
+    static Race cerbere = new Race("Cerbère", 3, 9, 1, 5, 5, 1, nomme_comp);
 
     public static Race[] enfers = {dynam_damn, squelette, ch_s_v, damne, guer_ske, guer_maudit, fantome, zombie, liche, cerbere};
 
     static Competence[] loup_comp = {Competence.MORSURE_EREINTANTE, Competence.MORSURE_MALADIVE, Competence.MORSURE_SAUVAGE};
     static Race loup = new Race("loup", 4, 9, 0, 0, 1, 1, loup_comp);
     static Competence[] karp_comp = {Competence.PHOTOSYNTHESE, Competence.COLERE, Competence.FEAR_DEMETER, Competence.HATE_DEMETER};
-    static Race karpoi = new Race("karpoi", 3, 9, 0, 0, 0, 1, karp_comp);
+    static Race karpoi = new Race("karpoi", 3, 9, 0, 0, 1, 1, karp_comp);
     static Competence[] basi_comp = {Competence.REGARD_APPEURANT, Competence.REGARD_MORTEL,
-            Competence.REGARD_PETRIFIANT, Competence.REGARD_TERRIFIANT, Competence.RAPIDE};
-    static Race basilic = new Race("basilic", 4, 12, 0, 1, 1, 2, basi_comp);
+            Competence.REGARD_PETRIFIANT, Competence.REGARD_TERRIFIANT};
+    static Race basilic = new Race("basilic", 4, 10, 0, 1, 1, 2, basi_comp);
     static Competence[] serp_comp = {Competence.RAPIDE, Competence.AUCUNE, Competence.POISON};
-    static Race serpent = new Race("serpent", 2, 6, 0, 0, 0, 1, serp_comp);
+    static Race serpent = new Race("serpent", 2, 6, 0, 0, 1, 1, serp_comp);
     static Competence[] serpg_comp = {Competence.RAPIDE, Competence.POISON, Competence.ARMURE_NATURELLE, Competence.VITALITE_NATURELLE, Competence.GEANT};
-    static Race serpent_geant = new Race("serpent géant", 4, 10, 0, 0, 1, 2, serpg_comp);
+    static Race serpent_geant = new Race("serpent géant", 4, 10, 0, 1, 1, 2, serpg_comp);
     static Competence[] sang_comp = {Competence.VITALITE_NATURELLE, Competence.ARMURE_NATURELLE, Competence.AUCUNE, Competence.CHARGE};
-    static Race sanglier = new Race("sanglier", 3, 10, 0, 0, 0, 1, sang_comp);
+    static Race sanglier = new Race("sanglier", 3, 10, 0, 0, 1, 1, sang_comp);
     static Competence[] sangf_comp = {Competence.ARMURE_FEU, Competence.FLAMME_ATTAQUE, Competence.FLAMME_DEFENSE};
     static Race sanglier_feu = new Race("sanglier de feu", 4, 10, 0, 1, 1, 1, sangf_comp);
     static Competence[] corn_comp = {Competence.VOL, Competence.VOL_OFF, Competence.VOLAGE, Competence.RAPIDE};
     static Race corneille = new Race("corneille", 2, 8, 0, 0, 1, 1, corn_comp);
     static Competence[] oursa_comp = {Competence.FRAGILE, Competence.BLESSE, Competence.FAIBLE};
-    static Race ours_agonisant = new Race("ours agonisant", 5, 15, 1, 1, 1, 2, oursa_comp);
-    static Race lycaon = new Race("Lycaon", 5, 15, 1, 5, 5, 1, nomme_comp);
-    static Race mormo = new Race("Mormo", 7, 12, 0, 5, 5, 1, nomme_comp);
+    static Race ours_agonisant = new Race("ours agonisant", 5, 13, 1, 1, 1, 2, oursa_comp);
+    static Race lycaon = new Race("Lycaon", 5, 17, 1, 5, 5, 1, nomme_comp);
+    static Race mormo = new Race("Mormo", 7, 14, 0, 5, 5, 1, nomme_comp);
 
     public static Race[] prairie = {loup, karpoi, basilic, serpent, serpent_geant, sanglier, sanglier_feu, corneille, ours_agonisant, lycaon, mormo};
 
