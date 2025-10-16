@@ -1111,7 +1111,6 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     protected int popo_cd() throws IOException {
-        // TODO : randomiser et booster un peu
         System.out.println("""
                 Entrez la potion que vous utilisez :
                 1 : potion douteuse     (P#1)
@@ -1125,11 +1124,16 @@ public abstract class Joueur {
             System.out.println("Unknow input");
             return popo_cd();
         }
-        if (temp == 6) {
-            return popo();
+        int poison = 0;
+        switch (temp){
+            case 1 -> poison = rand.nextInt(2) + rand.nextInt(2);
+            case 2 -> poison = 1 + rand.nextInt(3);
+            case 3 -> poison = 2 + rand.nextInt(4);
+            case 4 -> poison = 3 + rand.nextInt(4);
+            case 5 -> poison = 4 + rand.nextInt(5);
         }
         System.out.println("Vous enduisez votre lame d'une substance étrange.");
-        return -temp;
+        return -poison;
     }
 
     /**
