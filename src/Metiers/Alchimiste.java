@@ -99,8 +99,21 @@ public class Alchimiste extends Joueur {
                     return false;
                 }
             }
+            case DEXTERITE -> {
+                if (!est_berserk()) {
+                    dexterite(ennemi, bonus_popo);
+                    return false;
+                }
+            }
         }
         return super.traite_action(action, ennemi, bonus_popo);
+    }
+
+    public boolean action_consomme_popo(Action action){
+        if(action == Action.DEXTERITE){
+            return true;
+        }
+        return super.action_consomme_popo(action);
     }
     
     @Override
@@ -404,9 +417,17 @@ public class Alchimiste extends Joueur {
             return -20 - rand.nextInt(25);
         }
     }
-    // TODO traiter dextérité
+
+    /**
+     * Applique la compétence "dextérité" de l'alchimiste : utiliser 2 potions additionelles
+     * @throws IOException toujours
+     */
+    private void dexterite(Monstre ennemi, int popo_bonus) throws IOException {
+        popo_bonus += popo() + popo();
+        ennemi.dommage(popo_bonus);
+    }
+
     // TODO : mettre des #x aux popo pour les identifier
-    
 
     /**
      * Laisse l'alchimiste concoter ses potions
