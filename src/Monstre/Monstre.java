@@ -26,7 +26,7 @@ public class Monstre {
     protected Boolean assomme;       // quand l'adversaire utilise "assommer"
     protected int niveau_drop_min;
     protected int niveau_drop_max;
-    protected int drop_quantite_max;
+    protected int drop_quantite;
     protected float encaissement;   // quand l'adversaire utilise "encaisser"
     protected float part_soin;      // quand l'adversaire utilise "premier soin" en première ligne.
     protected int etat;         //l'état du corps du monstre
@@ -44,7 +44,7 @@ public class Monstre {
         this.armure = race.get_armure();
         this.niveau_drop_min = race.get_niveau_drop_min();
         this.niveau_drop_max = race.get_niveau_drop_max();
-        this.drop_quantite_max = race.get_drop_quantite();
+        this.drop_quantite = race.get_drop_quantite();
         this.competence = race.competence();
 
         this.etourdi = false;
@@ -189,7 +189,7 @@ public class Monstre {
     }
 
     public void bostDrop(int value){
-        this.drop_quantite_max += value;
+        this.drop_quantite += value;
     }
 
     /**
@@ -470,7 +470,7 @@ public class Monstre {
      */
     private void drop() throws IOException {
         System.out.println("Vous fouillez le corp de " + this.nom);
-        if(this.drop_quantite_max <= 0 || competence == Competence.ARNAQUE) {
+        if(this.drop_quantite <= 0 || competence == Competence.ARNAQUE) {
             System.out.println("Vous ne trouvez aucun équipement sur son cadavre");
             return;
         }
@@ -495,9 +495,7 @@ public class Monstre {
                 drop();
             }
         }
-        Random rand = new Random();
-        int q_drop = this.drop_quantite_max;
-        for(int i = 0; i < q_drop; i++) {
+        for(int i = 0; i < this.drop_quantite; i++) {
             int temp = this.niveau_drop_min + rand.nextInt(this.niveau_drop_max - this.niveau_drop_min + 1);
             switch(temp){
                 case 0 -> Equipement.drop_0();
