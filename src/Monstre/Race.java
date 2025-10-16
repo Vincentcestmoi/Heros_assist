@@ -181,19 +181,26 @@ public class Race {
             Competence.HATE_POSEIDON, Competence.FEAR_POSEIDON, Competence.CUIR_MAGIQUE, Competence.ARMURE_NATURELLE, Competence.VITALITE_NATURELLE};
     static Race leviathan = new Race("leviathan", 5, 30, 3, 2, 2, 2, levi_comp);
     static Competence[] hipp_comp = {Competence.RAPIDE, Competence.FEAR_POSEIDON, Competence.HATE_POSEIDON,
-        Competence.VITALITE_NATURELLE, Competence.BRUME};
+            Competence.VITALITE_NATURELLE, Competence.BRUME};
     static Race hippocampe = new Race("hippocampe", 8, 26, 1, 2, 2, 1, hipp_comp);
     static Competence[] grif_comp = {Competence.VOL, Competence.VOL_OFF, Competence.CUIR_MAGIQUE, Competence.ARMURE_NATURELLE,
-        Competence.POISON_CECITE, Competence.RAPIDE, Competence.POISON2, Competence.ESQUIVE, Competence.VIOLENT, Competence.VITALITE_NATURELLE};
+            Competence.POISON_CECITE, Competence.RAPIDE, Competence.POISON2, Competence.ESQUIVE, Competence.VIOLENT, Competence.VITALITE_NATURELLE};
     static Race griffon = new Race("griffon", 9, 25, 2, 2, 2, 2, grif_comp);
     static Competence[] sire_comp = {Competence.POISON, Competence.PEAU_MAGIQUE, Competence.FEAR_POSEIDON, Competence.HATE_POSEIDON,
+<<<<<<< HEAD:src/Monstre/Race.java
         Competence.POISON_CECITE, Competence.CHANT_SIRENE, Competence.RAPIDE};
     public static Race sirene = new Race("sirène", 7, 23, 1, 2, 2, 1, sire_comp);
     static Competence[] trit_comp = {Competence.PEAU_DURE, Competence.PEAU_MAGIQUE, Competence.VITALITE_NATURELLE,
         Competence.VIOLENT, Competence.ARMURE_NATURELLE, Competence.FEAR_POSEIDON, Competence.HATE_POSEIDON, Competence.SAUVAGE};
+=======
+            Competence.POISON_CECITE, Competence.CHANT_SIRENE, Competence.RAPIDE};
+    public static Race sirene = new Race("sirène", 7, 23, 1, 2, 2, 1, sire_comp);
+    static Competence[] trit_comp = {Competence.PEAU_DURE, Competence.PEAU_MAGIQUE, Competence.VITALITE_NATURELLE,
+            Competence.VIOLENT, Competence.ARMURE_NATURELLE, Competence.FEAR_POSEIDON, Competence.HATE_POSEIDON, Competence.SAUVAGE};
+>>>>>>> 18169247b456374409f510a2c2b5388cc2aac573:src/Race.java
     public static Race triton = new Race("triton", 9, 25, 1, 2, 2, 2, trit_comp);
     static Competence[] coqu_perle = {Competence.ARMURE_NATURELLE4, Competence.ARNAQUE, Competence.PEAU_DACIER, Competence.PERLE, Competence.AQUAJET3,
-        Competence.AQUAJET2};
+            Competence.AQUAJET2};
     static Race coquillage = new Race("coquillage", 0, 15, 5, 2, 2, 1, coqu_perle);
     static Competence[] symb_comp = {Competence.VOL, Competence.VOL_OFF, Competence.VOLAGE, Competence.VIOLENT, Competence.RAPIDE};
     static Race symbalien = new Race("oiseau de symbale", 8, 21, 1, 2, 2, 1, symb_comp);
@@ -203,6 +210,7 @@ public class Race {
     public static Race[] mer = {kraken, leviathan, hippocampe, griffon, sirene, triton, coquillage, symbalien, charibe, scylla};
 
     static Competence[] vent_comp = {Competence.ESPRIT, Competence.VOL, Competence.VOL_OFF, Competence.HATE_ZEUS,
+<<<<<<< HEAD:src/Monstre/Race.java
         Competence.FEAR_ZEUS, Competence.INTANGIBLE, Competence.ARMURE_FOUDRE};
     public static Race venti = new Race("venti", 9, 28, 1, 2, 3, 1, vent_comp);
     static Competence[] cycl_comp = {Competence.GEANT, Competence.ARMURE_NATURELLE2, Competence.VITALITE_NATURELLE2,
@@ -210,12 +218,25 @@ public class Race {
     public static Race cyclope = new Race("cyclope", 12, 35, 3, 3, 3, 2, cycl_comp);
     static Competence[] aura_comp = {Competence.ESPRIT, Competence.VOL, Competence.VOL_OFF,
         Competence.VOLAGE, Competence.INTANGIBLE, Competence.SPELL_IMMUNE};
+=======
+            Competence.FEAR_ZEUS, Competence.INTANGIBLE, Competence.ARMURE_FOUDRE};
+    public static Race venti = new Race("venti", 9, 28, 1, 2, 3, 1, vent_comp);
+    static Competence[] cycl_comp = {Competence.GEANT, Competence.ARMURE_NATURELLE2, Competence.VITALITE_NATURELLE2,
+            Competence.FORCE_NATURELLE2, Competence.VIOLENT, Competence.AUCUNE};
+    public static Race cyclope = new Race("cyclope", 12, 35, 3, 3, 3, 2, cycl_comp);
+    static Competence[] aura_comp = {Competence.ESPRIT, Competence.VOL, Competence.VOL_OFF,
+            Competence.VOLAGE, Competence.INTANGIBLE, Competence.SPELL_IMMUNE};
+>>>>>>> 18169247b456374409f510a2c2b5388cc2aac573:src/Race.java
     public static Race aurai_malefique = new Race("aurai maléfique", 10, 29, 1, 3, 3, 1, aura_comp);
     static Competence[] roch_comp = {Competence.VOLEUR_CASQUE, Competence.ARMURE_NATURELLE4,
             Competence.PEAU_DACIER, Competence.PEAU_MAGIQUE, Competence.ARNAQUE, Competence.DETESTE, Competence.KAMICASE};
     public static Race roche_maudite = new Race("roche maudite", 0, 38, 8, 2, 3, 1, roch_comp);
     static Competence[] dulh_comp = {Competence.PEAU_DURE, Competence.PEAU_MAGIQUE, Competence.CUIR_MAGIQUE, Competence.VAMPIRISME4,
+<<<<<<< HEAD:src/Monstre/Race.java
         Competence.REVENANT, Competence.FRAPPE_SPECTRALE};
+=======
+            Competence.REVENANT, Competence.FRAPPE_SPECTRALE};
+>>>>>>> 18169247b456374409f510a2c2b5388cc2aac573:src/Race.java
     public static Race dullahan  = new Race("dullahan", 11, 31, 3, 3, 3, 2, dulh_comp);
     static Competence[] gole_comp = {Competence.GOLEM_PIERRE, Competence.GOLEM_FER, Competence.GOLEM_ACIER, Competence.GOLEM_MITHRIL};
     public static Race golem = new Race("golem", 6, 20, 1, 2, 2, 1, gole_comp);
@@ -230,10 +251,18 @@ public class Race {
     public static Race[] mont = {venti, cyclope, aurai_malefique, roche_maudite, dullahan, golem, archliche, illusioniste, typhon, caucase};
 
     static Competence[] tita_comp = {Competence.CUIR_MAGIQUE, Competence.SPELL_IMMUNE, Competence.GEANT, Competence.FORCE_NATURELLE3,
+<<<<<<< HEAD:src/Monstre/Race.java
         Competence.VITALITE_NATURELLE3, Competence.ARMURE_NATURELLE3};
+=======
+            Competence.VITALITE_NATURELLE3, Competence.ARMURE_NATURELLE3};
+>>>>>>> 18169247b456374409f510a2c2b5388cc2aac573:src/Race.java
     static Race titan = new Race("titan", 25, 58, 4, 3, 4, 2, tita_comp);
     static Competence[] chro_comp = {Competence.CHRONOS};
     static Race chronos = new Race("Chronos", 35, 83, 7, 4, 4, 6, chro_comp);
 
     public static Race[] olympe = {titan, titan, titan, chronos};
+<<<<<<< HEAD:src/Monstre/Race.java
 }
+=======
+}
+>>>>>>> 18169247b456374409f510a2c2b5388cc2aac573:src/Race.java
