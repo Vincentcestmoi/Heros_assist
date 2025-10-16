@@ -985,14 +985,29 @@ public abstract class Joueur {
     /**
      * Traite l'action bonus potion
      *
-     * @return les dégats additionnel des potions (en négatif si les dommages ne s'appliquent qu'à l'attaque au corps à corps)
+     * @return les dégats additionnel des potions (en négatif si les dommages ne s'appliquent qu'à l'attaque au corps à corps).
      */
     public int popo() throws IOException {
-        System.out.println(nom + ", quelle type de potion utilisez vous : PV/RES/ATK/CD/D");
-        return switch (Input.read().toLowerCase()) {
-            case "pv", "res", "atk" -> 0; //TODO : afficher les effets de ces popo
-            case "cd" -> popo_cd();
-            case "d" -> popo_instable();
+        System.out.println(nom + """
+                ,quelle type de potion utilisez vous :
+                1 : Soin (PV)
+                2 : Résistance (RES)
+                3 : Force (ATK)
+                4 : Poison (P)
+                5 : Explosive (E)
+                6 : Aucune/Custom""");
+        int temp = Input.readInt();
+        if(temp <= 0 || temp > 6){
+            System.out.println("Unknow input.");
+            return popo();
+        }
+        return switch (temp) {
+            case 1 -> popo_soin();
+            case 2 -> popo_res();
+            case 3 -> popo_force();
+            case 4 -> popo_cd();
+            case 5 -> popo_instable();
+            case 6 -> 0;
             default -> {
                 System.out.println("Unknow input");
                 yield popo();
@@ -1001,12 +1016,104 @@ public abstract class Joueur {
     }
 
     /**
+     * Calcule et traite les soin
+     * @return 0
+     * @throws IOException toujours
+     */
+    protected int popo_soin() throws IOException {
+        // TODO marquer les id des popo
+        System.out.println("""
+                Entrez la potion que vous utilisez :
+                1 : potion insipide
+                2 : potion de vie
+                3 : potion de santé
+                4 : fortifiant
+                5 : aucune (reviens au choix des potions))""");
+        int temp = Input.readInt();
+        if (temp <= 0 || temp > 6) {
+            System.out.println("Unknow input");
+            return popo_soin();
+        }
+        int soin = 0;
+        switch (temp) {
+            case 1 -> soin = 1;
+            case 2 -> soin = 3 + rand.nextInt(2);
+            case 3 -> soin = 5 + rand.nextInt(3);
+            case 4 -> soin = 7 + rand.nextInt(4);
+            case 5 -> {
+                return popo();
+            }
+        }
+        System.out.println(nom + " se soigne de " + soin + " grâce à une potion.");
+        return 0;
+    }
+
+    /**
+     * Calcule et traite les bonus de vie
+     * @return 0
+     * @throws IOException toujours
+     */
+    protected int popo_res() throws IOException {
+        // TODO marquer les id des popo
+        System.out.println("""
+                Entrez la potion que vous utilisez :
+                1 : potion de vigueur
+                2 : potion de résistance
+                3 : aucune (reviens au choix des potions))""");
+        int temp = Input.readInt();
+        if (temp <= 0 || temp > 3) {
+            System.out.println("Unknow input");
+            return popo_res();
+        }
+        int res = 0;
+        switch (temp) {
+            case 1 -> res = 3 + rand.nextInt(2);
+            case 2 -> res = 4 + rand.nextInt(3);
+            case 3 -> {
+                return popo();
+            }
+        }
+        System.out.println(nom + " gagne temporairement " + res + " points de résistance grâce à une potion.");
+        return 0;
+    }
+
+    /**
+     * Calcule et traite les bonus d'attaque
+     * @return 0
+     * @throws IOException toujours
+     */
+    protected int popo_force() throws IOException {
+        // TODO marquer les id des popo
+        System.out.println("""
+                Entrez la potion que vous utilisez :
+                1 : potion de force
+                2 : potion de puissance
+                3 : potion du colosse
+                4 : aucune (reviens au choix des potions))""");
+        int temp = Input.readInt();
+        if (temp <= 0 || temp > 4) {
+            System.out.println("Unknow input");
+            return popo_force();
+        }
+        int force = 0;
+        switch (temp) {
+            case 1 -> force = 2 + rand.nextInt(2);
+            case 2 -> force = 3 + rand.nextInt(3);
+            case 3 -> force = 4 + rand.nextInt(4);
+            case 4 -> {
+                return popo();
+            }
+        }
+        System.out.println(nom + " gagne temporairement " + force + " points d'attaque grâce à une potion.");
+        return 0;
+    }
+
+    /**
      * Calcule et traite les dommage au corps à corps
-     *
      * @return le négatif du bonus de dommage
      * @throws IOException toujours
      */
-    private int popo_cd() throws IOException {
+    protected int popo_cd() throws IOException {
         // TODO : randomiser et booster un peu
         // TODO marquer les id des popo
         System.out.println("""
@@ -1023,9 +1130,9 @@ public abstract class Joueur {
             return popo_cd();
         }
         if (temp == 6) {
-            System.out.println("Vous enduisez votre lame d'une substance étrange.");
             return popo();
         }
+        System.out.println("Vous enduisez votre lame d'une substance étrange.");
         return -temp;
     }
 
@@ -1035,7 +1142,7 @@ public abstract class Joueur {
      * @return les dommages infligés
      * @throws IOException toujours
      */
-    private int popo_instable() throws IOException {
+    protected int popo_instable() throws IOException {
         // TODO marquer les id des popo
         System.out.println("""
                 Entrez la potion que vous utilisez :

@@ -102,7 +102,214 @@ public class Alchimiste extends Joueur {
         }
         return super.traite_action(action, ennemi, bonus_popo);
     }
+    
+    @Override
+    public int popo() throws IOException {
+        System.out.println(nom + """
+                ,quelle type de potion utilisez vous :
+                1 : Soin (PV)
+                2 : Résistance (RES)
+                3 : Force (ATK)
+                4 : Poison (P)
+                5 : Explosive (E)
+                6 : Energétique (PP)
+                7 : Divine (Div)
+                8 : Aucune/Custom""");
+        int temp = Input.readInt();
+        if(temp <= 0 || temp > 8){
+            System.out.println("Unknow input.");
+            return popo();
+        }
+        return switch (temp) {
+            case 1 -> local_popo_soin();
+            case 2 -> local_popo_res();
+            case 3 -> local_popo_force();
+            case 4 -> popo_cd() + super.popo();
+            case 5 -> popo_instable() + super.popo();
+            case 6 -> local_popo_mana();
+            case 7 -> local_popo_divine();
+            case 8 -> 0;
+            default -> {
+                System.out.println("Unknow input");
+                yield popo();
+            }
+        };
+    }
 
+    /**
+     * Calcule et traite les soin
+     * @throws IOException toujours
+     */
+    protected int local_popo_soin() throws IOException {
+        // TODO marquer les id des popo
+        System.out.println("""
+                Ciblez une joueur ou familier (ou vous même) et entrez la potion que vous utilisez :
+                1 : potion insipide
+                2 : potion de vie
+                3 : potion de santé
+                4 : fortifiant
+                5 : potion de régénération
+                6 : aucune (reviens au choix des potions))""");
+        int temp = Input.readInt();
+        if (temp <= 0 || temp > 7) {
+            System.out.println("Unknow input");
+            return local_popo_soin();
+        }
+        int soin = 0;
+        switch (temp) {
+            case 1 -> soin = 1;
+            case 2 -> soin = 3 + rand.nextInt(2);
+            case 3 -> soin = 5 + rand.nextInt(3);
+            case 4 -> soin = 7 + rand.nextInt(4);
+            case 5 -> {
+                System.out.println("La cible est soignée de " + (9 + rand.nextInt(5)) + ".");
+                return 0;
+            }
+            case 6 -> {
+                return popo();
+            }
+        }
+        System.out.println("La cible est soignée de " + soin + ".");
+        return super.popo();
+    }
+    
+    /**
+     * Calcule et traite les bonus de résistance
+     * @throws IOException toujours
+     */
+    protected int local_popo_res() throws IOException {
+        // TODO marquer les id des popo
+        System.out.println("""
+                Ciblez une joueur (ou vous même) et entrez la potion que vous utilisez :
+                1 : potion de vigueur
+                2 : potion de résistance
+                3 : potion de solidification
+                4 : aucune (reviens au choix des potions))""");
+        int temp = Input.readInt();
+        if (temp <= 0 || temp > 4) {
+            System.out.println("Unknow input");
+            return local_popo_res();
+        }
+        int res = 0;
+        switch (temp) {
+            case 1 -> res = 3 + rand.nextInt(2);
+            case 2 -> res = 4 + rand.nextInt(3);
+            case 3 -> {
+                System.out.println("La cible gagne temporairement " + (4 + rand.nextInt(2)) + " points de résistance" +
+                        " et 1 point d'armure.");
+                return 0;
+            }
+            case 4 -> {
+                return popo();
+            }
+        }
+        System.out.println("La cible gagne temporairement " + res + " points de résistance.");
+        return super.popo();
+    }
+    
+    /**
+     * Calcule et traite les bonus d'attaque
+     * @throws IOException toujours
+     */
+    protected int local_popo_force() throws IOException {
+        // TODO marquer les id des popo
+        System.out.println("""
+                Ciblez une joueur (ou vous même) et entrez la potion que vous utilisez :
+                1 : potion de force
+                2 : potion de puissance
+                3 : potion du colosse
+                4 : aucune (reviens au choix des potions))""");
+        int temp = Input.readInt();
+        if (temp <= 0 || temp > 4) {
+            System.out.println("Unknow input");
+            return local_popo_force();
+        }
+        int force = 0;
+        switch (temp) {
+            case 1 -> force = 2 + rand.nextInt(2);
+            case 2 -> force = 3 + rand.nextInt(3);
+            case 3 -> force = 4 + rand.nextInt(4);
+            case 4 -> {
+                return popo();
+            }
+        }
+        System.out.println("La cible gagne temporairement " + force + " points d'attaque.");
+        return super.popo();
+    }
+
+    /**
+     * Calcule et traite la régénèration du mana
+     * @throws IOException toujours
+     */
+    protected int local_popo_mana() throws IOException {
+        // TODO marquer les id des popo
+        System.out.println("""
+                Ciblez une joueur et entrez la potion que vous utilisez :
+                1 : potion énergétique
+                2 : potion d'énergie
+                3 : potion de mana
+                4 : potion ancestrale
+                5 : aucune (reviens au choix des potions))""");
+        int temp = Input.readInt();
+        if (temp <= 0 || temp > 5) {
+            System.out.println("Unknow input");
+            return local_popo_mana();
+        }
+        int PP = 0;
+        switch (temp) {
+            case 1 -> PP = 1 + rand.nextInt(3);
+            case 2 -> PP = 3 + rand.nextInt(3);
+            case 3 -> PP = 5 + rand.nextInt(3);
+            case 4 -> PP = 8 + rand.nextInt(5);
+            case 5 -> {
+                return popo();
+            }
+        }
+        System.out.println("La cible récupère " + PP + "PP.");
+        return 0;
+    }
+
+    /**
+     * Calcule et traite les effets des deux potions spéciale
+     * @throws IOException toujours
+     */
+    protected int local_popo_divine() throws IOException {
+        // TODO marquer les id des popo
+        System.out.println("""
+                Ciblez une joueur et entrez la potion que vous utilisez :
+                1 : potion divine
+                2 : potion élixir
+                3 : aucune (reviens au choix des potions))""");
+        int temp = Input.readInt();
+        if (temp <= 0 || temp > 3) {
+            System.out.println("Unknow input");
+            return local_popo_divine();
+        }
+        switch (temp) {
+            case 1 -> System.out.println("La cible est guérie de " + (3 + rand.nextInt(3)) + ", gagne temporairement " +
+                    (5 + rand.nextInt(5)) + " points de résistance et " + (2 + rand.nextInt(3)) + " points d'attaques.");
+            case 2 -> elixir();
+            case 3 -> {
+                return popo();
+            }
+        }
+        return 0;
+    }
+    
+    private void elixir() throws IOException {
+        System.out.println("La cible est guérie de " + switch (Input.D20()) {
+            case 4, 5, 6 -> "5 et gagne temporairement 6";
+            case 7, 8 -> "6 et gagne temporairement 8";
+            case 9, 10 -> "7 et gagne temporairement 10";
+            case 11, 12 -> "8 et gagne temporairement 12";
+            case 13, 14, 15 -> "9 et gagne temporairement 15";
+            case 16, 17 -> "10 et gagne temporairement 17";
+            case 18, 19 -> "11 et gagne temporairement 19";
+            case 20, 21, 22 -> "12 et gagne temporairement 22";
+            default -> "4 et gagne temporairement 3";
+        } + " points de résistance additionels.");
+    }
+    
     @Override
     public boolean peut_ressuciter() {
         return true;
@@ -198,8 +405,8 @@ public class Alchimiste extends Joueur {
         }
     }
     // TODO traiter dextérité
-    // TODO : Masquer les effets véritables des popo et remplacer par le contennue de Joueur.popo
     // TODO : mettre des #x aux popo pour les identifier
+    
 
     /**
      * Laisse l'alchimiste concoter ses potions
