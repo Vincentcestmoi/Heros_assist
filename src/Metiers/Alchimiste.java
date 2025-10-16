@@ -137,8 +137,16 @@ public class Alchimiste extends Joueur {
             case 1 -> local_popo_soin();
             case 2 -> local_popo_res();
             case 3 -> local_popo_force();
-            case 4 -> popo_cd() + super.popo();
-            case 5 -> popo_instable() + super.popo();
+            case 4 -> {
+                System.out.println("Vous vous dites qu'il serait contre-productif d'enduire votre lame de poison et de lancer une" +
+                        " potion explosive en même temps.");
+                yield popo_cd() + super.popo();
+            }
+            case 5 -> {
+                System.out.println("Vous vous dites qu'il serait contre-productif d'enduire votre lame de poison et de lancer une" +
+                        " potion explosive en même temps.");
+                yield popo_instable() + super.popo();
+            }
             case 6 -> local_popo_mana();
             case 7 -> local_popo_divine();
             case 8 -> 0;
