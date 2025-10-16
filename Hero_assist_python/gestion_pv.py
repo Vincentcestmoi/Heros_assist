@@ -59,7 +59,7 @@ while True:
             if pv <= 0:
                 print("Vous êtes mort.")
                 pv = 0
-            elif pv <= (pv_m * 0.8 ):
+            elif pv <= (pv_m * 0.08 ):
                 print("Votre vision se trouble, votre souffle s'épuise, vos sens s'amenuisent. La mort vous sourit.")
             elif pv <= (pv_m * 0.16 ):
                 print("La douleur vous vrille le crâne, vous ne survivrez sans doute pas au prochain coup.")
