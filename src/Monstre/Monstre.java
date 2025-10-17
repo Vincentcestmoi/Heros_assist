@@ -174,10 +174,10 @@ public class Monstre {
 
     /**
      * Nomme le golem
-     * @param materieux le type de matériaux du golem
+     * @param materiaux le type de matériaux du golem
      */
-    public void golemNom(String materieux){
-        this.nom = "golem" + materieux;
+    public void golemNom(String materiaux){
+        this.nom = "golem" + materiaux;
     }
 
     public void bostDropMax(int value){
