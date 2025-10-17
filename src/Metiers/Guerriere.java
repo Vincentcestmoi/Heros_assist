@@ -27,6 +27,22 @@ public class Guerriere extends Joueur {
         PP_max = 5;
         caracteristique = "Force naturelle, Invincibilité";
         competences = "Berserk, Lame d'aura, Rage";
+        SetEffetParent();
+    }
+
+    @Override
+    protected void presente_caracteristique(){
+        System.out.println("Force naturelle : Augmente l'attaque classique.");
+        System.out.println("Invincibilité : Permet parfois de tromper la mort.");
+    }
+
+    @Override
+    protected void presente_pouvoir(){
+        System.out.println("\"Berserk : pour 1 mana/aura, imprègne de folie meutrière l'esprit du lanceur avant qu'il " +
+                "ne frappe, augmentant sa puissance au prix de sa santé mentale.\"");
+        System.out.println("Lame d'aura : pour 3 point d'aura, lance une attaque classique surpuissante. " +
+                "Nécessite une arme pour être lancé. Détruit les armes à la fin du combat.");
+        System.out.println("Rage : Pour 1 point d'aura, augmente légèrement la folie meutrière.");
     }
 
     public Metier getMetier() {

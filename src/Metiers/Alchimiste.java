@@ -23,6 +23,18 @@ public class Alchimiste extends Joueur {
         PP_max = 11;
         caracteristique = "Dextérité";
         competences = "Fouille, Concoction";
+        SetEffetParent();
+    }
+
+    protected void presente_caracteristique(){
+        System.out.println("Dextérité : Permet d'utiliser deux potions en action bonus, ou une potion spéciale. Permet " +
+                "aussi de remplacer son action principale par 2 utilisations de potions.");
+    }
+
+    @Override
+    protected void presente_pouvoir(){
+        System.out.println("Fouille : recherche des ingrédients aux alentours. Faible chhance de réussite.");
+        System.out.println("Concoction : Dépenses des ingrédients pour réaliser une potion.");
     }
 
     public Metier getMetier() {

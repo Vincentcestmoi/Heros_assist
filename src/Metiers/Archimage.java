@@ -22,8 +22,24 @@ public class Archimage extends Joueur {
         PP = "mana";
         PP_value = 8;
         PP_max = 10;
-        caracteristique = "Double sort, Manchot, Bruyant";
+        caracteristique = "Double sort, Manchot, Bruyant, Fier";
         competences = "Sort, Méditation, Purge";
+        SetEffetParent();
+    }
+
+    @Override
+    protected void presente_caracteristique(){
+        System.out.println("Double sort : Permet de lancer deux sorts avec l'action Sort.");
+        System.out.println("Manchot : N'a qu'un bras.");
+        System.out.println("Bruyant : Inflige un malus aux jets d'explorations.");
+        System.out.println("Fier : N'utilise aucune magie autre que ses sorts d'archimage.");
+    }
+
+    @Override
+    protected void presente_pouvoir(){
+        System.out.println("Sort : Lance un puissant sort. L'intensité des sorts varie selon la quantité de mana utilisée.");
+        System.out.println("Méditation : Se repose pour récuperer du mana.");
+        System.out.println("Purge : Un sort particulier qui permet de retirer les altérations d'états."); //TODO coder avec poison
     }
 
     public Metier getMetier() {

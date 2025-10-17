@@ -31,6 +31,22 @@ public class Shaman extends Joueur {
         caracteristique = "Ame errante, Second souffle, Eclaireur";
         competences = "Incantation, Lien, Paix intérieure";
         possession_atk = 0;
+        SetEffetParent();
+    }
+
+    @Override
+    protected void presente_caracteristique(){
+        System.out.println("Ame errante : peut incanter même inconscient.");
+        System.out.println("Second souffle : Permet rarement de tromper la mort.");
+        System.out.println("Eclaireur : Augmente légèrement les dé d'exploration.");
+    }
+
+    @Override
+    protected void presente_pouvoir(){
+        System.out.println("Incantation : lance de mystérieuses incantations invoquant les forces de la nature et les esprits de ses ancêtres.");
+        System.out.println("Lien : Projete son âme dans celle d'un monstre pour tenter de les lier de force. Un monstre" +
+                " en bonne santé aura une âme puissante, alors que l'âme d'un monstre blessé est plus faible.");
+        System.out.println("Paix intérieure : Regagne instantannement sa santé mentale et son calme.");
     }
 
     public Metier getMetier() {

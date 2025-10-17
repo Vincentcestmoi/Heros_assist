@@ -16,6 +16,16 @@ public class Tryharder extends Joueur {
         PP_max = 6;
         caracteristique = "Déterminé";
         competences = "Aucune";
+        SetEffetParent();
+    }
+
+    @Override
+    protected void presente_caracteristique(){
+        System.out.println("Déterminé : Gagne (très lentement) des statistiques avec la pratique."); //TODO
+    }
+
+    @Override
+    protected void presente_pouvoir(){
     }
 
     public Metier getMetier() {

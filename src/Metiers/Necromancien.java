@@ -25,6 +25,23 @@ public class Necromancien extends Joueur {
         PP_max = 8;
         caracteristique = "Taumaturge";
         competences = "Sacrifice, Ressurection, Zombification, Appel des morts";
+        SetEffetParent();
+    }
+
+    @Override
+    protected void presente_caracteristique(){
+        System.out.println("Thaumaturge : Quand il meurt, un thaumaturge peut emporter avec lui 3 pièces d'équipements " +
+                "de son choix et 6 pièces dans l'au-delà.");
+    }
+
+    @Override
+    protected void presente_pouvoir(){
+        System.out.println("Sacrifice : Tuer un allié (familier comprit) régénère 4 mana.");
+        System.out.println("Ressurection : Pour 2 mana, tente de ramèner un joueur à la vie.");
+        System.out.println("Zombification : Pour 2 mana, tente de ramener un monstre fraichement tué à la vie sous la forme" +
+                "d'un fidèle serviteur. Peut endommager le cadavre.");
+        System.out.println("Appel des morts : Pour 4 mana ou plus, ramène à la vie un monstre mort depuis longtemps." +
+                "La réussite du sort et la puissance de l'entité invoquée depand de la quantité de mana utilisée.");
     }
 
     public Metier getMetier() {

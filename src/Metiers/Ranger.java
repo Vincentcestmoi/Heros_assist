@@ -23,6 +23,22 @@ public class Ranger extends Joueur {
         PP_max = 4;
         caracteristique = "Eclaireur, Explorateur, Oeil d'aigle";
         competences = "Assassinat, Coup critique";
+        SetEffetParent();
+    }
+
+    @Override
+    protected void presente_caracteristique(){
+        System.out.println("Eclaireur : Augmente légèrement les dé d'exploration.");
+        System.out.println("Explorateur : Augmente les dé d'exploration.");
+        System.out.println("Oeil d'aigle : augmente la probabilité et puissance des coups critiques.");
+    }
+
+    @Override
+    protected void presente_pouvoir(){
+        System.out.println("Assassinat : Pour 1 mana, se glisse discrètement derrière une cible pour " +
+                "lui infliger de gros dommage. Difficile à réaliser");
+        System.out.println("Coup critique : Pour 1 mana, tir une flèche avec une haute probabilité de faire" +
+                " des dommages additionnel, et une faible probabilitée de faire moins de dégats.");
     }
 
     public Metier getMetier() {
@@ -152,7 +168,7 @@ public class Ranger extends Joueur {
                 System.out.println("La pointe de votre flèche éclate en plein vol.");
                 ennemi.tir(tir, 0.5F);
             }
-            case 2, 3 -> ennemi.tir(tir);
+            case 2, 3 -> ennemi.tir(tir, 1.1F);
             case 4, 5 -> {
                 System.out.println("Votre flèche file droit sur " + ennemi.getNom() + " et lui porte un coup puissant.");
                 ennemi.tir(tir, 2F);

@@ -33,6 +33,7 @@ public abstract class Joueur {
     // stat
     protected int vie;
     protected int attaque;
+    protected int armure;
     protected String PP;
     protected int PP_value;
     protected int PP_max;
@@ -73,6 +74,8 @@ public abstract class Joueur {
         this.ob_f = ob_f;
         this.parent = parent;
         setNiveau(xp);
+        this.armure = 0;
+        SetEffetParent();
     }
 
     //************************************************CHARGEMENT******************************************************//
@@ -170,11 +173,32 @@ public abstract class Joueur {
     /**
      * Présente les caractéristiques et statistiques du joueur
      */
-    public void presente_base() {
-        System.out.println(nomMetier());
-        System.out.println("Base : Résistance : " + vie + " ; attaque : " + attaque + " ; " + PP + " : " + PP_value + "/" + PP_max);
+    public void presente_detail() {
+        System.out.println(nom + " descendant de " + getParent() + ", " + nomMetier());
+        System.out.print("Base : Résistance : " + vie);
+        int temp = bonusResLieux();
+        if(temp > 0){
+            System.out.print("(+" + temp + ")");
+        }
+        System.out.print(" ; attaque : " + attaque);
+        temp = bonusAtkLieux();
+        if(temp > 0){
+            System.out.print("(+" + temp + ")");
+        }
+        System.out.print(" ; armure : " + armure);
+        temp = bonusArmLieux();
+        if(temp > 0){
+            System.out.print("(+" + temp + ")");
+        }
+        System.out.println( " ; " + PP + " : " + PP_value + "/" + PP_max);
         System.out.println("Caractéristiques : " + caracteristique);
         System.out.println("Pouvoir : " + competences);
+        System.out.println();
+        presente_caracteristique();
+        System.out.println();
+        presente_pouvoir();
+        System.out.println();
+        System.out.println(DescribeEffetParent());
     }
 
     /**
@@ -188,6 +212,10 @@ public abstract class Joueur {
         }
         System.out.println(".");
     }
+
+    abstract void presente_caracteristique();
+
+    abstract void presente_pouvoir();
 
     //************************************************GETTER**********************************************************//
 
@@ -212,6 +240,68 @@ public abstract class Joueur {
             case DEMETER -> "Demeter";
             case DYONISOS -> "Dyonisos";
             case POSEIDON -> "Poseidon";
+        };
+    }
+
+    /**
+     * Applique les caractéristiques et capacités héréditaires
+     */
+    protected void SetEffetParent() {
+        switch(parent) {
+            case ARES -> {
+                if (getMetier() != Metier.GUERRIERE) {
+                    competences += ", Berserk";
+                }
+            }
+            case HADES -> {
+                if(getMetier() != Metier.NECROMANCIEN){
+                    caracteristique += ", Thaumaturge";
+                }
+            }
+            case APOLLON -> {
+                competences += ", Infection";
+            }
+            case DEMETER -> {
+                competences += ", Sérénité";
+            }
+            case DYONISOS -> {
+                caracteristique += ", Sens des affaires";
+            }
+            case POSEIDON -> {
+                competences += ", Déferlante";
+            }
+            case ZEUX -> {
+                competences += ", Foudre";
+            }
+        }
+    }
+
+    /**
+     * Présente les caractéristiques et capacités héréditaires
+     */
+    private String DescribeEffetParent() {
+        // TODO implémenter ces effets
+        return switch(parent) {
+            case ARES -> {
+                if (getMetier() != Metier.GUERRIERE) {
+                    yield "Berserk : pour 1 mana/aura, imprègne de folie meutrière l'esprit du lanceur avant qu'il " +
+                            "ne frappe, augmentant sa puissance au prit de sa santé mentale.";
+                }
+                yield "";
+            }
+            case HADES -> {
+                if(getMetier() != Metier.NECROMANCIEN){
+                    yield "Thaumaturge : Quand il meurt, un thaumaturge peut emporter avec lui 3 pièces d'équipements " +
+                            "de son choix et 6 pièces dans l'au-delà.";
+                }
+                yield "";
+            }
+            case APOLLON -> "Infection : pour 1 mana, augmente de 2 la force de tous les tirs pour un combat.";
+            case DEMETER -> "Sérénité : pour 2 mana/aura, soigne une cible.";
+            case DYONISOS -> "Sens des affaires : diminue les prix des objets en vente aux " +
+                    "marchés de 2 (à appliquer vous-même)."; //TODO
+            case POSEIDON -> "Déferlante : Un sort qui consomme 4 mana et inflige des dommages magiques";
+            case ZEUX -> "Foudre : Un sort qui consomme 5 mana et inflige des dommages magiques";
         };
     }
 
@@ -415,6 +505,85 @@ public abstract class Joueur {
 
     private boolean f_a_poison2() {
         return f_poison2;
+    }
+
+    protected int bonusResLieux(){
+        return switch(position){
+            case ASCENDANT, OLYMPE -> 0;
+            case ENFERS -> parent == Dieux.HADES ? 2 : 0;
+            case PRAIRIE -> parent == Dieux.DEMETER ? 2 : 0;
+            case VIGNES -> parent == Dieux.DYONISOS ? 4 : 0;
+            case TEMPLE -> parent == Dieux.APOLLON ? 4 : 0;
+            case MER -> parent == Dieux.POSEIDON ? 5 : 0;
+            case MONTS -> parent == Dieux.ZEUX ? 5 : 0;
+        };
+    }
+
+    protected int bonusAtkLieux(){
+        return switch(position){
+            case ASCENDANT -> 0;
+            case ENFERS -> {
+                if(parent == Dieux.HADES){
+                    yield 1;
+                }
+                yield 0;
+            }
+            case PRAIRIE -> {
+                if(parent == Dieux.DEMETER){
+                    yield 2;
+                }
+                else if(parent == Dieux.ARES){
+                    yield 1;
+                }
+                yield 0;
+            }
+            case VIGNES -> {
+                if(parent == Dieux.DYONISOS){
+                    yield 1;
+                }
+                else if(parent == Dieux.ARES){
+                    yield 1;
+                }
+                yield 0;
+            }
+            case TEMPLE -> {
+                if(parent == Dieux.APOLLON || parent == Dieux.ARES){
+                    yield 2;
+                }
+                yield 0;
+            }
+            case MER -> {
+                if(parent == Dieux.POSEIDON){
+                    yield 2;
+                }
+                else if(parent == Dieux.ARES){
+                    yield 3;
+                }
+                yield 0;
+            }
+            case MONTS -> {
+                if(parent == Dieux.ZEUX){
+                    yield 5;
+                }
+                else if(parent == Dieux.ARES){
+                    yield 3;
+                }
+                yield 0;
+            }
+            case OLYMPE -> {
+                if(parent == Dieux.ARES){
+                    yield 4;
+                }
+                yield 0;
+            }
+        };
+    }
+
+    protected int bonusArmLieux(){
+        if((position == Position.MONTS && parent == Dieux.ZEUX) || (position == Position.MER && parent == Dieux.POSEIDON)){
+            return 1;
+        }
+        return 0;
     }
 
     //************************************************METHODE INDEPENDANTE********************************************//
