@@ -72,7 +72,11 @@ public class Main {
                 }
                 case FAMILIER_MOINS -> {
                     joueur.perdre_familier();
-                    i -= 1;
+                    i --;
+                }
+                case STAT -> {
+                    joueur.presente_detail();
+                    i--;
                 }
                 case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
             }
@@ -485,7 +489,7 @@ public class Main {
             }
 
             joueurs[i] = Joueur.CreerJoueur(nom, Position.PRAIRIE, metier, 0, get_parent(), 0);
-            joueurs[i].presente_base();
+            joueurs[i].presente_detail();
             joueurs[i].presente();
             System.out.println();
         }

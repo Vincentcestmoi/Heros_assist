@@ -573,42 +573,44 @@ public class Input {
             if(peut_entrainer){
                 text += "/(en)trainer son familier";
             }
-            text += "/(c)ustom ?";
+            text += "/(c)ustom/(s)tatistique ?";
             System.out.println(text);
-            String readed = read();
+            String readed = read().toLowerCase();
             switch (readed) {
 
                 // normaux
-                case "E", "e", "explorer", "Explorer", "" -> {
+                case "e", "explorer", "" -> {
                     return Choix.EXPLORER;
                 }
-                case "d", "D", "Descendre", "descendre" -> {
+                case "d", "descendre" -> {
                     if(peut_descendre){
                         return Choix.DESCENDRE;
                     }
                     System.out.println("Exterieur.Input unknow");
                 }
-                case "m", "M", "monter", "Monter" ->{
+                case "m", "monter" ->{
                     if(peut_monter){
                         return Choix.MONTER;
                     }
                     System.out.println("Exterieur.Input unknow");
                 }
-                case "a", "A", "Aller au marche", "aller au marche", "Aller au marché", "aller au marché", "Aller",
-                     "aller", "marche", "Marche", "Marché", "marché" -> {
+                case "a", "aller au marche", "aller au marché", "aller", "marche", "marché" -> {
                     if(market){
                         return Choix.MARCHE;
                     }
                     System.out.println("Exterieur.Input unknow");
                 }
-                case "entrainer son familier", "Entrainer son familier", "en", "En", "EN", "eN" -> {
+                case "entrainer son familier", "en" -> {
                     if(peut_entrainer) {
                         return Choix.DRESSER;
                     }
                     System.out.println("Exterieur.Input unknow");
                 }
-                case "c", "C", "Custom", "custom" -> {
+                case "c", "custom" -> {
                     return Choix.ATTENDRE;
+                }
+                case "s", "stat", "stats", "statistique", "statistiques" -> {
+                    return Choix.STAT;
                 }
 
                 // caché
