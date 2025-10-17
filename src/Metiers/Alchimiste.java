@@ -5,6 +5,7 @@ import Exterieur.Input;
 import Enum.Metier;
 import Enum.Position;
 import Enum.Action;
+import Enum.Dieux;
 
 import Monstre.Monstre;
 
@@ -13,8 +14,8 @@ import java.io.IOException;
 public class Alchimiste extends Joueur {
     Metier metier = Metier.ALCHIMISTE;
 
-    public Alchimiste(String nom, Position position, int ob_f) {
-        super(nom, position, ob_f);
+    public Alchimiste(String nom, Position position, int ob_f, Dieux parent, int xp) {
+        super(nom, position, ob_f, parent, xp);
         vie = 4;
         attaque = 1;
         PP = "ingredient";

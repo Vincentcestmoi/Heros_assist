@@ -477,7 +477,6 @@ public class Combat {
             case FEAR_ZEUS -> fear(ennemi, "Zeus");
             case FEAR_DEMETER -> fear(ennemi, "Demeter");
             case FEAR_POSEIDON -> fear(ennemi, "Poseidon");
-            case FEAR_HYPNOS -> fear(ennemi, "hypnos");
             case FEAR_DYONISOS -> fear(ennemi, "Dyonisos");
             case CIBLE_CASQUE -> {
                 if (Input.yn(nom + " porte-il/elle un casque ?") && Input.D6() <= 4) {
@@ -614,7 +613,7 @@ public class Combat {
                 ennemi.bostVie(rand.nextInt(12) + 9, true);
                 ennemi.bostArmure(rand.nextInt(6) + 4, true);
                 ennemi.bostDropMax(2);
-                ennemi.bostDropMax(1);
+                ennemi.bostDropMin(1);
                 ennemi.bostDrop(2);
             }
         }

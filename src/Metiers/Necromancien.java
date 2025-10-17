@@ -5,8 +5,9 @@ import Exterieur.Input;
 import Enum.Metier;
 import Enum.Position;
 import Enum.Action;
-import Monstre.Lieu;
+import Enum.Dieux;
 
+import Monstre.Lieu;
 import Monstre.Monstre;
 
 import java.io.IOException;
@@ -15,8 +16,8 @@ public class Necromancien extends Joueur {
     Metier metier = Metier.NECROMANCIEN;
     private boolean a_maudit;
 
-    public Necromancien(String nom, Position position, int ob_f) {
-        super(nom, position, ob_f);
+    public Necromancien(String nom, Position position, int ob_f, Dieux parent, int xp) {
+        super(nom, position, ob_f, parent, xp);
         vie = 4;
         attaque = 1;
         PP = "mana";

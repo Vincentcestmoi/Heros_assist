@@ -5,6 +5,7 @@ import Exterieur.Input;
 import Enum.Metier;
 import Enum.Position;
 import Enum.Action;
+import Enum.Dieux;
 
 import Monstre.Monstre;
 import main.Main;
@@ -14,8 +15,8 @@ import java.io.IOException;
 public class Archimage extends Joueur {
     Metier metier = Metier.ARCHIMAGE;
 
-    public Archimage(String nom, Position position, int ob_f) {
-        super(nom, position, ob_f);
+    public Archimage(String nom, Position position, int ob_f, Dieux parent, int xp) {
+        super(nom, position, ob_f, parent, xp);
         vie = 4;
         attaque = 0;
         PP = "mana";

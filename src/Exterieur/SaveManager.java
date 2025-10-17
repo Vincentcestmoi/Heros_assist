@@ -112,6 +112,9 @@ public class SaveManager {
                     .add("metier", joueur.getMetier().name())
                     .add("ob_f", joueur.get_ob_f())
                     .add("position", joueur.getPosition().name())
+                    .add("xp", joueur.getXp())
+                    .add("parent", joueur.getParent().name())
+                    .add("effets", Json.createArrayBuilder())
                     .build();
 
             try (JsonWriter writer = Json.createWriter(new FileWriter(dossier + "/Joueur" + i + ".json"))) {

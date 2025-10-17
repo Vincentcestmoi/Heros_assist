@@ -6,6 +6,7 @@ import Enum.Metier;
 import Enum.Position;
 import Enum.Action;
 import Enum.Action_extra;
+import Enum.Dieux;
 
 import Equipement.Equipement;
 
@@ -25,6 +26,9 @@ public abstract class Joueur {
     protected final String nom;
     private Position position;
     private int ob_f;
+    private final Dieux parent;
+    private int xp;
+    protected int niveau;
 
     // stat
     protected int vie;
@@ -63,44 +67,180 @@ public abstract class Joueur {
     protected static int tir_bonus = 0;
     protected static int tour_modif = 0;
 
-    Joueur(String nom, Position position, int ob_f) {
+    Joueur(String nom, Position position, int ob_f, Dieux parent, int xp) {
         this.nom = nom;
         this.position = position;
         this.ob_f = ob_f;
+        this.parent = parent;
+        setNiveau(xp);
     }
 
-    public static Joueur chargerJoueur(String chemin) throws IOException {
+    //************************************************CHARGEMENT******************************************************//
+
+    /**
+     * Crée un joueur à partir de sa sauvegarde
+     * @param chemin le nom du fichier où se trouve la sauvegarde
+     * @return le joueur
+     * @throws FileNotFoundException evidemment on cherche à charger un fichier
+     */
+    public static Joueur chargerJoueur(String chemin) throws FileNotFoundException {
         try (JsonReader reader = Json.createReader(new FileReader(chemin))) {
             JsonObject json = reader.readObject();
 
+            // Les valeurs qui peuvent ne pas être écrite
+            int ob_f = 0, xp = 0;
+            Position position = Position.PRAIRIE;
+            Dieux parent = Main.get_parent();
+
             String nom = json.getString("nom");
             Metier metier = Metier.valueOf(json.getString("metier"));
-            int ob_f = json.getInt("ob_f");
-            Position position = Position.valueOf(json.getString("position"));
+            try {
+                ob_f = json.getInt("ob_f");
+            } catch (Exception e) {
+                System.out.println("Erreur : impossible de récuperer l'obéissance du familier. " + e.getMessage());
+                System.out.println("Valeur par défaut appliquée : aucun familier");
+            }
+            try {
+                position = Position.valueOf(json.getString("position"));
+            } catch (Exception e) {
+                System.out.println("Erreur : impossible de récuperer la zone. " + e.getMessage());
+                System.out.println("Valeur par défaut appliquée : Prairie");
+            }
+            try {
+                parent = Dieux.valueOf(json.getString("parent"));
+            } catch (Exception e) {
+                System.out.println("Erreur : impossible de récuperer le parent divin. " + e.getMessage());
+                System.out.println("Valeur par défaut appliquée : aléatoire : " + parent.toString());
+            }
+            try {
+                xp = json.getInt("xp");
+            } catch (Exception e) {
+                System.out.println("Erreur : impossible de récuperer l'xp du joueur. " + e.getMessage());
+                System.out.println("Valeur par défaut appliquée : 0");
+            }
 
-            return CreerJoueur(nom, position, metier, ob_f);
+            return CreerJoueur(nom, position, metier, ob_f, parent, xp);
         }
     }
 
-    public static Joueur CreerJoueur(String nom, Position position, Metier metier, int ob_f) {
+    /**
+     * Crée un joueur en fonction de ses données
+     * @param nom le nom du joueur à créer
+     * @param position la position du joueur à créer
+     * @param metier la classe du joueur à créer
+     * @param ob_f l'obéissance du joueur à créer (0 s'il n'en a pas).
+     * @param parent l'ancêtre divin du joueur à créer
+     * @param xp le total d'éxperience accumulée par lejoueur à créer
+     * @return le joueur
+     */
+    public static Joueur CreerJoueur(String nom, Position position, Metier metier, int ob_f, Dieux parent, int xp) {
         return switch (metier) {
-            case NECROMANCIEN -> new Necromancien(nom, position, ob_f);
-            case ARCHIMAGE -> new Archimage(nom, position, ob_f);
-            case ALCHIMISTE -> new Alchimiste(nom, position, ob_f);
-            case GUERRIERE -> new Guerriere(nom, position, ob_f);
-            case RANGER -> new Ranger(nom, position, ob_f);
-            case SHAMAN -> new Shaman(nom, position, ob_f);
-            case TRYHARDER -> new Tryharder(nom, position, ob_f);
+            case NECROMANCIEN -> new Necromancien(nom, position, ob_f, parent, xp);
+            case ARCHIMAGE -> new Archimage(nom, position, ob_f, parent, xp);
+            case ALCHIMISTE -> new Alchimiste(nom, position, ob_f, parent, xp);
+            case GUERRIERE -> new Guerriere(nom, position, ob_f, parent, xp);
+            case RANGER -> new Ranger(nom, position, ob_f, parent, xp);
+            case SHAMAN -> new Shaman(nom, position, ob_f, parent, xp);
+            case TRYHARDER -> new Tryharder(nom, position, ob_f, parent, xp);
         };
+    }
+
+    //************************************************SAUVEGARDE******************************************************//
+
+    public void sauvegarder(String chemin) throws IOException {
+        JsonObject joueurJson = Json.createObjectBuilder()
+                .add("nom", this.nom)
+                .add("metier", this.getMetier().name())
+                .add("ob_f", this.ob_f)
+                .add("position", this.position.name())
+                .add("xp", this.GetXpTotal())
+                .add("parent", this.parent.name())
+                .add("effets", "") // TODO
+                .build();
+
+        try (JsonWriter writer = Json.createWriter(new FileWriter(chemin))) {
+            writer.writeObject(joueurJson);
+        }
+    }
+
+    static Random rand = new Random();
+
+    //************************************************PRESENTATION****************************************************//
+
+    /**
+     * Présente les caractéristiques et statistiques du joueur
+     */
+    public void presente_base() {
+        System.out.println(nomMetier());
+        System.out.println("Base : Résistance : " + vie + " ; attaque : " + attaque + " ; " + PP + " : " + PP_value + "/" + PP_max);
+        System.out.println("Caractéristiques : " + caracteristique);
+        System.out.println("Pouvoir : " + competences);
+    }
+
+    /**
+     * Présente la condition et position du joueur
+     */
+    public void presente() {
+        System.out.print(this.nom + ", descendant de " + nomDieux() + ", est " + nomMetier() + " (niveau " + this.niveau
+                + ")" + " et se trouve " + Main.texte_pos(getPosition()));
+        if (a_familier()) {
+            System.out.print(" avec son familier");
+        }
+        System.out.println(".");
+    }
+
+    //************************************************GETTER**********************************************************//
+
+    public int getXp(){
+        return xp;
+    }
+
+    public Dieux getParent(){
+        return parent;
     }
 
     abstract public Metier getMetier();
 
     abstract protected String nomMetier();
 
-    static Random rand = new Random();
+    protected String nomDieux(){
+        return switch(parent){
+            case ZEUX -> "Zeus";
+            case ARES -> "Ares";
+            case HADES -> "Hades";
+            case APOLLON -> "Apollon";
+            case DEMETER -> "Demeter";
+            case DYONISOS -> "Dyonisos";
+            case POSEIDON -> "Poseidon";
+        };
+    }
 
-    //************************************************GETTER**********************************************************//
+    /**
+     * Convertie l'expérience en niveau et expérience
+     * Remplit les champs nécessaires
+     * @param experience l'expérience totale du joueur
+     */
+    private void setNiveau(int experience){
+        int niveau = 0;
+        while(experience > 5 * (niveau + 1)){
+            niveau++;
+            experience -= niveau * 5;
+        }
+        this.niveau = niveau;
+        this.xp = experience;
+    }
+
+    /**
+     * Convertie les niveaux et l'expérience du joueur en valeur d'xp uniquement
+     * @return l'ensemble de l'xp que le joueur possède
+     */
+    private int GetXpTotal(){
+        int xp_totale = this.xp;
+        for(int nv = this.niveau; nv > 0; nv--){
+            xp_totale += 5 * nv;
+        }
+        return xp_totale;
+    }
 
     protected void setOb(int value) {
         this.ob_f = value;
@@ -277,30 +417,15 @@ public abstract class Joueur {
         return f_poison2;
     }
 
-    //************************************************PRESENTATION****************************************************//
-
-    /**
-     * Présente les caractéristiques et statistiques du joueur
-     */
-    public void presente_base() {
-        System.out.println(nomMetier());
-        System.out.println("Base : Résistance : " + vie + " ; attaque : " + attaque + " ; " + PP + " : " + PP_value + "/" + PP_max);
-        System.out.println("Caractéristiques : " + caracteristique);
-        System.out.println("Pouvoir : " + competences);
-    }
-
-    /**
-     * Présente la condition et position du joueur
-     */
-    public void presente() {
-        System.out.print(this.nom + " est " + nomMetier() + " et se trouve " + Main.texte_pos(getPosition()));
-        if (a_familier()) {
-            System.out.print(" avec son familier");
-        }
-        System.out.println(".");
-    }
-
     //************************************************METHODE INDEPENDANTE********************************************//
+
+    protected void gagneXp(int value){
+        this.xp += value;
+        if(this.xp >= (this.niveau + 1) * 5){
+            this.niveau += 1;
+            this.xp -= this.niveau * 5;
+        }
+    }
 
     /**
      * Compte les tours pour arrêter les bonus de vent du shaman
@@ -640,22 +765,6 @@ public abstract class Joueur {
             return;
         }
         ennemi.dommage(Input.atk());
-    }
-
-
-    //************************************************SAVE/LOAD*******************************************************//
-
-    public void sauvegarder(String chemin) throws IOException {
-        JsonObject json = Json.createObjectBuilder()
-                .add("nom", nom)
-                .add("metier", getMetier().name())
-                .add("ob_f", ob_f)
-                .add("position", position.name())
-                .build();
-
-        try (JsonWriter writer = Json.createWriter(new FileWriter(chemin))) {
-            writer.writeObject(json);
-        }
     }
 
     //************************************************MAIN************************************************************//
@@ -1080,6 +1189,7 @@ public abstract class Joueur {
      * @return 0
      * @throws IOException toujours
      */
+    @SuppressWarnings("DuplicatedCode") //la fonction fille dans Alchimiste.java
     protected int popo_force() throws IOException {
         System.out.println("""
                 Entrez la potion que vous utilisez :

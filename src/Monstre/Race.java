@@ -91,7 +91,7 @@ public class Race {
     static Race damne = new Race("Damné", 1, 4, 0, 0, 0, 1, damn_comp);
     static Competence[] guerske_comp = {Competence.AUCUNE, Competence.FRAGILE, Competence.DAMN_ARES};
     static Race guer_ske = new Race("guerrier squelette", 1, 5, 0, 0, 0, 1, guerske_comp);
-    static Competence[] guermau_comp = {Competence.FEAR_POSEIDON, Competence.FEAR_DEMETER, Competence.FEAR_HYPNOS};
+    static Competence[] guermau_comp = {Competence.FEAR_POSEIDON, Competence.FEAR_DEMETER, Competence.FEAR_DYONISOS};
     static Race guer_maudit = new Race("Guerrier maudit", 2, 4, 0, 0, 0, 1, guermau_comp);
     static Competence[] fant_comp = {Competence.ESPRIT, Competence.SPELL_IMMUNE};
     static Race fantome = new Race("fantôme", 3, 3, 0, 0, 0, 2, fant_comp);

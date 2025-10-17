@@ -7,6 +7,7 @@ import Metiers.Joueur;
 import Enum.Metier;
 import Enum.Position;
 import Enum.Choix;
+import Enum.Dieux;
 
 import Monstre.Lieu;
 import Monstre.Monstre;
@@ -482,7 +483,8 @@ public class Main {
                     }
                 }
             }
-            joueurs[i] = Joueur.CreerJoueur(nom, Position.PRAIRIE, metier, 0);
+
+            joueurs[i] = Joueur.CreerJoueur(nom, Position.PRAIRIE, metier, 0, get_parent(), 0);
             joueurs[i].presente_base();
             joueurs[i].presente();
             System.out.println();
@@ -505,6 +507,15 @@ public class Main {
      */
     public static int corriger(float valeur, int min){
         return max(Math.round(valeur), min);
+    }
+
+    /**
+     * Renvoie un parent divin aléatoire
+     * @return un dieu
+     */
+    public static Dieux get_parent(){
+        Dieux[] t = {Dieux.POSEIDON, Dieux.ZEUX, Dieux.HADES, Dieux.ARES, Dieux.DYONISOS, Dieux.APOLLON, Dieux.DEMETER};
+        return t[rand.nextInt(t.length)];
     }
 
 }

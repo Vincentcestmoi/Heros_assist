@@ -15,7 +15,6 @@ public enum Competence {
     DAMN_ARES,  //done
     FEAR_POSEIDON,  //done
     FEAR_DEMETER,   //done
-    FEAR_HYPNOS,    //done
     FEAR_DYONISOS,  //done
     FEAR_ZEUS,      //done
     HATE_ZEUS,      //done
