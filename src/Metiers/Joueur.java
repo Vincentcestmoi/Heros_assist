@@ -258,21 +258,11 @@ public abstract class Joueur {
                     caracteristique += ", Thaumaturge";
                 }
             }
-            case APOLLON -> {
-                competences += ", Infection";
-            }
-            case DEMETER -> {
-                competences += ", Sérénité";
-            }
-            case DYONISOS -> {
-                caracteristique += ", Sens des affaires";
-            }
-            case POSEIDON -> {
-                competences += ", Déferlante";
-            }
-            case ZEUX -> {
-                competences += ", Foudre";
-            }
+            case APOLLON -> competences += ", Infection";
+            case DEMETER -> competences += ", Sérénité";
+            case DYONISOS -> caracteristique += ", Sens des affaires";
+            case POSEIDON -> competences += ", Déferlante";
+            case ZEUX -> competences += ", Foudre";
         }
     }
 
