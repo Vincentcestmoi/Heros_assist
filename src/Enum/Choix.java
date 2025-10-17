@@ -7,6 +7,7 @@ public enum Choix {
     DRESSER,
     MARCHE,
     ATTENDRE,
+    STAT,
     QUITTER,
     FAMILIER_PLUS,
     FAMILIER_MOINS,
