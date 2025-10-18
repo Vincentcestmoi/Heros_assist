@@ -9,6 +9,7 @@ import Enum.Position;
 import Enum.Action;
 import Enum.Action_extra;
 import Enum.Competence;
+import Enum.Dieux;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -465,19 +466,22 @@ public class Combat {
             case DAMNATION_RES -> System.out.println(nom + " perd 2 points de vie pour la durée du combat.");
             case DAMNATION_ATK -> System.out.println(nom + " perd 1 point d'attaque pour la durée du combat.");
             case DAMN_ARES -> {
-                if (Input.yn("Un de vous est-il descendant d'Ares ?")) {
-                    System.out.println(ennemi.getNom() + " vous maudit.");
-                    System.out.println("Tout descendant d'Arès perd 2 points d'attaque pour la durée du combat.");
+                for(int i = 0; i < Main.nbj; i++){
+                    if(Main.joueurs[i].getParent() == Dieux.ARES){
+                        System.out.println(ennemi.getNom() + " vous maudit.");
+                        System.out.println("Tout descendant d'Arès perd 2 points d'attaque pour la durée du combat.");
+                        break;
+                    }
                 }
             }
-            case HATE_DEMETER -> hate(ennemi, "Demeter");
-            case HATE_DYONISOS -> hate(ennemi, "Dyonisos");
-            case HATE_POSEIDON -> hate(ennemi, "Poseidon");
-            case HATE_ZEUS -> hate(ennemi, "Zeus");
-            case FEAR_ZEUS -> fear(ennemi, "Zeus");
-            case FEAR_DEMETER -> fear(ennemi, "Demeter");
-            case FEAR_POSEIDON -> fear(ennemi, "Poseidon");
-            case FEAR_DYONISOS -> fear(ennemi, "Dyonisos");
+            case HATE_DEMETER -> hate(ennemi, Dieux.DEMETER);
+            case HATE_DYONISOS -> hate(ennemi, Dieux.DYONISOS);
+            case HATE_POSEIDON -> hate(ennemi, Dieux.POSEIDON);
+            case HATE_ZEUS -> hate(ennemi, Dieux.ZEUX);
+            case FEAR_ZEUS -> fear(ennemi, Dieux.ZEUX);
+            case FEAR_DEMETER -> fear(ennemi, Dieux.DEMETER);
+            case FEAR_POSEIDON -> fear(ennemi, Dieux.POSEIDON);
+            case FEAR_DYONISOS -> fear(ennemi, Dieux.DYONISOS);
             case CIBLE_CASQUE -> {
                 if (Input.yn(nom + " porte-il/elle un casque ?") && Input.D6() <= 4) {
                     System.out.println(ennemi.getNom() + " fait tomber votre casque pour le combat.");
@@ -496,8 +500,8 @@ public class Combat {
             case FORCE_NATURELLE -> ennemi.bostAtk(2, true);
             case FORCE_NATURELLE2 -> ennemi.bostAtk(4, true);
             case FORCE_NATURELLE3 -> ennemi.bostAtk(6, true);
-            case PRUDENT -> {
-                int tolerance = ennemi.getVieMax();
+            case PRUDENT -> { //n'attaque pas s'il se fait OS
+                int tolerance = ennemi.getVieMax() + ennemi.getArmure();
                 for (int i = 0; i < Main.nbj; i++) {
                     if (Main.joueurs[i].est_actif()) {
                         System.out.print(Main.joueurs[i].getNom() + " ");
@@ -506,14 +510,14 @@ public class Combat {
                             System.out.print("Familier de " + Main.joueurs[i].getNom() + " ");
                             tolerance -= Input.atk();
                         }
-                        if (tolerance < 0) {
+                        if (tolerance <= 0) {
                             System.out.println(ennemi.getNom() + " fuit en vous voyant avancer.");
                             return true;
                         }
                     }
                 }
             }
-            case SUSPICIEUX -> {
+            case SUSPICIEUX -> { //n'attaque que s'il peut tuer tout le monde en 2 coups
                 int tolerance = ennemi.getAtk() * 2;
                 for (int i = 0; i < Main.nbj; i++) {
                     if (Main.joueurs[i].est_actif()) {
@@ -532,7 +536,7 @@ public class Combat {
                     }
                 }
             }
-            case MEFIANT -> {
+            case MEFIANT -> { // fuit s'il n'a pas de meilleures stats
                 int tolerance = ennemi.getVieMax() + ennemi.getArmure() * 3 + ennemi.getAtk();
                 for (int i = 0; i < Main.nbj; i++) {
                     if (Main.joueurs[i].est_actif()) {
@@ -555,7 +559,7 @@ public class Combat {
             }
             case REGARD_APPEURANT -> {
                 System.out.println(nom + " croise le regard de " + ennemi.getNom());
-                if (Input.D4() != 4) {
+                if (Input.D4() < 4) {
                     System.out.println(nom + " est appeuré(e) et perd 1 points d'attaque pour la durée du combat");
                 }
             }
@@ -584,7 +588,7 @@ public class Combat {
                 ennemi.bostArmure(-1, true);
             }
             case BRUME ->
-                    System.out.println(ennemi.getNom() + "crée un rideau de brûme, tous les participants perdent 1 point d'attaque pour la durée du combat.");
+                    System.out.println(ennemi.getNom() + "crée un rideau de brûme.");
             case GOLEM_PIERRE -> {
                 ennemi.golemNom(" de pierre");
                 ennemi.bostAtk(rand.nextInt(3) + 1, true);
@@ -623,26 +627,29 @@ public class Combat {
     /**
      * Applique les compétence de type HATE des monstres
      * @param ennemi le monstre en question
-     * @param dieu le nom du dieu qu'il haït
-     * @throws IOException toujours
+     * @param dieu le dieu qu'il haït
      */
-    private static void hate(Monstre ennemi, String dieu) throws IOException {
-        if (Input.yn("Un de vous est-il descendant de " + dieu + " ?")) {
-            System.out.println(ennemi.getNom() + " vous regarde avec haine.");
-            ennemi.bostAtk(1, false);
+    private static void hate(Monstre ennemi, Dieux dieu) {
+        for(int i = 0; i < Main.nbj; i++){
+            if(Main.joueurs[i].getParent() == dieu){
+                System.out.println(ennemi.getNom() + " vous regarde avec haine.");
+                ennemi.bostAtk(1 + rand.nextInt(2), false);
+                return;
+            }
         }
     }
 
     /**
      * Applique les compétence de type FEAR des monstres
      * @param ennemi le monstre en question
-     * @param dieu le nom du dieu qu'il craint
-     * @throws IOException toujours
+     * @param dieu le dieu qu'il craint
      */
-    private static void fear(Monstre ennemi, String dieu) throws IOException {
-        if (Input.yn("Un de vous est-il descendant de " + dieu + " ?")) {
-            System.out.println(ennemi.getNom() + " vous crains.");
-            ennemi.bostAtk(-1, false);
+    private static void fear(Monstre ennemi, Dieux dieu) {
+        for(int i = 0; i < Main.nbj; i++) {
+            if (Main.joueurs[i].getParent() == dieu) {
+                System.out.println(ennemi.getNom() + " vous crains.");
+                ennemi.bostAtk(-1 - rand.nextInt(2), false);
+            }
         }
     }
 

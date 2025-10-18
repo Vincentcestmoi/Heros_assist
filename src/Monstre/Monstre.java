@@ -554,7 +554,7 @@ public class Monstre {
             }
             case RAPIDE -> {
                 System.out.println(nom + " esquive partiellement votre projectile.");
-                degas = Main.corriger((float) degas / 2);
+                degas = Main.corriger(degas * 0.5f);
             }
             case FLAMME_DEFENSE -> {
                 System.out.println("Votre projectile brûle en s'approchant de " + nom + ".");
@@ -574,7 +574,7 @@ public class Monstre {
             }
             case PEAU_DURE, GOLEM_PIERRE, CHRONOS -> {
                 System.out.println("La peau dure de " + nom + " amortie une partie de l'impact");
-                degas = Main.corriger((float) (degas * 0.85));
+                degas = Main.corriger(degas * 0.85f);
             }
             case CHANT_SIRENE -> {
                 System.out.println("Le chant de " + nom + " perturbe le tir.");
@@ -584,7 +584,7 @@ public class Monstre {
             }
             case PEAU_DACIER, GOLEM_ACIER, GOLEM_FER -> {
                 System.out.println("La peau extrêmement dure de " + this.nom + " absorbe l'essentiel de l'impact.");
-                degas = Main.corriger((float) degas / 20);
+                degas = Main.corriger(degas * 0.05f);
             }
             case INTANGIBLE -> {
                 System.out.println("Votre projectile passe au travers de " + nom + " sans l'affecter.");
@@ -592,8 +592,9 @@ public class Monstre {
             }
             case GOLEM_MITHRIL -> {
                 System.out.println("La peau particulièrement solide de " + this.nom + " réduit l'impact.");
-                degas = Main.corriger((float) degas * 0.75F);
+                degas = Main.corriger(degas * 0.75F);
             }
+            case BRUME -> degas = max(degas - 2, 0);
         }
         return degas;
     }
@@ -641,11 +642,11 @@ public class Monstre {
             }
             case PEAU_MAGIQUE -> {
                 System.out.println("La peau de " + nom + " diminue l'impact du sort.");
-                degas = Main.corriger((float) degas / 2);
+                degas = Main.corriger(degas * 0.5f);
             }
             case CUIR_MAGIQUE -> {
                 System.out.println("Le cuir de " + nom + " absorbe l'essentiel de l'impact du sort.");
-                degas = Main.corriger((float) degas / 10);
+                degas = Main.corriger(degas * 0.1f);
             }
             case CHANT_SIRENE -> {
                 System.out.println("Le chant de " + nom + " perturbe le lancement du sort.");
@@ -655,15 +656,15 @@ public class Monstre {
             }
             case PEAU_DACIER -> {
                 System.out.println("La peau extrêmement dure de " + this.nom + " absorbe une partie de l'impact du sort.");
-                degas = Main.corriger((float) degas / 2);
+                degas = Main.corriger(degas * 0.5f);
             }
             case GOLEM_PIERRE, GOLEM_FER, GOLEM_ACIER -> {
                 System.out.println("La constitution particulière de " + this.nom + " diminue légèrement l'impact du sort.");
-                degas = Main.corriger((float)degas * 0.9F);
+                degas = Main.corriger(degas * 0.9F);
             }
             case GOLEM_MITHRIL -> {
                 System.out.println("La matériaux particulier composant " + this.nom + " réduise immensément l'impact du sort.");
-                degas = Main.corriger((float)degas / 20);
+                degas = Main.corriger(degas * 0.05f);
             }
         }
         return degas;
@@ -727,15 +728,7 @@ public class Monstre {
      * @throws IOException toujours
      */
     public void dommage(int quantite, float mult) throws IOException {
-        if(quantite <= 0){
-            return;
-        }
-        int degas = applique_competence_dommage((Main.corriger(quantite * mult) - this.armure));
-        subit_dommage(degas, false);
-        if(!est_mort()) {
-            applique_competence_post_dommage();
-        }
-        System.out.println();
+        dommage(Main.corriger(quantite * mult));
     }
 
     /**
@@ -779,19 +772,20 @@ public class Monstre {
                 degas = Main.corriger((float) degas * 0.9F);
             }
             case CHANT_SIRENE -> {
-                System.out.println("Le chant de " + nom + " perturbe le lancement du sort.");
+                System.out.println("Le chant de " + nom + " perturbe l'attaque'.");
                 if(Input.D8() <= 1){
                     degas = degas > 4 ? degas - 4 : 0;
                 }
             }
             case PEAU_DACIER, GOLEM_ACIER -> {
                 System.out.println("La peau extrêmement dure de " + this.nom + " absorbe l'essentiel de l'assaut.");
-                degas = Main.corriger((float) degas / 10);
+                degas = Main.corriger(degas * 0.1f);
             }
             case GOLEM_MITHRIL -> {
                 System.out.println("La peau particulièrement solide de " + this.nom + " absorbe une grande partie de l'assaut.");
-                degas = Main.corriger((float) degas / 2);
+                degas = Main.corriger(degas * 0.5f);
             }
+            case BRUME -> degas -= 1;
         }
         return degas;
     }
