@@ -13,6 +13,11 @@ public enum Action {
     F_SEUL,
     OFF,
     AVANCER,
+    PROTEGER,
+    END,
+    AUCUNE,
+
+    //metier
     MAUDIR,
     SORT,
     BERSERK,
@@ -27,7 +32,10 @@ public enum Action {
     INCANTATION,
     LIEN,
     CALME,
-    PROTEGER,
-    END,
-    AUCUNE,
+
+    //divinité
+    INFECTION,
+    SERENITE,
+    INONDATION,
+    FOUDRE,
 }

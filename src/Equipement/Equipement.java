@@ -15,6 +15,7 @@ public class Equipement {
     private String effet;
     private final Rang rang;
     private final Base base;
+    private final int prix;
 
     static Random rand = new Random();
 
@@ -38,8 +39,34 @@ public class Equipement {
             }
         }
         applique_effet(pre.effet);
+        this.prix = 0;
     }
 
+    Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix) {
+        this.nom = nom;
+        this.attaque = attaque;
+        this.resistance = resistance;
+        this.armure = armure;
+        this.rang = rang;
+        this.base = base;
+        this.prix = prix;
+        this.effet = null;
+    }
+
+    Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix, String effet) {
+        this.nom = nom;
+        this.attaque = attaque;
+        this.resistance = resistance;
+        this.armure = armure;
+        this.rang = rang;
+        this.base = base;
+        this.prix = prix;
+        this.effet = effet;
+    }
+
+    /**
+     * Crée un sac standard en fonction de son rang
+     */
     private void make_sac() {
         this.attaque = 0;
         this.armure = 0;
@@ -52,26 +79,6 @@ public class Equipement {
                 this.armure = 1;
             }
         }
-    }
-
-    Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix) {
-        this.nom = nom;
-        this.attaque = attaque;
-        this.resistance = resistance;
-        this.armure = armure;
-        this.rang = rang;
-        this.base = base;
-        this.effet = "prix : " + prix;
-    }
-
-    Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix, String effet) {
-        this.nom = nom;
-        this.attaque = attaque;
-        this.resistance = resistance;
-        this.armure = armure;
-        this.rang = rang;
-        this.base = base;
-        this.effet = effet + "\nprix : " + prix;
     }
 
     /**
@@ -500,10 +507,15 @@ public class Equipement {
         }
     }
 
+    private void presente(){
+        presente(0);
+    }
+
     /**
-     *
+     * Présente l'objet
+     * @param reduction la réduction sur le coup de l'objet
      */
-    public void presente(){
+    private void presente(int reduction){
         String type = getString();
         System.out.println("\n" + this.nom + " (" + type + ")");
         if(this.attaque > 0){
@@ -526,6 +538,15 @@ public class Equipement {
         }
         if(this.effet != null){
             System.out.println(this.effet);
+        }
+        if(this.prix > 0){
+            int temp = this.prix - reduction;
+            if(temp > 0){
+                System.out.println("Prix : " + temp);
+            }
+            else{
+                System.out.println("Prix : 1");
+            }
         }
         System.out.println();
     }
@@ -629,7 +650,7 @@ public class Equipement {
     static Equipement[] marcheIII = {arc_III, main1_III, main2_III, armure_III, bouclier_III, casque_III, ingredients_III, ingredients2_III};
 
     @SuppressWarnings("DuplicatedCode")
-    public static void marche_prairie() {
+    public static void marche_prairie(int reduc) {
         System.out.println("Vous êtes dans le marché des prairies et 3 objets vous sont proposés :");
         int i;
         Equipement a, b;
@@ -664,12 +685,12 @@ public class Equipement {
             i = rand.nextInt(list.length);
         }while(list[i] == b || list[i] == a);
 
-        a.presente();
-        b.presente();
-        list[i].presente();
+        a.presente(reduc);
+        b.presente(reduc);
+        list[i].presente(reduc);
     }
 
-    public static void marche_vigne() {
+    public static void marche_vigne(int reduc) {
         System.out.println("Vous êtes dans le marché des vignes et 3 objets vous sont proposés :");
         int i;
         Equipement a, b;
@@ -686,17 +707,17 @@ public class Equipement {
             i = rand.nextInt(list.length);
         } while (list[i] == b || list[i] == a);
 
-        a.presente();
-        b.presente();
-        list[i].presente();
+        a.presente(reduc);
+        b.presente(reduc);
+        list[i].presente(reduc);
     }
 
     @SuppressWarnings("DuplicatedCode")
-    public static void marche_temple() {
+    public static void marche_temple(int reduc) {
         int nbo = rand.nextInt(3) + 2;
         System.out.println("Vous trouvez un marchant dans le temple, qui vous propose " + nbo + " objets :");
         int i;
-        Equipement a, b, c = null;
+        Equipement a, b, c = null, d = null;
         Equipement[] list;
 
         if (rand.nextBoolean()) {
@@ -737,19 +758,20 @@ public class Equipement {
             do {
                 i = rand.nextInt(list.length);
             } while (list[i] == b || list[i] == a || list[i] == c);
+            d = list[i];
         }
 
-        a.presente();
-        b.presente();
+        a.presente(reduc);
+        b.presente(reduc);
         if(nbo > 2){
-            c.presente();
+            c.presente(reduc);
         }
         if(nbo > 3) {
-            list[i].presente();
+            d.presente(reduc);
         }
     }
 
-    public static void marche_mer() {
+    public static void marche_mer(int reduc) {
         System.out.println("Vous croisez un navire marchand qui vous propose 2 objets :");
         Equipement[] list;
         if(rand.nextBoolean()){
@@ -769,12 +791,12 @@ public class Equipement {
         do{
             i = rand.nextInt(list.length);
         }while(list[i] == a);
-        a.presente();
-        list[i].presente();
+        a.presente(reduc);
+        list[i].presente(reduc);
     }
 
-    public static void marche_monts() {
+    public static void marche_monts(int reduc) {
         System.out.println("Vous croisez un pelerin qui vous propose de vous vendre un objet :");
-        marcheIII[rand.nextInt(marcheIII.length)].presente();
+        marcheIII[rand.nextInt(marcheIII.length)].presente(reduc);
     }
 }

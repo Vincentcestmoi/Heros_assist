@@ -209,10 +209,8 @@ public class Guerriere extends Joueur {
         return 0;
     }
 
-    /**
-     * Lance le sort berserk : rend le joueur berserk
-     */
-    private void berserk(){
+    @Override
+    protected void berserk(){ //valeur différentes de la capa héréditaire
         System.out.println(nom + " est prit d'une folie meurtrière !");
         berserk = 0.2f + 0.1f * rand.nextInt(9); //0.2 à 1
     }

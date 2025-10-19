@@ -68,6 +68,8 @@ public abstract class Joueur {
     protected static int tir_bonus = 0;
     protected static int tour_modif = 0;
 
+    protected int bonus_infection;
+
     Joueur(String nom, Position position, int ob_f, Dieux parent, int xp) {
         this.nom = nom;
         this.position = position;
@@ -261,7 +263,7 @@ public abstract class Joueur {
             case APOLLON -> competences += ", Infection";
             case DEMETER -> competences += ", Sérénité";
             case DYONISOS -> caracteristique += ", Sens des affaires";
-            case POSEIDON -> competences += ", Déferlante";
+            case POSEIDON -> competences += ", Inondation";
             case ZEUX -> competences += ", Foudre";
         }
     }
@@ -270,28 +272,26 @@ public abstract class Joueur {
      * Présente les caractéristiques et capacités héréditaires
      */
     private String DescribeEffetParent() {
-        // TODO implémenter ces effets
         return switch(parent) {
             case ARES -> {
                 if (getMetier() != Metier.GUERRIERE) {
                     yield "Berserk : pour 1 mana/aura, imprègne de folie meutrière l'esprit du lanceur avant qu'il " +
-                            "ne frappe, augmentant sa puissance au prit de sa santé mentale.";
+                            "ne frappe, augmentant sa puissance au prix de sa santé mentale.";
                 }
                 yield "";
             }
             case HADES -> {
                 if(getMetier() != Metier.NECROMANCIEN){
                     yield "Thaumaturge : Quand il meurt, un thaumaturge peut emporter avec lui 3 pièces d'équipements " +
-                            "de son choix et 6 pièces dans l'au-delà.";
+                            "de son choix et 6PO dans l'au-delà.";
                 }
                 yield "";
             }
-            case APOLLON -> "Infection : pour 1 mana, augmente de 2 la force de tous les tirs pour un combat.";
+            case APOLLON -> "Infection : pour 1 mana, augmente les dommages de vos tirs pour un combat.";
             case DEMETER -> "Sérénité : pour 2 mana/aura, soigne une cible.";
-            case DYONISOS -> "Sens des affaires : diminue les prix des objets en vente aux " +
-                    "marchés de 2 (à appliquer vous-même)."; //TODO
-            case POSEIDON -> "Déferlante : Un sort qui consomme 4 mana et inflige des dommages magiques";
-            case ZEUX -> "Foudre : Un sort qui consomme 5 mana et inflige des dommages magiques";
+            case DYONISOS -> "Sens des affaires : diminue les prix des objets en vente aux marchés.";
+            case POSEIDON -> "Inondation : Un sort qui consomme 4 mana et inflige de gros dommages magiques.";
+            case ZEUX -> "Foudre : Un sort qui consomme 5 mana et inflige de puissants dommages magiques.";
         };
     }
 
@@ -636,6 +636,7 @@ public abstract class Joueur {
         f_front = false;
         attaque_bonus = 0;
         tir_bonus = 0;
+        bonus_infection = 0;
         tour_modif = 0;
         if (a_familier() && Input.yn("Est-ce que votre familier participe au combat ?")) {
             f_actif = true;
@@ -784,6 +785,7 @@ public abstract class Joueur {
         bonus += critique_tir(base);
         bonus += bonus_tir();
         bonus += tir_bonus;
+        bonus += bonus_infection;
         bonus += bonus_popo;
         ennemi.tir(base + Main.corriger(bonus, 0));
     }
@@ -850,6 +852,11 @@ public abstract class Joueur {
         System.out.println(nom + " est mort.");
         ob_f = 0;
         position = Position.ENFERS;
+        if(this.parent == Dieux.HADES || getMetier() != Metier.NECROMANCIEN){ //TODO surcharge nécro
+            System.out.println("Grâce à vos dons héréditaires, vous pouvez choisir 3 pièces d'équipements " +
+                    "que vous conservez (vous devez entrer à nouveau les effets cachées). De plus, vous pouvez conserver" +
+                    " jusqu'à 6 PO.");
+        }
     }
 
     /**
@@ -1108,12 +1115,16 @@ public abstract class Joueur {
     }
 
     public void aller_au_marche() {
+        int reduc = 0;
+        if(getParent() == Dieux.DYONISOS){
+            reduc = 2;
+        }
         switch (position) {
-            case PRAIRIE -> Equipement.marche_prairie();
-            case VIGNES -> Equipement.marche_vigne();
-            case TEMPLE -> Equipement.marche_temple();
-            case MER -> Equipement.marche_mer();
-            case MONTS -> Equipement.marche_monts();
+            case PRAIRIE -> Equipement.marche_prairie(reduc);
+            case VIGNES -> Equipement.marche_vigne(reduc);
+            case TEMPLE -> Equipement.marche_temple(reduc);
+            case MER -> Equipement.marche_mer(reduc);
+            case MONTS -> Equipement.marche_monts(reduc);
             case ENFERS, OLYMPE -> System.out.println("Erreur : Il n'y a pas de marché ici.");
             case ASCENDANT -> System.out.println("ERROR : DONOT");
         }
@@ -1166,6 +1177,21 @@ public abstract class Joueur {
         }
         if (!est_berserk()) {
             text += "/(p)remier soin";
+            if (getParent() == Dieux.ARES && getMetier() != Metier.GUERRIERE) {
+                text += "/(b)erserker";
+            }
+            if(getParent() == Dieux.APOLLON){
+                text += "/(i)nfection";
+            }
+            if(getParent() == Dieux.DEMETER){
+                text += "/sé(r)enité";
+            }
+            if(getParent() == Dieux.POSEIDON){
+                text += "/(i)nondation";
+            }
+            if(getParent() == Dieux.ZEUX){
+                text += "/(f)oudre";
+            }
         }
         text += "/(f)uir/(c)ustom/(o)ff";
         return text;
@@ -1189,12 +1215,44 @@ public abstract class Joueur {
     /**
      * Extension de la fonction Input.action, permet de jouer les action de métier
      *
-     * @param choix        le choix fait par le joueur (en lowercase)
+     * @param choix le choix fait par le joueur (en lowercase)
      * @param est_familier s'il s'agit d'un familier ou d'un joueur
-     * @return si le tour a été joué
+     * @return l'action à jouer, ou AUCUNE si le choix n'est pas reconnu
      */
     public Action action(String choix, boolean est_familier) throws IOException {
-        return Action.AUCUNE;
+        if(est_familier){
+            return Action.AUCUNE;
+        }
+        return switch (choix) {
+            case "b" -> {
+                if(!est_berserk() && getParent() == Dieux.ARES && getMetier() != Metier.GUERRIERE){
+                    yield Action.BERSERK; //version légèrement différente de la guerrière
+                }
+                yield Action.AUCUNE;
+            }
+            case "i" -> {
+                if(getParent() == Dieux.APOLLON){
+                    yield Action.INFECTION;
+                }
+                if(getParent() == Dieux.POSEIDON){
+                    yield Action.INONDATION;
+                }
+                yield Action.AUCUNE;
+            }
+            case "r" -> {
+                if(getParent() == Dieux.DEMETER){
+                    yield Action.SERENITE;
+                }
+                yield Action.AUCUNE;
+            }
+            case "f" -> {
+                if(getParent() == Dieux.ZEUX){
+                    yield Action.FOUDRE;
+                }
+                yield Action.AUCUNE;
+            }
+            default -> Action.AUCUNE;
+        };
     }
 
     /**
@@ -1203,7 +1261,29 @@ public abstract class Joueur {
      * @return s'il faut encore réaliser l'action
      */
     public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
-        return true;
+        return switch (action) {
+            case BERSERK -> {
+                berserk();
+                yield true;
+            }
+            case INFECTION -> {
+                infection();
+                yield false;
+            }
+            case SERENITE -> {
+                serenite();
+                yield false;
+            }
+            case INONDATION -> {
+                inondation(ennemi, bonus_popo);
+                yield false;
+            }
+            case FOUDRE -> {
+                foudre_zeus(ennemi, bonus_popo);
+                yield false;
+            }
+            default -> true;
+        };
     }
 
     /**
@@ -1643,6 +1723,48 @@ public abstract class Joueur {
             return base * 0.1f * (rand.nextInt(5) + 1); //10% à 50% de bonus
         }
         return 0;
+    }
+
+    /**
+     * Lance le sort berserk : rend le joueur berserk
+     */
+    protected void berserk(){
+        System.out.println(nom + " est prit d'une folie meurtrière !");
+        berserk = 0.1f + 0.1f * rand.nextInt(7); //0.1 à 0.7
+    }
+
+    /**
+     * Lance le sort infection : améliore les attaques de l'arc
+     */
+    protected void infection(){
+        System.out.println("Les flèches de " + nom + " s'emplissent de maladies.");
+        bonus_infection += 2;
+    }
+
+    /**
+     * Lance le sort sérénité : guérie un joueur
+     */
+    protected void serenite(){
+        System.out.println("Ciblez un joueur ou familier.");
+        System.out.println("La cible guérie de " + (5 + rand.nextInt(3) + "."));
+    }
+
+    /**
+     * Lance le sort Inondation : inflige des dommages magiques et affecte
+     */
+    protected void inondation(Monstre ennemi, int dps_bonus) throws IOException {
+        System.out.println("Une vague d'eau percute " + ennemi.getNom() + " de plein fouet.");
+        ennemi.dommage_magique(10 + dps_bonus);
+        ennemi.affecte();
+    }
+
+    /**
+     * Lance le sort Foudre : inflige des dommages magiques et affecte
+     */
+    protected void foudre_zeus(Monstre ennemi, int dps_bonus) throws IOException {
+        System.out.println("Un éclair s'abat sur " + ennemi.getNom() + ".");
+        ennemi.dommage_magique(15 + dps_bonus);
+        ennemi.affecte();
     }
 
     /**Nombre spécifique indiquant qu'un joueur berserk a tiré sur un allié**/
