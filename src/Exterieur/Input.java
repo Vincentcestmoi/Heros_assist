@@ -12,7 +12,6 @@ import Enum.Action;
 import Enum.Action_extra;
 import Enum.Choix;
 import Enum.Sort;
-import Enum.Concoction;
 import Enum.Incantation;
 
 import java.io.File;
@@ -653,33 +652,6 @@ public class Input {
                 }
             }
         }
-    }
-
-    /**
-     * Laisse l'alchimiste choisir la potion qu'il veut créer
-     * @return le type de potion
-     * @throws IOException toujours
-     */
-    public static Concoction concoction() throws IOException {
-        System.out.println("Quel type de potion voulez vous concocter : (re)sistance/(al)éatoire/(di)vine/en (se)rie/" +
-                "(en)ergie/(fo)rce/(in)stable/(mi)racle/(so)in/(to)xique/(c)ustom ?");
-        return switch(read().toLowerCase()){
-            case "re" -> Concoction.RESISTANCE;
-            case "al" -> Concoction.ALEATOIRE;
-            case "di" -> Concoction.DIVINE;
-            case "se" -> Concoction.SERIE;
-            case "en" -> Concoction.ENERGIE;
-            case "fo" -> Concoction.FORCE;
-            case "in" -> Concoction.INSTABLE;
-            case "mi" -> Concoction.MIRACLE;
-            case "so" -> Concoction.SOIN;
-            case "to" -> Concoction.TOXIQUE;
-            case "c" -> Concoction.AUTRE;
-            default -> {
-                System.out.println("Exterieur.Input unknow");
-                yield concoction();
-            }
-        };
     }
 
     /**

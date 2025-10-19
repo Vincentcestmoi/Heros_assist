@@ -77,6 +77,7 @@ public abstract class Joueur {
         this.parent = parent;
         setNiveau(xp);
         this.armure = 0;
+        actualiser_niveau();
         SetEffetParent();
     }
 
@@ -149,6 +150,11 @@ public abstract class Joueur {
             case TRYHARDER -> new Tryharder(nom, position, ob_f, parent, xp);
         };
     }
+
+    /**
+     * Met à jour les informations du personnage à partir de son niveau
+     */
+    protected abstract void actualiser_niveau();
 
     //************************************************SAUVEGARDE******************************************************//
 
@@ -589,8 +595,14 @@ public abstract class Joueur {
             this.niveau += 1;
             this.xp -= this.niveau * 5;
             System.out.println(nom + " a gagné un niveau !");
+            lvl_up();
         }
     }
+
+    /**
+     * Ajoute les données dû à la montée de niveau
+     */
+    abstract void lvl_up();
 
     /**
      * Compte les tours pour arrêter les bonus de vent du shaman
@@ -717,7 +729,7 @@ public abstract class Joueur {
 
     /**
      * Traite la fin de combat des joueurs
-     * @param ennemi_nomme si l'ennemi était un monstre nommé (bonus d'xp)
+     * @param ennemi_nomme si l'ennemi était un monstre nommé (bonus d'xp).
      * @throws IOException toujours
      */
     public void fin_affrontement(boolean ennemi_nomme) throws IOException {
@@ -1817,7 +1829,8 @@ public abstract class Joueur {
 
     /**
      * Tente de fuir le combat
-     * @param ennemi_nomme si l'ennemi est un monstre nommé (complexifie la tache et fournit de l'XP en cas de réussite)
+     * @param ennemi_nomme si l'ennemi est un monstre nommé (complexifie la tache et fournit de l'expérience en cas de
+     *                     réussite).
      * @throws IOException ça roule
      */
     public void fuir(boolean ennemi_nomme) throws IOException {
