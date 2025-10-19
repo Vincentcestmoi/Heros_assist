@@ -58,6 +58,9 @@ public class Monstre {
         this.armure_base = this.armure;
 
         this.etat = 18 + rand.nextInt(11);
+        if(est_nomme()){
+            etat += 7;
+        }
         if(Objects.equals(this.nom, "illusioniste")){
             illu_check();
         }
