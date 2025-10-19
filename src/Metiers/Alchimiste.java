@@ -72,7 +72,7 @@ public class Alchimiste extends Joueur {
             case 4 -> "Nouvelles recettes débloquées.\nVos compétence de dissection ont été renforcées.";
             case 5 -> {
                 this.vie += 1;
-                yield "Votre résistance a augmentée.";
+                yield "Votre résistance a augmentée.\nVous pouvez à présent utiliser des potions avancés.";
             }
             case 6 -> """
                     Nouvelles recettes débloquées.
@@ -227,9 +227,13 @@ public class Alchimiste extends Joueur {
                 3 : Force (ATK)
                 4 : Poison (P)
                 5 : Explosive (E)
-                6 : Energétique (PP)
-                7 : Divine (Div)
-                8 : Aucune/Custom""");
+                6 : Energétique (PP)""");
+        if(niveau >= 5) {
+            System.out.println("7 : Divine(Div)\n8 : Aucune/Custom");
+        }
+        else{
+            System.out.println("7 : Aucune/Custom");
+        }
         int temp = Input.readInt();
         if(temp <= 0 || temp > 8){
             System.out.println("Unknow input.");
@@ -250,7 +254,12 @@ public class Alchimiste extends Joueur {
                 yield popo_instable() + super.popo();
             }
             case 6 -> local_popo_mana();
-            case 7 -> local_popo_divine();
+            case 7 -> {
+                if(this.niveau >= 5) {
+                    yield local_popo_divine();
+                }
+                yield 0;
+            }
             case 8 -> 0;
             default -> {
                 System.out.println("Unknow input");
@@ -269,9 +278,14 @@ public class Alchimiste extends Joueur {
                 1 : potion insipide         (PV#1)
                 2 : potion de vie           (PV#2)
                 3 : potion de santé         (PV#3)
-                4 : fortifiant              (PV#4)
-                5 : potion de régénération  (PV#5)
-                6 : aucune (reviens au choix des potions))""");
+                4 : fortifiant              (PV#4)""");
+        if(niveau >= 5) {
+            System.out.println("5 : potion de régénération  (PV#5)\n6 : aucune (reviens au choix des potions))");
+        }
+        else{
+            System.out.println("5 : aucune (reviens au choix des potions))");
+        }
+
         int temp = Input.readInt();
         if (temp <= 0 || temp > 7) {
             System.out.println("Unknow input");
@@ -284,8 +298,13 @@ public class Alchimiste extends Joueur {
             case 3 -> soin = 5 + rand.nextInt(3);
             case 4 -> soin = 7 + rand.nextInt(4);
             case 5 -> {
-                System.out.println("La cible est soignée de " + (9 + rand.nextInt(5)) + ".");
-                return 0;
+                if(this.niveau >= 5) {
+                    System.out.println("La cible est soignée de " + (9 + rand.nextInt(5)) + ".");
+                    return 0;
+                }
+                else{
+                    return popo();
+                }
             }
             case 6 -> {
                 return popo();
@@ -303,9 +322,13 @@ public class Alchimiste extends Joueur {
         System.out.println("""
                 Ciblez une joueur (ou vous même) et entrez la potion que vous utilisez :
                 1 : potion de vigueur           (RES#1)
-                2 : potion de résistance        (RES#2)
-                3 : potion de solidification    (RES#3)
-                4 : aucune (reviens au choix des potions))""");
+                2 : potion de résistance        (RES#2)""");
+        if(this.niveau >= 5){
+            System.out.println("3 : potion de solidification    (RES#3)\n4 : aucune (reviens au choix des potions))");
+        }
+        else{
+            System.out.println("3 : aucune (reviens au choix des potions))");
+        }
         int temp = Input.readInt();
         if (temp <= 0 || temp > 4) {
             System.out.println("Unknow input");
@@ -316,9 +339,14 @@ public class Alchimiste extends Joueur {
             case 1 -> res = 3 + rand.nextInt(2);
             case 2 -> res = 4 + rand.nextInt(3);
             case 3 -> {
-                System.out.println("La cible gagne temporairement " + (4 + rand.nextInt(2)) + " points de résistance" +
-                        " et 1 point d'armure.");
-                return 0;
+                if(this.niveau >= 5) {
+                    System.out.println("La cible gagne temporairement " + (4 + rand.nextInt(2)) + " points de résistance" +
+                            " et 1 point d'armure.");
+                    return 0;
+                }
+                else{
+                    return popo();
+                }
             }
             case 4 -> {
                 return popo();
