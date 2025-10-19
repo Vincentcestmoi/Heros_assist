@@ -60,7 +60,7 @@ public class Alchimiste extends Joueur {
                     this.caracteristique = "Dextérité";
                 }
                 else {
-                    this.caracteristique = "Dextérité" + this.caracteristique;
+                    this.caracteristique = "Dextérité, " + this.caracteristique;
                 }
                 yield "Nouvelle caractéristique débloqué !";
             }
