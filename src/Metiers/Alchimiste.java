@@ -661,7 +661,7 @@ public class Alchimiste extends Joueur {
         if(this.niveau >= 10){
             text += "/(mi)racle";
         }
-        text += "(c)ustom";
+        text += "/(c)ustom";
         return text;
     }
 

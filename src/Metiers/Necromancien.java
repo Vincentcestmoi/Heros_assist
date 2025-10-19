@@ -150,7 +150,7 @@ public class Necromancien extends Joueur {
     @Override
     protected void presente_caracteristique(){
         System.out.println("Thaumaturge : Quand il meurt, un thaumaturge peut emporter avec lui " + nb_item +
-                " pièces d'équipements de son choix et " + nb_piece + " pièces dans l'au-delà.");
+                " pièces d'équipements de son choix et " + nb_piece + "PO dans l'au-delà.");
     }
 
     @Override

@@ -60,8 +60,8 @@ public class Guerriere extends Joueur {
     }
 
     @Override
-    public void fin_affrontement() throws IOException {
-        super.fin_affrontement();
+    public void fin_affrontement(boolean ennemi_nomme) throws IOException {
+        super.fin_affrontement(ennemi_nomme);
         if(lame_break){
             System.out.println("Les armes de " + nom + " se brisent");
         }
