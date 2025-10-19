@@ -9,6 +9,7 @@ import main.Main;
 import Metiers.Joueur;
 
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Random;
 
@@ -1197,6 +1198,14 @@ public class Monstre {
                 System.out.println("Le résultat n'a pas été comprit, attaque classique appliquée.");
         }
         dommage(attaque);
+    }
+
+    /**
+     * Regarde si le monstre est nommé
+     * @return true s'il est nommé, false sinon
+     */
+    public boolean est_nomme(){
+        return (EnumSet.of(Competence.PRUDENT, Competence.MEFIANT, Competence.SUSPICIEUX, Competence.CHRONOS).contains(this.competence));
     }
 
     /**

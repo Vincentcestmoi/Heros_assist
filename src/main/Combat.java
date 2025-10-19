@@ -8,12 +8,10 @@ import Monstre.Race;
 import Enum.Position;
 import Enum.Action;
 import Enum.Action_extra;
-import Enum.Competence;
 import Enum.Dieux;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.Random;
 
 public class Combat {
@@ -77,7 +75,7 @@ public class Combat {
         combat(ennemi, pr_l, position);
 
         System.out.println("Fin du combat");
-        gestion_fin_combat();
+        gestion_fin_combat(ennemi.est_nomme());
     }
 
     /**
@@ -205,7 +203,7 @@ public class Combat {
                         ennemi.dommage_magique(Input.magie() + dps_popo);
                         dps_popo = 0;
                     }
-                    case FUIR -> joueur.fuir();
+                    case FUIR -> joueur.fuir(ennemi.est_nomme());
                     case ASSOMER -> ennemi.assommer(joueur.getBerserk());
                     case ENCAISSER -> ennemi.encaisser();
                     case SOIGNER -> {
@@ -216,6 +214,7 @@ public class Combat {
                         if (ennemi.domestiquer()) {
                             ennemi.presente_familier();
                             joueur.ajouter_familier();
+                            joueur.gagneXp();
                             stop_run();
                         }
                     }
@@ -280,9 +279,9 @@ public class Combat {
                 }
 
                 if(run) {
-                    int temp = verifie_mort(ennemi, pos);
-                    if (temp != -2) {
+                    if (verifie_mort(ennemi, pos)) {
                         stop_run();
+                        joueur.gagneXp();
                     }
                 }
             }
@@ -290,8 +289,7 @@ public class Combat {
             // tour de l'adversaire
             if (run) {
                 ennemi.attaque(Main.joueurs[pr_l]);
-                int temp = verifie_mort(ennemi, pos);
-                if(temp != -2){
+                if(verifie_mort(ennemi, pos)){
                     stop_run();
                 }
                 System.out.println();
@@ -313,16 +311,16 @@ public class Combat {
     /**
      * Vérifie si le monstre est mort et en gère les aprés coup
      * @param ennemi le monstre adverse
-     * @return -2 si le monstre est en vie, -1 s'il est mort
+     * @return true si le monstre est mort, false s'il est en vie
      * @throws IOException toujours
      */
-    private static int verifie_mort(Monstre ennemi, Position pos) throws IOException {
+    private static boolean verifie_mort(Monstre ennemi, Position pos) throws IOException {
         if (ennemi.check_mort(pos)) {
-            return -2;
+            return false;
         }
         // la mort est donné par les méthodes de dommage
         gestion_nomme(ennemi);
-        return -1;
+        return true;
     }
 
     /**
@@ -412,6 +410,7 @@ public class Combat {
                         if (j_temp.ressuciter(malus)) {
                             System.out.println(joueur.getNom() + " a été arraché(e) à l'emprise de la mort.");
                             joueur.do_ressucite(malus);
+                            j_temp.gagneXp();
                             return;
                         }
                         malus += 1;
@@ -678,7 +677,7 @@ public class Combat {
      * @implNote ne couvre que les monstres nommés
      */
     static void gestion_nomme(Monstre ennemi) {
-        if(EnumSet.of(Competence.PRUDENT, Competence.MEFIANT, Competence.SUSPICIEUX, Competence.CHRONOS).contains(ennemi.getCompetence()))  {
+        if(ennemi.est_nomme())  {
             Output.dismiss_race(ennemi.getNom());
             Race.delete_monstre(ennemi.getNom());
         }
@@ -762,11 +761,12 @@ public class Combat {
 
     /**
      * Traite les joueurs après la fin du combat
+     * @param ennemi_nomme si l'ennemi etait un monstre nommé (bonus d'xp)
      * @throws IOException toujours
      */
-    static private void gestion_fin_combat() throws IOException {
+    static private void gestion_fin_combat(boolean ennemi_nomme) throws IOException {
         for (int i = 0; i < Main.nbj; i++) {
-            Main.joueurs[i].fin_affrontement();
+            Main.joueurs[i].fin_affrontement(ennemi_nomme);
         }
     }
 }

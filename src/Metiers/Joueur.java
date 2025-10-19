@@ -578,11 +578,17 @@ public abstract class Joueur {
 
     //************************************************METHODE INDEPENDANTE********************************************//
 
-    protected void gagneXp(int value){
-        this.xp += value;
+    /**
+     * Donne de l'expérience au joueur de 1.
+     * @implNote Ce qui agmente l'xp : participer à un combat, domestiquer un monstre, porter le dernier coup,
+     * ressuciter un allié, avoir affronté un monstre nommé (victoire ou fuite)
+     */
+    public void gagneXp(){
+        this.xp += 1;
         if(this.xp >= (this.niveau + 1) * 5){
             this.niveau += 1;
             this.xp -= this.niveau * 5;
+            System.out.println(nom + " a gagné un niveau !");
         }
     }
 
@@ -711,15 +717,21 @@ public abstract class Joueur {
 
     /**
      * Traite la fin de combat des joueurs
-     *
+     * @param ennemi_nomme si l'ennemi était un monstre nommé (bonus d'xp)
      * @throws IOException toujours
      */
-    public void fin_affrontement() throws IOException {
+    public void fin_affrontement(boolean ennemi_nomme) throws IOException {
         if (est_actif() && !est_vivant() && Input.yn(getNom() + " est mort durant le combat, le reste-t-il/elle ?")) {
             if (auto_ressuciter(0)) {
                 System.out.println(getNom() + " résiste à la mort.");
             } else {
                 mort_def();
+            }
+        }
+        if(est_actif()){
+            gagneXp();
+            if(ennemi_nomme){
+                gagneXp();
             }
         }
         actif = false;
@@ -852,7 +864,7 @@ public abstract class Joueur {
         System.out.println(nom + " est mort.");
         ob_f = 0;
         position = Position.ENFERS;
-        if(this.parent == Dieux.HADES || getMetier() != Metier.NECROMANCIEN){ //TODO surcharge nécro
+        if(this.parent == Dieux.HADES || getMetier() != Metier.NECROMANCIEN){
             System.out.println("Grâce à vos dons héréditaires, vous pouvez choisir 3 pièces d'équipements " +
                     "que vous conservez (vous devez entrer à nouveau les effets cachées). De plus, vous pouvez conserver" +
                     " jusqu'à 6 PO.");
@@ -1805,16 +1817,23 @@ public abstract class Joueur {
 
     /**
      * Tente de fuir le combat
+     * @param ennemi_nomme si l'ennemi est un monstre nommé (complexifie la tache et fournit de l'XP en cas de réussite)
      * @throws IOException ça roule
      */
-    public void fuir() throws IOException {
+    public void fuir(boolean ennemi_nomme) throws IOException {
         int bonus = -1 + rand.nextInt(3);
+        if(ennemi_nomme){
+            bonus -= 1;
+        }
         bonus += bonus_fuite();
         bonus += berserk_fuite();
         bonus += position_fuite();
         if (Input.D6() + bonus >= 4) {
             System.out.println(nom + " a fuit le combat.");
             inactiver();
+            if(ennemi_nomme){
+                gagneXp();
+            }
         } else {
             System.out.println(nom + " n'est pas parvenu à fuir le combat.");
         }
