@@ -78,7 +78,7 @@ public class Archimage extends Joueur {
         System.out.println("Sort : Lance un puissant sort. L'intensité des sorts varie selon la quantité de mana utilisée.");
         System.out.println("Méditation : Se repose pour récuperer du mana.");
         if(this.niveau >= 2) {
-            System.out.println("Purge : Un sort particulier qui permet de retirer les altérations d'états.");
+            System.out.println("Purge : Pour " + purge_cout + " mana, guérie des alterations d'états.");
         }
     }
 
