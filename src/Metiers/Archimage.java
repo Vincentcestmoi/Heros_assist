@@ -198,6 +198,9 @@ public class Archimage extends Joueur {
         String text = super.text_action();
         if (!est_berserk()) {
             text += "/(me)ditation/(so)rt";
+            if(this.niveau >= 2 && (a_cecite() || poison1 || poison2)){
+                text += "/(pu)rge";
+            }
         }
         return text;
     }
@@ -218,6 +221,11 @@ public class Archimage extends Joueur {
                     return Action.SORT;
                 }
             }
+            case "pu" -> {
+                if(!est_berserk() && (a_cecite() || poison1 || poison2)){
+                    return Action.PURGE;
+                }
+            }
         }
         return super.action(choix, false);
     }
@@ -233,6 +241,10 @@ public class Archimage extends Joueur {
                 sort(ennemi);
                 return false;
             }
+            case PURGE -> {
+                purge();
+                return false;
+            }
         }
         return super.traite_action(action, ennemi, bonus_popo);
     }
@@ -246,23 +258,7 @@ public class Archimage extends Joueur {
     public void essaie_reveil() throws IOException {
         // l'archimage peut se réveiller via un sort
         if (this.niveau >= 2 && Input.yn("Utiliser purge ( " + purge_cout + "PP) pour reprendre conscience ?")) {
-            System.out.println(nom + " se réveille.\n");
-            conscient = true;
-            if(cecite){
-                System.out.println(nom + " recouvre la vue.");
-                cecite = false;
-            }
-            if(this.poison2 && this.niveau < 6){
-                System.out.println("Le poison dans le corps de " + nom + " s'affaiblit.");
-                this.poison2 = false;
-                this.poison1 = true;
-            }
-            else if(this.poison2 || this.poison1){
-                System.out.println("Le poison dans le corps dr " + nom + " se dissipe.");
-                this.poison2 = false;
-                this.poison1 = false;
-            }
-            reveil = 0;
+            purge();
         }
         else{
             super.essaie_reveil();
@@ -274,6 +270,32 @@ public class Archimage extends Joueur {
             else if(this.niveau >= 4) {
                 System.out.println(nom + " récupère 1 point de mana.");
             }
+        }
+    }
+
+    /**
+     * Utilise la compétence purge, retire ou
+     * diminue les altértions d'états.
+     */
+    void purge(){
+        if(est_assomme()) {
+            System.out.println(nom + " se réveille.\n");
+            conscient = true;
+            reveil = 0;
+        }
+        if(cecite){
+            System.out.println(nom + " recouvre la vue.");
+            cecite = false;
+        }
+        if(this.poison2 && this.niveau < 6){
+            System.out.println("Le poison dans le corps de " + nom + " s'affaiblit.");
+            this.poison2 = false;
+            this.poison1 = true;
+        }
+        else if(this.poison2 || this.poison1){
+            System.out.println("Le poison dans le corps dr " + nom + " se dissipe.");
+            this.poison2 = false;
+            this.poison1 = false;
         }
     }
 

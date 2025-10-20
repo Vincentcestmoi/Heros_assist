@@ -20,6 +20,7 @@ public enum Action {
     //metier
     MAUDIR,
     SORT,
+    PURGE,
     BERSERK,
     LAME_DAURA,
     MEDITATION,
