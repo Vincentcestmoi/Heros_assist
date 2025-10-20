@@ -1619,9 +1619,9 @@ public abstract class Joueur {
     /**
      * Subit la compétence "Onde ce choc" de l'archimage
      */
-    protected void choc() throws IOException {
+    protected void choc(int bonus) throws IOException {
         System.out.println(nom + " est frappé par l'onde de choc.");
-        int jet = Input.D6() - rand.nextInt(4) - 2;
+        int jet = Input.D6() - rand.nextInt(4) - 2 + bonus;
         if(est_assomme()){
             reveil -= Math.max(1, jet);
         }
@@ -1636,7 +1636,7 @@ public abstract class Joueur {
         if(!a_familier_actif()){
             return;
         }
-        jet = Input.D4() - 2 - rand.nextInt(2);
+        jet = Input.D4() - 2 - rand.nextInt(2) + bonus;
         if(f_est_assomme()){
             f_reveil -= Math.max(1, jet);
         }

@@ -11,7 +11,6 @@ import Enum.Promo_Type;
 import Enum.Action;
 import Enum.Action_extra;
 import Enum.Choix;
-import Enum.Sort;
 import Enum.Incantation;
 
 import java.io.File;
@@ -652,26 +651,6 @@ public class Input {
                 }
             }
         }
-    }
-
-    /**
-     * Demande à l'archimage quel sort il veut lancer
-     * @return le sort à lancer
-     * @throws IOException toujours
-     */
-    public static Sort sort() throws IOException {
-        System.out.println("Quel sort voulez vous lancer : (bo)ule de feu/(ar)mure de glace/(on)de de choc/(fo)udre/(c)ustom ?");
-        return switch(read().toLowerCase()){
-            case "bo" -> Sort.BDF;
-            case "ar" -> Sort.ADG;
-            case "on" -> Sort.ONDE_CHOC;
-            case "fo" -> Sort.FOUDRE;
-            case "c" -> Sort.AUTRE;
-            default -> {
-                System.out.println("Input unknow");
-                yield sort();
-            }
-        };
     }
 
     /**
