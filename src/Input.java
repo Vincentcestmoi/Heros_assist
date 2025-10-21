@@ -847,7 +847,7 @@ public class Input {
             boolean peut_descendre =  position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
             boolean peut_monter = position != Position.OLYMPE;
             boolean market = position != Position.OLYMPE && position != Position.ENFERS;
-            boolean peut_entrainer = obe > 0 && obe < 3;
+            boolean peut_entrainer = obe > 0 && obe < Main.f_max;
             if(Main.metier[index] == Metier.ALCHIMISTE){
                 text += "/(fo)uiller/(co)ncocter des potions";
             }
