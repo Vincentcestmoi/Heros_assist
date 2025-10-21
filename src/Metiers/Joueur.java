@@ -801,8 +801,8 @@ public abstract class Joueur {
         int base = Input.tir();
         float bonus = 0;
         if (est_berserk()) {
-            bonus = berserk_tir(base);
-            if (bonus == berserk_tir_alliee) {
+            bonus = berserk_atk(base);
+            if (bonus == berserk_atk_alliee) {
                 return;
             }
         }
@@ -1704,29 +1704,25 @@ public abstract class Joueur {
         return 0;
     }
 
-    /**Nombre spécifique indiquant qu'un joueur berserk a tiré sur un allié**/
-    static float berserk_tir_alliee = -256;
     /**
-     * Gère les effets de la folie du berserk lors de tir à l'arc
-     * @param base la puissance de tir originale
-     * @return le bonus de dommages, ou -1000 si le joueur attaque un allié
-     * @throws IOException toujours
+     * Calcule si un joueur succombe à sa folie de berserker ou non
+     * @return si le joueur frappe sans savoir qui
      */
-    protected float berserk_tir(int base) throws IOException {
-        System.out.println("Vous êtes pris(e) de folie mertrière et distinguez mal vos alliés de vos ennemis.");
-        if (Input.D6() < 2 + berserk) {
-            int i;
-            do {
-                i = rand.nextInt(Main.nbj);
-            } while (!Main.joueurs[i].est_actif());
-            int temp = Input.tir();
-            temp += Main.corriger(temp * (berserk * 0.5f));
-            System.out.println("Pris(e) de folie, " + nom + " attaque " + Main.joueurs[i].getNom() + " et lui inflige " + temp + " dommages !");
+    protected boolean folie_berserk() throws IOException {
+        return Input.D6() < 2 + berserk;
+    }
+
+    /**
+     * Augmente l'état de rage meutrière du joueur
+     * @param is_crazy si le joueur est déjà dans un état de folie (augmente la déterioration).
+     */
+    protected void berserk_boost(boolean is_crazy) {
+        if(is_crazy){
             berserk += 0.1f + rand.nextInt(5) * 0.1f; //0.1 à 0.5 de boost
-            return berserk_tir_alliee;
         }
-        berserk += 0.1f + rand.nextInt(3) * 0.1f; //0.1 à 0.3 de boost
-        return base * berserk;
+        else{
+        this.berserk += 0.1f + rand.nextInt(3) * 0.1f; //0.1 à 0.3 de boost
+            }
     }
 
     /**
@@ -1791,7 +1787,7 @@ public abstract class Joueur {
         ennemi.affecte();
     }
 
-    /**Nombre spécifique indiquant qu'un joueur berserk a tiré sur un allié**/
+    /**Nombre spécifique indiquant qu'un joueur berserk a tiré/attaqué un allié**/
     static float berserk_atk_alliee = -256;
     /**
      * Gère les effets de la folie du berserk lors d'attaque
@@ -1801,18 +1797,25 @@ public abstract class Joueur {
      */
     protected float berserk_atk(int base) throws IOException {
         System.out.println("Vous êtes pris(e) de folie mertrière et distinguez mal vos alliés de vos ennemis.");
-        if (Input.D6() < 2 + berserk) {
+        if (folie_berserk()) {
             int i;
             do {
-                i = rand.nextInt(Main.nbj);
-            } while (!Main.joueurs[i].est_actif());
-            int temp = Input.atk();
+                i = rand.nextInt(Main.nbj + 1);
+            } while (i < Main.nbj || !Main.joueurs[i].est_actif());
+            if (i == Main.nbj) {
+                return base * berserk * 0.5f; //50% bonus en moins dû à la folie
+            }
+            int temp = base;
             temp += Main.corriger(temp * (berserk * 0.5f));
-            System.out.println("Pris(e) de folie, " + nom + " attaque " + Main.joueurs[i].getNom() + " et lui inflige " + temp + " dommages !");
-            berserk += 0.1f + rand.nextInt(5) * 0.1f; //0.1 à 0.5 de boost
+            String cible = Main.joueurs[i].getNom();
+            if (a_familier_actif() && rand.nextBoolean()) {
+                cible = "le familier de " + cible;
+            }
+            System.out.println("Pris(e) de folie, " + nom + " attaque " + cible + " et lui inflige " + temp + " dommages !");
+            berserk_boost(true);
             return berserk_atk_alliee;
         }
-        berserk += 0.1f + rand.nextInt(3) * 0.1f; //0.1 à 0.3 de boost
+        berserk_boost(false);
         return base * berserk;
     }
 

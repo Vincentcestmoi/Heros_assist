@@ -24,25 +24,68 @@ public class Guerriere extends Joueur {
         attaque = 2;
         PP = "aura";
         PP_value = 1;
-        PP_max = 5;
-        caracteristique = "Force naturelle, Invincibilité";
-        competences = "Berserk, Lame d'aura, Rage";
+        PP_max = 3;
+        caracteristique = "Force naturelle, Violent";
+        competences = "Berserk";
         SetEffetParent();
+    }
+
+    @Override
+    protected void actualiser_niveau() {
+        if(this.niveau >= 1){
+            this.competences += ", Rage";
+        }
+        if(this.niveau >= 2){
+            this.attaque += 1;
+        }
+        if(this.niveau >= 3){
+            this.caracteristique += ", Invincibilité";
+        }
+        if(this.niveau >= 4){
+            this.attaque += 1;
+        }
+        if(this.niveau >= 5){
+            this.competences += ", Lame d'aura";
+        }
+        if(this.niveau >= 6){
+            this.vie += 2;
+            this.attaque += 1;
+            this.PP_max += 1;
+        }
+        if(this.niveau >= 8){
+            this.attaque += 1;
+            this.vie += 1;
+        }
+        if(this.niveau >= 9){
+            this.PP_max += 1;
+        }
+        if(this.niveau >= 10){
+            this.vie += 1;
+            this.attaque += 1;
+        }
     }
 
     @Override
     protected void presente_caracteristique(){
         System.out.println("Force naturelle : Augmente l'attaque classique.");
-        System.out.println("Invincibilité : Permet parfois de tromper la mort.");
+        System.out.println("Violent : Augmente la puissance des coups critiques à l'attaque classique.\n" +
+                "Diminue les chances de fuir sous folie meurtrière");
+        if(this.niveau >= 3) {
+            System.out.println("Invincibilité : Permet parfois de tromper la mort.");
+        }
     }
 
     @Override
     protected void presente_pouvoir(){
-        System.out.println("\"Berserk : pour 1 mana/aura, imprègne de folie meutrière l'esprit du lanceur avant qu'il " +
-                "ne frappe, augmentant sa puissance au prix de sa santé mentale.\"");
-        System.out.println("Lame d'aura : pour 3 point d'aura, lance une attaque classique surpuissante. " +
-                "Nécessite une arme pour être lancé. Détruit les armes à la fin du combat.");
-        System.out.println("Rage : Pour 1 point d'aura, augmente légèrement la folie meutrière.");
+        System.out.println("Berserk : pour 1 mana/aura, imprègne de folie meurtrière l'esprit du lanceur avant qu'il " +
+                "ne frappe, augmentant sa puissance au prix de sa santé mentale.");
+        if(this.niveau >= 1) {
+            System.out.println("Rage : Pour 1 point d'aura, augmente légèrement la folie meurtrière.");
+        }
+        if(this.niveau >= 5) {
+            System.out.println("Lame d'aura : pour 3 points d'aura, lance une attaque classique surpuissante. " +
+                    "Nécessite une arme pour être utilisé. Détruit les armes à la fin du combat.");
+        }
     }
 
     public Metier getMetier() {
@@ -51,6 +94,95 @@ public class Guerriere extends Joueur {
 
     protected String nomMetier(){
         return "guerrière";
+    }
+
+    @Override
+    void lvl_up() {
+        int temp = this.niveau;
+        if(temp < 0){
+            temp = 0;
+        }
+        if(temp > 11){
+            temp = 11;
+        }
+        String text = switch(temp){
+            case 0 -> "Error : this function is not suposed to be called at level 0.";
+            case 1 -> {
+                this.competences += ", Rage";
+                yield "Nouvelle capacité débloquée !";
+            }
+            case 2 -> {
+                this.attaque += 1;
+                yield "Votre attaque a légèrement augmenté.";
+            }
+            case 3 -> {
+                this.caracteristique += ", Invincibilité";
+                yield """
+                        Nouvelle capacité débloquée !
+                        Votre force mentale s'est légèrement accrue.
+                        """;
+            }
+            case 4 -> {
+                this.attaque += 1;
+                yield """
+                    Votre attaque a légèrement augmenté.
+                    Votre force d'attaque a légèrement augmentée.
+                    """;
+            }
+            case 5 -> {
+                this.competences += ", Lame d'aura";
+                yield """
+                       Nouvelle capacité débloquée !
+                       Votre précision s'été légèrement améliorée.
+                       """;
+            }
+            case 6 -> {
+                this.vie += 2;
+                this.attaque += 1;
+                this.PP_max += 1;
+                yield """
+                        Votre réserve d'aura a légèrement augmenté.
+                        Votre attaque a légèrement augmenté.
+                        Votre résistance a augmenté.
+                        """;
+            }
+            case 7 -> """
+                      Votre force d'attaque a légèrement augmenté.
+                      Votre rage s'est légèrement intensifiée.
+                      Votre précision s'été améliorée.
+                      """;
+            case 8 -> {
+                this.attaque += 1;
+                this.vie += 1;
+                yield """
+                        Votre attaque a légèrement augmenté.
+                        Votre résistance a légèrement augmenté.
+                        Votre force mentale s'est légèrement accrue.
+                        """;
+            }
+            case 9 -> {
+                this.PP_max += 1;
+                yield """
+                        Votre résilience s'est légèrement accrue.
+                        Votre rage s'est intensifiée.
+                        Votre aura s'est renforcée.
+                        """;
+            }
+            case 10 -> {
+                this.vie += 1;
+                this.attaque += 1;
+                yield """
+                    Votre attaque a légèrement augmenté.
+                    Votre résistance a augmenté.
+                    Votre force d'attaque a légèrement augmenté.
+                    Votre rage s'est légèrement intensifiée.
+                    Votre précision s'été légèrement améliorée.
+                    """;
+            }
+            case 11 -> "Vous avez atteint le niveau max (frappe le dev c'est sa faute).";
+            default -> throw new IllegalStateException("Unexpected value: " + temp);
+        };
+        System.out.println(text);
     }
 
     @Override
@@ -68,19 +200,31 @@ public class Guerriere extends Joueur {
     }
 
     @Override
-    protected float berserk_tir(int base) throws IOException {
-        System.out.println("Vous êtes pris(e) de folie mertrière et distinguez mal vos alliés de vos ennemis.");
-        if (Input.D6() < 1.5f + berserk) {
-            int i;
-            do {
-                i = rand.nextInt(Main.nbj);
-            } while (!Main.joueurs[i].est_actif());
-            int temp = Input.tir();
-            temp += Main.corriger(temp * (berserk * 0.4f));
-            System.out.println("Pris(e) de folie, " + nom + " attaque " + Main.joueurs[i].getNom() + " et lui inflige " + temp + " dommages !");
-            return berserk_tir_alliee;
+    protected boolean folie_berserk() throws IOException {System.out.println("Vous êtes pris(e) de folie mertrière et distinguez mal vos alliés de vos ennemis.");
+        float palier_folie = 2f + berserk;
+        if(this.niveau >= 3){
+            palier_folie -= 0.5f;
         }
-        return base * berserk - rand.nextInt(3);
+        if(this.niveau >= 8){
+            palier_folie -= 0.5f;
+        }
+        return Input.D6() < palier_folie;
+    }
+
+    @Override
+    protected void berserk_boost(boolean is_crazy) {
+        if(is_crazy){
+            berserk += 0.2f + rand.nextInt(7) * 0.1f; //0.2 à 0.8 de boost
+        }
+        else{
+            this.berserk += 0.1f + rand.nextInt(4) * 0.1f; //0.1 à 0.5 de boost
+        }
+        int[] paliers = {7, 9, 9, 10};
+        for(int palier : paliers){
+            if(this.niveau >= palier){
+                this.berserk += 0.1f;
+            }
+        }
     }
 
     @Override
@@ -89,7 +233,7 @@ public class Guerriere extends Joueur {
         if (!est_berserk()) {
             text += "/(be)rserker";
         }
-        if(!lame_break) {
+        if(!lame_break && this.niveau >= 5) {
             text += "/(la)me d'aura";
         }
         return text;
@@ -107,7 +251,7 @@ public class Guerriere extends Joueur {
                 }
             }
             case "la" -> {
-                if(!lame_break) {
+                if(!lame_break && this.niveau >= 5) {
                     return Action.LAME_DAURA;
                 }
             }
@@ -141,12 +285,14 @@ public class Guerriere extends Joueur {
     @Override
     public String text_extra(Action action) {
         String text = super.text_extra(action);
-        text += "/(ra)ge";
+        if(this.niveau >= 1) {
+            text += "/(ra)ge";
+        }
         return text;
     }
     @Override
     public Action_extra extra(String choix){
-        if(choix.equals("ra")){
+        if(choix.equals("ra") && this.niveau >= 1){
             return Action_extra.RAGE;
         }
         return super.extra(choix);
@@ -163,30 +309,28 @@ public class Guerriere extends Joueur {
     @Override
     protected int bonus_atk(){
         int base = super.bonus_atk();
-        return base + 1;
+        int[] paliers = {4, 7, 10};
+        for(int palier : paliers){
+            if(this.niveau >= palier){
+                base += 1;
+            }
+        }
+        return base;
     }
 
     @Override
     protected float berserk_atk(int base) throws IOException {
-        System.out.println("Vous êtes pris(e) de folie mertrière et distinguez mal vos alliés de vos ennemis.");
-        if(berserk + 1.5f >= 5.5f){
+        float tolerance = 0;
+        if(this.niveau >= 3){
+            tolerance += 0.5f;
+        }
+        if(this.niveau >= 8){
+            tolerance += 0.5f;
+        }
+        if (berserk >= 5.5f + tolerance) {
             return burst(base);
         }
-        if (Input.D6() < 1.5f + berserk) {
-            int i;
-            do {
-                i = rand.nextInt(Main.nbj + 1);
-            } while (i != Main.nbj || !Main.joueurs[i].est_actif());
-            int bonus = Main.corriger(base * (berserk * 0.7f));
-            berserk += 0.2f + rand.nextInt(7) * 0.1f; //0.2 à 0.8 de boost
-            if(i == Main.nbj){
-                return bonus;
-            }
-            System.out.println("Pris(e) de folie, " + nom + " attaque " + Main.joueurs[i].getNom() + " et lui inflige " + (base + bonus) + " dommages !");
-            return berserk_atk_alliee;
-        }
-        berserk += 0.1f + rand.nextInt(5) * 0.1f; //0.1 à 0.5 de boost
-        return base * berserk;
+        return super.berserk_atk(base);
     }
 
     /**
@@ -196,15 +340,40 @@ public class Guerriere extends Joueur {
      */
     private float burst(int base) {
         System.out.println(getNom() + " éclate dans une rage prodigieuse !");
-        int contrecoup = rand.nextInt(Main.corriger(berserk), 6) + 2; //2~8 normalement
+        int contrecoup = rand.nextInt(Main.corriger(berserk), 7) + 2; //2~8
+        //force mentale
+        if(this.niveau >= 3){
+            contrecoup -= 1;
+        }
+        if(this.niveau >= 8){
+            contrecoup -= 1;
+        }
+        int rage = 0;
+        if(this.niveau >= 7){
+            rage += 1;
+        }
+        if(this.niveau >= 9){
+            rage += 2;
+        }
+        if(this.niveau >= 10){
+            rage += 1;
+        }
+        contrecoup += rage;
         assomme(2 - contrecoup);
-        return base * berserk * 1.5f;
+        return base * (berserk + 0.1f * rage) * 1.5f;
     }
 
     @Override
     protected float critique_atk(int base) {
-        if(rand.nextInt(8) == 0) { //12.5%
-            return base * 0.25f * (rand.nextInt(4) + 1); //25% à 100% de bonus
+        int imprecision = 50;
+        int[] paliers = {5, 7, 7, 10};
+        for(int palier : paliers){
+            if(this.niveau >= palier){
+                imprecision -= 10;
+            }
+        }
+        if(rand.nextInt(imprecision) == 0) { //2% à 10%
+            return base * 0.15f * (rand.nextInt(5) + 1); //15% à 75% de bonus
         }
         return 0;
     }
@@ -212,7 +381,13 @@ public class Guerriere extends Joueur {
     @Override
     protected void berserk(){ //valeur différentes de la capa héréditaire
         System.out.println(nom + " est prit d'une folie meurtrière !");
-        berserk = 0.2f + 0.1f * rand.nextInt(9); //0.2 à 1
+        berserk = 0.2f + 0.1f * rand.nextInt(6); //0.2 à 0.7
+        int[] paliers = {7, 9, 10};
+        for(int palier : paliers){
+            if(this.niveau >= palier){
+                berserk += 0.1f;
+            }
+        }
     }
 
     /**
@@ -235,7 +410,12 @@ public class Guerriere extends Joueur {
 
         //capacité d'aura
         float total = base + bonus;
-        total *= 2.7f;
+        if(this.niveau >= 9){
+            total *= 3.2f;
+        }
+        else{
+            total *= 2.7f;
+        }
         lame_break = true;
 
         total += bonus_popo; // indépendant des dommages de cac donc pas améliorés
@@ -245,7 +425,14 @@ public class Guerriere extends Joueur {
 
     @Override
     public boolean auto_ressuciter(int malus) throws IOException{
-        return (Input.D10() > 7); //30%
+        if(this.niveau < 3){
+            return false;
+        }
+        int palier_mort = 7 + malus;
+        if(this.niveau >= 9){
+            palier_mort -= 1;
+        }
+        return (Input.D10() >= palier_mort); //40~50% sans malus
     }
 
 }
