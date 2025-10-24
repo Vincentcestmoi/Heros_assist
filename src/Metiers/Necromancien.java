@@ -182,7 +182,7 @@ public class Necromancien extends Joueur {
     public void mort_def(){
         super.mort_def();
         System.out.println("Grace à vos talent de thaumaturge, vous conservez vos modifications physiques et emportez" +
-                "avec vous " + nb_piece + "PO et " + nb_item + " de vos items de votre choix.");
+                "avec vous " + nb_piece + "PO et " + nb_item + " de vos items de votre choix (vous devez entrer à nouveau les effets cachées).");
     }
 
     @Override
