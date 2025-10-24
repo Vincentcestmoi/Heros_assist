@@ -95,7 +95,7 @@ public abstract class Joueur {
 
             // Les valeurs qui peuvent ne pas être écrite
             int ob_f = 0, xp = 0;
-            Position position = Position.PRAIRIE;
+            Position position = Position.DEFAULT;
             Dieux parent = Main.get_parent();
 
             String nom = json.getString("nom");
