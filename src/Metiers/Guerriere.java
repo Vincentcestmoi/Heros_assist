@@ -303,7 +303,7 @@ public class Guerriere extends Joueur {
         if(!est_berserk()){
             return 0;
         }
-        float folie = berserk - Input.D4() * 0.3f;
+        float folie = berserk - Input.D4() * 0.5f;
         //rage
         int [] paliers = {7, 9, 9, 10};
         for(int palier : paliers){
