@@ -840,25 +840,37 @@ public abstract class Joueur {
 
     /**
      * Calcule et applique les effets d'une attaque classique sur un monstre
-     *
      * @param ennemi le monstre ennemi
      * @throws IOException toujours
      */
     public void attaquer(Monstre ennemi, int bonus_popo) throws IOException {
-        //noinspection DuplicatedCode
         int base = Input.atk();
+        float bonus = calcule_bonus_atk(base, bonus_popo);
+        if(bonus != berserk_atk_alliee){
+            ennemi.dommage(base + Main.corriger(bonus, 0));
+        }
+    }
+
+    /**
+     * Calcule les dommages bonus d'une attaque classique
+     * @param base les dommages de base de l'attaque
+     * @param bonus_popo les dommages des consommables
+     * @return la valeur des dommages bonus (arrondits)
+     * @throws IOException toujours
+     */
+    protected float calcule_bonus_atk(int base, int bonus_popo) throws IOException {
         float bonus = 0;
         if (est_berserk()) {
             bonus = berserk_atk(base);
             if (bonus == berserk_atk_alliee) {
-                return;
+                return berserk_atk_alliee;
             }
         }
         bonus += critique_atk(base);
         bonus += bonus_atk();
         bonus += attaque_bonus;
         bonus += bonus_popo;
-        ennemi.dommage(base + Main.corriger(bonus, 0));
+        return bonus;
     }
 
     /**
