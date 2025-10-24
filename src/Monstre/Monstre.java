@@ -604,6 +604,18 @@ public class Monstre {
     }
 
     /**
+     * Inflige des dommages au monstre sans aucun calcul
+     * @param quantite la quantité de dommage à infliger
+     * @throws IOException toujours
+     */
+    public void dommage_directe(int quantite) throws IOException {
+        if(quantite <= 0){
+            return;
+        }
+        subit_dommage(quantite, true);
+    }
+
+    /**
      * Inflige des dommages magiques au monstre
      * @param quantite la puissance d'attaque
      * @implNote Considère l'armure et la compétence du monstre
