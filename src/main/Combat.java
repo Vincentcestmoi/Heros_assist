@@ -175,7 +175,6 @@ public class Combat {
                 int dps_popo = 0;
                 switch(act_ex){
                     case AUCUNE, AUTRE -> {}
-                    case RAGE -> joueur.rage();
                     case ANALYSER -> analyser(joueur.est_front(), ennemi);
                     case POTION -> {
                         dps_popo = joueur.popo();
@@ -191,6 +190,7 @@ public class Combat {
                             ennemi.affecte();
                         }
                     }
+                    default -> joueur.jouer_extra(act_ex);
                 }
                 switch (act) {
                     case END -> stop_run();

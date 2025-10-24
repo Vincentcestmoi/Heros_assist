@@ -1395,6 +1395,12 @@ public abstract class Joueur {
         return Action_extra.AUCUNE;
     }
 
+    public void jouer_extra(Action_extra extra) {
+        if (extra == Action_extra.RAGE) {
+            rage();
+        }
+    }
+
     /**
      * Traite l'action bonus rage (initialement exclusive à la guerrière)
      */
@@ -1929,8 +1935,8 @@ public abstract class Joueur {
     }
 
     /**
-     * Indique les bonus/malus de l'état de berserk
-     * @return le bonus (ou malus en négatif)
+     * Indique le malus de fuite dû à l'état de berserk
+     * @return le malus (négatif)
      * @throws IOException toujours
      */
     protected int berserk_fuite() throws IOException {
