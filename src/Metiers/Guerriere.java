@@ -303,7 +303,22 @@ public class Guerriere extends Joueur {
         if(!est_berserk()){
             return 0;
         }
-        return Math.min(0, Math.round(Input.D4() * 0.3f - berserk));
+        float folie = berserk - Input.D4() * 0.3f;
+        //rage
+        int [] paliers = {7, 9, 9, 10};
+        for(int palier : paliers){
+            if(this.niveau >= palier){
+                folie += 0.1f;
+            }
+        }
+        //force mentale
+        paliers = new int[] {3, 8};
+        for(int palier : paliers){
+            if(this.niveau >= palier){
+                folie -= 0.2f;
+            }
+        }
+        return Math.min(0, -Math.round(folie));
     }
 
     @Override
