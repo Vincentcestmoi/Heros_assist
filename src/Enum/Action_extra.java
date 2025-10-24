@@ -8,4 +8,7 @@ public enum Action_extra {
 
     //Guerrière
     RAGE,
+
+    //Shaman
+    CALME,
 }

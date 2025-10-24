@@ -32,7 +32,6 @@ public enum Action {
     ASSAUT,
     INCANTATION,
     LIEN,
-    CALME,
 
     //divinité
     INFECTION,

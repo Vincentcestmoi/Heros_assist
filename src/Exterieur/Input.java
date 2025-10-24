@@ -503,7 +503,7 @@ public class Input {
 
     public static Action_extra extra(Joueur joueur, Action action) throws IOException {
         if(action == Action.AUCUNE || action == Action.END || action == Action.CONCOCTION || action == Action.DOMESTIQUER
-        || action == Action.DEXTERITE || action == Action.LIEN || action == Action.MEDITATION || action == Action.CALME){
+        || action == Action.DEXTERITE || action == Action.LIEN || action == Action.MEDITATION){
             return Action_extra.AUCUNE;
         }
         String text = joueur.text_extra(action);
@@ -651,30 +651,5 @@ public class Input {
                 }
             }
         }
-    }
-
-    /**
-     * Demande au shaman quelle incantation il veut reciter
-     * @return l'incantation à lancer
-     * @throws IOException toujours
-     */
-    public static Incantation incantation() throws IOException {
-        System.out.println("""
-                Quel type d'incantation voulez-vous réciter ?\
-                
-                \t1: ↥☁
-                \t2: ≠‼
-                \t3: ¤✧
-                \t4: ∆Ψ""");
-        return switch(read()){
-            case "1" -> Incantation.NUAGE;
-            case "2" -> Incantation.COLERE;
-            case "3" -> Incantation.BENIE;
-            case "4" -> Incantation.ELEMENTAIRE;
-            default -> {
-                System.out.println("Input unknow");
-                yield incantation();
-            }
-        };
     }
 }

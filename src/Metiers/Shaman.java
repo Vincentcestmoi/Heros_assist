@@ -7,6 +7,7 @@ import Enum.Position;
 import Enum.Action;
 import Enum.Competence;
 import Enum.Dieux;
+import Enum.Action_extra;
 
 import Monstre.Monstre;
 import main.Combat;
@@ -23,30 +24,65 @@ public class Shaman extends Joueur {
 
     public Shaman(String nom, Position position, int ob_f, Dieux parent, int xp) {
         super(nom, position, ob_f, parent, xp);
-        vie = 4;
+        vie = 3;
         attaque = 1;
         PP = "mana";
         PP_value = 0;
         PP_max = 0;
-        caracteristique = "Ame errante, Second souffle, Eclaireur";
-        competences = "Incantation, Lien, Paix intérieure";
+        caracteristique = "Ame errante";
+        competences = "Incantation";
         possession_atk = 0;
         SetEffetParent();
     }
 
     @Override
+    protected void actualiser_niveau() {
+        if(this.niveau >= 2){
+            this.competences += ", Lien";
+            this.vie += 1;
+        }
+        if(this.niveau >= 3){
+            this.competences += ", Paix intérieure";
+        }
+        if(this.niveau >= 4){
+            this.attaque += 1;
+        }
+        if(this.niveau >= 5){
+            this.caracteristique += ", Second souffle";
+        }
+        if(this.niveau >= 7){
+            this.caracteristique += ", Eclaireur";
+        }
+        if(this.niveau >= 8){
+            this.armure += 1;
+        }
+        if(this.niveau >= 10){
+            this.vie += 1;
+            this.attaque += 1;
+        }
+    }
+
+    @Override
     protected void presente_caracteristique(){
         System.out.println("Ame errante : peut incanter même inconscient.");
-        System.out.println("Second souffle : Permet rarement de tromper la mort.");
-        System.out.println("Eclaireur : Augmente légèrement les dé d'exploration.");
+        if(this.niveau >= 5) {
+            System.out.println("Second souffle : Permet rarement de tromper la mort.");
+        }
+        if(this.niveau >= 7) {
+            System.out.println("Eclaireur : Augmente légèrement les dé d'exploration.");
+        }
     }
 
     @Override
     protected void presente_pouvoir(){
         System.out.println("Incantation : lance de mystérieuses incantations invoquant les forces de la nature et les esprits de ses ancêtres.");
-        System.out.println("Lien : Projete son âme dans celle d'un monstre pour tenter de les lier de force. Un monstre" +
-                " en bonne santé aura une âme puissante, alors que l'âme d'un monstre blessé est plus faible.");
-        System.out.println("Paix intérieure : Regagne instantannement sa santé mentale et son calme.");
+        if(this.niveau >= 2) {
+            System.out.println("Lien : Projete son âme dans celle d'un monstre pour tenter de les lier de force. Un monstre" +
+                    " en bonne santé aura une âme puissante, alors que l'âme d'un monstre blessé est plus faible.");
+        }
+        if(this.niveau >= 3) {
+            System.out.println("Paix intérieure : Regagne instantannement sa santé mentale et son calme.");
+        }
     }
 
     public Metier getMetier() {
@@ -55,6 +91,95 @@ public class Shaman extends Joueur {
 
     protected String nomMetier(){
         return "shaman";
+    }
+
+    @Override
+    void lvl_up() {
+        int temp = this.niveau;
+        if(temp < 0){
+            temp = 0;
+        }
+        if(temp > 11){
+            temp = 11;
+        }
+        String text = switch(temp){
+            case 0 -> "Error : this function is not suposed to be called at level 0.";
+            case 1 -> "Nouvelles incantations apprises !"; // nuage de base (pas foudre)
+            case 2 -> {
+                this.vie += 1;
+                this.competences += ", Lien";
+                yield """
+            Nouvelle compétence débloquée !
+            Votre résistance a légèrement augmenté.
+            """;
+            }
+            case 3 -> {
+                this.competences += ", Paix intérieure";
+                yield """
+            Nouvelle compétence débloquée !
+            Nouvelle incantation apprise !
+            """; //chant qui rend berserk
+            }
+            case 4 -> {
+                this.attaque += 1;
+                yield """
+                        Des âmes anciennes, fortes et belliqueuses ont rejoint vos rangs.
+                        Votre attaque s'en trouve légèrement renforcée.
+                        """; //bonus chant colère
+            }
+            case 5 -> {
+                this.vie += 1;
+                this.caracteristique += ", Second souffle";
+                yield """
+                       Des esprits bienfaisants se mettent à vous suivre.
+                       Votre résistance s'en trouve légèrement renforcée.
+                       Nouvelle caractèristique débloquée !";
+                       Nouvelles incantations apprises !
+                       """; // bénédiction de base (pas armure)
+            }
+            case 6 -> """
+                    Nouvelle incantation apprise !
+                    Votre compréhension des nuages s'est améliorée.
+                    Votre esprit est plus calme même sous la fureur.
+                    """; //nuage foudre, bonus nuages, réduction malus berserk
+            case 7 -> {
+                this.caracteristique += ", Eclaireur";
+                yield """
+                       Nouvelle caractèristique débloquée !";
+                       Votre âme s'est légèrement renforcée.
+                       """; //bonus lien
+            }
+            case 8 -> {
+                this.armure += 1;
+                yield """
+                Voux vous liez aux esprit élémentaires.
+                Nouvelles incantations apprises !
+                Votre compréhension des nuages s'est améliorée.
+                La protection des esprit est sur vous !
+                """; //invocation des éléments, bonus nuages
+                }
+            case 9 -> //bénédiction armure, boost bénédiction, boost chant colère, boost second souffle
+                    """
+                    Les esprits de puissants anciens guerriers rejoignent vos rangs.
+                    Les esprits d'anciens guérisseurs rejoignent vos rangs.
+                    Nouvelle incantation apprise !
+                    Votre âme dévellope son indépendance.
+                    """;
+            case 10 -> {
+                this.vie += 1;
+                this.attaque += 1;
+                yield """
+                    De nombreux esprits se lient à vous.
+                    Votre attaque s'en trouve légèrement renforcée.
+                    Votre résistance s'en trouve légèrement renforcée.
+                    Votre âme s'en trouve grandement renforcée.
+                    Votre compréhension du monde s'accroie grandement
+                    """; //bonus lien, bonus type dé tout incantation
+            }
+            case 11 -> "Vous avez atteint le niveau max (frappe le dev c'est sa faute).";
+            default -> throw new IllegalStateException("Unexpected value: " + temp);
+        };
+        System.out.println(text);
     }
 
     @Override
@@ -70,13 +195,10 @@ public class Shaman extends Joueur {
         }
         String text = super.text_action();
         if (!est_berserk()) {
-            if (!a_familier()) {
+            if (!a_familier() && this.niveau >= 2) {
                 text += "/(li)en";
             }
             text += "/(in)cantation";
-        }
-        else {
-            text += "/(pa)ix intérieure";
         }
         return text;
     }
@@ -97,13 +219,8 @@ public class Shaman extends Joueur {
                 return Action.INCANTATION;
             }
             case "li" -> {
-                if (!a_familier()) {
+                if (!a_familier() && this.niveau >= 2) {
                     return Action.LIEN;
-                }
-            }
-            case "pa" -> {
-                if (est_berserk()) {
-                    return Action.CALME;
                 }
             }
         }
@@ -122,12 +239,32 @@ public class Shaman extends Joueur {
                 lien(ennemi);
                 return false;
             }
-            case CALME -> {
-                calme();
-                return false;
-            }
         }
         return super.traite_action(action, ennemi, bonus_popo);
+    }
+
+    @Override
+    public String text_extra(Action action) {
+        String text = super.text_extra(action);
+        if(est_berserk() && this.niveau >= 3){
+            text += "(pa)ix intérieure";
+        }
+        return text;
+    }
+
+    @Override
+    public Action_extra extra(String choix) {
+        if(choix.equals("pa")){
+            return Action_extra.CALME;
+        }
+        return super.extra(choix);
+    }
+
+    public void jouer_extra(Action_extra extra) {
+        if(extra == Action_extra.CALME){
+            calme();
+        }
+        super.jouer_extra(extra);
     }
 
     @Override
@@ -140,13 +277,18 @@ public class Shaman extends Joueur {
 
     @Override
     protected int bonus_atk(){
-        int base = super.bonus_atk();
-        return base + possession_atk;
+        int bonus = super.bonus_atk();
+        return bonus + possession_atk;
     }
 
     @Override
     public int bonus_exploration(){
-        return rand.nextInt(2) /* eclaireur */;
+        int bonus = super.bonus_exploration();
+        //éclaireur
+        if(this.niveau >= 7){
+            bonus += rand.nextInt(2);
+        }
+        return bonus;
     }
 
     @Override
@@ -156,39 +298,23 @@ public class Shaman extends Joueur {
     }
 
     @Override
-    public boolean peut_ressuciter() {
-        return true;
-    }
-
-    public boolean ressuciter(int malus) throws IOException {
-        if (malus > 2) {
-            malus = 2;
-        }
-        int jet = Input.D6() - malus + rand.nextInt(3) - 1;
-        if (jet <= 4) {
-            System.out.println("Echec de la résurection");
-            return false;
-        }
-        if (jet <= 6) {
-            System.out.println("Résurection avec 1 (max) points de vie");
-        }
-        else {
-            System.out.println("Résurection avec 2 (max) points de vie");
-        }
-        return true;
-    }
-
-    @Override
     public boolean peut_diriger_familier(){
         return est_actif() && a_familier_actif() && est_vivant();
     }
 
     @Override
     protected int berserk_fuite() throws IOException {
+        if(this.niveau < 6){
+            return super.berserk_fuite();
+        }
         if(!est_berserk()){
             return 0;
         }
-        return Math.min(0, Math.round(Input.D6() * 0.1f - berserk));
+        float folie = berserk - Input.D6() * 0.5f;
+        if(this.niveau >= 6){ //calme spirituel
+            folie -= 1;
+        }
+        return -Main.corriger(folie, 0);
     }
 
     private void calme() {
@@ -206,27 +332,59 @@ public class Shaman extends Joueur {
             System.out.println("Les esprits de vos ancêtres vous arretes avant que vous ne fassiez quelques choses de stupides.");
             return;
         }
-        int ratio = (int) ((float) ennemi.getVie() / ennemi.getVieMax() * 12);
-        if (ennemi.getCompetence() == Competence.PRUDENT || ennemi.getCompetence() == Competence.MEFIANT || ennemi.getCompetence() == Competence.SUSPICIEUX) {
-            ratio += 4 + rand.nextInt(3);
+        int ratio = (int) ((float) ennemi.getVie() / ennemi.getVieMax() * 12); //1~12
+        if (ennemi.est_nomme()) {
+            ratio += 4 + rand.nextInt(3); //4~6
         }
         System.out.println(getNom() + " tente de lier son âme à " + ennemi.getNom());
-        int result = Input.D12() - ratio + rand.nextInt(3) - 1;
-        if (result <= 1) {
-            System.out.println("L'âme de " + getNom() + " est violemment rejeté par celle de " + ennemi.getNom() + " !");
+        int result = Input.D8();
+        result -= ratio; //force d'âme du monstre
+        result += rand.nextInt(3) - 1;
+        if(this.niveau >= 7){
+            result += 1;
+        }
+        if(this.niveau >= 10){
+            result += 3;
+        }
+        if (result <= -5) {
+            System.out.println("L'âme de " + getNom() + " est violemment rejetée par celle de " + ennemi.getNom() + " !");
             rendre_mort();
         }
-        else if (result <= 4) {
-            System.out.println(getNom() + " n'est pas parvenu à se lier à " + ennemi.getNom());
+        else if (result <= -1) {
+            System.out.println("l'âme de " + getNom() + " est blessé par celle de " + ennemi.getNom());
+            System.out.println(getNom() + " subit " + (-result) + " dommages.");
+        }
+        else if (result <= 3){
+            System.out.println(getNom() + " n'est pas parvenu à se lier à " + ennemi.getNom() + " et à bléssé son âme");
+            ennemi.dommage_directe(result);
         }
         else {
             System.out.println("Les âmes de " + ennemi.getNom() + " et de " + getNom() + " entre en communion !");
-            setOb(min(7, rand.nextInt(result) + 1));
+            setOb(min(7, rand.nextInt(result) + 3));
             Combat.stop_run();
             ennemi.presente_familier();
         }
     }
 
+    /**
+     * Demande au shaman quelle incantation il veut reciter
+     * @return le text demandant l'incatation à lancer
+     * @implNote appellé uniquement avec un niveau d'au moins 1
+     */
+    private String text_incantation() {
+        String text = """
+                Quel type d'incantation voulez-vous réciter ?
+                \t1: ≠‼
+                \t2: ↥☁
+                """;
+        if(this.niveau >= 5){
+            text += "\n\t3: ¤✧";
+        }
+        if(this.niveau >= 8){
+            text += "\n\t4: ∆Ψ";
+        }
+        return text;
+    }
 
     /**
      * Applique la compétence "incantation" du shaman
@@ -234,11 +392,36 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void incantation(Monstre ennemi) throws IOException {
-        switch(Input.incantation()){
-            case COLERE -> colere(ennemi);
-            case NUAGE -> nuage(ennemi);
-            case ELEMENTAIRE -> element(ennemi);
-            case BENIE -> benir();
+        if(this.niveau < 1){
+            colere(ennemi);
+            return;
+        }
+        System.out.println(text_incantation());
+        switch(Input.readInt()){
+            case 1 -> colere(ennemi);
+            case 2 -> nuage(ennemi);
+            case 3 -> {
+                if(this.niveau >= 5){
+                    benir();
+                }
+                else{
+                    System.out.println("Unknow input");
+                    incantation(ennemi);
+                }
+            }
+            case 4 -> {
+                if(this.niveau >= 8) {
+                    element(ennemi);
+                }
+                else{
+                    System.out.println("Unknow input");
+                    incantation(ennemi);
+                }
+            }
+            default -> {
+                System.out.println("Unknow input");
+                incantation(ennemi);
+            }
         }
     }
 
@@ -252,12 +435,22 @@ public class Shaman extends Joueur {
                 De nombreux esprits en colère répondent à vos chants, donnez leur des ordres :\
                 
                 \t1: ≠‼∴α
-                \t2: ≠‼ψχ
-                \t3: ≠‼∅δ""");
-        switch(Input.read()){
-            case "1" -> colere_boost();
-            case "2" -> colere_attaque(ennemi);
-            case "3" -> colere_berserk();
+                \t2: ≠‼ψχ""");
+        if(this.niveau >= 3){
+            System.out.println("\\t3: ≠‼∅δ");
+        }
+        switch(Input.readInt()){
+            case 1 -> colere_boost();
+            case 2 -> colere_attaque(ennemi);
+            case 3 -> {
+                if(this.niveau >= 3){
+                    colere_berserk();
+                }
+                else {
+                    System.out.println("Input unknow");
+                    colere(ennemi);
+                }
+            }
             default -> {
                 System.out.println("Input unknow");
                 colere(ennemi);
@@ -270,22 +463,41 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void colere_boost() throws IOException {
-        int jet = Input.D8() + rand.nextInt(3) - 1;
-        if(jet <= 3){
-            System.out.println("Les esprits des ancients guerriers exalte vos actes.");
+        int jet = this.niveau >= 9 ? Input.D8() : Input.D6();
+        jet += rand.nextInt(3) - 1;
+        int[] paliers = {4, 10, 10, 10};
+        for(int palier : paliers){
+            if(this.niveau >= palier){
+                jet += 1;
+            }
+        }
+        if(jet <= 2){
+            System.out.println("Les esprits des ancients guerriers vous encouragent.");
             possession_atk += 1;
         }
-        else if (jet <= 5){
-            System.out.println("Les âmes de vos ancestres guerriers renforcent vos actes.");
+        else if (jet <= 4){
+            System.out.println("L'âmes d'un anciens guerriers supporte vos actes.");
             possession_atk += 2;
         }
-        else if (jet <= 8){
-            System.out.println("L'âme d'un ancien guerrier guide votre main.");
+        else if (jet <= 6){
+            System.out.println("Des âmes d'anciens guerriers guident votre main.");
             possession_atk += 4;
+        }
+        else if(jet <= 8){
+            System.out.println("L'esprit d'un grand guerrier vous prête sa force.");
+            possession_atk += 8;
+        }
+        else if(jet <= 10){
+            System.out.println("L'âme d'un grand guerrier vous prête son savoir");
+            possession_atk += 11;
+        }
+        else if (jet == 11){
+            System.out.println("L'âme d'un grand guerrier raisonne avec la votre, vous offrant sa force et son savoir.");
+            possession_atk += 14;
         }
         else{
             System.out.println("Votre âme entre en symbiose avec celle de vos ancestres belliqueux.");
-            possession_atk += 7;
+            possession_atk += 18;
         }
     }
 
@@ -297,21 +509,52 @@ public class Shaman extends Joueur {
     private void colere_attaque(Monstre ennemi) throws IOException {
         System.out.println("Les esprits de vos ancêtres déchainent leur colère sur " + ennemi.getNom());
         int attaque;
-        int jet = Input.D10() + rand.nextInt(3) - 1;
-        if(jet <= 3){
+        int jet;
+        if (this.niveau >= 9) {
+            jet = Input.D10();
+        } else if (this.niveau >= 4) {
+            jet = Input.D8();
+        } else {
+            jet = Input.D6();
+        }
+        jet += rand.nextInt(3) - 1;
+        if (this.niveau >= 10) {
+            jet += 3;
+        }
+        //D6
+        if (jet <= 2) {
             attaque = 2;
+        } else if (jet <= 4) {
+            attaque = 3 + rand.nextInt(3); //3~5
+        } else if(jet == 5){
+            attaque = 4 + rand.nextInt(3); //4~6
+        } else if(jet == 6){
+            attaque = 6 + rand.nextInt(2); //6~7
+        } //D8
+        else if (jet == 7) {
+            attaque = 8 + rand.nextInt(6); //8~13
+        } else if(jet == 8){
+            attaque = 9 + rand.nextInt(7); //9~15
+        } //D10
+        else if(jet == 9){
+            attaque = 12 + rand.nextInt(7); //12~18
+        } else if (jet == 10){
+            attaque = 13 + rand.nextInt(7); //15~22
+        } //D10 + 3
+        else if (jet <= 12){
+            attaque = 18 + rand.nextInt(13); //18~30
         }
-        else if(jet <= 5){
-            attaque = 4 + rand.nextInt(3);
-        }
-        else if(jet <= 7){
-            attaque = 6 + rand.nextInt(4);
-        }
-        else{
-            attaque = 9 + rand.nextInt(5);
-            ennemi.affecte();
+        else {  //13
+            attaque = 25 + rand.nextInt(9);  //25~33
         }
         ennemi.dommage_magique(attaque);
+        if(attaque >= 28){
+            ennemi.do_assomme();
+        } else if (attaque >= 18){
+            ennemi.affecte();
+        } else if (attaque >= 14 || (attaque >= 10 && rand.nextBoolean())){
+            ennemi.do_etourdi();
+        }
     }
 
     /**
@@ -319,19 +562,49 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void colere_berserk() throws IOException {
-        int jet = Input.D10() + rand.nextInt(3) - 1;
-        if (jet <= 3) {
-            System.out.println("Un esprit vous emplie de colère.");
-            berserk += max(0.1f, jet * 0.1f);
-        } else if (jet <= 5) {
-            System.out.println("L'âme d'un guerrier emplie votre coeur de haine !");
-            berserk += jet * 0.2f + 0.1f;
-        } else if (jet <= 7) {
-            System.out.println("Une âme pleine de colère emplie votre coeur de rage !");
-            berserk += 1.4f + rand.nextInt(3) * 0.1f;
+        int jet;
+        if (this.niveau >= 9) {
+            jet = Input.D8();
+        } else if (this.niveau >= 4) {
+            jet = Input.D6();
         } else {
-            System.out.println("L'âme d'un ancien guerrier tombé au combat incruste votre coeur d'une haine féroce !");
-            berserk += 1.5f + rand.nextInt(3) * 0.2f;
+            jet = Input.D4();
+        }
+        jet += rand.nextInt(3) - 1;
+        if (this.niveau >= 10) {
+            jet += 2;
+        }
+        // D4
+        if (jet <= 2) {
+            System.out.println("Un esprit provoque votre colère.");
+            berserk += max(0.1f, jet * 0.1f);
+        } else if (jet == 3) {
+            System.out.println("Un esprit vengeur vous offre sa haine.");
+            berserk += 0.3f;
+        } else if (jet == 4) {
+            System.out.println("Une âme pleine de colère emplie votre coeur de rage !");
+            berserk += 0.4f + rand.nextInt(3) * 0.1f; //0.4~0.6
+        } //D6
+        else if (jet == 5){
+            System.out.println("Les esprit de victimes innocentes font s'emplir de colère votre coeur.");
+            berserk += 0.6f + rand.nextInt(7) * 0.1f; //0.6~1.2
+        } else if (jet == 6){
+            System.out.println("L'âme d'un guerrier vénérable vous transmet sa rage vengeresse.");
+            berserk += 0.7f + rand.nextInt(9) * 0.1f; //0.7~1.5
+        } // D8
+        else if (jet == 7){
+            System.out.println("Les esprits de guerriers morts au combat insufle une rage profonde dans votre âme !");
+            berserk += 1f + rand.nextInt(5) * 0.2f; //1~1.8
+        } else if (jet == 8){
+            System.out.println("Vous êtes posséde par l'esprit d'un puissant combattant, emplie d'une haine profonde !");
+            berserk += 1.5f + rand.nextInt(8) * 0.15f; //1.5~2.55
+        } //D8 + 2
+        else if (jet == 9){
+            System.out.println("Un esprit amplie d'une haine sans fin vous possède !");
+            berserk += 1.9f + rand.nextInt(6) * 0.25f; //1.9~3.15
+        } else {
+            System.out.println("RAAAAAAAAAAAAAAAAAAAH !!!! Vous êtes consummé par la haine, la rage et la folie !");
+            berserk += 2.8f + rand.nextInt(7) * 0.2f; //2.8~4.2
         }
     }
 
@@ -758,7 +1031,14 @@ public class Shaman extends Joueur {
 
     @Override
     public boolean auto_ressuciter(int malus) throws IOException{
-        return (Input.D20() > 17); //15%
+        if(this.niveau < 5){
+            return false;
+        }
+        int palier_mort = 9 + malus;
+        if(this.niveau >= 9){
+            palier_mort -= 1;
+        }
+        return Input.D10() >= palier_mort; //20%~30% sans malus
     }
 
 }
