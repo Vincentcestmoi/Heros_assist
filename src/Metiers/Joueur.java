@@ -322,6 +322,9 @@ public abstract class Joueur {
      */
     private int GetXpTotal(){
         int xp_totale = this.xp;
+        if(xp_totale < 0){
+            xp_totale = 0;
+        }
         for(int nv = this.niveau; nv > 0; nv--){
             xp_totale += 5 * nv;
         }
@@ -597,6 +600,27 @@ public abstract class Joueur {
             System.out.println(nom + " a gagné un niveau !");
             lvl_up();
         }
+    }
+
+    /**
+     * Méthode permettant aux classes filles d'ajouter de l'expérience
+     */
+    protected void gagneXpLocal(){
+        this.xp += 1;
+    }
+
+    /**
+     * Méthode permettant aux classes filles d'analyser la quantité d'expérience
+     */
+    protected int getXplocal(){
+        return this.xp;
+    }
+
+    /**
+     * Méthode permettant de remettre à 0 l'expérience d'un joueur
+     */
+    protected void resetXpLocal(){
+        this.xp = 0;
     }
 
     /**
@@ -880,7 +904,20 @@ public abstract class Joueur {
             System.out.println("Grâce à vos dons héréditaires, vous pouvez choisir 3 pièces d'équipements " +
                     "que vous conservez (vous devez entrer à nouveau les effets cachées). De plus, vous pouvez conserver" +
                     " jusqu'à 6 PO.");
+            for(int i = this.niveau; i > 0; i--){
+                if(rand.nextInt(3) == 0){
+                    this.xp -= 1;
+                }
+            }
         }
+        else{
+            for(int i = this.niveau; i > 0; i--){
+                if(rand.nextBoolean()){
+                    this.xp -= 1;
+                }
+            }
+        }
+        System.out.println(nom + " perd de l'expérience.");
     }
 
     /**
