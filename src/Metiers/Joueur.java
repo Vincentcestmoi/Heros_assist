@@ -430,12 +430,12 @@ public abstract class Joueur {
         }
     }
 
-    private void p_prend_cecite() {
+    protected void p_prend_cecite() {
         cecite = true;
         System.out.println(nom + " est empoisonné(e) et atteint(e) de cécité.");
     }
 
-    private void f_prend_cecite() {
+    protected void f_prend_cecite() {
         f_cecite = true;
         System.out.println("Le familier de " + nom + " est empoisonné et atteint de cécité.");
     }
@@ -2005,4 +2005,55 @@ public abstract class Joueur {
      */
     protected void monstre_mort_perso(Monstre ennemi) throws IOException{
     }
+
+    /**
+     * Renvoie le résultat d'un jet de dé
+     * @param paliers_de les différents niveaux demandant différents dés, dans l'ordre décroissant
+     * @param de le dé à lancer selon le niveau, doit contenir un élément de plus que paliers_de
+     * @param palier_bonus les niveaux ajoutant un bonus de 1 au dé
+     * @param do_random si une variable aléatoire de 1 doit être appliqué
+     * @return la valeur du jet avec les modificateurs appliqué
+     * @throws IOException toujours
+     */
+    protected int jet(int[] paliers_de, int[] de, int[] palier_bonus, boolean do_random) throws IOException {
+        int jet = 0;
+        for(int i = 0; i < paliers_de.length; i++){
+            if(this.niveau >= paliers_de[i]){
+                jet = de_par_palier(de[i]);
+                break;
+            }
+        }
+        if(jet == 0){
+            jet = de_par_palier(de[de.length-1]);
+        }
+        for(int palier : palier_bonus){
+            if(this.niveau >= palier){
+                jet += 1;
+            }
+        }
+        if(do_random){
+            jet += rand.nextInt(3) - 1;
+        }
+        return jet;
+    }
+
+    /**
+     * Renvoie le résultat d'un jet du type spécifié
+     * @param de_type le nombre de face du dé demandé (4, 6, 8, 10, 12 ou 20)
+     * @return le résultat du jet de dé
+     * @throws IOException toujours
+     * @throws IllegalStateException si le dé demandé n'est pas reconnu
+     */
+    protected int de_par_palier(int de_type) throws IOException {
+        return switch (de_type){
+            case 4 -> Input.D4();
+            case 6 -> Input.D6();
+            case 8 -> Input.D8();
+            case 10 -> Input.D10();
+            case 12 -> Input.D12();
+            case 20 -> Input.D20();
+            default -> throw new IllegalStateException("Unexpected value: " + de_type);
+        };
+    }
+
 }
