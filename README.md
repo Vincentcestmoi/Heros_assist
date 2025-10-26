@@ -9,7 +9,8 @@ L'alpha peut être compilé et exécuté simplement en terminal :
   java Main
 
 
-La beta demande quelques précisions, mais les shells suivants permettent la compilation et l'exécution :  
+La beta n'est pas stable, elle est actuellement en cours de modification sous le main.
+La lancer demande un peu plus d'efforts, mais les shells suivants permettent la compilation et l'exécution :  
 compiler.sh (permet de compiler, à faire la première fois que vous lancez le projet.)  
 lancer.sh (pour éxecuter le projet et lancer la beta)  
-build&run.sh (les deux précédents à la suite)
+build&run.sh (les deux précédents l'un après l'autre)
