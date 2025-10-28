@@ -60,6 +60,7 @@ public class Main {
                     joueur.descendre();
                 }
                 case MARCHE -> joueur.aller_au_marche();
+                case DUMMY -> frapper_pantin(i);
                 case DRESSER -> joueur.dresser();
                 case ATTENDRE -> System.out.println(joueur.getNom() + " passe son tour.");
 
@@ -88,6 +89,15 @@ public class Main {
         System.out.println("Sauvegarde des données joueurs.");
         SaveManager.sauvegarder(false);
         System.out.println("Fin du programme");
+    }
+
+    private static void frapper_pantin(int i) throws IOException {
+        Monstre pantin = Lieu.get_dummy();
+        System.out.println("Cela vous coutera 2PO par participants.");
+        System.out.println("Vous vous trouvez dans une simulation. La mort n'est pas définitive, et vous" +
+                " possédez des quantités illimités de mana, d'aura et d'ingrédients. Vous pouvez utiliser sans limites" +
+                " tout objet que vous avez sur vous ou que vous fabriquerez sur place, mais rien d'autre.");
+        Combat.affrontement(joueurs[i].getPosition(), -1, pantin);
     }
 
     /**

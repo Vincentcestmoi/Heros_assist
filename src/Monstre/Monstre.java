@@ -219,6 +219,15 @@ public class Monstre {
      * @param silence si l'on peut ou non commenter le résultat
      */
     private void subit_dommage(int quantite, boolean silence){
+        if(est_pantin()){
+            System.out.print("Vous avez infligé " + quantite + " dommages");
+            while(quantite > 25){
+                System.out.print("!");
+                quantite -= 10;
+            }
+            System.out.println();
+            return;
+        }
         this.vie -= quantite;
         if(vie <= 0){
             return;
@@ -710,6 +719,7 @@ public class Monstre {
                 case DUO -> {
                     System.out.println("Un des " + this.nom + " est mort(e).");
                     this.competence = Competence.DUO_PASSED;
+                    this.vie = this.vie_base;
                 }
                 default -> System.out.println(this.nom + " est mort(e).");
             }
@@ -1079,6 +1089,7 @@ public class Monstre {
      * @return si le monstre est domestiqué
      */
     public Boolean domestiquer(int bonus) throws IOException {
+        int ratio = (this.vie * 100 / this.vie_max);
         switch (competence){
             case COLERE, VIOLENT -> {
                 if(Input.D8() + bonus <= this.vie){
@@ -1127,8 +1138,15 @@ public class Monstre {
                 System.out.println(this.nom + " réagit très étrangement à votre tentative.");
                 return false;
             }
+            case DUMMY -> {
+                System.out.println("Simulation d'une interraction avec un monstre aléatoire.");
+                int pvm, pv;
+                pvm = rand.nextInt(41) + 10; //10~50
+                pv = rand.nextInt(pvm - 9) + 5; //5~pvm-5
+                System.out.printf("Simulation : Monstre commun ayant %d/%d points de vie\n", pv, pvm);
+                ratio = (pv * 100 / pvm);
+            }
         }
-        int ratio = (this.vie * 100 / this.vie_max);
         if (ratio >= 85) {
             System.out.println(this.nom + " réagit agressivement.");
             return false;
@@ -1235,6 +1253,14 @@ public class Monstre {
      */
     public boolean est_nomme(){
         return (EnumSet.of(Competence.PRUDENT, Competence.MEFIANT, Competence.SUSPICIEUX, Competence.CHRONOS).contains(this.competence));
+    }
+
+    /**
+     * Regarde si le monstre est un pantin d'entrainement
+     * @return True s'il s'agit d'un pantin d'entrainement, false sinon
+     */
+    public boolean est_pantin(){
+        return competence == Competence.DUMMY;
     }
 
     /**

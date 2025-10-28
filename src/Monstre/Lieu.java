@@ -194,6 +194,10 @@ public class Lieu {
         return new Monstre(race);
     }
 
+    public static Monstre get_dummy(){
+        return new Monstre(Race.pantin);
+    }
+
     /**
      * Renvoie un monstre de la position demandé en supprimant les chances qu'il vienne d'une position voisine
      * @param pos la position dont on veut le monstre

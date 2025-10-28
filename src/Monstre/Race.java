@@ -236,4 +236,7 @@ public class Race {
     static Race chronos = new Race("Chronos", 35, 83, 7, 4, 4, 6, chro_comp);
 
     public static Race[] olympe = {titan, titan, titan, chronos};
+
+    static Competence[] pant_comp = {Competence.DUMMY};
+    static Race pantin = new Race("Mannequin d'entrainement", 0, 1, 0, 0, 0, 0, pant_comp);
 }

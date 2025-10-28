@@ -107,4 +107,5 @@ public enum Competence {
     ILLU_DULLA,
     ILLU_TRITON,
     ILLU_GOLEM,
+    DUMMY,
 }

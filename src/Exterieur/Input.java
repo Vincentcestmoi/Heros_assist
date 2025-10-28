@@ -566,7 +566,7 @@ public class Input {
                 text += "/(m)onter";
             }
             if(market){
-                text += "/(a)ller au marché";
+                text += "/(a)ller au marché/(f)rapper un pantin";
             }
             if(peut_entrainer){
                 text += "/(en)trainer son familier";
@@ -598,6 +598,12 @@ public class Input {
                     }
                     System.out.println("Exterieur.Input unknow");
                 }
+                case "frapper un pantin", "frapper", "f" -> {
+                    if(market){
+                    return Choix.DUMMY;
+                }
+                System.out.println("Exterieur.Input unknow");
+            }
                 case "entrainer son familier", "en" -> {
                     if(peut_entrainer) {
                         return Choix.DRESSER;

@@ -332,7 +332,18 @@ public class Shaman extends Joueur {
             System.out.println("Les esprits de vos ancêtres vous arretes avant que vous ne fassiez quelques choses de stupides.");
             return;
         }
-        int ratio = (int) ((float) ennemi.getVie() / ennemi.getVieMax() * 12); //1~12
+        int ratio;
+        if (ennemi.est_pantin()){
+            System.out.println("Simulation d'une interraction avec un monstre aléatoire.");
+            int pvm, pv;
+            pvm = rand.nextInt(41) + 10; //10~50
+            pv = rand.nextInt(pvm - 9) + 5; //5~pvm-5
+            System.out.printf("Simulation : Monstre ayant %d/%d points de vie\n", pv, pvm);
+            ratio = (int) ((float) pv / pvm * 10);
+            System.out.println("Puissance d'âme simulée : " + ratio);
+        } else {
+            ratio = (int) ((float) ennemi.getVie() / ennemi.getVieMax() * 10); //1~10
+        }
         if (ennemi.est_nomme()) {
             ratio += 4 + rand.nextInt(3); //4~6
         }
@@ -348,18 +359,30 @@ public class Shaman extends Joueur {
         }
         if (result <= -5) {
             System.out.println("L'âme de " + getNom() + " est violemment rejetée par celle de " + ennemi.getNom() + " !");
-            rendre_mort();
+            if(ennemi.est_pantin()){
+                System.out.println("Protocole de sécurité engagée, tentative de préservation de l'âme en cours.");
+                System.out.println(getNom() + " subit " + (-result)/2 + " dommages directes.");
+            } else {
+                rendre_mort();
+            }
         }
         else if (result <= -1) {
             System.out.println("l'âme de " + getNom() + " est blessé par celle de " + ennemi.getNom());
-            System.out.println(getNom() + " subit " + (-result) + " dommages.");
+            System.out.println(getNom() + " subit " + (-result) + " dommages directes.");
+        }
+        else if (result == 0){
+            System.out.println(getNom() + " n'est pas parvenu à se lier à " + ennemi.getNom());
         }
         else if (result <= 3){
-            System.out.println(getNom() + " n'est pas parvenu à se lier à " + ennemi.getNom() + " et à bléssé son âme");
+            System.out.println(getNom() + " n'est pas parvenu à se lier à " + ennemi.getNom() + " et à blessé son âme");
             ennemi.dommage_direct(result);
         }
         else {
             System.out.println("Les âmes de " + ennemi.getNom() + " et de " + getNom() + " entre en communion !");
+            if(ennemi.est_pantin()){
+                System.out.printf("Fin de la simulation, le monstre aurait un niveau d'affection de %d/7\n", min(7, rand.nextInt(result) + 3));
+                return;
+            }
             setOb(min(7, rand.nextInt(result) + 3));
             Combat.stop_run();
             ennemi.presente_familier();

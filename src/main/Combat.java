@@ -74,7 +74,7 @@ public class Combat {
 
         combat(ennemi, pr_l, position);
 
-        System.out.println("Fin du combat");
+        System.out.println("Fin du combat\n");
         gestion_fin_combat(ennemi.est_nomme());
     }
 
@@ -216,10 +216,18 @@ public class Combat {
                     }
                     case DOMESTIQUER -> {
                         if (ennemi.domestiquer(joueur.bonus_dresser())) {
-                            ennemi.presente_familier();
-                            joueur.ajouter_familier();
-                            joueur.gagneXp();
-                            stop_run();
+                            if(ennemi.est_pantin()){
+                                System.out.println("Félicitation, vous avez réussit à domestiquer la cible.");
+                                System.out.println("Fin de la simulation, le monstre aurait un niveau d'affection de 1/7.");
+                            } else {
+                                ennemi.presente_familier();
+                                joueur.ajouter_familier();
+                                joueur.gagneXp();
+                                stop_run();
+                            }
+                        } else if(ennemi.est_pantin()){
+                            System.out.println("Vous n'avez pas réussit à domestiquer la cible.");
+                            System.out.println("Fin de la simulation, le monstre aurait un niveau d'affection de 0/7.");
                         }
                     }
                     case AUTRE -> System.out.println(joueur.getNom() + " fait quelque chose.");
@@ -758,7 +766,11 @@ public class Combat {
             }
         }
         System.out.println(ennemi.getNom() + " :");
-        System.out.println("vie : " + (temp >= 5 ? pv : "???") + "/" + (temp >= 2 ? pvm : "???"));
+        if(ennemi.est_pantin()){
+            System.out.println("vie : " + (temp >= 5 ? "∞" : "???") + "/" + (temp >= 2 ? "∞" : "???"));
+        } else {
+            System.out.println("vie : " + (temp >= 5 ? pv : "???") + "/" + (temp >= 2 ? pvm : "???"));
+        }
         System.out.println("attaque : " + (temp >= 3 ? atk : "???"));
         System.out.println("armure : " + (temp >= 7 ? arm : "???"));
     }
