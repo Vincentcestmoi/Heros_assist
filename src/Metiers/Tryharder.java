@@ -65,7 +65,7 @@ public class Tryharder extends Joueur {
                 gagneXpLocal();
             }
             System.out.println(nom + " a gagné un niveau !");
-            lvl_up();
+            super_lvl_up();
         }
     }
 

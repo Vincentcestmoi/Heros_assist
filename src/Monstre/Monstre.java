@@ -1074,13 +1074,14 @@ public class Monstre {
 
     /**
      * Renvoie le résultat de la compétence "domestiquer"
+     * @param bonus un bonus du joueur
      * @throws IOException jsp mais sans ça, ça ne marche pas
      * @return si le monstre est domestiqué
      */
-    public Boolean domestiquer() throws IOException {
+    public Boolean domestiquer(int bonus) throws IOException {
         switch (competence){
             case COLERE, VIOLENT -> {
-                if(Input.D8() <= this.vie){
+                if(Input.D8() + bonus <= this.vie){
                     System.out.println(this.nom + " réagit très agressivement.");
                     return false;
                 }

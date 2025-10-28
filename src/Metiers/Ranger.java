@@ -281,10 +281,13 @@ public class Ranger extends Joueur {
                 imprecision -= 8;
             }
         }
+        if(this.niveau >= 9){ //bonus classe mère
+            imprecision -= 1;
+        }
         if(this.niveau >= 10){
             imprecision -= 2; //on pourrait enlever 7 à chaque fois plutôt, mais cela réduit l'efficacité des autres paliers
         }
-        if(rand.nextInt(imprecision) == 0) { //2% à 12.5%
+        if(rand.nextInt(imprecision) == 0) { //2% à 14.25%
             return base * 0.15f * (rand.nextInt(6) + 1); //15% à 90% de bonus
         }
         return 0;
@@ -302,7 +305,10 @@ public class Ranger extends Joueur {
                 imprecision -= 7;
             }
         }
-        if(rand.nextInt(imprecision) == 0) { //2% à 12.5%
+        if(this.niveau >= 9){
+            imprecision -= 1;
+        }
+        if(rand.nextInt(imprecision) == 0) { //2% à 14.25%
             return base * 0.1f * (rand.nextInt(5) + 2); //20% à 60% de bonus
         }
         return 0;

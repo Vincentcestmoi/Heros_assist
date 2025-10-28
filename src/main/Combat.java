@@ -211,7 +211,7 @@ public class Combat {
                         ennemi.soigner(temp);
                     }
                     case DOMESTIQUER -> {
-                        if (ennemi.domestiquer()) {
+                        if (ennemi.domestiquer(joueur.bonus_dresser())) {
                             ennemi.presente_familier();
                             joueur.ajouter_familier();
                             joueur.gagneXp();

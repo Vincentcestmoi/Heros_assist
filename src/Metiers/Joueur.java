@@ -77,7 +77,7 @@ public abstract class Joueur {
         this.parent = parent;
         setNiveau(xp);
         this.armure = 0;
-        actualiser_niveau();
+        super_actualiser_niveau();
         SetEffetParent();
     }
 
@@ -153,8 +153,16 @@ public abstract class Joueur {
 
     /**
      * Met à jour les informations du personnage à partir de son niveau
+     * @implNote : Ne dois pas être appellé, sauf par le super
      */
     protected abstract void actualiser_niveau();
+
+    private void super_actualiser_niveau() {
+        if(this.niveau >= 6){
+            this.attaque += 1;
+        }
+        actualiser_niveau();
+    }
 
     //************************************************SAUVEGARDE******************************************************//
 
@@ -598,7 +606,7 @@ public abstract class Joueur {
             this.niveau += 1;
             this.xp -= this.niveau * 5;
             System.out.println(nom + " a gagné un niveau !");
-            lvl_up();
+            super_lvl_up();
         }
     }
 
@@ -625,8 +633,26 @@ public abstract class Joueur {
 
     /**
      * Ajoute les données dû à la montée de niveau
+     * @implNote ne dois pas être appellé, sauf par le super
      */
     abstract void lvl_up();
+
+    /**
+     * Ajoute les données dû à la montée de niveau
+     */
+    protected void super_lvl_up(){
+        System.out.println(switch(this.niveau){
+            case 4 -> "Votre vitesse de fuite a augmenté.";
+            case 6 -> {
+                this.vie += 1;
+                yield "Votre résistance a augmenté";
+            }
+            case 7 -> "Vos compétence de domptage ont augmenté.";
+            case 9 -> "Votre précision a augmenté.";
+            default -> "";
+        });
+        lvl_up();
+    }
 
     /**
      * Compte les tours pour arrêter les bonus de vent du shaman
@@ -1112,7 +1138,7 @@ public abstract class Joueur {
     }
 
     protected int entrainer() throws IOException {
-        return switch (Input.D6()) {
+        return switch (Input.D6() + bonus_dresser()) {
             case 1 -> {
                 if (Input.D4() <= 2) {
                     System.out.println("Votre familier désapprouve fortement vos méthodes d'entrainement.\n");
@@ -1411,7 +1437,6 @@ public abstract class Joueur {
 
     /**
      * Traite l'action bonus potion
-     *
      * @return les dégats additionnel des potions (en négatif si les dommages ne s'appliquent qu'à l'attaque au corps à corps).
      */
     public int popo() throws IOException {
@@ -1652,6 +1677,17 @@ public abstract class Joueur {
     }
 
     /**
+     * Contabilise les bonus de dressage
+     * @return le bonus
+     */
+    public int bonus_dresser(){
+        if (this.niveau >= 7){
+            return 1;
+        }
+        return 0;
+    }
+
+    /**
      * Réalise les actions de fin de tour (en combat)
      */
     public void fin_tour_combat(){
@@ -1753,7 +1789,11 @@ public abstract class Joueur {
      * @return le bonus de dommages
      */
     protected float critique_tir(int base) {
-        if(rand.nextInt(50) == 0) { //2%
+        int imprecision = 50;
+        if(this.niveau >= 9){
+            imprecision = 40;
+        }
+        if(rand.nextInt(imprecision) == 0) { //2%~2.5%
             return base * 0.1f * (rand.nextInt(5) + 1); //10% à 50% de bonus
         }
         return 0;
@@ -1794,7 +1834,11 @@ public abstract class Joueur {
      * @return le bonus de dommages
      */
     protected float critique_atk(int base) {
-        if(rand.nextInt(50) == 0) { //2%
+        int imprecision = 50;
+        if(this.niveau >= 9){
+            imprecision -= 10;
+        }
+        if(rand.nextInt(imprecision) == 0) { //2% à 2.5%
             return base * 0.1f * (rand.nextInt(5) + 1); //10% à 50% de bonus
         }
         return 0;
@@ -1931,6 +1975,9 @@ public abstract class Joueur {
      * @return le bonus
      */
     protected int bonus_fuite() {
+        if (this.niveau >= 4){
+            return 1;
+        }
         return 0;
     }
 

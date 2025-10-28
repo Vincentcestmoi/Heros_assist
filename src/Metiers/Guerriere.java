@@ -387,7 +387,10 @@ public class Guerriere extends Joueur {
                 imprecision -= 10;
             }
         }
-        if(rand.nextInt(imprecision) == 0) { //2% à 10%
+        if(this.niveau >= 9){ // bonus classe mère
+            imprecision -= 1;
+        }
+        if(rand.nextInt(imprecision) == 0) { //2% à 11.1%
             return base * 0.15f * (rand.nextInt(5) + 1); //15% à 75% de bonus
         }
         return 0;
