@@ -608,7 +608,7 @@ public class Monstre {
      * @param quantite la quantité de dommage à infliger
      * @throws IOException toujours
      */
-    public void dommage_directe(int quantite) throws IOException {
+    public void dommage_direct(int quantite) throws IOException {
         if(quantite <= 0){
             return;
         }
@@ -843,6 +843,9 @@ public class Monstre {
      * Règle l'état du monstre à "assommé"
      */
     public void do_assomme() {
+        if(est_mort()){
+            return;
+        }
         switch (competence){
             case GOLEM_ACIER, GOLEM_MITHRIL -> {
                 System.out.println(nom + " n'a pas de conscience, et ne peut pas être assommé(e).");
@@ -867,7 +870,9 @@ public class Monstre {
      * Règle l'état du monstre à "étourdi"
      */
     public void do_etourdi() {
-
+        if(est_mort()){
+            return;
+        }
         switch (competence) {
             case GOLEM_ACIER, GOLEM_MITHRIL -> {
                 System.out.println(nom + " est trop solide pour être étourdi(e).");
