@@ -356,7 +356,7 @@ public class Shaman extends Joueur {
         }
         else if (result <= 3){
             System.out.println(getNom() + " n'est pas parvenu à se lier à " + ennemi.getNom() + " et à bléssé son âme");
-            ennemi.dommage_directe(result);
+            ennemi.dommage_direct(result);
         }
         else {
             System.out.println("Les âmes de " + ennemi.getNom() + " et de " + getNom() + " entre en communion !");
@@ -831,7 +831,6 @@ public class Shaman extends Joueur {
             }
             ennemi.do_assomme();
         } else {
-
             System.out.println("Le nuage noir s'abt sur l'ennemi, illuminant la scène chaque fois qu'un éclair le frappe.");
             for(int i = 0; i < rand.nextInt(3) + 3; i++) { //3 à 6 fois
                 ennemi.dommage(7 + rand.nextInt(9)); //7~15
@@ -872,38 +871,75 @@ public class Shaman extends Joueur {
      */
     private void vent(Monstre ennemi) throws IOException {
         System.out.println("Le vent se lève...");
-        int jet = Input.D6() + rand.nextInt(3) - 1;
+        int jet = jet(new int[] {}, new int[] {6}, new int[] {10, 10}, true);
+        // D6
         if(jet <= 1) {
             System.out.println("Une légère brise se fait sentir.");
-        }
-        else if (jet <= 4) {
+            if(tir_vent(3, rand.nextInt(Main.nbj) + 1)){
+                return;
+            }
+        } else if (jet <= 3) {
             System.out.println("Une puissant vent souffle.");
-            if(tir_bonus <= 2){
-                tir_bonus = 2;
-                tour_modif = rand.nextInt(3) -1 + Main.nbj;
+            if(tir_vent(8, Main.nbj)) {
+                return;
             }
-            System.out.println("Tous les tirs sont temporairement boostés.");
-        }
-        else if (jet <= 6) {
-            System.out.println("De violente rafale se prononce.");
-            if(tir_bonus <= 3){
-                tir_bonus = 3;
-                tour_modif = Main.nbj + rand.nextInt(3) -1 + rand.nextInt(Main.nbj);
+        } else if (jet <= 5) {
+            System.out.println("De violentes rafales se prononce.");
+            ennemi.dommage_direct(2);
+            if(tir_vent(12, Main.nbj + rand.nextInt(Main.nbj + 1))){
+                return;
             }
-            System.out.println("Tous les tirs sont temporairement boostés.");
-            ennemi.dommage(2);
-        }
-        else{
+        } else if (jet == 6){
+            ennemi.dommage_direct(3);
+            if(tir_vent(17, Main.nbj + 2 * rand.nextInt(Main.nbj + 1))){
+                return;
+            }
+        } // D6 + 2
+        else if (jet == 7){
             System.out.println("Le vent est si puissant que vous avez du mal à ne pas être emporté.");
-            if(tir_bonus <= 5){
-                tir_bonus = 5;
-                attaque_bonus = -3;
-                tour_modif = Main.nbj * 2 + rand.nextInt(Main.nbj * 3);
+            ennemi.dommage_direct(4);
+            if(tir_vent(26, -5, Main.nbj * 2 + rand.nextInt((Main.nbj + 1) * 3))){
+                return;
             }
-            System.out.println("Tous les tirs sont temporairement boostés.");
-            System.out.println("Toutes les attaques sont temporairement baissés.");
-            ennemi.dommage(5);
+            System.out.println("Toutes les attaques sont temporairement baissées.");
+        } else {
+            System.out.println("De violentes bourrasques vous empêchent de tenir debout.");
+            ennemi.dommage_direct(5);
+            if(tir_vent(42, -23, Main.nbj * 3 + rand.nextInt((Main.nbj + 1) * 5))){
+                return;
+            }
+            System.out.println("Toutes les attaques sont temporairement baissées.");
         }
+        System.out.println("Tous les tirs sont temporairement boostés.");
+    }
+
+    /**
+     * Méthode auxiliaire de vent, met à jour les modificateur de vent
+     * @param value_tir la nouvelle valeur de modificateur tir à mettre à jour
+     * @param duree la durée du bonus
+     * @return si la modification a été ignorée
+     */
+    private boolean tir_vent(int value_tir, int duree){
+        return tir_vent(value_tir, 0, duree);
+    }
+
+    /**
+     * Méthode auxiliaire de vent, met à jour les modificateur de vent
+     *
+     * @param value_tir la nouvelle valeur de modificateur tir à mettre à jour
+     * @param value_atk la nouvelle valeur de modificateur d'attaque
+     * @param duree     la durée du bonus
+     * @return si la modification a été ignorée
+     */
+    private boolean tir_vent(int value_tir, int value_atk, int duree){
+        if(tir_bonus <= value_tir){
+            tir_bonus = value_tir;
+            attaque_bonus = value_atk;
+            tour_modif = duree + rand.nextInt(3) - 1;
+            return false;
+        }
+        System.out.println("Le vent souffle déjà fort.");
+        return true;
     }
 
     /**
@@ -913,31 +949,45 @@ public class Shaman extends Joueur {
      */
     private void terre(Monstre ennemi) throws IOException {
         System.out.println("La terre commence à trembler...");
-        int jet = Input.D6() + rand.nextInt(3) - 1;
+        int jet = jet(new int[] {}, new int[] {6}, new int[] {10, 10}, true);
+        // D6
         if(jet <= 1) {
             System.out.println("Vous entendez un léger grondement.");
-        }
-        else if (jet <= 4) {
-            System.out.println("Des fragment de roches s'arrachent du sol et herte l'ennemi.");
-            ennemi.dommage(3 + rand.nextInt(2));
-            if(rand.nextBoolean()){
+            ennemi.dommage(2);
+        } else if (jet <= 3) {
+            System.out.println("Des fragments de roches s'arrachent du sol et hertent l'ennemi.");
+            ennemi.dommage(3 + rand.nextInt(5)); //3~5
+            ennemi.do_etourdi();
+        } else if (jet <= 5) {
+            System.out.println("Un rocher se soulève et frappe l'adversaire.");
+            ennemi.dommage(5 + rand.nextInt(3)); //5~7
+            if(rand.nextBoolean()){ //50% => 25% assommer
                 ennemi.do_etourdi();
+            } else {
+                ennemi.affecte();
             }
-        }
-        else if (jet <= 6) {
-            System.out.println("Le sol se fends sous l'ennemi !");
-            ennemi.dommage(3 + rand.nextInt(2));
-            if(rand.nextBoolean()){
-                ennemi.do_etourdi();
-            }
-            else {
+        } else if (jet == 6){
+            System.out.println("Un rocher se soulève et frappe violemment l'adversaire.");
+            ennemi.dommage(9 + rand.nextInt(7)); //9~15
+            ennemi.affecte(); // 50% assommer
+        } // D6 + 2
+        else if(jet == 7){
+            System.out.println("Le sol se soulève et une avalanche rocailleuse frappe le monstre ennemi.");
+            ennemi.dommage(20 + rand.nextInt(5)); //20~24
+            if(rand.nextInt(3) != 0){ //66% => 83.1% assommer
+                ennemi.do_assomme();
+            } else {
                 ennemi.affecte();
             }
         }
         else{
-            System.out.println("Le sol sous l'ennemi se soulève !");
-            ennemi.dommage(4 + rand.nextInt(3));
-            ennemi.affecte();
+            System.out.println("Le sol se soulève et se fissure en deux. Les deux parties se fracasse l'une contre l'autre sur le monstre ennemi.");
+            ennemi.dommage(29 + rand.nextInt(45)); //29~73
+            if(rand.nextInt(5) != 0){ //80% => 90% assommer
+                ennemi.do_assomme();
+            } else {
+                ennemi.affecte();
+            }
         }
     }
 
@@ -948,26 +998,32 @@ public class Shaman extends Joueur {
      */
     private void feu(Monstre ennemi) throws IOException {
         System.out.println("Vous entendez de légers crépitements...");
-        int jet = Input.D6() + rand.nextInt(3) - 1;
+        int jet = jet(new int[] {}, new int[] {6}, new int[] {10, 10}, true);
+        int dommage;
+        // D6
         if(jet <= 1) {
-            System.out.println("Must been the wind...");
-        }
-        else if (jet <= 3) {
+            dommage = 4;
+        } else if (jet <= 3) {
             System.out.println("L'ennemi semble indisposé par quelque chose.");
-            ennemi.dommage(2 + rand.nextInt(2));
+            dommage = jet + 5 + rand.nextInt(2); //7~9
+        } else if (jet == 4) {
+            System.out.println("De la fumée s'échappe du monstre ennemi.");
+            dommage = 7 + rand.nextInt(7); //7~13
+        } else if (jet == 5) {
+            System.out.println("Des flammes s'élève de l'adversaire !");
+            dommage = 10 + rand.nextInt(6); // 10~15
+        } else if (jet == 6) {
+            System.out.println("L'ennemi brûle de l'intérieur !");
+            dommage = 13 + rand.nextInt(9); // 13~21
+        } // D6 + 2
+        else if (jet == 7){
+            System.out.println("Le monstre ennemi se transforme en un véritable brasier !");
+            dommage = 17 + rand.nextInt(6); // 17~22
+        } else {
+            System.out.println("Une véritable tornade de flamme rugit dans le corps de l'adversaire.");
+            dommage = 23 + rand.nextInt(3); // 23~25
         }
-        else if (jet <= 5) {
-            System.out.println("Le monstre prend feu !");
-            ennemi.dommage(4 + rand.nextInt(3));
-        }
-        else if (jet <= 7) {
-            System.out.println("Des flammes s'élève tout autour de l'adversaire !");
-            ennemi.dommage(5 + rand.nextInt(5));
-        }
-        else{
-            System.out.println("Un véritable brasier apparait aurour de l'ennemi !");
-            ennemi.dommage(6 + rand.nextInt(7));
-        }
+        ennemi.dommage_direct(dommage, false);
     }
 
     /**
@@ -977,28 +1033,41 @@ public class Shaman extends Joueur {
      */
     private void eau(Monstre ennemi) throws IOException {
         System.out.println("Vous entendez un léger gargouillement...");
-        int jet = Input.D6() + rand.nextInt(3) - 1;
+        int jet = jet(new int[] {}, new int[] {6}, new int[] {10, 10}, true);
+        // D
         if(jet <= 1) {
             System.out.println("Vous sentez quelques gouttes de pluie.");
-        }
-        else if (jet <= 3) {
-            System.out.println("Une pluie purificatrice s'abat.");
             System.out.println("Tous les joueurs récupèrent 1PP.");
-        }
-        else if (jet <= 5) {
+        } else if (jet <= 3) {
+            System.out.println("Une pluie purificatrice s'abat.");
+            System.out.println("Tous les joueurs récupèrent 2PP.");
+        } else if (jet == 4) {
             System.out.println("De l'eau jaillit de sous l'adversaire, le faisant glisser.");
+            System.out.println("Cette eau magique purifie votre corps");
+            System.out.println("Tous les joueurs récupèrent 2PP.");
             ennemi.dommage(1 + rand.nextInt(2));
-            ennemi.do_etourdi(); // glissade
-        }
-        else if (jet <= 7) {
-            System.out.println("Une vague magique frappe l'ennemi !");
+            ennemi.do_etourdi();
+        } else if (jet <= 6) {
+            System.out.println("Une vague magique frappe l'ennemi et vous renforce.");
+            System.out.println("Tous les joueurs récupèrent 3PP.");
             ennemi.dommage_magique(2 + rand.nextInt(2));
-            ennemi.affecte(); // affaiblissement magique
+            ennemi.affecte();
+        } // D6 + 2
+        else if(jet == 7){
+            System.out.println("Un torrent mystique s'abat sur le terrain, emportant l'ennemi et réveillant les joueurs.");
+            System.out.println("Tous les joueurs récupèrent 3PP.");
+            ennemi.dommage(3 + rand.nextInt(4));
+            ennemi.affecte();
+            for(int i = 0; i < Main.nbj; i++){
+                Main.joueurs[i].conscient = true;
+                Main.joueurs[i].reveil = 0;
+            }
         }
         else {
             System.out.println("Un torrent mystique s'abat sur le terrain, emportant l'ennemi et réveillant les joueurs.");
+            System.out.println("Tous les joueurs récupèrent 4PP.");
             ennemi.dommage(4 + rand.nextInt(4));
-            ennemi.affecte();
+            ennemi.do_assomme();
             for(int i = 0; i < Main.nbj; i++){
                 Main.joueurs[i].conscient = true;
                 Main.joueurs[i].reveil = 0;
