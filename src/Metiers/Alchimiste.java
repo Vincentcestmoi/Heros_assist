@@ -187,22 +187,16 @@ public class Alchimiste extends Joueur {
     public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         switch (action) {
             case FOUILLE -> {
-                if (!est_berserk()) {
                     fouille();
-                    return false;
-                }
+                return false;
             }
             case CONCOCTION -> {
-                if (!est_berserk()) {
-                    concocter();
-                    return false;
-                }
+                concocter();
+                return false;
             }
             case DEXTERITE -> {
-                if (!est_berserk()) {
-                    dexterite(ennemi, bonus_popo);
-                    return false;
-                }
+                dexterite(ennemi, bonus_popo);
+                return false;
             }
         }
         return super.traite_action(action, ennemi, bonus_popo);
