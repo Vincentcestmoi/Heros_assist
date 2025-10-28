@@ -168,7 +168,7 @@ public class SaveManager {
         }
 
         if (!discret) {
-            System.out.println("✅ Sauvegarde mise à jour : " + dossier + " (" + Main.joueurs.length + " joueur(s))");
+            System.out.println("✅ Sauvegarde mise à jour : " + titre + " (" + Main.joueurs.length + " joueur(s))");
         }
     }
 }
