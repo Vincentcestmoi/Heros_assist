@@ -490,8 +490,8 @@ public class Monstre {
                 System.out.println("Vous (tous ceux présent) gagnez définitivement 1 point de résistance.");
             }
             case FOLIE_MEURTRIERE -> {
-                System.out.println("Le corp de " + this.nom + " s'agite !");
-                System.out.println(this.nom + " vous (pl) inflige" + this.attaque + " dommages.");
+                System.out.println("\nLe corp de " + this.nom + " s'agite !");
+                System.out.println(this.nom + " vous (pl) inflige" + this.attaque + " dommages.\n");
             }
             case DUO_PASSED -> {
                 competence = Competence.AUCUNE;
@@ -606,9 +606,8 @@ public class Monstre {
     /**
      * Inflige des dommages au monstre sans aucun calcul
      * @param quantite la quantité de dommage à infliger
-     * @throws IOException toujours
      */
-    public void dommage_direct(int quantite) throws IOException {
+    public void dommage_direct(int quantite) {
         if(quantite <= 0){
             return;
         }
