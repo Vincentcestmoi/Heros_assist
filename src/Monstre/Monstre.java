@@ -608,10 +608,19 @@ public class Monstre {
      * @param quantite la quantité de dommage à infliger
      */
     public void dommage_direct(int quantite) {
+        dommage_direct(quantite, true);
+    }
+
+    /**
+     * Inflige des dommages au monstre sans aucun calcul
+     * @param quantite la quantité de dommage à infliger
+     * @param is_silent si on renvoie un message suite aux dommages subits
+     */
+    public void dommage_direct(int quantite, boolean is_silent) {
         if(quantite <= 0){
             return;
         }
-        subit_dommage(quantite, true);
+        subit_dommage(quantite, is_silent);
     }
 
     /**
