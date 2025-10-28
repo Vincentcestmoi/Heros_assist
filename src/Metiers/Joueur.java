@@ -319,7 +319,7 @@ public abstract class Joueur {
      */
     private void setNiveau(int experience){
         int niveau = 0;
-        while(experience > 5 * (niveau + 1)){
+        while(experience >= 5 * (niveau + 1)){
             niveau++;
             experience -= niveau * 5;
         }
@@ -654,14 +654,14 @@ public abstract class Joueur {
      * Ajoute les données dû à la montée de niveau
      */
     protected void super_lvl_up(){
-        System.out.println(switch(this.niveau){
-            case 4 -> "Votre vitesse de fuite a augmenté.";
+        System.out.print(switch(this.niveau){
+            case 4 -> "Votre vitesse de fuite a augmenté.\n";
             case 6 -> {
                 this.vie += 1;
-                yield "Votre résistance a augmenté";
+                yield "Votre résistance a augmenté.\n";
             }
-            case 7 -> "Vos compétence de domptage ont augmenté.";
-            case 9 -> "Votre précision a augmenté.";
+            case 7 -> "Vos compétence de domptage ont augmenté.\n";
+            case 9 -> "Votre précision a augmenté.\n";
             default -> "";
         });
         lvl_up();
@@ -1976,7 +1976,7 @@ public abstract class Joueur {
         bonus += bonus_fuite();
         bonus += berserk_fuite();
         bonus += position_fuite();
-        if (Input.D6() + bonus >= 4) {
+        if (Input.D6() + bonus >= 3) {
             System.out.println(nom + " a fuit le combat.");
             inactiver();
             if(ennemi_nomme){
@@ -2037,7 +2037,7 @@ public abstract class Joueur {
             }
             return -3;
         }
-        return 3;
+        return 0;
     }
 
     /**
