@@ -167,6 +167,10 @@ public class Combat {
                     if(act == Action.OFF){
                         alteration(joueur, pr_l);
                     }
+                    if(act == Action.JOINDRE){
+                        Joueur.joindre(pos);
+                        act = Action.OFF;
+                    }
                 }while(act == Action.OFF && joueur.peut_jouer());
                 if(!joueur.peut_jouer()){
                     act = Action.AUCUNE;

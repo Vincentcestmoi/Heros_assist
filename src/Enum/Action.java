@@ -16,6 +16,7 @@ public enum Action {
     PROTEGER,
     END,
     AUCUNE,
+    JOINDRE,
 
     //metier
     MAUDIR,

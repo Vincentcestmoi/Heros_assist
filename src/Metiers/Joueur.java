@@ -51,6 +51,8 @@ public abstract class Joueur {
     protected boolean cecite;
     protected boolean poison1;
     protected boolean poison2;
+    protected boolean peut_joindre;
+    protected boolean skip_joindre;
 
     //familier en combat
     protected boolean f_front;
@@ -62,6 +64,7 @@ public abstract class Joueur {
     protected boolean f_cecite;
     protected boolean f_poison1;
     protected boolean f_poison2;
+    protected boolean f_skip_joindre;
 
     //modificateur
     protected static int attaque_bonus = 0;
@@ -384,6 +387,10 @@ public abstract class Joueur {
     }
 
     public boolean familier_peut_pas_jouer() {
+        if(f_skip_joindre){
+            f_skip_joindre = false;
+            return true;
+        }
         return !a_familier_actif() || f_skip || f_est_assomme();
     }
 
@@ -408,6 +415,12 @@ public abstract class Joueur {
     }
 
     public boolean est_pas_activable() {
+        if(skip_joindre){
+            System.out.println(nom + " débarque en plein combat !");
+            skip_joindre = false;
+            f_skip_joindre = false;
+            return true;
+        }
         return !est_actif() || !est_vivant();
     }
 
@@ -686,9 +699,10 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     public void init_affrontement(boolean force, Position pos) throws IOException {
-        if (!force && (pos != position || !Input.yn("Est-ce que " + nom + " participe au combat ?"))) {
+        if (!force && (pos != this.position || !Input.yn("Est-ce que " + nom + " part au combat ?"))) {
             actif = false;
             f_actif = false;
+            peut_joindre = pos == this.position;
             return;
         }
         actif = true;
@@ -706,7 +720,8 @@ public abstract class Joueur {
         tir_bonus = 0;
         bonus_infection = 0;
         tour_modif = 0;
-        if (a_familier() && Input.yn("Est-ce que votre familier participe au combat ?")) {
+        peut_joindre = false;
+        if (a_familier() && Input.yn("Est-ce que votre familier vous rejoint au combat ?")) {
             f_actif = true;
             f_conscient = true;
             f_skip = false;
@@ -716,6 +731,23 @@ public abstract class Joueur {
             f_poison2 = false;
         } else {
             f_actif = false;
+        }
+    }
+
+    /**
+     * Permet aux joueurs qui en sont abscent de rejoindre un combat
+     * @param pos le lieu du combat
+     * @throws IOException toujours
+     */
+    static public void joindre(Position pos) throws IOException {
+        for(Joueur j : Main.joueurs){
+            if(j.peut_joindre){
+                j.init_affrontement(false, pos);
+            }
+            if(j.est_actif()){
+                j.skip_joindre = true;
+                j.f_skip_joindre = true;
+            }
         }
     }
 
@@ -771,6 +803,7 @@ public abstract class Joueur {
     public void inactiver() {
         actif = false;
         f_actif = false;
+        peut_joindre = false;
     }
 
     public void f_inactiver() {
@@ -1407,7 +1440,7 @@ public abstract class Joueur {
                 text += "(p)otion/";
             }
         }
-        text += "(c)ustom/(a)ucune";
+        text += "(c)ustom/(A)ucune";
         return text;
     }
 

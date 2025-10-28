@@ -11,7 +11,6 @@ import Enum.Promo_Type;
 import Enum.Action;
 import Enum.Action_extra;
 import Enum.Choix;
-import Enum.Incantation;
 
 import java.io.File;
 import java.io.IOException;
@@ -421,6 +420,7 @@ public class Input {
             case "f" -> Action.FUIR;
             case "c" -> Action.AUTRE;
             case "o" -> Action.OFF;
+            case "j" -> Action.JOINDRE;
 
             // actions joueur
             case "t" -> {
