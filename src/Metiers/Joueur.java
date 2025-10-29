@@ -861,7 +861,6 @@ public abstract class Joueur {
 
     /**
      * Essaie de se réveiller (assommé)
-     *
      * @throws IOException toujours
      */
     public void essaie_reveil() throws IOException {

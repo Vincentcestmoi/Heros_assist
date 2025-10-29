@@ -268,8 +268,10 @@ public class Archimage extends Joueur {
     @Override
     public void essaie_reveil() throws IOException {
         // l'archimage peut se réveiller via un sort
-        if (this.niveau >= 2 && Input.yn("Utiliser purge ( " + purge_cout + "PP) pour reprendre conscience ?")) {
-            purge();
+        if(est_assomme()) {
+            if (this.niveau >= 2 && Input.yn("Utiliser purge (" + purge_cout + "mana) pour reprendre conscience ?")) {
+                purge();
+            }
         }
         else{
             super.essaie_reveil();
