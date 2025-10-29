@@ -207,7 +207,7 @@ public class Combat {
                         ennemi.dommage_magique(Input.magie() + dps_popo);
                         dps_popo = 0;
                     }
-                    case FUIR -> joueur.fuir(ennemi.est_nomme());
+                    case FUIR -> joueur.fuir(ennemi);
                     case ASSOMER -> ennemi.assommer(joueur.getBerserk());
                     case ENCAISSER -> ennemi.encaisser();
                     case SOIGNER -> {
