@@ -121,12 +121,8 @@ public class Main {
     static void expedition_enfer(int meneur) throws IOException {
         Monstre monstre = Lieu.enfers();
         int jet = Input.D4() + joueurs[meneur].bonus_exploration();
-        if(jet <= 1){
-            if(rand.nextBoolean()){
-                jet = 0;
-            } else {
-                jet = 1;
-            }
+        if(jet == 1 && rand.nextBoolean()){
+            jet = 0;
         } else if(jet > 5){
             jet = 5;
         }
@@ -162,10 +158,7 @@ public class Main {
     static void expedition_prairie(int meneur) throws IOException {
         Monstre monstre = Lieu.prairie();
         int jet = Input.D6() + joueurs[meneur].bonus_exploration();
-        if(jet < 1){
-            jet = 1;
-        }
-        else if(jet > 7){
+        if(jet > 7){
             jet = 7;
         }
         switch (jet) {
@@ -204,10 +197,7 @@ public class Main {
     static void expedition_vigne(int meneur) throws IOException {
         Monstre monstre = Lieu.vigne();
         int jet = Input.D6() + joueurs[meneur].bonus_exploration();
-        if(jet < 1){
-            jet = 1;
-        }
-        else if(jet > 7){
+        if(jet > 7){
             jet = 7;
         }
         switch (jet) {
@@ -256,10 +246,7 @@ public class Main {
     static void expedition_temple(int meneur) throws IOException {
         Monstre monstre = Lieu.temple();
         int jet = Input.D8() + joueurs[meneur].bonus_exploration();
-        if(jet < 1){
-            jet = 1;
-        }
-        else if(jet > 9){
+        if(jet > 9){
             jet = 9;
         }
         switch (jet) {
@@ -302,10 +289,7 @@ public class Main {
     static void expedition_mer(int meneur) throws IOException {
         Monstre monstre = Lieu.mer();
         int jet = Input.D8() + joueurs[meneur].bonus_exploration();
-        if(jet < 1){
-            jet = 1;
-        }
-        else if(jet > 9){
+        if(jet > 9){
             jet = 9;
         }
         switch (jet) {
@@ -348,10 +332,7 @@ public class Main {
     static void expedition_mont(int meneur) throws IOException {
         Monstre monstre = Lieu.mont();
         int jet = Input.D12() + joueurs[meneur].bonus_exploration();
-        if(jet < 1){
-            jet = 1;
-        }
-        else if(jet > 13){
+        if(jet > 13){
             jet = 13;
         }
         switch (jet) {
@@ -387,10 +368,7 @@ public class Main {
     static void expedition_olympe(int meneur) throws IOException {
         Monstre monstre = Lieu.olympe();
         int jet = Input.D20() + joueurs[meneur].bonus_exploration();
-        if(jet < 1){
-            jet = 1;
-        }
-        else if(jet > 21){
+        if(jet > 21){
             jet = 21;
         }
         switch (jet) {
