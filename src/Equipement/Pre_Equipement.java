@@ -44,7 +44,18 @@ public class Pre_Equipement {
      * @param rang le rang de l'équipement à supprimer
      * @param promo le type de promotion, significatif uniquement si le rang est PROMOTION
      */
-    public static void safe_delete(String nom, Rang rang, Promo_Type promo) {
+    public static void safe_delete(String nom, Rang rang, Promo_Type promo){
+        safe_delete(nom, rang, promo, false);
+    }
+
+    /**
+     * Suprimme les équipements donnés
+     * @param nom le nom de l'équipement à supprimer
+     * @param rang le rang de l'équipement à supprimer
+     * @param promo le type de promotion, significatif uniquement si le rang est PROMOTION
+     * @param silence si on affiche le message de suppression
+     */
+    public static void safe_delete(String nom, Rang rang, Promo_Type promo, boolean silence) {
         boolean corect = false;
         Pre_Equipement[] list = switch(rang){
             case O -> rang0;
@@ -63,7 +74,9 @@ public class Pre_Equipement {
         }
         for(int i = 0; i < list.length; i++){
             if(list[i] != null && nom.equals(list[i].nom)){
-                System.out.println(nom + " supprimé(e) avec succès.");
+                if(!silence) {
+                    System.out.println(nom + " supprimé(e) avec succès.");
+                }
                 list[i] = null;
                 if(corect){
                     switch(promo){
@@ -93,6 +106,7 @@ public class Pre_Equipement {
     private void safe_delete() {
         if(this.is_unique) {
             Output.dismiss_item(this);
+            safe_delete(this.nom, this.rang, this.promo_type, true);
         }
     }
 
