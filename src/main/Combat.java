@@ -129,10 +129,12 @@ public class Combat {
         Action act, act_f;
         Action_extra act_ex;
         Joueur joueur;
+        boolean skip;
         while (run) {
 
             //chaque joueur
             for (int j = 0; j < Main.nbj && run; j++) {
+                skip = false;
                 i = t[j];
                 joueur = Main.joueurs[j];
                 Joueur.debut_tour();
@@ -164,14 +166,10 @@ public class Combat {
                 // action
                 do {
                     act = Input.action(joueur, false);
-                    if(act == Action.OFF){
-                        alteration(joueur, pr_l);
-                    }
                     if(act == Action.JOINDRE){
                         Joueur.joindre(pos);
-                        act = Action.OFF;
                     }
-                }while(act == Action.OFF && joueur.peut_jouer());
+                }while(act == Action.JOINDRE && joueur.peut_jouer());
                 if(!joueur.peut_jouer()){
                     act = Action.AUCUNE;
                 }
@@ -198,6 +196,11 @@ public class Combat {
                 }
                 switch (act) {
                     case END -> stop_run();
+                    case OFF -> {
+                        alteration(joueur, pr_l);
+                        j -= 1;
+                        skip = true;
+                    }
                     case TIRER -> {
                         joueur.tirer(ennemi, dps_popo);
                         dps_popo = 0;
@@ -252,7 +255,7 @@ public class Combat {
                     ennemi.dommage(dps_popo);
                 }
                 System.out.println();
-                if(joueur.a_familier_actif() && run) {
+                if(joueur.a_familier_actif() && run && !skip) {
                     act_f = familier_act(joueur, Input.action(joueur, true));
                     switch (act_f) {
                         case FUIR -> joueur.f_fuir();
