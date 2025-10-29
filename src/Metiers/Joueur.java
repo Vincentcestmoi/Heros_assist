@@ -1964,22 +1964,25 @@ public abstract class Joueur {
 
     /**
      * Tente de fuir le combat
-     * @param ennemi_nomme si l'ennemi est un monstre nommé (complexifie la tache et fournit de l'expérience en cas de
-     *                     réussite).
+     * @param ennemi Le monstre adverse (peut complexifier la tâche et changer le gain d'xp).
      * @throws IOException ça roule
      */
-    public void fuir(boolean ennemi_nomme) throws IOException {
+    public void fuir(Monstre ennemi) throws IOException {
         int bonus = -1 + rand.nextInt(3);
-        if(ennemi_nomme){
+        if(ennemi.est_nomme()){
             bonus -= 1;
         }
         bonus += bonus_fuite();
         bonus += berserk_fuite();
         bonus += position_fuite();
         if (Input.D6() + bonus >= 3) {
+            if(ennemi.est_pantin()){
+                System.out.println(nom + " aurait réussit à fuir le combat.");
+                return;
+            }
             System.out.println(nom + " a fuit le combat.");
             inactiver();
-            if(ennemi_nomme){
+            if(ennemi.est_nomme()){
                 gagneXp();
             }
         } else {
