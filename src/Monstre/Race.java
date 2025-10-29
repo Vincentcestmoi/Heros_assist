@@ -65,7 +65,7 @@ public class Race {
      * @implNote n'enregistre pas la suppression dans les fichiers de sauvegarde
      */
     public static void delete_monstre(String monstre) {
-        delete_monstre(monstre, false);
+        delete_monstre(monstre, true);
     }
 
     /**
