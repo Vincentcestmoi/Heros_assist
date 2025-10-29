@@ -29,8 +29,8 @@ public class Shaman extends Joueur {
         PP = "mana";
         PP_value = 0;
         PP_max = 0;
-        caracteristique = "Ame errante";
-        competences = "Incantation";
+        add_caracteristique("Ame errante");
+        add_competence("Incantation");
         possession_atk = 0;
         SetEffetParent();
     }
@@ -38,20 +38,20 @@ public class Shaman extends Joueur {
     @Override
     protected void actualiser_niveau() {
         if(this.niveau >= 2){
-            this.competences += ", Lien";
+            add_competence("Lien");
             this.vie += 1;
         }
         if(this.niveau >= 3){
-            this.competences += ", Paix intérieure";
+            add_competence("Paix intérieure");
         }
         if(this.niveau >= 4){
             this.attaque += 1;
         }
         if(this.niveau >= 5){
-            this.caracteristique += ", Second souffle";
+            add_caracteristique("Second souffle");
         }
         if(this.niveau >= 7){
-            this.caracteristique += ", Eclaireur";
+            add_caracteristique("Eclaireur");
         }
         if(this.niveau >= 8){
             this.armure += 1;
@@ -107,14 +107,14 @@ public class Shaman extends Joueur {
             case 1 -> "Nouvelles incantations apprises !"; // nuage de base (pas foudre)
             case 2 -> {
                 this.vie += 1;
-                this.competences += ", Lien";
+                add_competence("Lien");
                 yield """
             Nouvelle compétence débloquée !
             Votre résistance a légèrement augmenté.
             """;
             }
             case 3 -> {
-                this.competences += ", Paix intérieure";
+                add_competence("Paix intérieure");
                 yield """
             Nouvelle compétence débloquée !
             Nouvelle incantation apprise !
@@ -129,7 +129,7 @@ public class Shaman extends Joueur {
             }
             case 5 -> {
                 this.vie += 1;
-                this.caracteristique += ", Second souffle";
+                add_caracteristique("Second souffle");
                 yield """
                        Des esprits bienfaisants se mettent à vous suivre.
                        Votre résistance s'en trouve légèrement renforcée.
@@ -143,7 +143,7 @@ public class Shaman extends Joueur {
                     Votre esprit est plus calme même sous la fureur.
                     """; //nuage foudre, bonus nuages, réduction malus berserk
             case 7 -> {
-                this.caracteristique += ", Eclaireur";
+                add_caracteristique("Eclaireur");
                 yield """
                        Nouvelle caractèristique débloquée !";
                        Votre âme s'est légèrement renforcée.
@@ -868,7 +868,7 @@ public class Shaman extends Joueur {
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
-    private void element(Monstre ennemi) throws IOException { //TODO les éléments
+    private void element(Monstre ennemi) throws IOException {
         System.out.println("""
                 Choississez un élément à invoquer :\
                 \t1: ∆Ψ≋ξ

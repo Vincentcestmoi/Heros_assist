@@ -37,8 +37,8 @@ public abstract class Joueur {
     protected String PP;
     protected int PP_value;
     protected int PP_max;
-    protected String caracteristique;
-    protected String competences;
+    private String caracteristique;
+    private String competences;
 
     // en combat
     protected boolean front;
@@ -78,6 +78,8 @@ public abstract class Joueur {
         this.position = position;
         this.ob_f = ob_f;
         this.parent = parent;
+        this.caracteristique = "";
+        this.competences = "";
         setNiveau(xp);
         this.armure = 0;
         super_actualiser_niveau();
@@ -269,19 +271,43 @@ public abstract class Joueur {
         switch(parent) {
             case ARES -> {
                 if (getMetier() != Metier.GUERRIERE) {
-                    competences += ", Berserk";
+                    add_competence("Berserk");
                 }
             }
             case HADES -> {
                 if(getMetier() != Metier.NECROMANCIEN){
-                    caracteristique += ", Thaumaturge";
+                    add_caracteristique("Thaumaturge");
                 }
             }
-            case APOLLON -> competences += ", Infection";
-            case DEMETER -> competences += ", Sérénité";
-            case DYONISOS -> caracteristique += ", Sens des affaires";
-            case POSEIDON -> competences += ", Inondation";
-            case ZEUX -> competences += ", Foudre";
+            case APOLLON -> add_competence("Infection");
+            case DEMETER -> add_competence("Sérénité");
+            case DYONISOS -> add_caracteristique("Sens des affaires");
+            case POSEIDON -> add_competence("Inondation");
+            case ZEUX -> add_competence("Foudre");
+        }
+    }
+
+    /**
+     * Ajoute proprement la caractéristique à celles existantes
+     * @param new_caracteristique la caractéristique à ajouter
+     */
+    protected void add_caracteristique(String new_caracteristique) {
+        if(this.caracteristique.isEmpty()){
+            this.caracteristique = new_caracteristique;
+        } else {
+            this.caracteristique += ", " + new_caracteristique;
+        }
+    }
+
+    /**
+     * Ajoute proprement la competence à celles existantes
+     * @param new_competence la competence à ajouter
+     */
+    protected void add_competence(String new_competence) {
+        if(this.competences.isEmpty()){
+            this.competences = new_competence;
+        } else {
+            this.competences += ", " + new_competence;
         }
     }
 
@@ -685,7 +711,7 @@ public abstract class Joueur {
         for (int i = 0; i < Main.nbj; i++) {
             Main.joueurs[i].monstre_mort_perso(ennemi);
             if (!ennemi.corps_utilisable()) {
-                System.out.println("Le cadavre du monstre n'est plus qu'une masse informe et inutilisable.");
+                System.out.println("Le cadavre du monstre n'est plus utilisable.");
                 return;
             }
         }

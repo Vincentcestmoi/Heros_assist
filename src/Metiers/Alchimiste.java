@@ -11,7 +11,6 @@ import Enum.Concoction;
 import Monstre.Monstre;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class Alchimiste extends Joueur {
     Metier metier = Metier.ALCHIMISTE;
@@ -23,18 +22,17 @@ public class Alchimiste extends Joueur {
         PP = "ingredient";
         PP_value = 3;
         PP_max = 11;
-        caracteristique = "";
-        competences = "Dissection, Concoction";
+        add_competence("Dissection, Concoction");
         SetEffetParent();
     }
 
     @Override
     protected void actualiser_niveau() {
         if(this.niveau >= 1){
-            this.caracteristique += "Dextérité";
+            add_caracteristique("Dextérité");
         }
         if(this.niveau >= 2){
-            this.competences += ", Fouille";
+            add_competence("Fouille");
         }
         if(this.niveau >= 5){
             this.vie += 1;
@@ -56,16 +54,11 @@ public class Alchimiste extends Joueur {
         String text = switch(temp){
             case 0 -> "Error : this function is not suposed to be called at level 0.";
             case 1 -> {
-                if(Objects.equals(this.caracteristique, "")){
-                    this.caracteristique = "Dextérité";
-                }
-                else {
-                    this.caracteristique = "Dextérité, " + this.caracteristique;
-                }
+                add_caracteristique("Dextérité");
                 yield "Nouvelle caractéristique débloqué !";
             }
             case 2 -> {
-                this.competences += ", Fouille";
+                add_competence("Fouille");
                 yield "Nouvelle compétence débloquée !";
             }
             case 3, 8 -> "Nouvelles recettes débloquées.\nVos compétence de fouille ont été légèrement renforcées.";

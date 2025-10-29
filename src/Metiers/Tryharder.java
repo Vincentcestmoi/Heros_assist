@@ -14,8 +14,7 @@ public class Tryharder extends Joueur {
         PP = "mana";
         PP_value = 2;
         PP_max = 2;
-        caracteristique = "Déterminé";
-        competences = "Aucune";
+        add_caracteristique("Déterminé");
         SetEffetParent();
     }
 
@@ -25,10 +24,10 @@ public class Tryharder extends Joueur {
         this.attaque += (this.niveau + 1) / 3;
         this.PP_max += this.niveau / 3;
         if(this.niveau >= 5){
-            this.caracteristique += ", Doué";
+            add_caracteristique("Doué");
         }
         if(this.niveau >= 8){
-            this.caracteristique += ", Talentieux";
+            add_caracteristique("Talentieux");
         }
     }
 
@@ -82,11 +81,11 @@ public class Tryharder extends Joueur {
             System.out.println("Votre réserve de mana a légèrement augmentée.");
         }
         if(this.niveau == 5){
-            this.caracteristique += ", Doué";
+            add_caracteristique("Doué");
             System.out.println("Nouvelle capacité débloquée !");
         }
         if(this.niveau == 8){
-            this.caracteristique += ", Talentieux";
+            add_caracteristique("Talentieux");
             System.out.println("Nouvelle capacité débloquée !");
         }
     }

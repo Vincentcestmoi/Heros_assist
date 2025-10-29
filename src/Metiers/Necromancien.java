@@ -11,7 +11,6 @@ import Monstre.Lieu;
 import Monstre.Monstre;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class Necromancien extends Joueur {
     Metier metier = Metier.NECROMANCIEN;
@@ -27,8 +26,8 @@ public class Necromancien extends Joueur {
         PP = "mana";
         PP_value = 5;
         PP_max = 7;
-        caracteristique = "Taumaturge";
-        competences = "Sacrifice, Malédiction";
+        add_caracteristique("Taumaturge");
+        add_competence("Sacrifice, Malédiction");
         nb_piece = 6;
         nb_item = 3;
         pp_sacrifice = 2;
@@ -38,10 +37,10 @@ public class Necromancien extends Joueur {
     @Override
     protected void actualiser_niveau() {
         if(this.niveau >= 1){
-            this.competences += ", Zombification";
+            add_competence("Zombification");
         }
         if(this.niveau >= 2){
-            this.competences += ", Ressurection";
+            add_competence("Ressurection");
         }
         if(this.niveau >= 3){
             pp_sacrifice += 1;
@@ -52,7 +51,7 @@ public class Necromancien extends Joueur {
         }
         if(this.niveau >= 5){
             this.vie += 1;
-            this.competences += ", Appel des morts";
+            add_competence("Appel des morts");
         }
         if(this.niveau >= 6){
             nb_piece += 2;
@@ -85,13 +84,11 @@ public class Necromancien extends Joueur {
         String text = switch(temp){
             case 0 -> "Error : this function is not suposed to be called at level 0.";
             case 1 -> {
-                if(Objects.equals(this.caracteristique, "")){
-                    this.competences += ", Zombification";
-                }
+                add_competence("Zombification");
                 yield "Nouvelle compétence débloquée !";
             }
             case 2 -> {
-                this.competences += ", Ressurection";
+                add_competence("Ressurection");
                 yield "Nouvelle compétence débloquée !";
             }
             case 3 -> {
@@ -105,7 +102,7 @@ public class Necromancien extends Joueur {
             }
             case 5 -> {
                 this.vie += 1;
-                this.competences += ", Appel des morts";
+                add_competence("Appel des morts");
                 yield "Votre résistance a augmentée.\nNouvelle compétence débloquée !";
             }
             case 6 -> {

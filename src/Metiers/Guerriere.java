@@ -25,27 +25,27 @@ public class Guerriere extends Joueur {
         PP = "aura";
         PP_value = 1;
         PP_max = 3;
-        caracteristique = "Force naturelle, Violent";
-        competences = "Berserk";
+        add_caracteristique("Force naturelle, Violent");
+        add_competence("Berserk");
         SetEffetParent();
     }
 
     @Override
     protected void actualiser_niveau() {
         if(this.niveau >= 1){
-            this.competences += ", Rage";
+            add_competence("Rage");
         }
         if(this.niveau >= 2){
             this.attaque += 1;
         }
         if(this.niveau >= 3){
-            this.caracteristique += ", Invincibilité";
+            add_caracteristique("Invincibilité");
         }
         if(this.niveau >= 4){
             this.attaque += 1;
         }
         if(this.niveau >= 5){
-            this.competences += ", Lame d'aura";
+            add_competence("Lame d'aura");
         }
         if(this.niveau >= 6){
             this.vie += 2;
@@ -108,7 +108,7 @@ public class Guerriere extends Joueur {
         String text = switch(temp){
             case 0 -> "Error : this function is not suposed to be called at level 0.";
             case 1 -> {
-                this.competences += ", Rage";
+                add_competence("Rage");
                 yield "Nouvelle capacité débloquée !";
             }
             case 2 -> {
@@ -116,7 +116,7 @@ public class Guerriere extends Joueur {
                 yield "Votre attaque a légèrement augmenté.";
             }
             case 3 -> {
-                this.caracteristique += ", Invincibilité";
+                add_caracteristique("Invincibilité");
                 yield """
                         Nouvelle capacité débloquée !
                         Votre force mentale s'est légèrement accrue.
@@ -130,7 +130,7 @@ public class Guerriere extends Joueur {
                     """;
             }
             case 5 -> {
-                this.competences += ", Lame d'aura";
+                add_competence("Lame d'aura");
                 yield """
                        Nouvelle capacité débloquée !
                        Votre précision s'été légèrement améliorée.

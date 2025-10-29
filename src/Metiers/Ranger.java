@@ -21,32 +21,26 @@ public class Ranger extends Joueur {
         PP = "mana";
         PP_value = 2;
         PP_max = 3;
-        caracteristique = "Eclaireur, Sniper";
-        competences = "";
+        add_caracteristique("Eclaireur, Sniper");
         SetEffetParent();
     }
 
     @Override
     protected void actualiser_niveau() {
         if(this.niveau >= 1){
-            if(this.competences.isEmpty()){
-                this.competences = "Coup critique";
-            }
-            else{
-                this.competences = "Coup critique, " + this.competences;
-            }
+            add_competence("Coup critique");
             this.attaque += 1;
         }
         if(this.niveau >= 2){
-            this.caracteristique += ", Oeil d'aigle";
+            add_caracteristique("Oeil d'aigle");
         }
         if(this.niveau >= 4){
-            this.competences += "Assassinat";
+            add_competence("Assassinat");
         }
         if(this.niveau >= 5){
             this.PP_value += 1;
             this.PP_max += 1;
-            this.caracteristique += ", Explorateur";
+            add_caracteristique("Explorateur");
         }
         if(this.niveau >= 7){
             this.attaque += 1;
@@ -106,12 +100,7 @@ public class Ranger extends Joueur {
         String text = switch(temp){
             case 0 -> "Error : this function is not suposed to be called at level 0.";
             case 1 -> {
-                if(this.competences.isEmpty()){
-                    this.competences = "Coup critique";
-                }
-                else{
-                    this.competences = "Coup critique, " + this.competences;
-                }
+                add_competence("Coup critique");
                 this.attaque += 1;
                 yield """
                         Nouvelle capacité débloquée !
@@ -119,12 +108,12 @@ public class Ranger extends Joueur {
                         """;
             }
             case 2 -> {
-                this.caracteristique += ", Oeil d'aigle";
+                add_caracteristique("Oeil d'aigle");
                 yield "Nouvelle compétence débloquée !";
             }
             case 3 -> "Votre précision s'est légèrement améliorée.";
             case 4 -> {
-                this.competences += "Assassinat";
+                add_competence("Assassinat");
                 yield """
                         Nouvelle capacité débloquée !
                         Vos compétences de tireur se sont légèrement améliorées.
@@ -133,7 +122,7 @@ public class Ranger extends Joueur {
             case 5 -> {
                 this.PP_value += 1;
                 this.PP_max += 1;
-                this.caracteristique += ", Explorateur";
+                add_caracteristique("Explorateur");
                 yield """
                        Nouvelle compétence débloquée !";
                        Votre réserve de mana s'est légèrement accrue.

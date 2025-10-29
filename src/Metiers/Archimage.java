@@ -24,23 +24,23 @@ public class Archimage extends Joueur {
         PP_value = 6;
         PP_max = 6;
         purge_cout = 4;
-        caracteristique = "Manchot, Bruyant, Fier, Addiction au mana";
-        competences = "Sort, Méditation";
+        add_caracteristique("Manchot, Bruyant, Fier, Addiction au mana");
+        add_competence("Sort, Méditation");
         SetEffetParent();
     }
 
     @Override
     protected void actualiser_niveau() {
         if(this.niveau >= 2){
-            this.competences += ", Purge";
+            add_competence("Purge");
         }
         if(this.niveau >= 3){
-            this.caracteristique += ", Double sort";
+            add_caracteristique("Double sort");
         }
         if(this.niveau >= 4){
             this.PP_max += 1;
             this.PP_value += 1;
-            this.caracteristique += ", Maitre du mana";
+            add_caracteristique("Maitre du mana");
         }
         if(this.niveau >= 6){
             this.PP_max += 1;
@@ -103,17 +103,17 @@ public class Archimage extends Joueur {
             case 0 -> "Error : this function is not suposed to be called at level 0.";
             case 1 -> "Nouveau sort débloqué !"; //AdG
             case 2 -> {
-                this.competences += ", Purge";
+                add_competence("Purge");
                 yield "Nouvelle compétence débloquée !";
             }
             case 3 -> {
-                this.caracteristique += ", Double sort";
+                add_caracteristique("Double sort");
                 yield "Nouvelle capacité débloquée !";
             }
             case 4 -> {
                 PP_max += 1;
                 PP_value += 1;
-                this.caracteristique = ", Maitre du mana";
+                add_caracteristique("Maitre du mana");
                 yield """
                         Votre réserve de mana a légèrement augmentée.
                         Vos sorts de feu ont été légèrement améliorés.
