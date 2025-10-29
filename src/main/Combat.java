@@ -776,6 +776,7 @@ public class Combat {
         }
         System.out.println("attaque : " + (temp >= 3 ? atk : "???"));
         System.out.println("armure : " + (temp >= 7 ? arm : "???"));
+        System.out.println();
     }
 
     /**
