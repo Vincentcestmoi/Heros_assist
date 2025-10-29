@@ -970,33 +970,36 @@ public class Monstre {
      * @implNote On considère que le joueur qui utilise encaisser est en première ligne
      */
     public void encaisser() throws IOException {
-        int attaque = Input.atk();
+        float modif;
         switch (Input.D6()) {
             case 1:
                 encaissement = 0.4F;
                 System.out.println("Vous vous préparer à encaisser en oubliant d'attaquer !");
+                modif = 0;
                 break;
             case 2, 3, 4:
-                attaque = Main.corriger(attaque * 0.1f);
+                modif = 0.1f;
                 encaissement = 0.4F;
                 System.out.println("Vous vous préparez à encaisser.");
-                dommage(attaque);
                 break;
             case 5:
-                attaque = Main.corriger(attaque * 0.5f);
-                dommage(attaque);
+                modif = 0.5f;
                 encaissement = 0.55F;
                 System.out.println("Vous vous préparez à encaisser.");
                 break;
             case 6, 7:
-                attaque = Main.corriger(attaque * 0.5f);
-                dommage(attaque);
+                modif = 0.5f;
                 encaissement = 0.7F;
                 System.out.println("Vous vous préparez fermement à encaisser, solide comme un roc.");
                 break;
             default:
                 System.out.println("Le résultat n'a pas été comprit, attaque classique appliquée.");
-                dommage(attaque);
+                modif = 1;
+        }
+        int attaque = Input.atk();
+        if(attaque > 0 && modif > 0){
+            attaque = Main.corriger(attaque * modif);
+            dommage(attaque);
         }
     }
 
