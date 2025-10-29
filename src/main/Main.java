@@ -58,6 +58,7 @@ public class Main {
                 case DESCENDRE -> {
                     System.out.println(joueur.getNom() + " retourne en des terres moins inhospitalières.");
                     joueur.descendre();
+                    joueur.check_bonus_lieux();
                 }
                 case MARCHE -> joueur.aller_au_marche();
                 case DUMMY -> frapper_pantin(i);

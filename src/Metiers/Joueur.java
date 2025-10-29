@@ -1140,9 +1140,7 @@ public abstract class Joueur {
                 position = pos;
                 monter();
                 System.out.println(text + " parvient sans encombre " + Main.texte_pos(position) + ".");
-                if(bonusAtkLieux() > 0 || bonusResLieux() > 0 || bonusArmLieux() > 0){
-                    System.out.println("Votre sang divin réagit à votre environnement !");
-                }
+                check_bonus_lieux();
                 return;
             }
             default -> {
@@ -1160,9 +1158,18 @@ public abstract class Joueur {
         if (Input.yn(nom + " a-t-il vaincu le monstre ?")) {
             monter();
             System.out.println(nom + " arrive " + Main.texte_pos(position) + ".");
-            System.out.println("Votre sang divin réagit à votre environnement !");
+            check_bonus_lieux();
         } else {
             System.out.println(nom + " est resté " + Main.texte_pos(position));
+        }
+    }
+
+    /**
+     * Avertie si le joueur à des bonus de lieu
+     */
+    public void check_bonus_lieux(){
+        if(bonusAtkLieux() > 0 || bonusResLieux() > 0 || bonusArmLieux() > 0){
+            System.out.println("Votre sang divin réagit à votre environnement !");
         }
     }
 
