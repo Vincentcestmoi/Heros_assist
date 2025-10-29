@@ -121,10 +121,13 @@ public class Main {
     static void expedition_enfer(int meneur) throws IOException {
         Monstre monstre = Lieu.enfers();
         int jet = Input.D4() + joueurs[meneur].bonus_exploration();
-        if(jet < 1){
-            jet = 1;
-        }
-        else if(jet > 5){
+        if(jet <= 1){
+            if(rand.nextBoolean()){
+                jet = 0;
+            } else {
+                jet = 1;
+            }
+        } else if(jet > 5){
             jet = 5;
         }
         switch (jet) {
@@ -138,7 +141,7 @@ public class Main {
 
             }
             case 4, 5 -> {
-                if (rand.nextBoolean() || rand.nextBoolean()) {
+                if (rand.nextInt(3) == 0) {
                     Equipement.drop_0();
                 } else {
                     System.out.println("Vous apercevez un(e) " + monstre.getNom());
