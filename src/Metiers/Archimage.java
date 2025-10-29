@@ -76,9 +76,21 @@ public class Archimage extends Joueur {
     @Override
     protected void presente_pouvoir(){
         System.out.println("Sort : Lance un puissant sort. L'intensité des sorts varie selon la quantité de mana utilisée.");
+        affiche_sorts();
         System.out.println("Méditation : Se repose pour récuperer du mana.");
         if(this.niveau >= 2) {
-            System.out.println("Purge : Pour " + purge_cout + " mana, guérie des alterations d'états.");
+            System.out.println("Purge : sort curatif, pour " + purge_cout + " mana, guérie des alterations d'états.");
+        }
+    }
+
+    private void affiche_sorts(){
+        System.out.println("\tBoule de feu : sort de feu, pour 2 mana ou plus, lance un sort offensif léger.");
+        System.out.println("\tOnde de choc : sort sonore, pour 3 mana, étourdit tous les participants à l'exception du lanceur.");
+        if(this.niveau >= 1){
+            System.out.println("\tArmure de glace : sort de glace, pour 3 mana ou plus, augmente la résistance d'une cible.");
+        }
+        if(this.niveau >= 5){
+            System.out.println("\tFoudre : sort de foudre, pour 7 mana ou plus, lance un puissant sort offensif.");
         }
     }
 
