@@ -32,7 +32,6 @@ public class Shaman extends Joueur {
         add_caracteristique("Ame errante");
         add_competence("Incantation");
         possession_atk = 0;
-        SetEffetParent();
     }
 
     @Override

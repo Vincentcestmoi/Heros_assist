@@ -23,7 +23,6 @@ public class Alchimiste extends Joueur {
         PP_value = 3;
         PP_max = 11;
         add_competence("Dissection, Concoction");
-        SetEffetParent();
     }
 
     @Override

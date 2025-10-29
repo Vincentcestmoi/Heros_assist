@@ -22,7 +22,6 @@ public class Ranger extends Joueur {
         PP_value = 2;
         PP_max = 3;
         add_caracteristique("Eclaireur, Sniper");
-        SetEffetParent();
     }
 
     @Override

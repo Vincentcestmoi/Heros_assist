@@ -15,7 +15,6 @@ public class Tryharder extends Joueur {
         PP_value = 2;
         PP_max = 2;
         add_caracteristique("Déterminé");
-        SetEffetParent();
     }
 
     @Override

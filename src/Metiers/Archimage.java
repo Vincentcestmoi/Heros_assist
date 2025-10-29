@@ -26,7 +26,6 @@ public class Archimage extends Joueur {
         purge_cout = 4;
         add_caracteristique("Manchot, Bruyant, Fier, Addiction au mana");
         add_competence("Sort, Méditation");
-        SetEffetParent();
     }
 
     @Override

@@ -31,7 +31,6 @@ public class Necromancien extends Joueur {
         nb_piece = 6;
         nb_item = 3;
         pp_sacrifice = 2;
-        SetEffetParent();
     }
 
     @Override

@@ -27,7 +27,6 @@ public class Guerriere extends Joueur {
         PP_max = 3;
         add_caracteristique("Force naturelle, Violent");
         add_competence("Berserk");
-        SetEffetParent();
     }
 
     @Override
