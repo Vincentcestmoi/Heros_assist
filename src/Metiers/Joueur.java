@@ -195,25 +195,25 @@ public abstract class Joueur {
      * Présente les caractéristiques et statistiques du joueur
      */
     public void presente_detail() {
-        System.out.println(nom + " descendant de " + getParent() + ", " + nomMetier());
-        System.out.print("Base : Résistance : " + vie);
+        System.out.println(nom + " descendant de " + getParent() + ", " + nomMetier() + " niveau " + this.niveau);
+        System.out.print("Base : Résistance : " + this.vie);
         int temp = bonusResLieux();
         if(temp > 0){
             System.out.print("(+" + temp + ")");
         }
-        System.out.print(" ; attaque : " + attaque);
+        System.out.print(" ; attaque : " + this.attaque);
         temp = bonusAtkLieux();
         if(temp > 0){
             System.out.print("(+" + temp + ")");
         }
-        System.out.print(" ; armure : " + armure);
+        System.out.print(" ; armure : " + this.armure);
         temp = bonusArmLieux();
         if(temp > 0){
             System.out.print("(+" + temp + ")");
         }
-        System.out.println( " ; " + PP + " : " + PP_value + "/" + PP_max);
-        System.out.println("Caractéristiques : " + caracteristique);
-        System.out.println("Pouvoir : " + competences);
+        System.out.println( " ; " + this.PP + " : " + this.PP_value + "/" + this.PP_max);
+        System.out.println("Caractéristiques : " + this.caracteristique);
+        System.out.println("Pouvoir : " + this.competences);
         System.out.println();
         presente_caracteristique();
         System.out.println();
