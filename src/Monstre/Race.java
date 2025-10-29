@@ -61,16 +61,28 @@ public class Race {
 
     /**
      * Supprime le monstre donné de sa liste
-     *
      * @param monstre le nom du monstre à supprimer
      * @implNote n'enregistre pas la suppression dans les fichiers de sauvegarde
      */
     public static void delete_monstre(String monstre) {
+        delete_monstre(monstre, false);
+    }
+
+    /**
+     * Supprime le monstre donné de sa liste
+     * @param monstre le nom du monstre à supprimer
+     * @param silence si on doit dire avoir supprimé le monstre
+     * @implNote n'enregistre pas la suppression dans les fichiers de sauvegarde
+     */
+    public static void delete_monstre(String monstre, boolean silence) {
         Race[][] lists = {Race.enfers, Race.prairie, Race.vigne, Race.temple, Race.mer, Race.mont, Race.olympe};
         for (Race[] l : lists) {
             for (int i = 0; i < l.length; i++) {
                 if (l[i] != null && Objects.equals(l[i].get_nom(), monstre)) {
                     l[i] = null;
+                    if(!silence) {
+                        System.out.println(monstre + " supprimé(e) avec succès.");
+                    }
                     return;
                 }
             }
