@@ -136,7 +136,7 @@ public class Combat {
             for (int j = 0; j < Main.nbj && run; j++) {
                 skip = false;
                 i = t[j];
-                joueur = Main.joueurs[j];
+                joueur = Main.joueurs[i];
                 Joueur.debut_tour();
 
                 // on ne joue que les participants actifs
