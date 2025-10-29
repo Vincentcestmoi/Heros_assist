@@ -175,7 +175,7 @@ public class Necromancien extends Joueur {
     }
 
     protected String nomMetier(){
-        return "necromancien";
+        return "mage noir";
     }
 
     @Override

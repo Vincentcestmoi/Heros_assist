@@ -476,7 +476,7 @@ public class Main {
             // metier
             boolean run = true;
             Metier metier = Metier.TRYHARDER;
-            String[] job = {"(ne)cromancien", "archi(ma)ge", "(al)chimiste", "(gu)erriere", "(ra)nger", "(sh)aman", "(au)cun"};
+            String[] job = {"mage (no)ir", "archi(ma)ge", "(al)chimiste", "(gu)erriere", "(ra)nger", "(sh)aman", "(au)cun"};
             while(run) {
                 run = false;
                 System.out.println(nom + ", choississez votre profession : ");
@@ -484,7 +484,7 @@ public class Main {
                     System.out.println(s + " ");
                 }
                 switch (Input.read().toLowerCase()) {
-                    case "ne" -> metier = Metier.NECROMANCIEN;
+                    case "no" -> metier = Metier.NECROMANCIEN;
                     case "ma" -> metier = Metier.ARCHIMAGE;
                     case "ra" -> metier = Metier.RANGER;
                     case "al" -> metier = Metier.ALCHIMISTE;
