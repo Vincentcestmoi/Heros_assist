@@ -86,7 +86,7 @@ public class Race {
     static Competence[] squel_comp = {Competence.AUCUNE, Competence.FRAGILE};
     static Race squelette = new Race("squelette", 1, 5, 0, 0, 0, 1, squel_comp);
     static Competence[] cvs_comp = {Competence.VOL, Competence.VAMPIRISME, Competence.VOLAGE, Competence.VOL_OFF};
-    static Race ch_s_v = new Race("chauve-souris vampire", 3, 2, 0, 0, 0, 2, cvs_comp);
+    static Race ch_s_v = new Race("chauve-souris vampire", 2, 4, 0, 0, 0, 2, cvs_comp);
     static Competence[] damn_comp = {Competence.AUCUNE, Competence.DAMNATION_RES, Competence.DAMNATION_ATK};
     static Race damne = new Race("Damné", 1, 4, 0, 0, 0, 1, damn_comp);
     static Competence[] guerske_comp = {Competence.AUCUNE, Competence.FRAGILE, Competence.DAMN_ARES};
