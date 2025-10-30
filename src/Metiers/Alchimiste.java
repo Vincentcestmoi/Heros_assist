@@ -727,10 +727,10 @@ public class Alchimiste extends Joueur {
         int[] popo_cost = {1, 1, 5, 8, 4, 9, 9, 6, 10, 11, 13, 11, 14, 14, 11, 14, 15, 15};
         String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "potion toxique (P#2)", "potion de " +
                 "poison" + " (P#3)", "potion instable (E#1)", "potion de feu (E#2)", "potion de force (ATK#1)",
-                "potion de vie " + "(PV#2)", "potion énergétique (PP#1)", "potion de santé (PV#3)", "potion " +
-                "d'énergie" + " (PP#2)", "potion " + "de vigeur (RES#1)", "potion de résistance (RES#2)", "potion de " +
-                "puissance " + "(ATK#2)", "flasque nécrosé " + "(P#4)", "potion nécrotyque (P#5)", "potion explosive " +
-                "(E#4)", "potion" + " divine (Div#A)"};
+                "potion de vie " + "(PV#2)", "potion énergétique (PP#1)", "potion de santé (PV#3)", "potion " + "d" +
+                "'énergie" + " (PP#2)", "potion " + "de vigeur (RES#1)", "potion de résistance (RES#2)",
+                "potion de " + "puissance " + "(ATK#2)", "flasque nécrosé " + "(P#4)", "potion nécrotyque (P#5)",
+                "potion explosive " + "(E#4)", "potion" + " divine (Div#A)"};
         
         
         System.out.println("Combien d'ingrédient allez-vous utiliser ? ");

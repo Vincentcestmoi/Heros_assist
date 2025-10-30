@@ -442,8 +442,9 @@ public class Equipement {
                     this.effet = "Permet de lancer le sort Boule de feu : pour 2PP, inflige 5 dégats magiques.";
             case PARCH_DODO -> this.effet = "Permet de lancer le sort Sommeil : pour 2PP, arrête un combat.";
             case PARCH_FORCE ->
-                    this.effet = "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement " + "l" +
-                            "'attaque" + " de 1, se détruit après usage.";
+                    this.effet =
+                            "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement " + "l" +
+                                    "'attaque" + " de 1, se détruit après usage.";
             case PARCH_LUMIERE ->
                     this.effet = "Permet de lancer le sort Lumière : pour 2PP, diminue de 2 points l'attaque de " +
                             "l'ennemie (augmentez tous de 2 votre armure pour le code).";

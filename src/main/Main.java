@@ -12,7 +12,6 @@ import Monstre.Lieu;
 import Monstre.Monstre;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Random;
 
 import static java.lang.Math.max;
@@ -30,7 +29,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         
         //pour les tests
-        if(args.length == 1 && args[0].equals("--test")) {
+        if (args.length == 1 && args[0].equals("--test")) {
             return;
         }
         

@@ -766,8 +766,8 @@ public class Shaman extends Joueur {
         else if (jet == 9) {
             System.out.println("Un brouillard dense vous entoure.");
             System.out.println("Il est désormais impossible de tirer.");
-            System.out.println("Il est désormais impossible de lancer un sort ciblé sur une autre cible que " + "soit" +
-                    "-même" + ".");
+            System.out.println("Il est désormais impossible de lancer un sort ciblé sur une autre cible que " + "soit"
+                    + "-même" + ".");
             System.out.println("Chaque joueur et familier perds temporairement 6 points d'attaque.");
             for (Joueur j : Main.joueurs) {
                 j.p_prend_cecite();
@@ -777,8 +777,8 @@ public class Shaman extends Joueur {
         } else {
             System.out.println("Une brûme vous entoure, si dense que vous ne vous voyez presque plus.");
             System.out.println("Il est désormais impossible de tirer.");
-            System.out.println("Il est désormais impossible de lancer un sort ciblé sur une autre cible que " + "soit" +
-                    "-même" + ".");
+            System.out.println("Il est désormais impossible de lancer un sort ciblé sur une autre cible que " + "soit"
+                    + "-même" + ".");
             System.out.println("Chaque joueur et familier perds temporairement 8 points d'attaque.");
             ennemi.bostAtk(-15, false);
         }
