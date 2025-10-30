@@ -38,6 +38,8 @@ elif [ "$1" == "--test2" ]; then
     rm -rf info.json
     cd ..
     printf "0\ntest\nO\n3\nJ1\nO\nno\nJ2\nO\nau\nJ3\nO\ngu\nq\nq\n" | java -cp "bin${SEP}lib/*" main.Main
+elif [ "$1" == "--test3" ]; then
+    printf "0\ntest\nO\ns\nc\nre\nre\nm\n4\nq\nq\n" | java -cp "bin${SEP}lib/*" main.Main
 else
     java -cp "bin${SEP}lib/*" main.Main "$@"
 fi
