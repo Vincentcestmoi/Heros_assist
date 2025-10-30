@@ -230,7 +230,7 @@ public class Output {
      * Joue le son d'une attaque
      */
     public static void JouerSonDommage(){
-        jouerSon("Audio/degat.wav");
+        jouerSon("Audio/degas.wav");
     }
     
     public static void jouerSonMonstreMort(){
