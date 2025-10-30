@@ -1,16 +1,89 @@
-# Heros_assist
-Un programme limité pour aider à jouer à Héros
-L'alpha demande un bon suivit personnel, tandis que la beta ne demande qu'une suivant des équipements et statistiques personnelles.
-Les deux versions ne permettent pas la pleine liberté du jeu de base, et sont concentrées sur l'aspect RPG.
+# Heros_assist - beta
 
-L'alpha peut être compilé et exécuté simplement en terminal :  
-  cd src  
-  javac *.java  
-  java Main
+![Build Status](https://github.com/vincentcestmoi/Heros_assist/actions/workflows/java-shell.yml/badge.svg)  
+
+**Heros_assist** est originalement un programme d’assistance pour accompagner les joueurs dans le jeu de rôle **Héros**.
+Il automatise la plupart des interactions non-inter-joueurs et se suffit presque à lui-même.
+
+## 🚀 Lancement du jeu
+
+1. **Compilation** (à faire une seule fois) :
+   ```bash
+   ./compiler.sh
+   ```
+2. **Exécution** du jeu :
+    ```bash
+   ./lancer.sh
+   ```
+3. Quitter le jeu :  
+   Lors du choix d’action du tour, entrez `q` deux fois pour quitter proprement.
+
+⚠️ Quand vous chargez une save existante sans la poursuivre, elle sera écrasée.
+
+---
+
+## 📜 Consignes de jeu
+Ce programme ne gère qu’une partie des règles.
+La majorité des données doivent être suivies par les joueurs eux-mêmes.  
+L’usage d’un classeur Excel ou d’un tableau est fortement recommandé. (voir le dossier `Table` pour des exemples)
+
+### 🎒 Règles d’équipement
+- Casques, boucliers, (tout équipement sauf contre-indication) : 1 par joueur
+- Mains : 2 maximum (sauf Archimage : 1 seule)
+- Bracelets : 4 maximum
+- Consommables, bonus, divers, amélioration d'arc : illimités
+
+### ⚔️ Règles d’attaque
+- **Arc** et **mains** sont deux valeurs distinctes
+- L'attaque apportée par les **mains** ne compte pas pour les **tirs**
+- Les bonus d’**arc** ne comptent pas pour l’**attaque classique**
+- Toute altération d’attaque affecte les deux valeurs
+- Lorsqu’une attaque est demandée, entrez l’**attaque classique**, pas les tirs
+
+### 🧙‍♂️ Spécificités
+
+Dans un esprit de jeu de rôle, Heros_assist privilégie l’immersion à la précision brute. La plupart des actions ne vous
+afficheront pas directement leurs valeurs numériques, mais vous fourniront plutôt une description narrative de
+l’effet produit.
+
+Chaque classe possède ses propres forces, faiblesses et mécaniques uniques, qui évoluent avec l’expérience et
+les niveaux. Certaines capacités ne sont accessibles qu’à partir d’un certain niveau ou dans des conditions spécifiques.
+
+Le programme ne cherche pas à imposer une lecture rigide des règles :
+
+- Vous pouvez ignorer les suggestions du programme si elles ne correspondent pas à votre style de jeu
+- Vous êtes libres de choisir vos propres valeurs, effets ou interprétations
+- Les consommables remplacent l’action principale, mais les consommables bonus peuvent être utilisés en plus — cette règle est recommandée, mais non imposée
+
+La plupart des actions reposent sur le jugement des joueurs : Héros reste avant tout un jeu de rôle. Il est totalement
+possible d'ignorer les informations fournit par le programme ou de choisir vous-même vos données.  
+Il est par exemple prévu que les consommables demandent une action pour être utilisés, et qu'un consommable bonus puisse
+être utilisé en plus de l'action principale de combat, mais rien n'interdit aux joueurs de ne pas l'appliquer.
+
+--- 
+
+## 🧭 Aides et commandes cachées
+
+Le dossier `Table/` contient un des tableurs de gestion des statistiques.
+
+### 🔍 Commandes spéciales disponibles lors du choix d’action de tour :
+
+| Commande | Effet                                    |
+|----------|------------------------------------------|
+| `del`    | Supprime le familier d’un joueur         |
+| `add`    | Ajoute un familier (obéissance minimale) |
+| `re`     | Revient au joueur précédent              |
+| `sui`    | Tue le joueur actif                      |
+
+⚠️ Chaque commande doit être confirmée en la réécrivant une seconde fois.
+
+### 🔍 Commandes spéciales disponibles lors du choix d’action de combat :
 
 
-La beta n'est pas stable, elle est actuellement en cours de modification sous le main.
-La lancer demande un peu plus d'efforts, mais les shells suivants permettent la compilation et l'exécution :  
-compiler.sh (permet de compiler, à faire la première fois que vous lancez le projet.)  
-lancer.sh (pour éxecuter le projet et lancer la beta)  
-build&run.sh (les deux précédents l'un après l'autre)
+| Commande | Effet                                                                                                                  |
+|----------|------------------------------------------------------------------------------------------------------------------------|
+| `q`      | Met fin abruptement au combat                                                                                          |
+| `o`      | Signal un état particulier du joueur actif ou du joueur <br/>en première ligne (mort, assomé, berserk, ou hors combat) |
+
+⚠️ Chaque commande vous demandera une confirmation, appuyez simplement sur entrée.
+
