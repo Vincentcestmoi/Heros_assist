@@ -1,8 +1,37 @@
 #!/usr/bin/env python3
 from random import shuffle
 
-text_min = ["Pathétique", "Vous n'avez rien senti.", "Un bébé vous aurez frappé plus fort que ça.",
-"Vous avez presque pitié des efforts futiles de votre adversaire."]
+text_min = ["Pathétique...", "Vous n'avez rien senti.", "Un bébé vous aurez frappé plus fort que ça.",
+ "Vous avez presque pitié des efforts futiles de votre adversaire.", "Vous pourriez encaisser 10 fois plus à une main",
+ "Vous avez plus souffert en éternuant qu'en subissant cette 'attaque'.", "Vous hésitez à vous battre nu(e) pour équilibrer les chances."]
+
+text_mort = ["Vous êtes mort.", "This person is décédée.", "Vous âme se fais la malle ! (t'es dead)", "Quik, t'es mort."]
+
+text_presque_mort = ["Votre vision se trouble, votre souffle s'épuise, vos sens s'amenuisent. La mort vous sourit.",
+ "Vous sentez votre sang se refroidir et votre souffle s'épuiser. Vous avez atteint vos limites...", "Vous ne sentez même plus"
+ " la douleur, vous n'en avez plus pour longtemp."]
+
+text_proche_mort = ["La douleur vous vrille le crâne, vous ne survivrez sans doute pas au prochain coup.", "La douleur est"
+ " sourde, profonde, vous ne résisterez pas à une autre attaque.", "Vous serez les dents, le prochaine assaut sera sans doute le dernier"
+ " que vous encaisserez jamais..."]
+
+text_douleur_intense = ["Même vos os semblent pulser de douleur, vous luttez pour rester conscient.", "Une souffrance intense"
+ "traverse tout votre corps.", "Tous vos muscles se crispent, votre cerveau est surchargé de message de douleur.", "La blessure"
+ " n'est pas fatale, mais pourrait rapidement le devenir..."]
+
+text_douleur_forte = ["Votre corps tout entier vous fait souffir.", "Vous laissez échapper un cri de douleur.",
+ "Ce n'est rien d'insurmontable, mais ça pique pas mal quand même.", "Votre visage se tords de douleur, mais vous restez"
+ " focus."]
+
+text_douleur_moyenne = ["Vous avez le souffle court et les muscles douloureux.", "Vous ressentez désagréablement l'impact.",
+ "La blessure n'est pas profonde, mais douloureuse.", "Vous aimeriez ne pas subir de tels assauts trop souvent."]
+
+text_douleur_faible = ["Vous supportez encore plutôt bien la douleur.", "L'impact n'a rien d'inquiétant, mais n'est pas"
+ "non plus négligeable.", "La blessure est superficielle, mais vous saignez.", "Rien d'inquiétant, mais vous prenez "
+ "la menace au sérieux."]
+
+text_standard = ["Ce n'est rien d'insurmontable.", "Vous pourriez encaisser bien plus que ça.", "Tranquille !", "Vous n'en"
+ " garderez même pas une cicatrice.", "Rien de spécial.", "Une attaque sans prétention, ni danger."]
 
 while True:
     pv_m = int(input("Nombre de PV : "))
@@ -48,29 +77,39 @@ while True:
             pv = pv_base
             armure = armure_base
 
-        elif temp in ["D", "d"]:
+        elif temp in ["D", "d", "", " ", "\n"]:
             attaque = int(input("Dégâts : "))
             degat = max(attaque - armure, 1)
         elif temp in ["P", "p"]:
-            degat = int(input("Dégâts de poison : "))
+            degat = int(input("Dégâts direct : "))
 
         if temp in ["D", "d", "P", "p"]:
             pv -= degat
             if pv <= 0:
-                print("Vous êtes mort.")
+                shuffle(text_mort)
+                print(text_mort[0])
                 pv = 0
             elif pv <= (pv_m * 0.08 ):
-                print("Votre vision se trouble, votre souffle s'épuise, vos sens s'amenuisent. La mort vous sourit.")
+                shuffle(text_presque_mort)
+                print(text_presque_mort[0])
             elif pv <= (pv_m * 0.16 ):
-                print("La douleur vous vrille le crâne, vous ne survivrez sans doute pas au prochain coup.")
+                shuffle(text_proche_mort)
+                print(text_presque_mort[0])
             elif degat > pv_m * 0.75:
-                print("Même vos os semblent pulser de douleur, vous luttez pour rester conscient.")
+                shuffle(text_douleur_intense)
+                print(text_douleur_intense[0])
             elif degat > pv_m * 0.6:
-                print("Votre corps tout entier vous fait souffir.")
+                shuffle(text_douleur_forte)
+                print(text_douleur_forte[0])
             elif degat > pv_m * 0.45:
-                print("Vous avez le souffle court et les muscles douloureux.")
-            elif degat > pv_m * 0.3:
-                print("Vous supportez encore plutôt bien la douleur.")
+                shuffle(text_douleur_moyenne)
+                print(text_douleur_moyenne[0])
+            elif degat > pv_m * 0.25:
+                shuffle(text_douleur_faible)
+                print(text_douleur_faible[0])
             elif degat <= pv_m * 0.1:
                 shuffle(text_min)
                 print(text_min[0])
+            else:
+                shuffle(text_standard)
+                print(text_standard[0])
