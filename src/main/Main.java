@@ -472,7 +472,7 @@ public class Main {
                     case "au" -> {
                     }
                     default -> {
-                        System.out.println("Unknow Exterieur.Input");
+                        System.out.println("Unknow Input");
                         run = true;
                     }
                 }
