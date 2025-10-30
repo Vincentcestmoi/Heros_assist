@@ -53,7 +53,6 @@ Le programme ne cherche pas à imposer une lecture rigide des règles :
 
 - Vous pouvez ignorer les suggestions du programme si elles ne correspondent pas à votre style de jeu
 - Vous êtes libres de choisir vos propres valeurs, effets ou interprétations
-- Les consommables remplacent l’action principale, mais les consommables bonus peuvent être utilisés en plus — cette règle est recommandée, mais non imposée
 
 La plupart des actions reposent sur le jugement des joueurs : Héros reste avant tout un jeu de rôle. Il est totalement
 possible d'ignorer les informations fournit par le programme ou de choisir vous-même vos données.  
