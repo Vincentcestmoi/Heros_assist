@@ -124,7 +124,7 @@ public class Shaman extends Joueur {
                 yield """
                         Des esprits bienfaisants se mettent à vous suivre.
                         Votre résistance s'en trouve légèrement renforcée.
-                        Nouvelle caractèristique débloquée !";
+                        Nouvelle caractèristique débloquée !;
                         Nouvelles incantations apprises !
                         """; // bénédiction de base (pas armure)
             }
