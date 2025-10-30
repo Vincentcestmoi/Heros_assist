@@ -20,6 +20,9 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
+    - name: 🌳 Arborescence project
+      run: tree
+
     - name: 🔧 Make scripts executable
       run: chmod +x compiler.sh lancer.sh
 
