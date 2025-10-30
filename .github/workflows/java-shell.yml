@@ -18,7 +18,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
-        java-version: '17' # ou la version que tu utilises
+        java-version: '17'
 
     - name: 🔧 Make scripts executable
       run: chmod +x compiler.sh lancer.sh
@@ -27,8 +27,7 @@ jobs:
       run: ./compiler.sh
 
     - name: 🚀 Run main program (no argument)
-      run: ./lancer.sh
+      run: ./lancer.sh --test
 
-    # Optionnel : test avec argument
-    # - name: 🚀 Run main program with argument
-    #   run: ./lancer.sh Save1
+    - name: 🚀 Run main program briefly
+      run: timeout 10s ./lancer.sh
