@@ -79,10 +79,10 @@ Le dossier `Table/` contient un des tableurs de gestion des statistiques.
 ### 🔍 Commandes spéciales disponibles lors du choix d’action de combat :
 
 
-| Commande | Effet                                                                                                                  |
-|----------|------------------------------------------------------------------------------------------------------------------------|
-| `q`      | Met fin abruptement au combat                                                                                          |
-| `o`      | Signal un état particulier du joueur actif ou du joueur <br/>en première ligne (mort, assomé, berserk, ou hors combat) |
+| Commande | Effet                                                                                                                   |
+|----------|-------------------------------------------------------------------------------------------------------------------------|
+| `q`      | Met fin abruptement au combat                                                                                           |
+| `o`      | Signal un état particulier du joueur actif ou du joueur <br/>en première ligne (mort, assommé, berserk, ou hors combat) |
 
 ⚠️ Chaque commande vous demandera une confirmation, appuyez simplement sur entrée.
 
