@@ -29,6 +29,11 @@ public class Main {
     
     public static void main(String[] args) throws IOException {
         
+        //pour les tests
+        if(args.length == 1 && args[0].equals("--test")) {
+            return;
+        }
+        
         if (!Arrays.equals(args, new String[]{})) Path = Integer.parseInt(args[0]);
         
         if (!Input.load()) {
