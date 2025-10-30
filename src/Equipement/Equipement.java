@@ -3,9 +3,14 @@ package Equipement;
 import Enum.Base;
 import Enum.Effet_equip;
 import Enum.Rang;
+import Exterieur.Output;
 
 import java.io.IOException;
 import java.util.Random;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+
 
 public class Equipement {
     public final String nom;
@@ -686,155 +691,95 @@ public class Equipement {
     static Equipement main2_III = new Equipement("grosse épée", Rang.III, Base.MAIN_2, 13, 0, 0, 16);
     static Equipement armure_III = new Equipement("excellente armure", Rang.III, Base.ARMURE, 0, 11, 2, 21);
     static Equipement casque_III = new Equipement("bon casque", Rang.III, Base.CASQUE, 0, 5, 1, 18);
-    static Equipement ingredients_III = new Equipement("ingrédient", Rang.O, Base.AUTRE, 0, 0, 0, 5);
-    static Equipement ingredients2_III = new Equipement("2 ingrédients", Rang.O, Base.AUTRE, 0, 0, 0, 11);
     
-    static Equipement[] marcheIII = {arc_III, main1_III, main2_III, armure_III, bouclier_III, casque_III,
-            ingredients_III, ingredients2_III};
+    static Equipement[] marcheIII = {arc_III, main1_III, main2_III, armure_III, bouclier_III, casque_III};
     
-    @SuppressWarnings("DuplicatedCode")
+    /**
+     * Sélectionne aléatoirement des objets dans une liste sans doublons et les présente
+     *
+     * @param reduc      réduction appliquée à l'affichage
+     * @param list       liste d'équipements disponibles
+     * @param nb_items   nombre d'objets à proposer
+     */
+    private static void marche_global(int reduc, Equipement[] list, int nb_items) {
+        List<Equipement> valides = new ArrayList<>();
+        for (Equipement e : list) {
+            if (e != null) {
+                valides.add(e);
+            }
+        }
+        
+        if (nb_items > valides.size()) {
+            throw new IllegalArgumentException("Impossible de sélectionner " + nb_items + " objets uniques parmi " + valides.size() + " valides.");
+        }
+        
+        Collections.shuffle(valides, rand);
+        List<Equipement> selection = valides.subList(0, nb_items);
+        
+        for (Equipement e : selection) {
+            e.presente(reduc);
+        }
+        
+        Output.jouerSonMarche();
+    }
+    
+    /**
+     * Affiche 3 objets aléatoires du marché des prairies.
+     *
+     * @param reduc réduction appliquée à l'affichage
+     */
     public static void marche_prairie(int reduc) {
-        System.out.println("Vous êtes dans le marché des prairies et 3 objets vous sont proposés :");
-        int i;
-        Equipement a, b;
-        Equipement[] list;
-        
-        if (rand.nextBoolean()) {
-            list = marche0;
-        } else {
-            list = marcheI;
-        }
-        a = list[rand.nextInt(list.length)];
-        
-        if (rand.nextBoolean()) {
-            list = marche0;
-        } else {
-            list = marcheI;
-        }
-        do {
-            i = rand.nextInt(list.length);
-        } while (a == list[i]);
-        b = list[i];
-        
-        if (rand.nextBoolean()) {
-            list = marche0;
-        } else {
-            list = marcheI;
-        }
-        do {
-            i = rand.nextInt(list.length);
-        } while (list[i] == b || list[i] == a);
-        
-        a.presente(reduc);
-        b.presente(reduc);
-        list[i].presente(reduc);
+        System.out.println("Vous êtes dans le marché des prairies et trois objets vous sont proposés :");
+        Equipement[] list = new Equipement[marche0.length + marcheI.length];
+        System.arraycopy(marche0, 0, list, 0, marche0.length);
+        System.arraycopy(marcheI, 0, list, marche0.length, marcheI.length);
+        marche_global(reduc, list, 3);
     }
     
+    /**
+     * Affiche 3 objets du marché des vignes.
+     *
+     * @param reduc réduction appliquée à l'affichage
+     */
     public static void marche_vigne(int reduc) {
-        System.out.println("Vous êtes dans le marché des vignes et 3 objets vous sont proposés :");
-        int i;
-        Equipement a, b;
-        Equipement[] list = marcheI;
-        
-        a = list[rand.nextInt(list.length)];
-        
-        do {
-            i = rand.nextInt(list.length);
-        } while (a == list[i]);
-        b = list[i];
-        
-        do {
-            i = rand.nextInt(list.length);
-        } while (list[i] == b || list[i] == a);
-        
-        a.presente(reduc);
-        b.presente(reduc);
-        list[i].presente(reduc);
+        System.out.println("Vous êtes dans le marché des vignes et trois objets vous sont proposés :");
+        marche_global(reduc, marcheI, 3);
     }
     
-    @SuppressWarnings("DuplicatedCode")
+    /**
+     * Affiche entre 2 et 4 objets proposés par un marchand dans un temple.
+     *
+     * @param reduc réduction appliquée à l'affichage
+     */
     public static void marche_temple(int reduc) {
-        int nbo = rand.nextInt(3) + 2;
+        int nbo = rand.nextInt(3) + 2; //2~4
         System.out.println("Vous trouvez un marchant dans le temple, qui vous propose " + nbo + " objets :");
-        int i;
-        Equipement a, b, c = null, d = null;
-        Equipement[] list;
-        
-        if (rand.nextBoolean()) {
-            list = marcheI;
-        } else {
-            list = marcheII;
-        }
-        a = list[rand.nextInt(list.length)];
-        
-        if (rand.nextBoolean()) {
-            list = marcheI;
-        } else {
-            list = marcheII;
-        }
-        do {
-            i = rand.nextInt(list.length);
-        } while (a == list[i]);
-        b = list[i];
-        
-        if (nbo > 2) {
-            if (rand.nextBoolean()) {
-                list = marcheI;
-            } else {
-                list = marcheII;
-            }
-            do {
-                i = rand.nextInt(list.length);
-            } while (list[i] == b || list[i] == a);
-            c = list[i];
-        }
-        
-        if (nbo > 3) {
-            if (rand.nextBoolean()) {
-                list = marcheI;
-            } else {
-                list = marcheII;
-            }
-            do {
-                i = rand.nextInt(list.length);
-            } while (list[i] == b || list[i] == a || list[i] == c);
-            d = list[i];
-        }
-        
-        a.presente(reduc);
-        b.presente(reduc);
-        if (nbo > 2) {
-            c.presente(reduc);
-        }
-        if (nbo > 3) {
-            d.presente(reduc);
-        }
+        Equipement[] list = new Equipement[marcheI.length + marcheII.length];
+        System.arraycopy(marcheI, 0, list, 0, marcheI.length);
+        System.arraycopy(marcheII, 0, list, marcheI.length, marcheII.length);
+        marche_global(reduc, list, nbo);
     }
     
+    /**
+     * Affiche 2 objets proposés par un navire marchand.
+     *
+     * @param reduc réduction appliquée à l'affichage
+     */
     public static void marche_mer(int reduc) {
-        System.out.println("Vous croisez un navire marchand qui vous propose 2 objets :");
-        Equipement[] list;
-        if (rand.nextBoolean()) {
-            list = marcheII;
-        } else {
-            list = marcheIII;
-        }
-        int i = rand.nextInt(list.length);
-        Equipement a = list[i];
-        if (rand.nextBoolean()) {
-            list = marcheII;
-        } else {
-            list = marcheIII;
-        }
-        do {
-            i = rand.nextInt(list.length);
-        } while (list[i] == a);
-        a.presente(reduc);
-        list[i].presente(reduc);
+        System.out.println("Vous croisez un navire marchand qui vous propose deux objets :");
+        Equipement[] list = new Equipement[marcheII.length + marcheIII.length];
+        System.arraycopy(marcheII, 0, list, 0, marcheII.length);
+        System.arraycopy(marcheIII, 0, list, marcheII.length, marcheIII.length);
+        marche_global(reduc, list, 2);
     }
     
+    /**
+     * Affiche un seul objet proposé par un pèlerin dans les monts.
+     *
+     * @param reduc réduction appliquée à l'affichage
+     */
     public static void marche_monts(int reduc) {
         System.out.println("Vous croisez un pelerin qui vous propose de vous vendre un objet :");
-        marcheIII[rand.nextInt(marcheIII.length)].presente(reduc);
+        marche_global(reduc, marcheIII, 1);
     }
 }

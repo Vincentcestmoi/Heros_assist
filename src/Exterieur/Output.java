@@ -168,8 +168,20 @@ public class Output {
     /**
      * Joue un bruit de musique
      */
-    public static void jouerSonOr(){
-        jouerSon("Audio/money.wav");
+    public static void jouerSonOr(int nb_fois){
+        for(int i = 0; i <= nb_fois; i++) {
+            jouerSon("Audio/money.wav");
+            try {
+                Thread.sleep(250); // pause de 0.25 seconde
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // bonne pratique : réinterrompre le thread
+                System.err.println("Interruption pendant la pause : " + e.getMessage());
+            }
+        }
+    }
+    
+    public static void jouerSonMarche(){
+        jouerSon("Audio/marche.wav");
     }
     
     /**

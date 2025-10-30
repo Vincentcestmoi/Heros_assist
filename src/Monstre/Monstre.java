@@ -732,15 +732,7 @@ public class Monstre {
             }
             int value = (1 + (etat - 1) / 10);
             System.out.println("Vous pouvez vendre le cadavre de " + nom + " pour " + value + " PO.");
-            for (int i = 0; i < value; i++) {
-                Output.jouerSonOr();
-                try {
-                    Thread.sleep(500); // pause de 0.5 seconde
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // bonne pratique : réinterrompre le thread
-                    System.err.println("Interruption pendant la pause : " + e.getMessage());
-                }
-            }
+            Output.jouerSonOr(value);
             return false;
         }
         return true;
