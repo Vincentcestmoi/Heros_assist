@@ -1,0 +1,34 @@
+name: Build and Run Java with Shell
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v3
+
+    - name: 🧰 Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17' # ou la version que tu utilises
+
+    - name: 🔧 Make scripts executable
+      run: chmod +x compiler.sh lancer.sh
+
+    - name: 🛠️ Compile Java sources
+      run: ./compiler.sh
+
+    - name: 🚀 Run main program (no argument)
+      run: ./lancer.sh
+
+    # Optionnel : test avec argument
+    # - name: 🚀 Run main program with argument
+    #   run: ./lancer.sh Save1
