@@ -6,10 +6,10 @@ import Enum.Rang;
 import Exterieur.Output;
 
 import java.io.IOException;
-import java.util.Random;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 
 public class Equipement {
@@ -696,10 +696,9 @@ public class Equipement {
     
     /**
      * Sélectionne aléatoirement des objets dans une liste sans doublons et les présente
-     *
-     * @param reduc      réduction appliquée à l'affichage
-     * @param list       liste d'équipements disponibles
-     * @param nb_items   nombre d'objets à proposer
+     * @param reduc    réduction appliquée à l'affichage
+     * @param list     liste d'équipements disponibles
+     * @param nb_items nombre d'objets à proposer
      */
     private static void marche_global(int reduc, Equipement[] list, int nb_items) {
         List<Equipement> valides = new ArrayList<>();
@@ -725,7 +724,6 @@ public class Equipement {
     
     /**
      * Affiche 3 objets aléatoires du marché des prairies.
-     *
      * @param reduc réduction appliquée à l'affichage
      */
     public static void marche_prairie(int reduc) {
@@ -738,7 +736,6 @@ public class Equipement {
     
     /**
      * Affiche 3 objets du marché des vignes.
-     *
      * @param reduc réduction appliquée à l'affichage
      */
     public static void marche_vigne(int reduc) {
@@ -748,7 +745,6 @@ public class Equipement {
     
     /**
      * Affiche entre 2 et 4 objets proposés par un marchand dans un temple.
-     *
      * @param reduc réduction appliquée à l'affichage
      */
     public static void marche_temple(int reduc) {
@@ -762,7 +758,6 @@ public class Equipement {
     
     /**
      * Affiche 2 objets proposés par un navire marchand.
-     *
      * @param reduc réduction appliquée à l'affichage
      */
     public static void marche_mer(int reduc) {
@@ -775,7 +770,6 @@ public class Equipement {
     
     /**
      * Affiche un seul objet proposé par un pèlerin dans les monts.
-     *
      * @param reduc réduction appliquée à l'affichage
      */
     public static void marche_monts(int reduc) {

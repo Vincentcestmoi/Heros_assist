@@ -30,7 +30,7 @@ public class Combat {
         
         int nb_part = 0;
         
-        if(joueur_force != -1){
+        if (joueur_force != -1) {
             Output.jouerSonAttaque();
         }
         

@@ -499,9 +499,7 @@ public class Input {
     }
     
     public static Action_extra extra(Joueur joueur, Action action) throws IOException {
-        if (action == Action.AUCUNE || action == Action.END || action == Action.CONCOCTION || action == Action.DOMESTIQUER
-                || action == Action.DEXTERITE || action == Action.LIEN || action == Action.MEDITATION
-                || action == Action.FUIR || action == Action.OFF) {
+        if (action == Action.AUCUNE || action == Action.END || action == Action.CONCOCTION || action == Action.DOMESTIQUER || action == Action.DEXTERITE || action == Action.LIEN || action == Action.MEDITATION || action == Action.FUIR || action == Action.OFF) {
             return Action_extra.AUCUNE;
         }
         String text = joueur.text_extra(action);

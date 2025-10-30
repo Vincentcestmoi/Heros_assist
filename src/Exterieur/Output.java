@@ -5,7 +5,9 @@ import Equipement.Pre_Equipement;
 import main.Main;
 
 import javax.json.*;
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -168,8 +170,8 @@ public class Output {
     /**
      * Joue un bruit de musique
      */
-    public static void jouerSonOr(int nb_fois){
-        for(int i = 0; i <= nb_fois; i++) {
+    public static void jouerSonOr(int nb_fois) {
+        for (int i = 0; i <= nb_fois; i++) {
             jouerSon("Audio/money.wav");
             try {
                 Thread.sleep(250); // pause de 0.25 seconde
@@ -180,60 +182,60 @@ public class Output {
         }
     }
     
-    public static void jouerSonMarche(){
+    public static void jouerSonMarche() {
         jouerSon("Audio/marche.wav");
     }
     
     /**
      * Joue le rugissement d'un ours
      */
-    public static void jouerSonAttaque(){
+    public static void jouerSonAttaque() {
         jouerSon("Audio/attaque.wav");
     }
     
     /**
      * Joue le son d'ouverture d'un coffre
      */
-    public static void jouerSonCoffre(){
+    public static void jouerSonCoffre() {
         jouerSon("Audio/coffre.wav");
     }
     
     /**
      * Joue un son encourageant
      */
-    public static void JouerSonLvlUp(){
+    public static void JouerSonLvlUp() {
         jouerSon("Audio/level_up.wav");
     }
     
     /**
      * Joue un cri d'agonie
      */
-    public static void JouerSonMortDef(){
+    public static void JouerSonMortDef() {
         jouerSon("Audio/mort_def.wav");
     }
     
     /**
      * Joue un (autre) cri d'agonie
      */
-    public static void JouerSonMort(){
+    public static void JouerSonMort() {
         jouerSon("Audio/mort.wav");
     }
     
     /**
      * Joue le son d'un tir à l'arc
      */
-    public static void JouerSonTir(){
+    public static void JouerSonTir() {
         jouerSon("Audio/tir.wav");
     }
     
     /**
      * Joue le son d'une attaque
      */
-    public static void JouerSonDommage(){
+    public static void JouerSonDommage() {
         jouerSon("Audio/degas.wav");
     }
     
-    public static void jouerSonMonstreMort(){
+    public static void jouerSonMonstreMort() {
         jouerSon("Audio/mort_monstre.wav");
     }
     

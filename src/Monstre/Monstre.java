@@ -526,7 +526,7 @@ public class Monstre {
             return;
         }
         int degat = applique_competence_tir(max(quantite - this.armure, 1));
-        if(degat > 0){
+        if (degat > 0) {
             Output.JouerSonTir();
         }
         subit_dommage(degat, false);
@@ -750,7 +750,7 @@ public class Monstre {
             return;
         }
         int degas = applique_competence_dommage(max(quantite - this.armure, 1));
-        if(degas > 0){
+        if (degas > 0) {
             Output.JouerSonDommage();
         }
         subit_dommage(degas, false);
