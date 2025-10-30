@@ -1,20 +1,14 @@
 package Metiers;
 
+import Enum.*;
 import Exterieur.Input;
-
-import Enum.Metier;
-import Enum.Position;
-import Enum.Action;
-import Enum.Dieux;
-import Enum.Concoction;
-
 import Monstre.Monstre;
 
 import java.io.IOException;
 
 public class Alchimiste extends Joueur {
     Metier metier = Metier.ALCHIMISTE;
-
+    
     public Alchimiste(String nom, Position position, int ob_f, Dieux parent, int xp) {
         super(nom, position, ob_f, parent, xp);
         vie = 4;
@@ -24,7 +18,7 @@ public class Alchimiste extends Joueur {
         PP_max = 11;
         add_competence("Dissection, Concoction");
     }
-
+    
     @Override
     protected void actualiser_niveau() {
         if (this.niveau >= 1) {
@@ -40,7 +34,7 @@ public class Alchimiste extends Joueur {
             this.attaque += 1;
         }
     }
-
+    
     @Override
     void lvl_up() {
         int temp = this.niveau;
@@ -85,34 +79,34 @@ public class Alchimiste extends Joueur {
         };
         System.out.println(text);
     }
-
+    
     @Override
     protected void presente_caracteristique() {
         if (this.niveau >= 1) {
-            System.out.println("Dextérité : Permet d'utiliser deux potions en action bonus, ou une potion spéciale. Permet " +
-                    "aussi de remplacer son action principale par 2 utilisations de potions.");
+            System.out.println("Dextérité : Permet d'utiliser deux potions en action bonus, ou une potion spéciale. " + "Permet " + "aussi de remplacer son action principale par 2 utilisations de potions.");
         }
     }
-
+    
     @Override
     protected void presente_pouvoir() {
-        System.out.println("Dissection : permet de récuperer des ingrédients sur un cadavres. Dégrade l'état du cadavre.");
+        System.out.println("Dissection : permet de récuperer des ingrédients sur un cadavres. Dégrade l'état du " +
+                "cadavre.");
         System.out.println("Concoction : Dépenses des ingrédients pour réaliser une potion.");
         if (niveau >= 2) {
             System.out.println("Fouille : recherche des ingrédients aux alentours. Faible chance de réussite.");
         }
     }
-
+    
     @Override
     public Metier getMetier() {
         return metier;
     }
-
+    
     @Override
     protected String nomMetier() {
         return "alchimiste";
     }
-
+    
     @Override
     public String text_tour() {
         String text = "/(co)ncocter des potions;";
@@ -121,7 +115,7 @@ public class Alchimiste extends Joueur {
         }
         return text;
     }
-
+    
     @Override
     public boolean tour(String choix) throws IOException {
         if (choix.equalsIgnoreCase("fo") && this.niveau >= 2) {
@@ -134,7 +128,7 @@ public class Alchimiste extends Joueur {
         }
         return false;
     }
-
+    
     @Override
     public String text_action() {
         String text = super.text_action();
@@ -149,7 +143,7 @@ public class Alchimiste extends Joueur {
         }
         return text;
     }
-
+    
     @Override
     public Action action(String choix, boolean est_familier) throws IOException {
         if (est_familier) {
@@ -174,7 +168,7 @@ public class Alchimiste extends Joueur {
         }
         return super.action(choix, false);
     }
-
+    
     @Override
     public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         switch (action) {
@@ -193,14 +187,14 @@ public class Alchimiste extends Joueur {
         }
         return super.traite_action(action, ennemi, bonus_popo);
     }
-
+    
     public boolean action_consomme_popo(Action action) {
         if (action == Action.DEXTERITE) {
             return true;
         }
         return super.action_consomme_popo(action);
     }
-
+    
     @Override
     public int popo() throws IOException {
         if (this.niveau <= 1) {
@@ -229,13 +223,11 @@ public class Alchimiste extends Joueur {
             case 2 -> local_popo_res();
             case 3 -> local_popo_force();
             case 4 -> {
-                System.out.println("Vous vous dites qu'il serait contre-productif d'enduire votre lame de poison et de lancer une" +
-                        " potion explosive en même temps.");
+                System.out.println("Vous vous dites qu'il serait contre-productif d'enduire votre lame de poison et " + "de lancer une" + " potion explosive en même temps.");
                 yield popo_cd() + super.popo();
             }
             case 5 -> {
-                System.out.println("Vous vous dites qu'il serait contre-productif d'enduire votre lame de poison et de lancer une" +
-                        " potion explosive en même temps.");
+                System.out.println("Vous vous dites qu'il serait contre-productif d'enduire votre lame de poison et " + "de lancer une" + " potion explosive en même temps.");
                 yield popo_instable() + super.popo();
             }
             case 6 -> local_popo_mana();
@@ -252,10 +244,9 @@ public class Alchimiste extends Joueur {
             }
         };
     }
-
+    
     /**
      * Calcule et traite les soin
-     *
      * @throws IOException toujours
      */
     protected int local_popo_soin() throws IOException {
@@ -270,7 +261,7 @@ public class Alchimiste extends Joueur {
         } else {
             System.out.println("5 : aucune (reviens au choix des potions))");
         }
-
+        
         int temp = Input.readInt();
         if (temp <= 0 || temp > 7) {
             System.out.println("Unknow input");
@@ -297,10 +288,9 @@ public class Alchimiste extends Joueur {
         System.out.println("La cible est soignée de " + soin + ".");
         return super.popo();
     }
-
+    
     /**
      * Calcule et traite les bonus de résistance
-     *
      * @throws IOException toujours
      */
     protected int local_popo_res() throws IOException {
@@ -324,8 +314,7 @@ public class Alchimiste extends Joueur {
             case 2 -> res = 4 + rand.nextInt(3);
             case 3 -> {
                 if (this.niveau >= 5) {
-                    System.out.println("La cible gagne temporairement " + (4 + rand.nextInt(2)) + " points de résistance" +
-                            " et 1 point d'armure.");
+                    System.out.println("La cible gagne temporairement " + (4 + rand.nextInt(2)) + " points de " + "r" + "ésistance" + " et 1 point d'armure.");
                     return 0;
                 } else {
                     return popo();
@@ -338,10 +327,9 @@ public class Alchimiste extends Joueur {
         System.out.println("La cible gagne temporairement " + res + " points de résistance.");
         return super.popo();
     }
-
+    
     /**
      * Calcule et traite les bonus d'attaque
-     *
      * @throws IOException toujours
      */
     @SuppressWarnings("DuplicatedCode")
@@ -369,10 +357,9 @@ public class Alchimiste extends Joueur {
         System.out.println("La cible gagne temporairement " + force + " points d'attaque.");
         return super.popo();
     }
-
+    
     /**
      * Calcule et traite la régénèration du mana
-     *
      * @throws IOException toujours
      */
     protected int local_popo_mana() throws IOException {
@@ -395,7 +382,8 @@ public class Alchimiste extends Joueur {
             case 3 -> PP = 5 + rand.nextInt(3);
             case 4 -> {
                 PP = 8 + rand.nextInt(7);
-                System.out.println("Le système de mana de la cible s'agrandit temporairement et peut stocker 5PP supplémentaires.");
+                System.out.println("Le système de mana de la cible s'agrandit temporairement et peut stocker 5PP " +
+                        "supplémentaires.");
             }
             case 5 -> {
                 return popo();
@@ -404,10 +392,9 @@ public class Alchimiste extends Joueur {
         System.out.println("La cible récupère " + PP + "PP.");
         return 0;
     }
-
+    
     /**
      * Calcule et traite les effets des deux potions spéciale
-     *
      * @throws IOException toujours
      */
     protected int local_popo_divine() throws IOException {
@@ -422,8 +409,8 @@ public class Alchimiste extends Joueur {
             return local_popo_divine();
         }
         switch (temp) {
-            case 1 -> System.out.println("La cible est guérie de " + (3 + rand.nextInt(3)) + ", gagne temporairement " +
-                    (5 + rand.nextInt(5)) + " points de résistance et " + (2 + rand.nextInt(3)) + " points d'attaques.");
+            case 1 ->
+                    System.out.println("La cible est guérie de " + (3 + rand.nextInt(3)) + ", gagne temporairement " + (5 + rand.nextInt(5)) + " points de résistance et " + (2 + rand.nextInt(3)) + " points d'attaques.");
             case 2 -> elixir();
             case 3 -> {
                 return popo();
@@ -431,7 +418,7 @@ public class Alchimiste extends Joueur {
         }
         return 0;
     }
-
+    
     private void elixir() throws IOException {
         System.out.println("La cible est guérie de " + switch (Input.D20()) {
             case 4, 5, 6 -> "5 et gagne temporairement 6";
@@ -445,12 +432,12 @@ public class Alchimiste extends Joueur {
             default -> "4 et gagne temporairement 3";
         } + " points de résistance additionels.");
     }
-
+    
     @Override
     public boolean peut_ressuciter() {
         return this.niveau >= 5;
     }
-
+    
     @Override
     public boolean ressuciter(int malus) throws IOException {
         if (this.niveau < 5) {
@@ -486,7 +473,7 @@ public class Alchimiste extends Joueur {
         System.out.println("Vous n'avez aucun moyen de ressuciter la cible.");
         return false;
     }
-
+    
     /**
      * Indique le résultat de la compétence "fouille"
      */
@@ -507,10 +494,9 @@ public class Alchimiste extends Joueur {
             System.out.println("Vous récoltez 2 ingrédients.");
         }
     }
-
+    
     /**
      * Indique le résultat de la compétence "dissection"
-     *
      * @param etat l'état du cadavre
      * @return le changement d'état du corps
      * @throws IOException toujours
@@ -548,26 +534,25 @@ public class Alchimiste extends Joueur {
             return -20 - rand.nextInt(25);
         }
     }
-
+    
     /**
      * Applique la compétence "dextérité" de l'alchimiste : utiliser 2 potions additionelles
-     *
      * @throws IOException toujours
      */
     private void dexterite(Monstre ennemi, int popo_bonus) throws IOException {
         popo_bonus += popo() + popo();
         ennemi.dommage(popo_bonus);
     }
-
-
+    
+    
     /**
      * Laisse l'alchimiste choisir la potion qu'il veut créer
-     *
      * @return le type de potion
      * @throws IOException toujours
      */
     public Concoction concoction() throws IOException {
-        //palier : base → force, soin, toxique, 3 → resistance 4 → energie, aléatoire 6 → instable, en série 8 → divin, 10 → elixir
+        //palier : base → force, soin, toxique, 3 → resistance 4 → energie, aléatoire 6 → instable, en série 8 →
+        // divin, 10 → elixir
         String text = text_concoc_possible();
         System.out.println(text);
         return switch (Input.read().toLowerCase()) {
@@ -623,7 +608,7 @@ public class Alchimiste extends Joueur {
             }
         };
     }
-
+    
     private String text_concoc_possible() {
         String text = "Quel type de potion voulez vous concocter : (fo)rce/(so)in/(to)xique";
         if (this.niveau >= 3) {
@@ -644,10 +629,9 @@ public class Alchimiste extends Joueur {
         text += "/(c)ustom";
         return text;
     }
-
+    
     /**
      * Laisse l'alchimiste concoter ses potions
-     *
      * @throws IOException toujours
      */
     public void concocter() throws IOException {
@@ -665,10 +649,9 @@ public class Alchimiste extends Joueur {
             case AUTRE -> System.out.println("Vous réalisez votre concoction.");
         }
     }
-
+    
     /**
      * Réalise une potion de résistance
-     *
      * @throws IOException toujours
      */
     protected void concoc_resi() throws IOException {
@@ -685,24 +668,23 @@ public class Alchimiste extends Joueur {
             System.out.println("Vous avez produit une potion de solidification (RES#3).");
         }
     }
-
+    
     /**
      * Réalise une potion de difficulté 10 ou moins
-     *
      * @throws IOException toujours
      */
     protected void concoc_alea() throws IOException {
-
+        
         int[] popo_cost = {1, 1, 5, 8, 4, 9, 9, 6, 10};
-        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "potion toxique (P#2)",
-                "potion de poison (P#3)", "potion instable (E#1)", "potion de feu (E#2)", "de force (ATK#1)",
-                "potion de vie (PV#2)", "potion énergétique (PP#1)"};
-
+        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "potion toxique (P#2)", "potion de " +
+                "poison" + " (P#3)", "potion instable (E#1)", "potion de feu (E#2)", "de force (ATK#1)",
+                "potion de " + "vie (PV#2)", "potion énergétique (PP#1)"};
+        
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (max 4): ");
         int ingre = Input.readInt();
         int concoc = Input.D4() + ingre + 2 + rand.nextInt(3) - 1 + bonus_concoc();
         int[] t = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
-
+        
         for (int i = 0; i < t.length; ) {
             int temp = rand.nextInt(t.length);
             if (t[temp] == -1) {
@@ -710,7 +692,7 @@ public class Alchimiste extends Joueur {
                 i++;
             }
         }
-
+        
         for (int j : t) {
             if (popo_cost[j] <= concoc) {
                 System.out.println("Vous avez concocté une " + popo[j]);
@@ -718,10 +700,9 @@ public class Alchimiste extends Joueur {
             }
         }
     }
-
+    
     /**
      * Tente de réaliser une potion divine
-     *
      * @throws IOException toujours
      */
     protected void concoc_divine() throws IOException {
@@ -736,29 +717,29 @@ public class Alchimiste extends Joueur {
             System.out.println("Vous avez produit une potion divine (Div#A).");
         }
     }
-
+    
     /**
      * Réalise des potions
-     *
      * @throws IOException toujours
      */
     protected void concoc_serie() throws IOException {
-
+        
         int[] popo_cost = {1, 1, 5, 8, 4, 9, 9, 6, 10, 11, 13, 11, 14, 14, 11, 14, 15, 15};
-        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "potion toxique (P#2)", "potion de poison (P#3)",
-                "potion instable (E#1)", "potion de feu (E#2)", "potion de force (ATK#1)", "potion de vie (PV#2)",
-                "potion énergétique (PP#1)", "potion de santé (PV#3)", "potion d'énergie (PP#2)", "potion de vigeur (RES#1)",
-                "potion de résistance (RES#2)", "potion de puissance (ATK#2)", "flasque nécrosé (P#4)", "potion nécrotyque (P#5)",
-                "potion explosive (E#4)", "potion divine (Div#A)"};
-
-
+        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "potion toxique (P#2)", "potion de " +
+                "poison" + " (P#3)", "potion instable (E#1)", "potion de feu (E#2)", "potion de force (ATK#1)",
+                "potion de vie " + "(PV#2)", "potion énergétique (PP#1)", "potion de santé (PV#3)", "potion " +
+                "d'énergie" + " (PP#2)", "potion " + "de vigeur (RES#1)", "potion de résistance (RES#2)", "potion de " +
+                "puissance " + "(ATK#2)", "flasque nécrosé " + "(P#4)", "potion nécrotyque (P#5)", "potion explosive " +
+                "(E#4)", "potion" + " divine (Div#A)"};
+        
+        
         System.out.println("Combien d'ingrédient allez-vous utiliser ? ");
         int ingre = Input.readInt();
         int concoc = Input.D6() + ingre + rand.nextInt(3) - 1 + bonus_concoc();
-
-
+        
+        
         while (concoc > 0) {
-
+            
             //tirage aléatoire
             int[] t = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
             for (int i = 0; i < t.length; ) {
@@ -768,7 +749,7 @@ public class Alchimiste extends Joueur {
                     i++;
                 }
             }
-
+            
             for (int i = 0; i < popo.length; i++) {
                 int j = t[i];
                 if (popo_cost[j] <= concoc) {
@@ -779,10 +760,9 @@ public class Alchimiste extends Joueur {
             }
         }
     }
-
+    
     /**
      * Réalise une potion d'énergie
-     *
      * @throws IOException toujours
      */
     protected void concoc_energie() throws IOException {
@@ -801,10 +781,9 @@ public class Alchimiste extends Joueur {
             System.out.println("Vous avez produit une potion ancestrale (PP#4).");
         }
     }
-
+    
     /**
      * Réalise une potion de force
-     *
      * @throws IOException toujours
      */
     protected void concoc_force() throws IOException {
@@ -821,10 +800,9 @@ public class Alchimiste extends Joueur {
             System.out.println("Vous avez produit une potion du colosse (ATK#3).");
         }
     }
-
+    
     /**
      * Réalise une potion explosive
-     *
      * @throws IOException toujours
      */
     protected void concoc_bombe() throws IOException {
@@ -843,10 +821,9 @@ public class Alchimiste extends Joueur {
             System.out.println("Vous avez produit une bombe (E#4).");
         }
     }
-
+    
     /**
      * Réalise une potion de soin
-     *
      * @throws IOException toujours
      */
     protected void concoc_soin() throws IOException {
@@ -865,10 +842,9 @@ public class Alchimiste extends Joueur {
             System.out.println("Vous avez produit une potion de régénération (PV#5).");
         }
     }
-
+    
     /**
      * Réalise une potion de toxique
-     *
      * @throws IOException toujours
      */
     protected void concoc_toxique() throws IOException {
@@ -887,10 +863,9 @@ public class Alchimiste extends Joueur {
             System.out.println("Vous avez produit une potion nécrotyque (P#5).");
         }
     }
-
+    
     /**
      * Tente de réaliser un élixir
-     *
      * @throws IOException toujours
      */
     protected void concoc_miracle() throws IOException {
@@ -905,10 +880,9 @@ public class Alchimiste extends Joueur {
             System.out.println("Vous avez produit un élixir (Div#B).");
         }
     }
-
+    
     /**
      * Applique les bons de concoction dû aux niveaux
-     *
      * @return la valeur du bonus
      */
     private int bonus_concoc() {
@@ -920,7 +894,7 @@ public class Alchimiste extends Joueur {
         }
         return 2;
     }
-
+    
     @Override
     protected void monstre_mort_perso(Monstre ennemi) throws IOException {
         if (ennemi.corps_utilisable() && est_actif() && est_vivant()) {

@@ -1,12 +1,10 @@
 package Metiers;
 
-import Exterieur.Input;
-
-import Enum.Metier;
-import Enum.Position;
 import Enum.Action;
 import Enum.Dieux;
-
+import Enum.Metier;
+import Enum.Position;
+import Exterieur.Input;
 import Monstre.Monstre;
 import main.Main;
 
@@ -15,7 +13,7 @@ import java.io.IOException;
 public class Archimage extends Joueur {
     Metier metier = Metier.ARCHIMAGE;
     int purge_cout;
-
+    
     public Archimage(String nom, Position position, int ob_f, Dieux parent, int xp) {
         super(nom, position, ob_f, parent, xp);
         vie = 4;
@@ -27,7 +25,7 @@ public class Archimage extends Joueur {
         add_caracteristique("Manchot, Bruyant, Fier, Addiction au mana");
         add_competence("Sort, Méditation");
     }
-
+    
     @Override
     protected void actualiser_niveau() {
         if (this.niveau >= 2) {
@@ -60,7 +58,7 @@ public class Archimage extends Joueur {
             this.PP_max += 1;
         }
     }
-
+    
     @Override
     protected void presente_caracteristique() {
         System.out.println("Manchot : N'a qu'un bras.");
@@ -71,36 +69,38 @@ public class Archimage extends Joueur {
             System.out.println("Double sort : Permet de lancer deux sorts avec l'action Sort.");
         }
     }
-
+    
     @Override
     protected void presente_pouvoir() {
-        System.out.println("Sort : Lance un puissant sort. L'intensité des sorts varie selon la quantité de mana utilisée.");
+        System.out.println("Sort : Lance un puissant sort. L'intensité des sorts varie selon la quantité de mana " +
+                "utilisée.");
         affiche_sorts();
         System.out.println("Méditation : Se repose pour récuperer du mana.");
         if (this.niveau >= 2) {
             System.out.println("Purge : sort curatif, pour " + purge_cout + " mana, guérie des alterations d'états.");
         }
     }
-
+    
     private void affiche_sorts() {
         System.out.println("\tBoule de feu : sort de feu, pour 2 mana ou plus, lance un sort offensif léger.");
-        System.out.println("\tOnde de choc : sort sonore, pour 3 mana, étourdit tous les participants à l'exception du lanceur.");
+        System.out.println("\tOnde de choc : sort sonore, pour 3 mana, étourdit tous les participants à l'exception " + "du lanceur.");
         if (this.niveau >= 1) {
-            System.out.println("\tArmure de glace : sort de glace, pour 3 mana ou plus, augmente la résistance d'une cible.");
+            System.out.println("\tArmure de glace : sort de glace, pour 3 mana ou plus, augmente la résistance d'une "
+                    + "cible.");
         }
         if (this.niveau >= 5) {
             System.out.println("\tFoudre : sort de foudre, pour 7 mana ou plus, lance un puissant sort offensif.");
         }
     }
-
+    
     public Metier getMetier() {
         return metier;
     }
-
+    
     protected String nomMetier() {
         return "archimage";
     }
-
+    
     @Override
     void lvl_up() {
         int temp = this.niveau;
@@ -182,12 +182,12 @@ public class Archimage extends Joueur {
         };
         System.out.println(text);
     }
-
+    
     @Override
     public String text_tour() {
         return "/(me)ditation";
     }
-
+    
     @Override
     public boolean tour(String choix) throws IOException {
         if (choix.equalsIgnoreCase("me")) {
@@ -196,14 +196,14 @@ public class Archimage extends Joueur {
         }
         return false;
     }
-
+    
     @Override
     public void addiction() throws IOException {
         if (Input.yn("Votre mana est-il descendu à 0 ?")) {
             mana_addiction();
         }
     }
-
+    
     @Override
     public String text_action() {
         String text = super.text_action();
@@ -215,7 +215,7 @@ public class Archimage extends Joueur {
         }
         return text;
     }
-
+    
     @Override
     public Action action(String choix, boolean est_familier) throws IOException {
         if (est_familier) {
@@ -240,7 +240,7 @@ public class Archimage extends Joueur {
         }
         return super.action(choix, false);
     }
-
+    
     @Override
     public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         switch (action) {
@@ -259,12 +259,12 @@ public class Archimage extends Joueur {
         }
         return super.traite_action(action, ennemi, bonus_popo);
     }
-
+    
     @Override
     public int bonus_exploration() {
         return rand.nextInt(2) - 1 /* bruyant */;
     }
-
+    
     @Override
     public void essaie_reveil() throws IOException {
         // l'archimage peut se réveiller via un sort
@@ -283,7 +283,7 @@ public class Archimage extends Joueur {
             }
         }
     }
-
+    
     /**
      * Utilise la compétence purge, retire ou
      * diminue les altértions d'états.
@@ -308,10 +308,9 @@ public class Archimage extends Joueur {
             this.poison1 = false;
         }
     }
-
+    
     /**
      * Permet à l'archimage de lancer ses sorts
-     *
      * @param ennemi le monstre ennemi
      * @throws IOException toujours
      */
@@ -334,7 +333,7 @@ public class Archimage extends Joueur {
             mana_addiction();
         }
     }
-
+    
     /**
      * Fonction auxiliaire de sort
      * demande au joueur quel sort il veut lancer et le lance
@@ -360,10 +359,9 @@ public class Archimage extends Joueur {
             }
         }
     }
-
+    
     /**
      * Affiche les bienfaits de la méditation
-     *
      * @throws IOException toujours
      */
     void meditation() throws IOException {
@@ -386,15 +384,14 @@ public class Archimage extends Joueur {
         }
         System.out.println("Vous récupérez " + recup + "PP.");
     }
-
+    
     /**
      * Applique les effets de la compétence "Onde de choc"
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
     private void onde_choc(Monstre ennemi) throws IOException {
-
+        
         int bonus = 0;
         if (this.niveau >= 7) {
             bonus = 1;
@@ -406,7 +403,7 @@ public class Archimage extends Joueur {
                 joueur.choc(bonus);
             }
         }
-
+        
         // sur l'ennemi
         System.out.println(ennemi.getNom() + " est frappé par l'onde de choc.");
         System.out.print(this.getNom() + " : ");
@@ -417,10 +414,9 @@ public class Archimage extends Joueur {
             default -> System.out.println(ennemi.getNom() + " n'a pas l'air très affecté...");
         }
     }
-
+    
     /**
      * Calcule et applique les dommages de la compétence "boule de feu"
-     *
      * @param ennemi la cible du sort
      * @throws IOException toujours
      */
@@ -476,10 +472,9 @@ public class Archimage extends Joueur {
         }
         ennemi.dommage_magique(dmg);
     }
-
+    
     /**
      * Indique l'efficacité de la compétence "armure de glace"
-     *
      * @throws IOException toujours
      */
     public void armure_de_glace() throws IOException {
@@ -515,10 +510,9 @@ public class Archimage extends Joueur {
             System.out.println("La cible gagne 12 points de résistance et 2 point d'armure.");
         }
     }
-
+    
     /**
      * Calcule et applique les dommages de la compétence "foudre"
-     *
      * @param ennemi la cible du sort
      * @throws IOException toujours
      */
@@ -565,7 +559,8 @@ public class Archimage extends Joueur {
             dmg = 24;
             ennemi.affecte();
         } else if (jet <= 22) {
-            System.out.println("L'espace d'un instant, les cieux s'illuminent et une miriade d'éclairs vient percuter " + ennemi.getNom() + " avec grand fracas.");
+            System.out.println("L'espace d'un instant, les cieux s'illuminent et une miriade d'éclairs vient " +
+                    "percuter" + " " + ennemi.getNom() + " avec grand fracas.");
             dmg = 25;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
@@ -573,20 +568,21 @@ public class Archimage extends Joueur {
                 ennemi.do_assomme();
             }
         } else if (jet == 23) {
-            System.out.println("L'espace d'un instant, les cieux s'illuminent et une miriade d'éclairs vient percuter " + ennemi.getNom() + " avec grand fracas.");
+            System.out.println("L'espace d'un instant, les cieux s'illuminent et une miriade d'éclairs vient " +
+                    "percuter" + " " + ennemi.getNom() + " avec grand fracas.");
             dmg = 27;
             ennemi.do_assomme();
         } else {
-            System.out.println("Un déchainement de pure énergie fend l'espace entre le ciel et la terre, transpersant " + ennemi.getNom() + " sur son passage.");
+            System.out.println("Un déchainement de pure énergie fend l'espace entre le ciel et la terre, " +
+                    "transpersant" + " " + ennemi.getNom() + " sur son passage.");
             dmg = 30;
             ennemi.do_assomme();
         }
         ennemi.dommage_magique(dmg);
     }
-
+    
     /**
      * Applique les compétences "addiction au mana" et "maitre du mana" de l'archimage
-     *
      * @return si le joueur perd connaissance
      * @throws IOException toujours
      */

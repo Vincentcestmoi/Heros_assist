@@ -9,6 +9,8 @@ public enum Position {
     MONTS,
     OLYMPE,
     ASCENDANT;
-    /** la position de départ des joueurs */
+    /**
+     * la position de départ des joueurs
+     */
     public static final Position DEFAULT = ENFERS;
 }

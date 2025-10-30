@@ -1,15 +1,8 @@
 package Metiers;
 
+import Enum.*;
 import Exterieur.Input;
-
-import Enum.Metier;
-import Enum.Position;
-import Enum.Action;
-import Enum.Action_extra;
-import Enum.Dieux;
-
 import Monstre.Monstre;
-
 import main.Main;
 
 import java.io.IOException;
@@ -17,7 +10,7 @@ import java.io.IOException;
 public class Guerriere extends Joueur {
     Metier metier = Metier.GUERRIERE;
     private boolean lame_break;
-
+    
     public Guerriere(String nom, Position position, int ob_f, Dieux parent, int xp) {
         super(nom, position, ob_f, parent, xp);
         vie = 6;
@@ -28,7 +21,7 @@ public class Guerriere extends Joueur {
         add_caracteristique("Force naturelle, Violent");
         add_competence("Berserk");
     }
-
+    
     @Override
     protected void actualiser_niveau() {
         if (this.niveau >= 1) {
@@ -63,38 +56,37 @@ public class Guerriere extends Joueur {
             this.attaque += 1;
         }
     }
-
+    
     @Override
     protected void presente_caracteristique() {
         System.out.println("Force naturelle : Augmente l'attaque classique.");
-        System.out.println("Violent : Augmente la puissance des coups critiques à l'attaque classique.\n" +
-                "Diminue les chances de fuir sous folie meurtrière");
+        System.out.println("Violent : Augmente la puissance des coups critiques à l'attaque classique.\n" + "Diminue "
+                + "les chances de fuir sous folie meurtrière");
         if (this.niveau >= 3) {
             System.out.println("Invincibilité : Permet parfois de tromper la mort.");
         }
     }
-
+    
     @Override
     protected void presente_pouvoir() {
-        System.out.println("Berserk : pour 1 mana/aura, imprègne de folie meurtrière l'esprit du lanceur avant qu'il " +
-                "ne frappe, augmentant sa puissance au prix de sa santé mentale.");
+        System.out.println("Berserk : pour 1 mana/aura, imprègne de folie meurtrière l'esprit du lanceur avant qu'il "
+                + "ne frappe, augmentant sa puissance au prix de sa santé mentale.");
         if (this.niveau >= 1) {
             System.out.println("Rage : Pour 1 point d'aura, augmente légèrement la folie meurtrière.");
         }
         if (this.niveau >= 5) {
-            System.out.println("Lame d'aura : pour 3 points d'aura, lance une attaque classique surpuissante. " +
-                    "Nécessite une arme pour être utilisé. Détruit les armes à la fin du combat.");
+            System.out.println("Lame d'aura : pour 3 points d'aura, lance une attaque classique surpuissante. " + "N" + "écessite une arme pour être utilisé. Détruit les armes à la fin du combat.");
         }
     }
-
+    
     public Metier getMetier() {
         return metier;
     }
-
+    
     protected String nomMetier() {
         return "guerrière";
     }
-
+    
     @Override
     void lvl_up() {
         int temp = this.niveau;
@@ -183,13 +175,13 @@ public class Guerriere extends Joueur {
         };
         System.out.println(text);
     }
-
+    
     @Override
     public void init_affrontement(boolean force, Position pos) throws IOException {
         super.init_affrontement(force, pos);
         lame_break = false;
     }
-
+    
     @Override
     public void fin_affrontement(boolean ennemi_nomme) throws IOException {
         super.fin_affrontement(ennemi_nomme);
@@ -197,7 +189,7 @@ public class Guerriere extends Joueur {
             System.out.println("Les armes de " + nom + " se brisent");
         }
     }
-
+    
     @Override
     protected boolean folie_berserk() throws IOException {
         System.out.println("Vous êtes pris(e) de folie mertrière et distinguez mal vos alliés de vos ennemis.");
@@ -210,7 +202,7 @@ public class Guerriere extends Joueur {
         }
         return Input.D6() < palier_folie;
     }
-
+    
     @Override
     protected void berserk_boost(boolean is_crazy) {
         if (is_crazy) {
@@ -225,7 +217,7 @@ public class Guerriere extends Joueur {
             }
         }
     }
-
+    
     @Override
     public String text_action() {
         String text = super.text_action();
@@ -237,7 +229,7 @@ public class Guerriere extends Joueur {
         }
         return text;
     }
-
+    
     @Override
     public Action action(String choix, boolean est_familier) throws IOException {
         if (est_familier) {
@@ -257,7 +249,7 @@ public class Guerriere extends Joueur {
         }
         return super.action(choix, false);
     }
-
+    
     @Override
     public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         switch (action) {
@@ -272,7 +264,7 @@ public class Guerriere extends Joueur {
         }
         return super.traite_action(action, ennemi, bonus_popo);
     }
-
+    
     @Override
     public boolean action_consomme_popo(Action action) {
         if (action == Action.LAME_DAURA) {
@@ -280,7 +272,7 @@ public class Guerriere extends Joueur {
         }
         return super.action_consomme_popo(action);
     }
-
+    
     @Override
     public String text_extra(Action action) {
         String text = super.text_extra(action);
@@ -289,7 +281,7 @@ public class Guerriere extends Joueur {
         }
         return text;
     }
-
+    
     @Override
     public Action_extra extra(String choix) {
         if (choix.equals("ra") && this.niveau >= 1) {
@@ -297,7 +289,7 @@ public class Guerriere extends Joueur {
         }
         return super.extra(choix);
     }
-
+    
     @Override
     protected int berserk_fuite() throws IOException {
         if (!est_berserk()) {
@@ -320,7 +312,7 @@ public class Guerriere extends Joueur {
         }
         return Math.min(0, -Math.round(folie));
     }
-
+    
     @Override
     protected int bonus_atk() {
         int base = super.bonus_atk();
@@ -332,7 +324,7 @@ public class Guerriere extends Joueur {
         }
         return base;
     }
-
+    
     @Override
     protected float berserk_atk(int base) throws IOException {
         float tolerance = 0;
@@ -347,10 +339,9 @@ public class Guerriere extends Joueur {
         }
         return super.berserk_atk(base);
     }
-
+    
     /**
      * Extension de la méthode berserk_atk, version amplifiée
-     *
      * @param base la puissance de frappe
      * @return le bonus de dommages, ou berserk_atk_alliee si le joueur attaque un allié
      */
@@ -378,7 +369,7 @@ public class Guerriere extends Joueur {
         assomme(2 - contrecoup);
         return base * (berserk + 0.1f * rage) * 1.5f;
     }
-
+    
     @Override
     protected float critique_atk(int base) {
         int imprecision = 50;
@@ -396,7 +387,7 @@ public class Guerriere extends Joueur {
         }
         return 0;
     }
-
+    
     @Override
     protected void berserk() { //valeur différentes de la capa héréditaire
         System.out.println(nom + " est prit d'une folie meurtrière !");
@@ -408,10 +399,9 @@ public class Guerriere extends Joueur {
             }
         }
     }
-
+    
     /**
      * Compétence "lame d'aura", une attaque classique avec d'énorme dommage bonus
-     *
      * @param ennemi le monstre ennemi
      */
     private void lame_aura(Monstre ennemi, int bonus_popo) throws IOException {
@@ -427,7 +417,7 @@ public class Guerriere extends Joueur {
         bonus += critique_atk(base);
         bonus += bonus_atk();
         bonus += attaque_bonus;
-
+        
         //capacité d'aura
         float total = base + bonus;
         if (this.niveau >= 9) {
@@ -436,12 +426,12 @@ public class Guerriere extends Joueur {
             total *= 2.7f;
         }
         lame_break = true;
-
+        
         total += bonus_popo; // indépendant des dommages de cac donc pas améliorés
-
+        
         ennemi.dommage(Main.corriger(total, 3));
     }
-
+    
     @Override
     public boolean auto_ressuciter(int malus) throws IOException {
         if (this.niveau < 3) {

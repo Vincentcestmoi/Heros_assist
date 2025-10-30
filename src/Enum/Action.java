@@ -17,7 +17,7 @@ public enum Action {
     END,
     AUCUNE,
     JOINDRE,
-
+    
     //metier
     MAUDIR,
     SORT,
@@ -33,7 +33,7 @@ public enum Action {
     ASSAUT,
     INCANTATION,
     LIEN,
-
+    
     //divinité
     INFECTION,
     SERENITE,

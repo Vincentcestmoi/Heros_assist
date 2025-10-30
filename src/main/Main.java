@@ -1,18 +1,15 @@
 package main;
 
-import Exterieur.*;
-
-import Metiers.Joueur;
-
-import Enum.Metier;
-import Enum.Position;
 import Enum.Choix;
 import Enum.Dieux;
-
+import Enum.Metier;
+import Enum.Position;
+import Equipement.Equipement;
+import Exterieur.Input;
+import Exterieur.SaveManager;
+import Metiers.Joueur;
 import Monstre.Lieu;
 import Monstre.Monstre;
-
-import Equipement.Equipement;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -22,23 +19,22 @@ import static java.lang.Math.max;
 
 
 public class Main {
-
+    
     static final Random rand = new Random();
     static final int nbj_max = 8;
-
+    
     static public int nbj;
     public static int Path = -1; //-1 = vide
     static public Joueur[] joueurs;
-
+    
     public static void main(String[] args) throws IOException {
-
-        if (!Arrays.equals(args, new String[]{}))
-            Path = Integer.parseInt(args[0]);
-
+        
+        if (!Arrays.equals(args, new String[]{})) Path = Integer.parseInt(args[0]);
+        
         if (!Input.load()) {
             init_game();
         }
-
+        
         boolean run = true;
         int i = nbj;
         while (run) {
@@ -46,10 +42,11 @@ public class Main {
                 SaveManager.sauvegarder(true); // sauvegarde auto
                 i = 0;
             }
-
+            
             //tour de jeu
             Joueur joueur = joueurs[i];
-            System.out.println(joueur.getNom() + " c'est votre tour, vous êtes " + texte_pos(joueur.getPosition()) + ".");
+            System.out.println(joueur.getNom() + " c'est votre tour, vous êtes " + texte_pos(joueur.getPosition()) +
+                    ".");
             Choix choix = Input.tour(i);
             switch (choix) {
                 // action classique
@@ -64,7 +61,7 @@ public class Main {
                 case DUMMY -> frapper_pantin(i);
                 case DRESSER -> joueur.dresser();
                 case ATTENDRE -> System.out.println(joueur.getNom() + " passe son tour.");
-
+                
                 // action caché
                 case SUICIDE -> joueur.mort_def();
                 case QUITTER -> run = false;
@@ -85,25 +82,22 @@ public class Main {
             System.out.println();
             i++;
         }
-
+        
         //arrêt
         System.out.println("Sauvegarde des données joueurs.");
         SaveManager.sauvegarder(false);
         System.out.println("Fin du programme");
     }
-
+    
     private static void frapper_pantin(int i) throws IOException {
         Monstre pantin = Lieu.get_dummy();
         System.out.println("Cela vous coutera 2PO par participants.");
-        System.out.println("Vous vous trouvez dans une simulation. La mort n'est pas définitive, et vous" +
-                " possédez des quantités illimités de mana, d'aura et d'ingrédients. Vous pouvez utiliser sans limites" +
-                " tout objet que vous avez sur vous ou que vous fabriquerez sur place, mais rien d'autre.");
+        System.out.println("Vous vous trouvez dans une simulation. La mort n'est pas définitive, et vous" + " poss" + "édez des quantités illimités de mana, d'aura et d'ingrédients. Vous pouvez utiliser sans limites" + " tout objet que vous avez sur vous ou que vous fabriquerez sur place, mais rien d'autre.");
         Combat.affrontement(joueurs[i].getPosition(), -1, pantin);
     }
-
+    
     /**
      * Gère le départ en expédition et ses conscéquences
-     *
      * @param meneur le joueur principal
      * @throws IOException sans problème
      */
@@ -119,7 +113,7 @@ public class Main {
             case ASCENDANT -> System.out.println("ERROR : DONOT");
         }
     }
-
+    
     static void expedition_enfer(int meneur) throws IOException {
         Monstre monstre = Lieu.enfers();
         int jet = Input.D4() + joueurs[meneur].bonus_exploration();
@@ -136,7 +130,7 @@ public class Main {
                 } else {
                     System.out.println("Vous vous éloignez discrètement");
                 }
-
+                
             }
             case 4, 5 -> {
                 if (rand.nextInt(3) == 0) {
@@ -156,7 +150,7 @@ public class Main {
             }
         }
     }
-
+    
     static void expedition_prairie(int meneur) throws IOException {
         Monstre monstre = Lieu.prairie();
         int jet = Input.D6() + joueurs[meneur].bonus_exploration();
@@ -171,7 +165,7 @@ public class Main {
                 } else {
                     System.out.println("Vous vous éloignez discrètement");
                 }
-
+                
             }
             case 6, 7 -> {
                 if (rand.nextBoolean()) {
@@ -193,7 +187,7 @@ public class Main {
             }
         }
     }
-
+    
     static void expedition_vigne(int meneur) throws IOException {
         Monstre monstre = Lieu.vigne();
         int jet = Input.D6() + joueurs[meneur].bonus_exploration();
@@ -208,7 +202,7 @@ public class Main {
                 } else {
                     System.out.println("Vous vous éloignez discrètement");
                 }
-
+                
             }
             case 6 -> {
                 if (rand.nextBoolean()) {
@@ -240,7 +234,7 @@ public class Main {
             }
         }
     }
-
+    
     static void expedition_temple(int meneur) throws IOException {
         Monstre monstre = Lieu.temple();
         int jet = Input.D8() + joueurs[meneur].bonus_exploration();
@@ -255,7 +249,7 @@ public class Main {
                 } else {
                     System.out.println("Vous vous éloignez discrètement");
                 }
-
+                
             }
             case 8 -> {
                 if (rand.nextBoolean()) {
@@ -283,7 +277,7 @@ public class Main {
             }
         }
     }
-
+    
     static void expedition_mer(int meneur) throws IOException {
         Monstre monstre = Lieu.mer();
         int jet = Input.D8() + joueurs[meneur].bonus_exploration();
@@ -298,7 +292,7 @@ public class Main {
                 } else {
                     System.out.println("Vous vous éloignez discrètement");
                 }
-
+                
             }
             case 8 -> {
                 if (rand.nextBoolean()) {
@@ -326,7 +320,7 @@ public class Main {
             }
         }
     }
-
+    
     static void expedition_mont(int meneur) throws IOException {
         Monstre monstre = Lieu.mont();
         int jet = Input.D12() + joueurs[meneur].bonus_exploration();
@@ -341,7 +335,7 @@ public class Main {
                 } else {
                     System.out.println("Vous vous éloignez discrètement");
                 }
-
+                
             }
             case 12, 13 -> {
                 if (rand.nextBoolean()) {
@@ -362,7 +356,7 @@ public class Main {
             }
         }
     }
-
+    
     static void expedition_olympe(int meneur) throws IOException {
         Monstre monstre = Lieu.olympe();
         int jet = Input.D20() + joueurs[meneur].bonus_exploration();
@@ -380,7 +374,7 @@ public class Main {
                     System.out.println(monstre.getNom() + " vous remarque et vous fonce dessus !");
                     Combat.affrontement(Position.OLYMPE, -1, monstre);
                 }
-
+                
             }
             default -> { // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
                 System.out.println(monstre.getNom() + " vous attaque");
@@ -388,10 +382,9 @@ public class Main {
             }
         }
     }
-
+    
     /**
      * Renvoie un texte du lieu
-     *
      * @param p la position à donner
      * @return un String nommant le lieu (avec un déterminant)
      */
@@ -407,11 +400,10 @@ public class Main {
             case ASCENDANT -> "en plein déplacement (ERROR : DONOT)";
         };
     }
-
-
+    
+    
     /**
      * Initialise les paramètres d'une partie de zéro
-     *
      * @throws IOException toujours
      */
     private static void init_game() throws IOException {
@@ -428,7 +420,7 @@ public class Main {
                 titre = ":";
             }
         } while (titre.equals(":") || !Input.yn("Confirmez vous le titre : " + titre + "?"));
-
+        
         //nbj
         System.out.print("Entrez le nombre de joueur :");
         Main.nbj = Input.readInt();
@@ -436,10 +428,10 @@ public class Main {
             System.out.println("Impossible, le nombre de joueur doit être comprit entre 1 et " + Main.nbj_max + ".");
             Main.nbj = Input.readInt();
         }
-
+        
         joueurs = new Joueur[Main.nbj];
         for (int i = 0; i < Main.nbj; i++) { //pour chaque joueur
-
+            
             // nom
             String nom;
             do {
@@ -453,11 +445,12 @@ public class Main {
                     nom = ":";
                 }
             } while (nom.equals(":") || !Input.yn("Voulez vous confirmer le pseudo " + nom + " ?"));
-
+            
             // metier
             boolean run = true;
             Metier metier = Metier.TRYHARDER;
-            String[] job = {"mage (no)ir", "archi(ma)ge", "(al)chimiste", "(gu)erriere", "(ra)nger", "(sh)aman", "(au)cun"};
+            String[] job = {"mage (no)ir", "archi(ma)ge", "(al)chimiste", "(gu)erriere", "(ra)nger", "(sh)aman",
+                    "(au)cun"};
             while (run) {
                 run = false;
                 System.out.println(nom + ", choississez votre profession : ");
@@ -479,7 +472,7 @@ public class Main {
                     }
                 }
             }
-
+            
             joueurs[i] = Joueur.CreerJoueur(nom, Position.DEFAULT, metier, 0, get_parent(), 0);
             joueurs[i].presente_detail();
             joueurs[i].presente();
@@ -487,29 +480,26 @@ public class Main {
         }
         SaveManager.creerSauvegarde(titre, Main.nbj);
     }
-
+    
     /**
      * Renvoie l'arrondit de la valeur donnée minorée par 1.
-     *
      * @param valeur le float à corriger
      */
     public static int corriger(float valeur) {
         return corriger(valeur, 1);
     }
-
+    
     /**
      * Renvoie l'arrondit de la valeur donnée
-     *
      * @param min    un minorant au résultat
      * @param valeur le float à corriger
      */
     public static int corriger(float valeur, int min) {
         return max(Math.round(valeur), min);
     }
-
+    
     /**
      * Renvoie un parent divin aléatoire
-     *
      * @return un dieu
      */
     public static Dieux get_parent() {

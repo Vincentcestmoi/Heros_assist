@@ -1,10 +1,9 @@
 package Metiers;
 
-import Enum.Metier;
-import Enum.Position;
 import Enum.Action;
 import Enum.Dieux;
-
+import Enum.Metier;
+import Enum.Position;
 import Exterieur.Input;
 import Monstre.Monstre;
 import main.Main;
@@ -13,7 +12,7 @@ import java.io.IOException;
 
 public class Ranger extends Joueur {
     Metier metier = Metier.RANGER;
-
+    
     public Ranger(String nom, Position position, int ob_f, Dieux parent, int xp) {
         super(nom, position, ob_f, parent, xp);
         vie = 4;
@@ -23,7 +22,7 @@ public class Ranger extends Joueur {
         PP_max = 3;
         add_caracteristique("Eclaireur, Sniper");
     }
-
+    
     @Override
     protected void actualiser_niveau() {
         if (this.niveau >= 1) {
@@ -53,40 +52,39 @@ public class Ranger extends Joueur {
             this.attaque += 1;
         }
     }
-
+    
     @Override
     protected void presente_caracteristique() {
         System.out.println("Eclaireur : Augmente légèrement vos jets d'exploration et de fuite.");
         System.out.println("Sniper : Augmente la puissance de vos tirs.");
         if (this.niveau >= 2) {
-            System.out.printf("Oeil d'aigle : augmente la probabilité et puissance des coups " +
-                    "critiques. %s", this.niveau >= 6 ? "Améliore vos capacités d'analyse.\n" : "\n");
+            System.out.printf("Oeil d'aigle : augmente la probabilité et puissance des coups " + "critiques. %s",
+                    this.niveau >= 6 ? "Améliore vos capacités d'analyse.\n" : "\n");
         }
         if (this.niveau >= 5) {
             System.out.println("Explorateur : Augmente vos jet d'exploration.");
         }
     }
-
+    
     @Override
     protected void presente_pouvoir() {
         if (this.niveau >= 1) {
-            System.out.println("Coup critique : Pour 1 mana, tir une flèche avec une haute probabilité de faire" +
-                    " des dommages additionnel, et une faible probabilitée de faire moins de dégats.");
+            System.out.println("Coup critique : Pour 1 mana, tir une flèche avec une haute probabilité de faire" + " "
+                    + "des dommages additionnel, et une faible probabilitée de faire moins de dégats.");
         }
         if (this.niveau >= 4) {
-            System.out.println("Assassinat : Pour 1 mana, se glisse discrètement derrière une cible pour " +
-                    "lui infliger de gros dommage. Difficile à réaliser");
+            System.out.println("Assassinat : Pour 1 mana, se glisse discrètement derrière une cible pour " + "lui " + "infliger de gros dommage. Difficile à réaliser");
         }
     }
-
+    
     public Metier getMetier() {
         return metier;
     }
-
+    
     protected String nomMetier() {
         return "ranger";
     }
-
+    
     @Override
     void lvl_up() {
         int temp = this.niveau;
@@ -169,7 +167,7 @@ public class Ranger extends Joueur {
         };
         System.out.println(text);
     }
-
+    
     @Override
     public String text_action() {
         String text = super.text_action();
@@ -186,7 +184,7 @@ public class Ranger extends Joueur {
         }
         return text;
     }
-
+    
     @Override
     public Action action(String choix, boolean est_familier) throws IOException {
         if (est_familier) {
@@ -209,7 +207,7 @@ public class Ranger extends Joueur {
         }
         return super.action(choix, false);
     }
-
+    
     @Override
     public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         switch (action) {
@@ -228,7 +226,7 @@ public class Ranger extends Joueur {
         }
         return super.traite_action(action, ennemi, bonus_popo);
     }
-
+    
     @Override
     public boolean action_consomme_popo(Action action) {
         if (action == Action.CRITIQUE || action == Action.ASSAUT || action == Action.ASSASSINAT) {
@@ -236,7 +234,7 @@ public class Ranger extends Joueur {
         }
         return super.action_consomme_popo(action);
     }
-
+    
     @Override
     public int bonus_exploration() {
         int bonus = super.bonus_exploration();
@@ -256,7 +254,7 @@ public class Ranger extends Joueur {
         }
         return bonus;
     }
-
+    
     @Override
     public float critique_tir(int base) {
         if (this.niveau < 2) {
@@ -273,14 +271,15 @@ public class Ranger extends Joueur {
             imprecision -= 1;
         }
         if (this.niveau >= 10) {
-            imprecision -= 2; //on pourrait enlever 7 à chaque fois plutôt, mais cela réduit l'efficacité des autres paliers
+            imprecision -= 2; //on pourrait enlever 7 à chaque fois plutôt, mais cela réduit l'efficacité des autres
+            // paliers
         }
         if (rand.nextInt(imprecision) == 0) { //2% à 14.25%
             return base * 0.15f * (rand.nextInt(6) + 1); //15% à 90% de bonus
         }
         return 0;
     }
-
+    
     @Override
     protected float critique_atk(int base) {
         if (this.niveau < 2) {
@@ -301,7 +300,7 @@ public class Ranger extends Joueur {
         }
         return 0;
     }
-
+    
     @Override
     protected int bonus_tir() {
         int bonus = super.bonus_tir();
@@ -313,7 +312,7 @@ public class Ranger extends Joueur {
         }
         return bonus;
     }
-
+    
     @Override
     protected int position_fuite() {
         int retour;
@@ -332,7 +331,7 @@ public class Ranger extends Joueur {
         }
         return retour + rand.nextInt(2);
     }
-
+    
     @Override
     protected int bonus_fuite() {
         int bonus = super.bonus_fuite();
@@ -342,10 +341,9 @@ public class Ranger extends Joueur {
         }
         return bonus + rand.nextInt(2);
     }
-
+    
     /**
      * Applique la compétence "coup critique" sur un tir classique
-     *
      * @param ennemi le monstre ennemi
      * @throws IOException toujours
      */
@@ -371,7 +369,8 @@ public class Ranger extends Joueur {
             }
             case 2, 3 -> ennemi.tir(tir, 1.1F);
             case 4, 5 -> {
-                System.out.println("Votre flèche file droit sur " + ennemi.getNom() + " et lui porte un coup puissant.");
+                System.out.println("Votre flèche file droit sur " + ennemi.getNom() + " et lui porte un coup " +
+                        "puissant" + ".");
                 ennemi.tir(tir, 2F);
             }
             case 6, 7 -> {
@@ -379,7 +378,8 @@ public class Ranger extends Joueur {
                 ennemi.tir(tir, 2.4F);
             }
             case 8 -> {
-                System.out.println("Votre flèche transperce " + ennemi.getNom() + ", lui perforant des organes vitaux.");
+                System.out.println("Votre flèche transperce " + ennemi.getNom() + ", lui perforant des organes " +
+                        "vitaux" + ".");
                 ennemi.tir(tir, 2.8F);
             }
             default -> {
@@ -388,10 +388,9 @@ public class Ranger extends Joueur {
             }
         }
     }
-
+    
     /**
      * Appliques les effets de la compétence "assassinat"
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -410,10 +409,9 @@ public class Ranger extends Joueur {
             System.out.println("Vous jugez plus prudent de ne pas engagez pour l'instant...");
         }
     }
-
+    
     /**
      * Applique la compétence "assaut"
-     *
      * @param ennemi le monstre ennemi
      * @throws IOException toujours
      * @implNote attaque avec des valeurs quelque peu modifiées
@@ -427,13 +425,13 @@ public class Ranger extends Joueur {
             ennemi.attaque(this);
         }
     }
-
+    
     private float calcule_bonus_atk_assaut(int base, int bonus_popo) throws IOException {
         float bonus = calcule_bonus_atk(base, bonus_popo);
         if (bonus == berserk_atk_alliee) {
             return bonus;
         }
-
+        
         int jet = Input.D8() + rand.nextInt(3) - 1;
         bonus += 0.1f * jet * base;
         return bonus;

@@ -1,14 +1,7 @@
 package Metiers;
 
+import Enum.*;
 import Exterieur.Input;
-
-import Enum.Metier;
-import Enum.Position;
-import Enum.Action;
-import Enum.Competence;
-import Enum.Dieux;
-import Enum.Action_extra;
-
 import Monstre.Monstre;
 import main.Combat;
 import main.Main;
@@ -21,7 +14,7 @@ import static java.lang.Math.min;
 public class Shaman extends Joueur {
     Metier metier = Metier.SHAMAN;
     private int possession_atk;
-
+    
     public Shaman(String nom, Position position, int ob_f, Dieux parent, int xp) {
         super(nom, position, ob_f, parent, xp);
         vie = 3;
@@ -33,7 +26,7 @@ public class Shaman extends Joueur {
         add_competence("Incantation");
         possession_atk = 0;
     }
-
+    
     @Override
     protected void actualiser_niveau() {
         if (this.niveau >= 2) {
@@ -60,7 +53,7 @@ public class Shaman extends Joueur {
             this.attaque += 1;
         }
     }
-
+    
     @Override
     protected void presente_caracteristique() {
         System.out.println("Ame errante : peut incanter même inconscient.");
@@ -71,27 +64,26 @@ public class Shaman extends Joueur {
             System.out.println("Eclaireur : Augmente légèrement les dé d'exploration.");
         }
     }
-
+    
     @Override
     protected void presente_pouvoir() {
-        System.out.println("Incantation : lance de mystérieuses incantations invoquant les forces de la nature et les esprits de ses ancêtres.");
+        System.out.println("Incantation : lance de mystérieuses incantations invoquant les forces de la nature et " + "les" + " esprits de ses ancêtres.");
         if (this.niveau >= 2) {
-            System.out.println("Lien : Projete son âme dans celle d'un monstre pour tenter de les lier de force. Un monstre" +
-                    " en bonne santé aura une âme puissante, alors que l'âme d'un monstre blessé est plus faible.");
+            System.out.println("Lien : Projete son âme dans celle d'un monstre pour tenter de les lier de force. Un " + "monstre" + " en bonne santé aura une âme puissante, alors que l'âme d'un monstre blessé est plus" + " faible.");
         }
         if (this.niveau >= 3) {
             System.out.println("Paix intérieure : Regagne instantannement sa santé mentale et son calme.");
         }
     }
-
+    
     public Metier getMetier() {
         return metier;
     }
-
+    
     protected String nomMetier() {
         return "shaman";
     }
-
+    
     @Override
     void lvl_up() {
         int temp = this.niveau;
@@ -180,13 +172,13 @@ public class Shaman extends Joueur {
         };
         System.out.println(text);
     }
-
+    
     @Override
     public void init_affrontement(boolean force, Position pos) throws IOException {
         possession_atk = 0;
         super.init_affrontement(force, pos);
     }
-
+    
     @Override
     public String text_action() {
         if (est_assomme()) {
@@ -201,7 +193,7 @@ public class Shaman extends Joueur {
         }
         return text;
     }
-
+    
     @Override
     public Action action(String choix, boolean est_familier) throws IOException {
         if (est_familier) {
@@ -225,7 +217,7 @@ public class Shaman extends Joueur {
         }
         return super.action(choix, false);
     }
-
+    
     @Override
     public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         switch (action) {
@@ -241,7 +233,7 @@ public class Shaman extends Joueur {
         }
         return super.traite_action(action, ennemi, bonus_popo);
     }
-
+    
     @Override
     public String text_extra(Action action) {
         String text = super.text_extra(action);
@@ -250,7 +242,7 @@ public class Shaman extends Joueur {
         }
         return text;
     }
-
+    
     @Override
     public Action_extra extra(String choix) {
         if (choix.equals("pa")) {
@@ -258,14 +250,14 @@ public class Shaman extends Joueur {
         }
         return super.extra(choix);
     }
-
+    
     public void jouer_extra(Action_extra extra) {
         if (extra == Action_extra.CALME) {
             calme();
         }
         super.jouer_extra(extra);
     }
-
+    
     @Override
     public boolean action_consomme_popo(Action action) {
         if (action == Action.INCANTATION) {
@@ -273,13 +265,13 @@ public class Shaman extends Joueur {
         }
         return super.action_consomme_popo(action);
     }
-
+    
     @Override
     protected int bonus_atk() {
         int bonus = super.bonus_atk();
         return bonus + possession_atk;
     }
-
+    
     @Override
     public int bonus_exploration() {
         int bonus = super.bonus_exploration();
@@ -289,18 +281,18 @@ public class Shaman extends Joueur {
         }
         return bonus;
     }
-
+    
     @Override
     public boolean peut_jouer() {
         // peut jouer inconscient
         return est_actif() && !skip;
     }
-
+    
     @Override
     public boolean peut_diriger_familier() {
         return est_actif() && a_familier_actif() && est_vivant();
     }
-
+    
     @Override
     protected int berserk_fuite() throws IOException {
         if (this.niveau < 6) {
@@ -315,21 +307,20 @@ public class Shaman extends Joueur {
         }
         return -Main.corriger(folie, 0);
     }
-
+    
     private void calme() {
         System.out.println(nom + " s'harmonise avec l'univers et laisse retomber sa rage.");
         this.berserk = 0f;
     }
-
+    
     /**
      * Applique la compétence "lien" du shaman
-     *
      * @param ennemi le Monstre à lier
      * @throws IOException toujours
      */
     private void lien(Monstre ennemi) throws IOException {
         if (ennemi.getCompetence() == Competence.CHRONOS) {
-            System.out.println("Les esprits de vos ancêtres vous arretes avant que vous ne fassiez quelques choses de stupides.");
+            System.out.println("Les esprits de vos ancêtres vous arretes avant que vous ne fassiez quelques choses " + "de" + " stupides.");
             return;
         }
         int ratio;
@@ -358,7 +349,8 @@ public class Shaman extends Joueur {
             result += 3;
         }
         if (result <= -5) {
-            System.out.println("L'âme de " + getNom() + " est violemment rejetée par celle de " + ennemi.getNom() + " !");
+            System.out.println("L'âme de " + getNom() + " est violemment rejetée par celle de " + ennemi.getNom() +
+                    " !");
             if (ennemi.est_pantin()) {
                 System.out.println("Protocole de sécurité engagée, tentative de préservation de l'âme en cours.");
                 System.out.println(getNom() + " subit " + (-result) / 2 + " dommages directes.");
@@ -376,7 +368,8 @@ public class Shaman extends Joueur {
         } else {
             System.out.println("Les âmes de " + ennemi.getNom() + " et de " + getNom() + " entre en communion !");
             if (ennemi.est_pantin()) {
-                System.out.printf("Fin de la simulation, le monstre aurait un niveau d'affection de %d/7\n", min(7, rand.nextInt(result) + 3));
+                System.out.printf("Fin de la simulation, le monstre aurait un niveau d'affection de %d/7\n", min(7,
+                        rand.nextInt(result) + 3));
                 return;
             }
             setOb(min(7, rand.nextInt(result) + 3));
@@ -384,10 +377,9 @@ public class Shaman extends Joueur {
             ennemi.presente_familier();
         }
     }
-
+    
     /**
      * Demande au shaman quelle incantation il veut reciter
-     *
      * @return le text demandant l'incatation à lancer
      * @implNote appellé uniquement avec un niveau d'au moins 1
      */
@@ -405,10 +397,9 @@ public class Shaman extends Joueur {
         }
         return text;
     }
-
+    
     /**
      * Applique la compétence "incantation" du shaman
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -443,10 +434,9 @@ public class Shaman extends Joueur {
             }
         }
     }
-
+    
     /**
      * La compétence "chant de colère" du shaman
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -476,10 +466,9 @@ public class Shaman extends Joueur {
             }
         }
     }
-
+    
     /**
      * Chant de colère version attaque bonus
-     *
      * @throws IOException toujours
      */
     private void colere_boost() throws IOException {
@@ -500,17 +489,17 @@ public class Shaman extends Joueur {
             System.out.println("L'âme d'un grand guerrier vous prête son savoir");
             possession_atk += 11;
         } else if (jet == 11) {
-            System.out.println("L'âme d'un grand guerrier raisonne avec la votre, vous offrant sa force et son savoir.");
+            System.out.println("L'âme d'un grand guerrier raisonne avec la votre, vous offrant sa force et son " +
+                    "savoir" + ".");
             possession_atk += 14;
         } else {
             System.out.println("Votre âme entre en symbiose avec celle de vos ancestres belliqueux.");
             possession_atk += 18;
         }
     }
-
+    
     /**
      * Chant de colère version dps
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -552,10 +541,9 @@ public class Shaman extends Joueur {
             ennemi.do_etourdi();
         }
     }
-
+    
     /**
      * Chant de colère version berserk
-     *
      * @throws IOException toujours
      */
     private void colere_berserk() throws IOException {
@@ -582,7 +570,8 @@ public class Shaman extends Joueur {
             System.out.println("Les esprits de guerriers morts au combat insufle une rage profonde dans votre âme !");
             berserk += 1f + rand.nextInt(5) * 0.2f; //1~1.8
         } else if (jet == 8) {
-            System.out.println("Vous êtes posséde par l'esprit d'un puissant combattant, emplie d'une haine profonde !");
+            System.out.println("Vous êtes posséde par l'esprit d'un puissant combattant, emplie d'une haine profonde "
+                    + "!");
             berserk += 1.5f + rand.nextInt(8) * 0.15f; //1.5~2.55
         } //D8 + 2
         else if (jet == 9) {
@@ -593,10 +582,9 @@ public class Shaman extends Joueur {
             berserk += 2.8f + rand.nextInt(7) * 0.2f; //2.8~4.2
         }
     }
-
+    
     /**
      * Applique la compétence "appel des nuages" du shaman
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -628,10 +616,9 @@ public class Shaman extends Joueur {
             }
         }
     }
-
+    
     /**
      * Appel des nuages version soin
-     *
      * @throws IOException toujours
      */
     private void nuage_pluie() throws IOException {
@@ -645,10 +632,10 @@ public class Shaman extends Joueur {
             System.out.println("La pluie tombante recouvre vos blessures.");
             System.out.println("Chaque joueur et familier soigne de 3 points");
         } else if (jet == 4) {
-
+            
             System.out.println("Les gouttes d'eau s'abattent sur vos blessures, qui commencent à se refermer.");
             System.out.println("Chaque joueur et familier soigne de 5 points");
-
+            
         } //D6
         else if (jet == 5) {
             System.out.println("Les gouttes d'eau recouvrant vos blessures vous aide à cicatriser.");
@@ -658,26 +645,24 @@ public class Shaman extends Joueur {
             System.out.printf("Chaque joueur et familier soigne de %d points\n", 10 + rand.nextInt(4)); //10~13
         } //D8
         else if (jet == 7) {
-            System.out.println("Une énergie régénérantes s'insinnue dans vos veines alors que l'eau coule sur votre corps.");
+            System.out.println("Une énergie régénérantes s'insinnue dans vos veines alors que l'eau coule sur votre " + "corps.");
             System.out.printf("Chaque joueur et familier soigne de %d points\n", 15 + rand.nextInt(9)); //15~23
         } else if (jet == 8) {
-            System.out.println("Des gouttes dorées tombent des nuages et se collent à vos blessures, les guérissant comme par magie.");
+            System.out.println("Des gouttes dorées tombent des nuages et se collent à vos blessures, les guérissant " + "comme par magie.");
             System.out.printf("Chaque joueur et familier soigne de %d points\n", 17 + rand.nextInt(10)); //17~26
         } //D8+
         else if (jet == 9) {
-            System.out.println("Les gouttes tombant du ciel s'insinuent dans vos corps, renforcent vos os et referment vos plaie.");
-            System.out.printf("Chaque joueur et familier soigne de %d points, et gagne temporairement %d points de résistance" +
-                    "\n", 21 + rand.nextInt(12), 3 + rand.nextInt(3)); //21~32 | 3~5
+            System.out.println("Les gouttes tombant du ciel s'insinuent dans vos corps, renforcent vos os et " +
+                    "referment vos plaie.");
+            System.out.printf("Chaque joueur et familier soigne de %d points, et gagne temporairement %d points de " + "résistance" + "\n", 21 + rand.nextInt(12), 3 + rand.nextInt(3)); //21~32 | 3~5
         } else {
             System.out.println("Une force ancienne s'infiltre dans vos corps au travers les gouttes d'eau.");
-            System.out.printf("Chaque joueur et familier soigne de %d points, et gagne temporairement %d points de résistance" +
-                    "\n", 25 + rand.nextInt(14), 8 + rand.nextInt(6)); //25~38 | 8~13
+            System.out.printf("Chaque joueur et familier soigne de %d points, et gagne temporairement %d points de " + "résistance" + "\n", 25 + rand.nextInt(14), 8 + rand.nextInt(6)); //25~38 | 8~13
         }
     }
-
+    
     /**
      * Appel des nuages version dps AOE
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -738,10 +723,9 @@ public class Shaman extends Joueur {
             }
         }
     }
-
+    
     /**
      * Appel des nuages version debuff
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -782,7 +766,8 @@ public class Shaman extends Joueur {
         else if (jet == 9) {
             System.out.println("Un brouillard dense vous entoure.");
             System.out.println("Il est désormais impossible de tirer.");
-            System.out.println("Il est désormais impossible de lancer un sort ciblé sur une autre cible que soit-même.");
+            System.out.println("Il est désormais impossible de lancer un sort ciblé sur une autre cible que " + "soit" +
+                    "-même" + ".");
             System.out.println("Chaque joueur et familier perds temporairement 6 points d'attaque.");
             for (Joueur j : Main.joueurs) {
                 j.p_prend_cecite();
@@ -792,15 +777,15 @@ public class Shaman extends Joueur {
         } else {
             System.out.println("Une brûme vous entoure, si dense que vous ne vous voyez presque plus.");
             System.out.println("Il est désormais impossible de tirer.");
-            System.out.println("Il est désormais impossible de lancer un sort ciblé sur une autre cible que soit-même.");
+            System.out.println("Il est désormais impossible de lancer un sort ciblé sur une autre cible que " + "soit" +
+                    "-même" + ".");
             System.out.println("Chaque joueur et familier perds temporairement 8 points d'attaque.");
             ennemi.bostAtk(-15, false);
         }
     }
-
+    
     /**
      * Appel des nuages version dps debuff
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -848,7 +833,7 @@ public class Shaman extends Joueur {
             }
             ennemi.do_assomme();
         } else {
-            System.out.println("Le nuage noir s'abt sur l'ennemi, illuminant la scène chaque fois qu'un éclair le frappe.");
+            System.out.println("Le nuage noir s'abt sur l'ennemi, illuminant la scène chaque fois qu'un éclair le " + "frappe.");
             for (int i = 0; i < rand.nextInt(3) + 3; i++) { //3 à 6 fois
                 ennemi.dommage(7 + rand.nextInt(9)); //7~15
             }
@@ -856,10 +841,9 @@ public class Shaman extends Joueur {
             ennemi.do_assomme();
         }
     }
-
+    
     /**
      * Applique la compétence "invocation des éléments" du shaman
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -881,10 +865,9 @@ public class Shaman extends Joueur {
             }
         }
     }
-
+    
     /**
      * Invocation des éléments version buff tir
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -931,10 +914,9 @@ public class Shaman extends Joueur {
         }
         System.out.println("Tous les tirs sont temporairement boostés.");
     }
-
+    
     /**
      * Méthode auxiliaire de vent, met à jour les modificateur de vent
-     *
      * @param value_tir la nouvelle valeur de modificateur tir à mettre à jour
      * @param duree     la durée du bonus
      * @return si la modification a été ignorée
@@ -942,10 +924,9 @@ public class Shaman extends Joueur {
     private boolean tir_vent(int value_tir, int duree) {
         return tir_vent(value_tir, 0, duree);
     }
-
+    
     /**
      * Méthode auxiliaire de vent, met à jour les modificateur de vent
-     *
      * @param value_tir la nouvelle valeur de modificateur tir à mettre à jour
      * @param value_atk la nouvelle valeur de modificateur d'attaque
      * @param duree     la durée du bonus
@@ -961,10 +942,9 @@ public class Shaman extends Joueur {
         System.out.println("Le vent souffle déjà fort.");
         return true;
     }
-
+    
     /**
      * Invocation des éléments version debuff et dps
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -1001,7 +981,7 @@ public class Shaman extends Joueur {
                 ennemi.affecte();
             }
         } else {
-            System.out.println("Le sol se soulève et se fissure en deux. Les deux parties se fracasse l'une contre l'autre sur le monstre ennemi.");
+            System.out.println("Le sol se soulève et se fissure en deux. Les deux parties se fracasse l'une contre " + "l'autre sur le monstre ennemi.");
             ennemi.dommage(29 + rand.nextInt(45)); //29~73
             if (rand.nextInt(5) != 0) { //80% => 90% assommer
                 ennemi.do_assomme();
@@ -1010,10 +990,9 @@ public class Shaman extends Joueur {
             }
         }
     }
-
+    
     /**
      * Invocation des éléments version dps
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -1046,10 +1025,9 @@ public class Shaman extends Joueur {
         }
         ennemi.dommage_direct(dommage, false);
     }
-
+    
     /**
      * Invocation des éléments version buff/random
-     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
@@ -1076,7 +1054,8 @@ public class Shaman extends Joueur {
             ennemi.affecte();
         } // D6 + 2
         else if (jet == 7) {
-            System.out.println("Un torrent mystique s'abat sur le terrain, emportant l'ennemi et réveillant les joueurs.");
+            System.out.println("Un torrent mystique s'abat sur le terrain, emportant l'ennemi et réveillant les " +
+                    "joueurs.");
             System.out.println("Tous les joueurs récupèrent 3PP.");
             ennemi.dommage(3 + rand.nextInt(4));
             ennemi.affecte();
@@ -1085,7 +1064,8 @@ public class Shaman extends Joueur {
                 Main.joueurs[i].reveil = 0;
             }
         } else {
-            System.out.println("Un torrent mystique s'abat sur le terrain, emportant l'ennemi et réveillant les joueurs.");
+            System.out.println("Un torrent mystique s'abat sur le terrain, emportant l'ennemi et réveillant les " +
+                    "joueurs.");
             System.out.println("Tous les joueurs récupèrent 4PP.");
             ennemi.dommage(4 + rand.nextInt(4));
             ennemi.do_assomme();
@@ -1095,10 +1075,9 @@ public class Shaman extends Joueur {
             }
         }
     }
-
+    
     /**
      * Applique la compétence "bénédiction" du shaman
-     *
      * @throws IOException toujours
      */
     private void benir() throws IOException {
@@ -1129,10 +1108,9 @@ public class Shaman extends Joueur {
             }
         }
     }
-
+    
     /**
      * Bénédiction version soin
-     *
      * @throws IOException toujours
      */
     private void benir_soin() throws IOException {
@@ -1160,10 +1138,9 @@ public class Shaman extends Joueur {
         }
         System.out.printf("La cilbe est soignée de %d.\n", soin);
     }
-
+    
     /**
      * Bénédiction version buff résistance
-     *
      * @throws IOException toujours
      */
     private void benir_vie() throws IOException {
@@ -1191,10 +1168,9 @@ public class Shaman extends Joueur {
         }
         System.out.printf("La cible gagne temporairement %d points de résistance.\n", boost);
     }
-
+    
     /**
      * Bénédiction version buff attaque
-     *
      * @throws IOException toujours
      */
     private void benir_force() throws IOException {
@@ -1216,10 +1192,9 @@ public class Shaman extends Joueur {
         }
         System.out.printf("La cible gagne temporairement %d point d'attaque.\n", boost);
     }
-
+    
     /**
      * Bénédiction version buff résistance/armure
-     *
      * @throws IOException toujours
      */
     private void benir_def() throws IOException {
@@ -1238,7 +1213,7 @@ public class Shaman extends Joueur {
         }
         System.out.printf("La cible gagne temporairement %d points d'armure.\n", def);
     }
-
+    
     @Override
     public boolean auto_ressuciter(int malus) throws IOException {
         if (this.niveau < 5) {

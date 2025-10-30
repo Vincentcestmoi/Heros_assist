@@ -1,36 +1,35 @@
 package main;
 
+import Enum.Action;
+import Enum.Action_extra;
+import Enum.Dieux;
+import Enum.Position;
 import Exterieur.Input;
 import Exterieur.Output;
 import Metiers.Joueur;
 import Monstre.Monstre;
 import Monstre.Race;
-import Enum.Position;
-import Enum.Action;
-import Enum.Action_extra;
-import Enum.Dieux;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 
 public class Combat {
-
+    
     static Random rand = new Random();
     private static boolean run;
-
+    
     /**
      * Lance un combat entre les joueur et un monstres
-     *
      * @param position     le lieu où a lieu l'affrontement
      * @param joueur_force l'indice du joueur qui est attaqué en cas d'embuscade (de 1 à 4) ou -1 sinon
      * @param ennemi       le monstre que les joueurs affronte
      * @throws IOException lecture de terminal
      */
     public static void affrontement(Position position, int joueur_force, Monstre ennemi) throws IOException {
-
+        
         int nb_part = 0;
-
+        
         // préparer les participants
         for (int i = 0; i < Main.nbj; i++) {
             Main.joueurs[i].init_affrontement(i == joueur_force, position);
@@ -41,12 +40,12 @@ public class Combat {
                 }
             }
         }
-
+        
         if (nb_part == 0) {
             System.out.println("Aucun joueur détecté, annulation du combat.");
             return;
         }
-
+        
         // choix du joueur au front
         int pr_l;
         if (joueur_force != -1) {
@@ -55,37 +54,36 @@ public class Combat {
         } else {
             pr_l = getPrL(nb_part);
         }
-
+        
         if (Main.joueurs[pr_l].a_familier_front()) {
             System.out.println("Le familier de " + Main.joueurs[pr_l].getNom() + " se retrouve en première ligne.");
         } else {
             System.out.println(Main.joueurs[pr_l].getNom() + " se retrouve en première ligne.");
         }
-
+        
         if (competence(ennemi, pr_l)) {
             return;
         }
-
+        
         // si l'ennemi à l'avantage de la surprise
         if (joueur_force != -1) {
             ennemi.attaque(Main.joueurs[pr_l]);
         }
-
+        
         combat(ennemi, pr_l, position);
-
+        
         System.out.println("Fin du combat\n");
         gestion_fin_combat(ennemi.est_nomme());
     }
-
+    
     /**
      * Renvoie l'index du joueur qui sera en première ligne
-     *
      * @param nbp le nombre de participants
      * @return l'index du joueur en première ligne
      * @throws IOException toujours
      */
     private static int getPrL(int nbp) throws IOException {
-
+        
         // demander gentimment
         if (nbp > 1) {
             for (int i = 0; i < Main.nbj; i++) {
@@ -94,7 +92,7 @@ public class Combat {
                 }
             }
         }
-
+        
         // z'avez plus le choix
         int i;
         do {
@@ -102,16 +100,15 @@ public class Combat {
         } while (!Main.joueurs[i].faire_front(true));
         return i;
     }
-
+    
     /**
      * Gère le combat en appliquant les actions
-     *
      * @param ennemi le monstre adverse
      * @param pr_l   index du participant de première ligne
      * @throws IOException et oui
      */
     private static void combat(Monstre ennemi, int pr_l, Position pos) throws IOException {
-
+        
         // on prépare une bijection aléatoire pour l'ordre de jeu
         int[] t = new int[Main.nbj];
         Arrays.fill(t, -1);
@@ -122,33 +119,33 @@ public class Combat {
                 i++;
             }
         }
-
+        
         combat_start(ennemi, pos);
-
+        
         int i;
         Action act, act_f;
         Action_extra act_ex;
         Joueur joueur;
         boolean skip;
         while (run) {
-
+            
             //chaque joueur
             for (int j = 0; j < Main.nbj && run; j++) {
                 skip = false;
                 i = t[j];
                 joueur = Main.joueurs[i];
                 Joueur.debut_tour();
-
+                
                 // on ne joue que les participants actifs
                 if (!run || joueur.est_pas_activable()) {
                     continue;
                 }
-
+                
                 joueur.essaie_reveil();
                 if (joueur.a_familier_actif()) {
                     joueur.f_essaie_reveil();
                 }
-
+                
                 // resurection, être assommé, etc.
                 if (!joueur.peut_jouer()) {
                     System.out.println(joueur.getNom() + " ne peut pas réaliser d'action dans l'immédiat.");
@@ -159,10 +156,10 @@ public class Combat {
                     continue;
                 }
                 if (joueur.a_familier_actif() && joueur.familier_peut_pas_jouer()) {
-                    System.out.println("Le familier de " + joueur.getNom() + " ne peut pas réaliser d'action dans l'immédiat.");
+                    System.out.println("Le familier de " + joueur.getNom() + " ne peut pas réaliser d'action dans " + "l'immédiat.");
                 }
-
-
+                
+                
                 // action
                 do {
                     act = Input.action(joueur, false);
@@ -221,7 +218,8 @@ public class Combat {
                         if (ennemi.domestiquer(joueur.bonus_dresser())) {
                             if (ennemi.est_pantin()) {
                                 System.out.println("Félicitation, vous avez réussit à domestiquer la cible.");
-                                System.out.println("Fin de la simulation, le monstre aurait un niveau d'affection de 1/7.");
+                                System.out.println("Fin de la simulation, le monstre aurait un niveau d'affection de "
+                                        + "1/7.");
                             } else {
                                 ennemi.presente_familier();
                                 joueur.ajouter_familier();
@@ -270,7 +268,7 @@ public class Combat {
                     joueur.fin_tour_combat();
                     System.out.println();
                 }
-
+                
                 // s'assure qu'un participant est toujours en première ligne
                 if (run && (!Main.joueurs[pr_l].est_actif() || !Main.joueurs[pr_l].est_vivant())) {
                     boolean is_active = false;
@@ -293,7 +291,7 @@ public class Combat {
                         Main.joueurs[k].faire_front(true);
                     }
                 }
-
+                
                 if (run) {
                     if (verifie_mort(ennemi, pos)) {
                         stop_run();
@@ -301,7 +299,7 @@ public class Combat {
                     }
                 }
             }
-
+            
             // tour de l'adversaire
             if (run) {
                 ennemi.attaque(Main.joueurs[pr_l]);
@@ -312,21 +310,20 @@ public class Combat {
             }
         }
     }
-
+    
     private static void combat_start(Monstre ennemi, Position pos) throws IOException {
         run = ennemi.check_mort(pos);
     }
-
+    
     /**
      * Stop le combat
      */
     public static void stop_run() {
         run = false;
     }
-
+    
     /**
      * Vérifie si le monstre est mort et en gère les aprés coup
-     *
      * @param ennemi le monstre adverse
      * @return true si le monstre est mort, false s'il est en vie
      * @throws IOException toujours
@@ -339,10 +336,9 @@ public class Combat {
         gestion_nomme(ennemi);
         return true;
     }
-
+    
     /**
      * Simule le comportement d'un familier en fonction de son niveau d'obéissance
-     *
      * @param joueur le propriétaire du familier
      * @return si le familier joue l'action, un false remplace l'action
      */
@@ -365,17 +361,16 @@ public class Combat {
         }
         return action;
     }
-
+    
     /**
      * Gère le retour OFF de l'action, c.-à-d. la mort, l'inconscience ou le retrait du joueur actif ou de celui
      * de première ligne
-     *
      * @param joueur le joueur actif
      * @param prl    l'index du joueur de première ligne
      * @throws IOException mon poto
      */
     private static void alteration(Joueur joueur, int prl) throws IOException {
-
+        
         String text = "L'alteration concerne-t-elle :\n\t1: " + joueur.getNom();
         if (joueur.a_familier_actif()) {
             text += "\n\t2: Le familier de " + joueur.getNom();
@@ -387,7 +382,7 @@ public class Combat {
                 text += "\n\t4: Le familier de " + front.getNom();
             }
         }
-
+        
         int reponse;
         do {
             System.out.println(text);
@@ -409,7 +404,7 @@ public class Combat {
         if (reponse == 1 || reponse == 3) {
             joueur.addiction();
         }
-
+        
         //mort
         if (Input.yn(nom + " est-il/elle mort(e) ?")) {
             //on regarde si on peut le ressuciter immédiatement
@@ -421,7 +416,8 @@ public class Combat {
             for (int k = 0; k < Main.nbj; k++) {
                 Joueur j_temp = Main.joueurs[k];
                 if (j_temp.peut_ressuciter() && j_temp.peut_jouer()) {
-                    if (Input.yn("Est-ce que " + j_temp.getNom() + " veux tenter de ressuciter " + joueur.getNom() + " ?")) {
+                    if (Input.yn("Est-ce que " + j_temp.getNom() + " veux tenter de ressuciter " + joueur.getNom() +
+                            " ?")) {
                         if (j_temp.ressuciter(malus)) {
                             System.out.println(joueur.getNom() + " a été arraché(e) à l'emprise de la mort.");
                             joueur.do_ressucite(malus);
@@ -434,7 +430,7 @@ public class Combat {
             }
             joueur.rendre_mort();
         }
-
+        
         // assommé
         else if (Input.yn(nom + " est-il/elle inconscient(e) ?")) {
             if (reponse == 2 || reponse == 4) {
@@ -443,14 +439,15 @@ public class Combat {
                 joueur.assomme();
             }
         }
-
+        
         // berserk
-        else if ((reponse == 1 || reponse == 3) && !joueur.est_berserk() && Input.yn(nom + " devient-il/elle berserk ?")) {
+        else if ((reponse == 1 || reponse == 3) && !joueur.est_berserk() && Input.yn(nom + " devient-il/elle berserk "
+                + "?")) {
             joueur.berserk(0.1f + 0.1f * rand.nextInt(3));
-        } else if ((reponse == 2 || reponse == 4) && !joueur.f_est_berserk() && Input.yn(nom + " devient-il berserk ?")) {
+        } else if ((reponse == 2 || reponse == 4) && !joueur.f_est_berserk() && Input.yn(nom + " devient-il berserk " + "?")) {
             joueur.f_berserk(0.1f + 0.1f * rand.nextInt(3));
         }
-
+        
         // off
         else if (Input.yn(nom + " est-il/elle hors du combat ?")) {
             if (reponse == 2 || reponse == 4) {
@@ -460,10 +457,9 @@ public class Combat {
             }
         }
     }
-
+    
     /**
      * Gère les compétences du monstre juste avant le combat
-     *
      * @param ennemi le monstre qu'affrontent les participants
      * @param pr_l   l'indice du participant en premières lignes
      * @return si le combat s'arrête
@@ -582,7 +578,7 @@ public class Combat {
             }
             case FAIBLE -> ennemi.bostAtk(-3, true);
             case BENEDICTION -> {
-                System.out.println(ennemi.getNom() + " béni " + nom + " qui gagne définitivement 1 point de résistance.");
+                System.out.println(ennemi.getNom() + " béni " + nom + " qui gagne définitivement 1 point de " + "r" + "ésistance.");
                 System.out.println(ennemi.getNom() + " a disparu...");
                 return true;
             }
@@ -633,10 +629,9 @@ public class Combat {
         }
         return false;
     }
-
+    
     /**
      * Applique les compétence de type HATE des monstres
-     *
      * @param ennemi le monstre en question
      * @param dieu   le dieu qu'il haït
      */
@@ -649,10 +644,9 @@ public class Combat {
             }
         }
     }
-
+    
     /**
      * Applique les compétence de type FEAR des monstres
-     *
      * @param ennemi le monstre en question
      * @param dieu   le dieu qu'il craint
      */
@@ -664,10 +658,9 @@ public class Combat {
             }
         }
     }
-
+    
     /**
      * Gère les compétences de l'ennemi lors d'un changement de position
-     *
      * @param ennemi le monstre ennemi
      * @param joueur l'unité en première ligne
      * @throws IOException ça va mon pote ?
@@ -675,17 +668,18 @@ public class Combat {
     static void competence_avance(Monstre ennemi, Joueur joueur) throws IOException {
         switch (ennemi.getCompetence()) {
             case ASSAUT -> {
-                System.out.println(ennemi.getNom() + " se jete sur " + joueur.getNom() + " avant que vous ne vous en rendiez compte");
+                System.out.println(ennemi.getNom() + " se jete sur " + joueur.getNom() + " avant que vous ne vous en "
+                        + "rendiez compte");
                 ennemi.attaque(joueur);
             }
             case CHANT_SIRENE ->
-                    System.out.println("Le chant de " + ennemi.getNom() + " perturbe " + joueur.getNom() + " qui perd 1 point d'attaque pour la durée du combat.");
+                    System.out.println("Le chant de " + ennemi.getNom() + " perturbe " + joueur.getNom() + " qui " +
+                            "perd" + " 1 point d'attaque pour la durée du combat.");
         }
     }
-
+    
     /**
      * Suprimme le monstre de sa zone après sa mort s'il est nommé
-     *
      * @param ennemi le monstre ennemi
      * @implNote ne couvre que les monstres nommés
      */
@@ -695,10 +689,9 @@ public class Combat {
             Race.delete_monstre(ennemi.getNom());
         }
     }
-
+    
     /**
      * Analyse le monstre ennemi et écrit ses stats aux joueurs
-     *
      * @param is_prl booléan indiquant si l'analyste est en première ligne
      * @param ennemi le monstre analysé
      * @throws IOException ce bon vieux throws
@@ -776,10 +769,9 @@ public class Combat {
         System.out.println("armure : " + (temp >= 7 ? arm : "???"));
         System.out.println();
     }
-
+    
     /**
      * Traite les joueurs après la fin du combat
-     *
      * @param ennemi_nomme si l'ennemi etait un monstre nommé (bonus d'xp)
      * @throws IOException toujours
      */

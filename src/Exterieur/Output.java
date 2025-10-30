@@ -1,32 +1,31 @@
 package Exterieur;
 
+import Enum.Rang;
 import Equipement.Pre_Equipement;
 import main.Main;
-import Enum.Rang;
 
+import javax.json.*;
 import javax.sound.sampled.*;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.FileReader;
-import javax.json.*;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.LinkedHashSet;
 
 
 public class Output {
-
+    
     /**
      * Met à jour le json pour enregistrer la suppression des monstres nommés
-     *
      * @param nom la race à dismiss
      */
     public static void dismiss_race(String nom) {
         try {
             File infoFile = new File("Save" + Main.Path + "/info.json");
             JsonObject info;
-
+            
             // Lire l'existant
             if (infoFile.exists()) {
                 try (JsonReader reader = Json.createReader(new FileReader(infoFile))) {
@@ -35,23 +34,24 @@ public class Output {
             } else {
                 info = Json.createObjectBuilder().build(); // vide
             }
-
+            
             // Récupérer ou créer le tableau
-            JsonArray anciens = info.containsKey("monstres_nommes") ? info.getJsonArray("monstres_nommes") : Json.createArrayBuilder().build();
+            JsonArray anciens = info.containsKey("monstres_nommes") ? info.getJsonArray("monstres_nommes") :
+                    Json.createArrayBuilder().build();
             Set<String> noms = new LinkedHashSet<>();
             for (JsonValue val : anciens) {
                 noms.add(((JsonString) val).getString());
             }
-
+            
             // Ajouter le nouveau nom s'il n'existe pas déjà
             noms.add(nom);
-
+            
             // Reconstruire le tableau
             JsonArrayBuilder builder = Json.createArrayBuilder();
             for (String n : noms) {
                 builder.add(n);
             }
-
+            
             // Reconstruire l'objet info
             JsonObjectBuilder infoBuilder = Json.createObjectBuilder();
             for (String key : info.keySet()) {
@@ -60,61 +60,57 @@ public class Output {
                 }
             }
             infoBuilder.add("monstres_nommes", builder);
-
+            
             // Écrire dans le fichier
             try (JsonWriter writer = Json.createWriter(new FileWriter(infoFile))) {
                 writer.writeObject(infoBuilder.build());
             }
-
+            
         } catch (IOException e) {
             System.err.println("Erreur lors de l'ajout du monstre nommé : " + e.getMessage());
         }
     }
-
+    
     /**
      * Met à jour le json pour enregistrer la suppression des items uniques
-     *
      * @param item l'objet a dismiss
      */
     public static void dismiss_item(Pre_Equipement item) {
         try {
             File infoFile = new File("Save" + Main.Path + "/info.json");
-            JsonObject info = infoFile.exists()
-                    ? Json.createReader(new FileReader(infoFile)).readObject()
-                    : Json.createObjectBuilder().build();
-
-            JsonObject items = info.containsKey("items_uniques")
-                    ? info.getJsonObject("items_uniques")
-                    : Json.createObjectBuilder().build();
-
+            JsonObject info = infoFile.exists() ? Json.createReader(new FileReader(infoFile)).readObject() :
+                    Json.createObjectBuilder().build();
+            
+            JsonObject items = info.containsKey("items_uniques") ? info.getJsonObject("items_uniques") :
+                    Json.createObjectBuilder().build();
+            
             JsonObjectBuilder itemsBuilder = Json.createObjectBuilder();
-
+            
             // Copier toutes les clés existantes
             for (String key : items.keySet()) {
                 itemsBuilder.add(key, items.get(key));
             }
-
+            
             if (item.rang != Rang.PROMOTION) {
                 String rangKey = item.rang.name();
                 recuperation(item, items, itemsBuilder, rangKey);
-
+                
             } else {
-                JsonObject promoObj = items.containsKey("PROMOTION")
-                        ? items.getJsonObject("PROMOTION")
-                        : Json.createObjectBuilder().build();
-
+                JsonObject promoObj = items.containsKey("PROMOTION") ? items.getJsonObject("PROMOTION") :
+                        Json.createObjectBuilder().build();
+                
                 JsonObjectBuilder promoBuilder = Json.createObjectBuilder();
-
+                
                 // Copier les sous-clés existantes
                 for (String k : promoObj.keySet()) {
                     promoBuilder.add(k, promoObj.get(k));
                 }
-
+                
                 String promoKey = item.promo_type.name();
                 recuperation(item, promoObj, promoBuilder, promoKey);
                 itemsBuilder.add("PROMOTION", promoBuilder.build());
             }
-
+            
             // Reconstruction de info.json
             JsonObjectBuilder infoBuilder = Json.createObjectBuilder();
             for (String k : info.keySet()) {
@@ -123,16 +119,16 @@ public class Output {
                 }
             }
             infoBuilder.add("items_uniques", itemsBuilder.build());
-
+            
             try (JsonWriter writer = Json.createWriter(new FileWriter(infoFile))) {
                 writer.writeObject(infoBuilder.build());
             }
-
+            
         } catch (IOException e) {
             System.err.println("Erreur lors de l'ajout d'un item unique : " + e.getMessage());
         }
     }
-
+    
     /**
      * Ajoute le nom d'un pré-équipment à une liste JSON associée à une clé promotionnelle.
      * <p>
@@ -140,29 +136,28 @@ public class Output {
      * Si oui, elle récupère le tableau JSON existant, sinon elle initialise un tableau vide.
      * Elle ajoute ensuite le nom de l'objet {@code item} à l'ensemble des noms (sans doublons),
      * puis reconstruit le tableau JSON et l'ajoute au {@code promoBuilder}.
-     *
-     * @param item        le pré-équipment à ajouter (son nom sera inséré dans le tableau)
-     * @param promoObj    l'objet JSON source contenant éventuellement des entrées existantes
+     * @param item         le pré-équipment à ajouter (son nom sera inséré dans le tableau)
+     * @param promoObj     l'objet JSON source contenant éventuellement des entrées existantes
      * @param promoBuilder le constructeur JSON dans lequel le tableau mis à jour sera inséré
-     * @param promoKey    la clé sous laquelle le tableau des noms est stocké dans le JSON
+     * @param promoKey     la clé sous laquelle le tableau des noms est stocké dans le JSON
      */
-    private static void recuperation(Pre_Equipement item, JsonObject promoObj, JsonObjectBuilder promoBuilder, String promoKey) {
-        JsonArray existants = promoObj.containsKey(promoKey)
-                ? promoObj.getJsonArray(promoKey)
-                : Json.createArrayBuilder().build();
-
+    private static void recuperation(Pre_Equipement item, JsonObject promoObj, JsonObjectBuilder promoBuilder,
+                                     String promoKey) {
+        JsonArray existants = promoObj.containsKey(promoKey) ? promoObj.getJsonArray(promoKey) :
+                Json.createArrayBuilder().build();
+        
         Set<String> noms = new LinkedHashSet<>();
         for (JsonValue val : existants) {
             noms.add(((JsonString) val).getString());
         }
         noms.add(item.nom);
-
+        
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         for (String nom : noms) arrayBuilder.add(nom);
-
+        
         promoBuilder.add(promoKey, arrayBuilder);
     }
-
+    
     /**
      * Joue un son de dés
      */
@@ -173,16 +168,16 @@ public class Output {
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
             clip.start();
-
+            
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             System.err.println("Erreur lors de la lecture du son : " + e.getMessage());
         }
     }
-
+    
     public static void viderSauvegarde(int index) throws IOException {
         File dossier = new File("Save" + index);
         if (!dossier.exists()) throw new IOException("Dossier introuvable.");
-
+        
         for (File f : Objects.requireNonNull(dossier.listFiles())) {
             if (!f.delete()) {
                 throw new IOException("Impossible de supprimer : " + f.getName());

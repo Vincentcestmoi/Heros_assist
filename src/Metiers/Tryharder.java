@@ -1,12 +1,12 @@
 package Metiers;
 
+import Enum.Dieux;
 import Enum.Metier;
 import Enum.Position;
-import Enum.Dieux;
 
 public class Tryharder extends Joueur {
     Metier metier = Metier.TRYHARDER;
-
+    
     public Tryharder(String nom, Position position, int ob_f, Dieux parent, int xp) {
         super(nom, position, ob_f, parent, xp);
         vie = 3;
@@ -16,7 +16,7 @@ public class Tryharder extends Joueur {
         PP_max = 2;
         add_caracteristique("Déterminé");
     }
-
+    
     @Override
     protected void actualiser_niveau() {
         this.vie += this.niveau;
@@ -29,7 +29,7 @@ public class Tryharder extends Joueur {
             add_caracteristique("Talentieux");
         }
     }
-
+    
     @Override
     protected void presente_caracteristique() {
         System.out.println("Déterminé : Gagne des statistiques avec la pratique.");
@@ -40,11 +40,11 @@ public class Tryharder extends Joueur {
             System.out.println("Talentueux : Gagne encore plus rapidement de l'expérience.");
         }
     }
-
+    
     @Override
     protected void presente_pouvoir() {
     }
-
+    
     @Override
     //le tryhardeur progresse 20% plus vite (palier par 4 au lieu de 5).
     public void gagneXp() {
@@ -66,7 +66,7 @@ public class Tryharder extends Joueur {
             super_lvl_up();
         }
     }
-
+    
     @Override
     void lvl_up() {
         this.vie += 1;
@@ -88,11 +88,11 @@ public class Tryharder extends Joueur {
             System.out.println("Nouvelle capacité débloquée !");
         }
     }
-
+    
     public Metier getMetier() {
         return metier;
     }
-
+    
     protected String nomMetier() {
         return "tryharder";
     }

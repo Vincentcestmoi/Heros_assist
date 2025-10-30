@@ -1,73 +1,66 @@
 package Exterieur;
 
-import Metiers.Joueur;
+import Enum.*;
 import Equipement.Pre_Equipement;
+import Metiers.Joueur;
 import Monstre.Race;
 import main.Main;
 
-import Enum.Position;
-import Enum.Rang;
-import Enum.Promo_Type;
-import Enum.Action;
-import Enum.Action_extra;
-import Enum.Choix;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.FileReader;
 import javax.json.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class Input {
-
+    
     // sauvegarde
-
+    
     /**
      * Sauvegarde les données des précedéntes partie et propose aux joueurs de charger une sauvegarde
-     *
      * @return true si la sauvegarde est complété, et false si elle doit être faite à la main
      */
     public static boolean load() throws IOException {
-
+        
         SaveManager.afficherSauvegardes();
         int reponse;
         do {
             System.out.print("Votre choix : ");
             reponse = readInt();
         } while (reponse < 0 || reponse >= SaveManager.SAVE_DIRS.length);
-
+        
         File infoFile = new File(SaveManager.SAVE_DIRS[reponse] + "/info.json");
         boolean sauvegardeExiste = infoFile.exists();
-
+        
         Main.Path = reponse;
-
+        
         // charger ou nouvelle partie
-        if (!sauvegardeExiste ||
-                (!yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la suppression"))) {
+        if (!sauvegardeExiste || (!yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la " +
+                "suppression"))) {
             Output.viderSauvegarde(reponse);
             System.out.println("lancement du jeu.\n\n");
             return false;
         }
-
+        
         // Chargement des joueurs
         Main.Path = reponse;
         Main.joueurs = SaveManager.chargerSauvegarde();
         Main.nbj = Main.joueurs.length;
-
+        
         for (Joueur joueur : Main.joueurs) {
             System.out.print("Joueur chargé avec succès : ");
             joueur.presente();
             System.out.println();
         }
-
+        
         //monstre nommé
         corrige_nomme();
         //item unique
         corrige_item();
-
+        
         System.out.println("lancement du jeu.\n\n");
         return true;
     }
-
+    
     /**
      * Supprime les objets uniques déjà tirés
      */
@@ -76,7 +69,7 @@ public class Input {
             JsonObject info = reader.readObject();
             JsonObject items = info.getJsonObject("items_uniques");
             if (items == null) return;
-
+            
             for (String rangKey : items.keySet()) {
                 if (!rangKey.equals("PROMOTION")) {
                     Rang rang = Rang.valueOf(rangKey);
@@ -99,8 +92,8 @@ public class Input {
             System.err.println("Erreur lors de la lecture des items uniques : " + e.getMessage());
         }
     }
-
-
+    
+    
     /**
      * Supprime les monstres nommés enregistrés comme abscent
      */
@@ -108,9 +101,9 @@ public class Input {
         try (JsonReader reader = Json.createReader(new FileReader("Save" + Main.Path + "/info.json"))) {
             JsonObject info = reader.readObject();
             JsonArray monstres = info.getJsonArray("monstres_nommes");
-
+            
             if (monstres == null) return;
-
+            
             for (JsonValue val : monstres) {
                 String nom = ((JsonString) val).getString();
                 Race.delete_monstre(nom, false);
@@ -119,15 +112,14 @@ public class Input {
             System.err.println("Erreur lors de la lecture des monstres nommés : " + e.getMessage());
         }
     }
-
-
+    
+    
     // ********************************************************************************************************** //
-
+    
     //visuel (terminal)
-
+    
     /**
      * Lit le texte en terminal
-     *
      * @return le texte lu
      * @throws IOException en cas de problème ?
      */
@@ -141,10 +133,9 @@ public class Input {
         System.out.println();
         return readed.toString();
     }
-
+    
     /**
      * Lit une valeur en terminal et la renvoie (doit être en chiffre uniquement)
-     *
      * @return la valeur
      * @throws IOException en cas de problème ?
      */
@@ -153,11 +144,11 @@ public class Input {
         while (true) {
             number = 0;
             int temp = System.in.read();
-
+            
             if (temp == '\n') {
                 continue;
             }
-
+            
             boolean valid = true;
             while (temp != '\n' && temp != -1) {
                 int digit = temp - '0';
@@ -168,21 +159,20 @@ public class Input {
                 }
                 temp = System.in.read();
             }
-
+            
             if (valid) {
                 System.out.println();
                 return number;
             }
-
+            
             System.out.println("\nErreur détectée : saisie non numérique. Veuillez réécrire votre nombre.");
         }
     }
-
-
+    
+    
     /**
      * Demande au joueur le résultat d'un jet 4 et le renvoie
      * majoration par 6.
-     *
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -195,11 +185,10 @@ public class Input {
         }
         return Math.max(temp, 1);
     }
-
+    
     /**
      * Demande au joueur le résultat d'un jet 6 et le renvoie
      * majoration par 8.
-     *
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -212,11 +201,10 @@ public class Input {
         }
         return Math.max(temp, 1);
     }
-
+    
     /**
      * Demande au joueur le résultat d'un jet 8 et le renvoie
      * majoration par 10
-     *
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -229,11 +217,10 @@ public class Input {
         }
         return Math.max(temp, 1);
     }
-
+    
     /**
      * Demande au joueur le résultat d'un jet 10 et le renvoie
      * majoration par 12
-     *
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -246,11 +233,10 @@ public class Input {
         }
         return Math.max(temp, 1);
     }
-
+    
     /**
      * Demande au joueur le résultat d'un jet 12 et le renvoie
      * majoration par 14
-     *
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -263,11 +249,10 @@ public class Input {
         }
         return Math.max(temp, 1);
     }
-
+    
     /**
      * Demande au joueur le résultat d'un jet 20 et le renvoie
      * majoration par 22
-     *
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -280,10 +265,9 @@ public class Input {
         }
         return Math.max(temp, 1);
     }
-
+    
     /**
      * Pose une question au joueur
-     *
      * @return s'il a répondu oui
      */
     public static boolean yn(String question) throws IOException {
@@ -299,10 +283,9 @@ public class Input {
             System.out.println("Réponse non comprise.");
         }
     }
-
+    
     /**
      * Demande au joueur son attaque
-     *
      * @return le nombre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -310,10 +293,9 @@ public class Input {
         System.out.print("entrez votre attaque actuelle : ");
         return readInt();
     }
-
+    
     /**
      * Demande au joueur son attaque
-     *
      * @return le nombre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -321,10 +303,9 @@ public class Input {
         System.out.print("entrez votre puissance de tir actuelle : ");
         return readInt();
     }
-
+    
     /**
      * Demande au joueur sa vie
-     *
      * @return le nombre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -332,10 +313,9 @@ public class Input {
         System.out.print("entrez votre résistance actuelle : ");
         return readInt();
     }
-
+    
     /**
      * Demande au joueur son armure
-     *
      * @return le nombre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -343,10 +323,9 @@ public class Input {
         System.out.print("entrez votre armure actuelle : ");
         return readInt();
     }
-
+    
     /**
      * Demande au joueur la force de son attaque magique
-     *
      * @return le nombre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -354,10 +333,9 @@ public class Input {
         System.out.print("entrez votre puissance d'attaque magique : ");
         return readInt();
     }
-
+    
     /**
      * Laisse le joueur choisir sa promotion
-     *
      * @return un indice sur le type de promotion que le joueur veut
      */
     public static Promo_Type promo() throws IOException {
@@ -396,10 +374,9 @@ public class Input {
         }
         return promo();
     }
-
+    
     /**
      * Demande au joueur l'action qu'il veut mener et la transmet
-     *
      * @param joueur       le joueur qui réalise l'action
      * @param est_familier s'il s'agit d'un familier
      * @return l'action choisit
@@ -430,7 +407,7 @@ public class Input {
             case "c" -> Action.AUTRE;
             case "o" -> Action.OFF;
             case "j" -> Action.JOINDRE;
-
+            
             // actions joueur
             case "t" -> {
                 if (!est_familier && !joueur.a_cecite()) {
@@ -453,7 +430,7 @@ public class Input {
                 System.out.println("Action non reconnue.");
                 yield action(joueur, est_familier);
             }
-
+            
             // première ligne
             case "s" -> {
                 if (!est_familier) {
@@ -470,8 +447,7 @@ public class Input {
                 yield action(joueur, true);
             }
             case "e" -> {
-                if (joueur.est_front() && (!est_familier && !joueur.est_berserk()) ||
-                        (joueur.est_front_f() && est_familier && !joueur.f_est_berserk())) {
+                if (joueur.est_front() && (!est_familier && !joueur.est_berserk()) || (joueur.est_front_f() && est_familier && !joueur.f_est_berserk())) {
                     yield Action.ENCAISSER;
                 }
                 System.out.println("Action non reconnue.");
@@ -490,7 +466,7 @@ public class Input {
                 }
                 yield action(joueur, est_familier);
             }
-
+            
             // actions particulières
             case "q" -> {
                 if (yn("Confirmez ")) {
@@ -498,7 +474,7 @@ public class Input {
                 }
                 yield action(joueur, est_familier);
             }
-
+            
             default -> {
                 Action act = joueur.action(input, est_familier);
                 if (act != Action.AUCUNE) {
@@ -509,10 +485,9 @@ public class Input {
             }
         };
     }
-
+    
     public static Action_extra extra(Joueur joueur, Action action) throws IOException {
-        if (action == Action.AUCUNE || action == Action.END || action == Action.CONCOCTION || action == Action.DOMESTIQUER
-                || action == Action.DEXTERITE || action == Action.LIEN || action == Action.MEDITATION || action == Action.FUIR) {
+        if (action == Action.AUCUNE || action == Action.END || action == Action.CONCOCTION || action == Action.DOMESTIQUER || action == Action.DEXTERITE || action == Action.LIEN || action == Action.MEDITATION || action == Action.FUIR) {
             return Action_extra.AUCUNE;
         }
         String text = joueur.text_extra(action);
@@ -533,10 +508,9 @@ public class Input {
             }
         };
     }
-
+    
     /**
      * Demande au joueur qui il veut soigner
-     *
      * @param premier_ligne l'indice du participant de première ligne
      * @return si la cible est en première ligne
      */
@@ -553,10 +527,9 @@ public class Input {
             i = i == Main.nbj - 1 ? 0 : i + 1;
         }
     }
-
+    
     /**
      * Demande au joueur ce qu'il fait de son tour
-     *
      * @param index l'index du joueur dont c'est le tour
      * @return : un choix correspondant
      */
@@ -565,7 +538,8 @@ public class Input {
         Position position = joueur.getPosition();
         while (true) {
             String text = "Que voulez-vous faire : (E)xplorer";
-            boolean peut_descendre = position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
+            boolean peut_descendre =
+                    position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
             boolean peut_monter = position != Position.OLYMPE;
             boolean market = position != Position.OLYMPE && position != Position.ENFERS;
             boolean peut_entrainer = joueur.a_familier() && !joueur.familier_loyalmax();
@@ -586,7 +560,7 @@ public class Input {
             System.out.println(text);
             String readed = read().toLowerCase();
             switch (readed) {
-
+                
                 // normaux
                 case "e", "explorer", "" -> {
                     return Choix.EXPLORER;
@@ -627,7 +601,7 @@ public class Input {
                 case "s", "stat", "stats", "statistique", "statistiques" -> {
                     return Choix.STAT;
                 }
-
+                
                 // caché
                 case "q" -> {
                     System.out.println("Confirmez l'arret");
@@ -659,7 +633,7 @@ public class Input {
                         return Choix.SUICIDE;
                     }
                 }
-
+                
                 default -> {
                     if (joueur.tour(readed)) {
                         return Choix.AUCUN;

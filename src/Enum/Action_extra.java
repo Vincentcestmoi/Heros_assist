@@ -5,10 +5,10 @@ public enum Action_extra {
     POTION,
     AUTRE,
     AUCUNE,
-
+    
     //Guerrière
     RAGE,
-
+    
     //Shaman
     CALME,
 }
