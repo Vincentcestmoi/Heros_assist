@@ -1,0 +1,29 @@
+<code_scheme name="Default" version="173">
+  <JavaCodeStyleSettings>
+    <option name="JD_ADD_BLANK_AFTER_DESCRIPTION" value="false" />
+    <option name="JD_KEEP_EMPTY_PARAMETER" value="false" />
+    <option name="JD_KEEP_EMPTY_RETURN" value="false" />
+  </JavaCodeStyleSettings>
+  <codeStyleSettings language="JAVA">
+    <option name="KEEP_LINE_BREAKS" value="false" />
+    <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
+    <option name="KEEP_SIMPLE_METHODS_IN_ONE_LINE" value="true" />
+    <option name="KEEP_SIMPLE_LAMBDAS_IN_ONE_LINE" value="true" />
+    <option name="KEEP_SIMPLE_CLASSES_IN_ONE_LINE" value="true" />
+    <option name="WRAP_LONG_LINES" value="true" />
+    <indentOptions>
+      <option name="KEEP_INDENTS_ON_EMPTY_LINES" value="true" />
+    </indentOptions>
+    <arrangement>
+      <groups>
+        <group>
+          <type>ENUM_CONSTANT</type>
+        </group>
+      </groups>
+    </arrangement>
+    <codeStyleSettings>
+      <option name="ENUM_CONSTANTS_WRAP" value="2" />
+      <option name="ALIGN_ENUM_CONSTANTS" value="true" />
+    </codeStyleSettings>
+  </codeStyleSettings>
+</code_scheme>
