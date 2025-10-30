@@ -17,6 +17,8 @@
 3. Quitter le jeu :  
 Lors du choix d’action du tour, entrez `q` deux fois pour quitter proprement.
 
+⚠️ Une seule sauvegarde est disponible, si vous ne la chargez pas, elle sera écrasée.
+
 ---
 
 ## 📜 Consignes de jeu
@@ -39,7 +41,7 @@ L’usage d’un classeur Excel ou d’un tableau est fortement recommandé. (vo
  
 
   La plupart des actions reposent sur le jugement des joueurs : Héros reste avant tout un jeu de rôle. Il est totalement
-possible d'ingnorer les informations fournit par le programme ou de choisir vous-même vos données.  
+possible d'ignorer les informations fournit par le programme ou de choisir vous-même vos données.  
 Il est par exemple prévu que les consommables demandent une action pour être utilisés, et qu'un consommable bonus puisse 
   être utilisé en plus de l'action principale de combat, mais rien n'interdit aux joueurs de ne pas l'appliquer.
 
