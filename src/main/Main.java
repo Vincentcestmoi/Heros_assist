@@ -464,11 +464,11 @@ public class Main {
             // metier
             boolean run = true;
             Metier metier = Metier.TRYHARDER;
-            String[] job = {"mage (no)ir", "archi(ma)ge", "(al)chimiste", "(gu)erriere", "(ra)nger", "(sh)aman",
+            String[] job = {"mage (no)ir", "archi(ma)ge", "(al)chimiste", "(gu)errière", "(ra)nger", "(sh)aman",
                     "(au)cun"};
             while (run) {
                 run = false;
-                System.out.println(nom + ", choississez votre profession : ");
+                System.out.println(nom + ", choisissez votre profession : ");
                 for (String s : job) {
                     System.out.println(s + " ");
                 }
@@ -482,7 +482,7 @@ public class Main {
                     case "au" -> {
                     }
                     default -> {
-                        System.out.println("Unknow Input");
+                        System.out.println("Unknown Input");
                         run = true;
                     }
                 }

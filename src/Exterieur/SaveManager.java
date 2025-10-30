@@ -106,7 +106,7 @@ public class SaveManager {
             }
         }
         
-        System.out.println("✅ Sauvegarde " + dossier + " créée avec " + nombreJoueurs + " joueur(s).");
+        System.out.println("✅ Sauvegarde " + titre + " créée avec " + nombreJoueurs + " joueur(s).\n");
     }
     
     /**
