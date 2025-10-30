@@ -61,6 +61,7 @@ public class Race {
 
     /**
      * Supprime le monstre donné de sa liste
+     *
      * @param monstre le nom du monstre à supprimer
      * @implNote n'enregistre pas la suppression dans les fichiers de sauvegarde
      */
@@ -70,6 +71,7 @@ public class Race {
 
     /**
      * Supprime le monstre donné de sa liste
+     *
      * @param monstre le nom du monstre à supprimer
      * @param silence si on doit dire avoir supprimé le monstre
      * @implNote n'enregistre pas la suppression dans les fichiers de sauvegarde
@@ -80,7 +82,7 @@ public class Race {
             for (int i = 0; i < l.length; i++) {
                 if (l[i] != null && Objects.equals(l[i].get_nom(), monstre)) {
                     l[i] = null;
-                    if(!silence) {
+                    if (!silence) {
                         System.out.println(monstre + " supprimé(e) avec succès.");
                     }
                     return;
@@ -228,7 +230,7 @@ public class Race {
     public static Race roche_maudite = new Race("roche maudite", 0, 38, 8, 2, 3, 1, roch_comp);
     static Competence[] dulh_comp = {Competence.PEAU_DURE, Competence.PEAU_MAGIQUE, Competence.CUIR_MAGIQUE, Competence.VAMPIRISME4,
             Competence.REVENANT, Competence.FRAPPE_SPECTRALE};
-    public static Race dullahan  = new Race("dullahan", 14, 37, 3, 3, 3, 2, dulh_comp);
+    public static Race dullahan = new Race("dullahan", 14, 37, 3, 3, 3, 2, dulh_comp);
     static Competence[] gole_comp = {Competence.GOLEM_PIERRE, Competence.GOLEM_FER, Competence.GOLEM_ACIER, Competence.GOLEM_MITHRIL};
     public static Race golem = new Race("golem", 9, 25, 2, 2, 2, 2, gole_comp);
     static Competence[] arch_comp = {Competence.GEL, Competence.ARMURE_GLACE2, Competence.SPELL_IMMUNE};

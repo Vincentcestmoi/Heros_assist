@@ -23,7 +23,7 @@ public class Equipement {
         this.nom = pre.nom;
         this.rang = pre.rang;
         this.base = pre.base;
-        switch(base){
+        switch (base) {
             case CASQUE -> this.make_casque();
             case ARMURE -> this.make_armure();
             case MAIN_1 -> this.make_main1();
@@ -70,7 +70,7 @@ public class Equipement {
     private void make_sac() {
         this.attaque = 0;
         this.armure = 0;
-        switch(rang){
+        switch (rang) {
             case O, I -> this.resistance = 0;
             case II -> this.resistance = 1;
             case III -> this.resistance = 2;
@@ -84,10 +84,10 @@ public class Equipement {
     /**
      * Crée un casque standard en fonction de son rang
      */
-    private void make_casque(){
+    private void make_casque() {
         this.attaque = 0;
         this.armure = 0;
-        switch(rang){
+        switch (rang) {
             case O -> this.resistance = 1;
             case I -> this.resistance = 2;
             case II -> this.resistance = 3;
@@ -99,9 +99,9 @@ public class Equipement {
     /**
      * Crée une armure standard en fonction de son rang
      */
-    private void make_armure(){
+    private void make_armure() {
         this.attaque = 0;
-        switch(rang){
+        switch (rang) {
             case O -> {
                 this.armure = 0;
                 this.resistance = 1;
@@ -128,10 +128,10 @@ public class Equipement {
     /**
      * Crée une arme à une main standard en fonction de son rang
      */
-    private void make_main1(){
+    private void make_main1() {
         this.armure = 0;
         this.resistance = 0;
-        switch(rang){
+        switch (rang) {
             case O -> this.attaque = 2;
             case I -> this.attaque = 3;
             case II -> this.attaque = rand.nextInt(2) + 4;
@@ -143,10 +143,10 @@ public class Equipement {
     /**
      * Crée une arme à deux mains standard en fonction de son rang
      */
-    private void make_main2(){
+    private void make_main2() {
         this.armure = 0;
         this.resistance = 0;
-        switch(rang){
+        switch (rang) {
             case O -> this.attaque = 3;
             case I -> this.attaque = 5;
             case II -> this.attaque = rand.nextInt(3) + 7;
@@ -158,9 +158,9 @@ public class Equipement {
     /**
      * Crée un bouclier standard en fonction de son rang
      */
-    private void make_bouclier(){
+    private void make_bouclier() {
         this.armure = 0;
-        switch(rang){
+        switch (rang) {
             case O -> {
                 this.attaque = 0;
                 this.resistance = 1;
@@ -188,10 +188,10 @@ public class Equipement {
     /**
      * Crée un arc standard en fonction de son rang
      */
-    private void make_arc(){
+    private void make_arc() {
         this.armure = 0;
         this.resistance = 0;
-        switch(rang){
+        switch (rang) {
             case O -> this.attaque = rand.nextInt(2); // 2 * +1
             case I -> this.attaque = 1 + rand.nextInt(3); // 5 * +1
             case II -> this.attaque = rand.nextInt(3) + 2; // 4 * +3
@@ -265,7 +265,8 @@ public class Equipement {
                         this.armure = 0;
                     }
                 }
-            }case III -> {
+            }
+            case III -> {
                 switch (rand.nextInt(6)) {
                     case 0 -> {
                         this.resistance = 6;
@@ -310,11 +311,11 @@ public class Equipement {
     /**
      * Applique les effets spéciaux à l'équipement
      */
-    private void applique_effet(Effet_equip effet){
+    private void applique_effet(Effet_equip effet) {
         this.effet = null;
-        switch(effet){
+        switch (effet) {
             case ARCA -> {
-                switch(rang){
+                switch (rang) {
                     case O, I -> this.effet = "Augmente de 1 l'attaque des arcs.";
                     case II -> this.effet = "Augmente de 3 l'attaque des arcs.";
                     case III -> this.effet = "Augmente de 4 l'attaque des arcs.";
@@ -390,13 +391,15 @@ public class Equipement {
             case PP4 -> this.effet = "Régénère 4 PP.";
             case PP6 -> this.effet = "Régénère 6 PP.";
             case PPL -> this.effet = "Pour ce combat, récupérez 1PP à chacun de vos débuts de tour.";
-            case PPMAX -> this.effet = "Pour ce combat, vous avez un nombre infini de PP ; à la fin du combat, mettez vos PP à 0.";
-            case SOUPE_MAGIQUE -> this.effet = "Soigne de 4, augmente temporairement la résistance de 3 et l'attaque de 2.";
+            case PPMAX ->
+                    this.effet = "Pour ce combat, vous avez un nombre infini de PP ; à la fin du combat, mettez vos PP à 0.";
+            case SOUPE_MAGIQUE ->
+                    this.effet = "Soigne de 4, augmente temporairement la résistance de 3 et l'attaque de 2.";
             case NECTAR -> this.effet = "Combinez le à l'ambroisie pour gagner.";
             case AMBROISIE -> this.effet = "Combinez le au nectar pour gagner";
             case SAC0 -> this.effet = "Permet de stocker 1 objet (pas d'arme).";
             case SAC1 -> {
-                switch(rand.nextInt(4)) {
+                switch (rand.nextInt(4)) {
                     case 0 -> this.effet = "Permet de stocker 1 objet (pas d'arme) et 1 arme à une main.";
                     case 1 -> this.effet = "Permet de stocker 1 objet ou arme à une main.";
                     case 2 -> this.effet = "Permet de stocker 2 objets (pas d'arme).";
@@ -404,7 +407,7 @@ public class Equipement {
                 }
             }
             case SAC2 -> {
-                switch(rand.nextInt(4)) {
+                switch (rand.nextInt(4)) {
                     case 0 -> this.effet = "Permet de stocker 2 objets (pas d'armes) et 1 arme à une main.";
                     case 1 -> this.effet = "Permet de stocker (2 objets ou armes à une main) ou 1 arme à deux mains.";
                     case 2 -> this.effet = "Permet de stocker 2 armes sans contraintes.";
@@ -433,24 +436,34 @@ public class Equipement {
                 this.effet = "+4 attaques pour les descendant d'Hypnos";
             }
             case RUNE_RESIDU -> this.effet = "Peut être consummé à la place de 2 PP.";
-            case PARCH_FEU -> this.effet = "Permet de lancer le sort Boule de feu : pour 2PP, inflige 5 dégats magiques.";
+            case PARCH_FEU ->
+                    this.effet = "Permet de lancer le sort Boule de feu : pour 2PP, inflige 5 dégats magiques.";
             case PARCH_DODO -> this.effet = "Permet de lancer le sort Sommeil : pour 2PP, arrête un combat.";
-            case PARCH_FORCE -> this.effet = "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement l'attaque de 1, se détruit après usage.";
-            case PARCH_LUMIERE -> this.effet = "Permet de lancer le sort Lumière : pour 2PP, diminue de 2 points l'attaque de l'ennemie (augmentez tous de 2 votre armure pour le code).";
+            case PARCH_FORCE ->
+                    this.effet = "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement l'attaque de 1, se détruit après usage.";
+            case PARCH_LUMIERE ->
+                    this.effet = "Permet de lancer le sort Lumière : pour 2PP, diminue de 2 points l'attaque de l'ennemie (augmentez tous de 2 votre armure pour le code).";
             case RUNE_CROISS -> this.effet = "Diminue de 1 le coût de la compétence Embranchement végétal.";
             case RUNE_PLUIE -> this.effet = "Diminue de 1 le coût de la compétence Déferlante.";
-            case RUNE_HAINE -> this.effet = "Augmente le bonus d'attaque sous Berserk, mais aussi le malus de résistance.";
+            case RUNE_HAINE ->
+                    this.effet = "Augmente le bonus d'attaque sous Berserk, mais aussi le malus de résistance.";
             case RUNE_VIRALE -> this.effet = "Double les dommages infligés par la compétence Maladie.";
             case RUNE_ARDENTE -> this.effet = "augmente de 3 les dommages du sort Boule de feu";
-            case RUNE_ARDENTE2 -> this.effet = "augmente de 5 les dommages du sort Boule de feu, mais augmente de 1 son coût.";
+            case RUNE_ARDENTE2 ->
+                    this.effet = "augmente de 5 les dommages du sort Boule de feu, mais augmente de 1 son coût.";
             case RUNE_DODO -> this.effet = "Diminue de 1 le coût de la compétence Sommeil.";
             case RUNE_MORT -> this.effet = "Double l'efficacité de la compétence Thaumaturge";
             case RUNE_ORAGE -> this.effet = "Diminue de 1 le coût de la compétence Foudre.";
-            case SOIN -> this.effet = "Vous pouvez, une fois par combat, utiliser votre action pour soigner une cible de 6.";
-            case PROTECTION -> this.effet = "Peut être utilisé pour ignorer des dommages (avant de les calculer). Une seule utilisation.";
-            case RUNE_VENGEANCE -> this.effet = "Récuperez 2PP chaque fois qu'un familier ou joueur allié est tué par un monstre.";
-            case RUNE_INTERDITE -> this.effet = "Augmente de 1 le coût de la compétence Nécromancie, mais augmente de 1 le résultat du jet de dé.";
-            case BRACELET_ABSO -> this.effet = "Gagnez 1 PP chaque fois qe vous tuez un monstre (vous ou votre familier doit porter le dernier coup).";
+            case SOIN ->
+                    this.effet = "Vous pouvez, une fois par combat, utiliser votre action pour soigner une cible de 6.";
+            case PROTECTION ->
+                    this.effet = "Peut être utilisé pour ignorer des dommages (avant de les calculer). Une seule utilisation.";
+            case RUNE_VENGEANCE ->
+                    this.effet = "Récuperez 2PP chaque fois qu'un familier ou joueur allié est tué par un monstre.";
+            case RUNE_INTERDITE ->
+                    this.effet = "Augmente de 1 le coût de la compétence Nécromancie, mais augmente de 1 le résultat du jet de dé.";
+            case BRACELET_ABSO ->
+                    this.effet = "Gagnez 1 PP chaque fois qe vous tuez un monstre (vous ou votre familier doit porter le dernier coup).";
             case LUNETTE -> this.effet = "Vous êtes immunisé à l'altération cécité";
             case BRACELET_MAUDIT -> {
                 this.resistance -= 3;
@@ -465,9 +478,11 @@ public class Equipement {
                 attaque += 2;
                 armure -= 2;
             }
-            case PARCH_VOLCAN -> this.effet = "Permet de lancer le sort Folie meurtrière : pour 6PP, infliges 55 dégats magiques";
-            case PARCH_ABSO -> this.effet = "Quand vous tuez un monstre, vous gagnez définitivement 7 points de résistances, 3 points" +
-                    "d'attaques, 1 point d'armure et 4PP. (vous ou votre familier devez porter le dernier coup).";
+            case PARCH_VOLCAN ->
+                    this.effet = "Permet de lancer le sort Folie meurtrière : pour 6PP, infliges 55 dégats magiques";
+            case PARCH_ABSO ->
+                    this.effet = "Quand vous tuez un monstre, vous gagnez définitivement 7 points de résistances, 3 points" +
+                            "d'attaques, 1 point d'armure et 4PP. (vous ou votre familier devez porter le dernier coup).";
             case PEGASE -> {
                 this.resistance += 3;
                 this.effet = "Ajoutez 1 à tout vos dés d'exploration et d'ascension.";
@@ -489,62 +504,66 @@ public class Equipement {
                 this.resistance += 2;
                 this.effet = "Pour 1PP, augmente temporairement votre résistance de 3 points.";
             }
-            case ALTRUISME -> this.effet = "Au début de chaque combat, répartissez 5 points temporaires de résistance entre vos alliés (familiers inclus)." +
-                    "Vous ne pouvez les attribuer à vous même.";
+            case ALTRUISME ->
+                    this.effet = "Au début de chaque combat, répartissez 5 points temporaires de résistance entre vos alliés (familiers inclus)." +
+                            "Vous ne pouvez les attribuer à vous même.";
             case RUNE_ARCA -> this.effet = "Diminue de 1 la coût de tout vos sort";
             case ANTIDODE -> this.effet = "Le consommer fournit une immunité définitive au poison et à la cécité.";
-            case ANNIHILITON -> this.effet = "En sacrifiant une rune, vous pouvez lancer un attaque magique de puissance le triple de votre attaque classique.";
-            case REZ -> this.effet = "Si vous êtes mort à la fin d'un combat, vous ramène à la vie. S'efface après utilisation. Ne peut être échangé.";
-            case FUITE -> this.effet = "A tout moment, vous pouvez utiliser cet objet pour fuir un combat. Se détruit après usage. Ne peut être utilisé si vous êtes mort.";
+            case ANNIHILITON ->
+                    this.effet = "En sacrifiant une rune, vous pouvez lancer un attaque magique de puissance le triple de votre attaque classique.";
+            case REZ ->
+                    this.effet = "Si vous êtes mort à la fin d'un combat, vous ramène à la vie. S'efface après utilisation. Ne peut être échangé.";
+            case FUITE ->
+                    this.effet = "A tout moment, vous pouvez utiliser cet objet pour fuir un combat. Se détruit après usage. Ne peut être utilisé si vous êtes mort.";
             case GRENADE -> this.effet = "Inflige 4 dommages additionels. Utilisable 3 fois au total.";
-            case MER_EXP -> this.effet = "Si vous vous trouvez en mer, vous pouvez choisir n'importe quel résultat entre 1 et 7 au lieu de lancer le dé." +
-                    "Un résultat choisi ignore le bonus de dé.";
-            case ITEM_IMMUN -> this.effet = "Qu'importe la cause et le contexte, chaque fois que vous perdez un équipement, récuperez le." +
-                    "(ne fonctionne pas si vous mourrez, vendez, échangez ou dépensez un équipement)";
+            case MER_EXP ->
+                    this.effet = "Si vous vous trouvez en mer, vous pouvez choisir n'importe quel résultat entre 1 et 7 au lieu de lancer le dé." +
+                            "Un résultat choisi ignore le bonus de dé.";
+            case ITEM_IMMUN ->
+                    this.effet = "Qu'importe la cause et le contexte, chaque fois que vous perdez un équipement, récuperez le." +
+                            "(ne fonctionne pas si vous mourrez, vendez, échangez ou dépensez un équipement)";
             case SAC_TEMP -> this.effet = "Lorsque vous utilisez un objet à usage limité pour la dernière fois," +
                     "vous pouvez choisir de détruire cette sacoche à la place et récuperer tous les utilisations de votre objet.";
-            default -> {} //inclus AUCUN
+            default -> {
+            } //inclus AUCUN
         }
     }
 
-    private void presente(){
+    private void presente() {
         presente(0);
     }
 
     /**
      * Présente l'objet
+     *
      * @param reduction la réduction sur le coup de l'objet
      */
-    private void presente(int reduction){
+    private void presente(int reduction) {
         String type = getString();
         System.out.println("\n" + this.nom + " (" + type + ")");
-        if(this.attaque > 0){
+        if (this.attaque > 0) {
             System.out.println("+" + this.attaque + " attaque(s)");
-        }
-        else if(this.attaque < 0){
+        } else if (this.attaque < 0) {
             System.out.println("-" + -this.attaque + " attaque(s)");
         }
-        if(this.resistance > 0){
+        if (this.resistance > 0) {
             System.out.println("+" + this.resistance + " resistance(s)");
-        }
-        else if(this.resistance < 0){
+        } else if (this.resistance < 0) {
             System.out.println("-" + -this.resistance + " resistance(s)");
         }
-        if(this.armure > 0){
+        if (this.armure > 0) {
             System.out.println("+" + this.armure + " armure(s)");
-        }
-        else if(this.armure < 0){
+        } else if (this.armure < 0) {
             System.out.println("-" + -this.armure + " armure(s)");
         }
-        if(this.effet != null){
+        if (this.effet != null) {
             System.out.println(this.effet);
         }
-        if(this.prix > 0){
+        if (this.prix > 0) {
             int temp = this.prix - reduction;
-            if(temp > 0){
+            if (temp > 0) {
                 System.out.println("Prix : " + temp);
-            }
-            else{
+            } else {
                 System.out.println("Prix : 1");
             }
         }
@@ -553,7 +572,7 @@ public class Equipement {
 
     private String getString() {
         String type;
-        switch(base){
+        switch (base) {
             case CEINTURE -> type = "ceinture";
             case MAIN_1 -> type = "une main";
             case MAIN_2 -> type = "deux main";
@@ -656,34 +675,31 @@ public class Equipement {
         Equipement a, b;
         Equipement[] list;
 
-        if(rand.nextBoolean()){
+        if (rand.nextBoolean()) {
             list = marche0;
-        }
-        else{
+        } else {
             list = marcheI;
         }
         a = list[rand.nextInt(list.length)];
 
-        if(rand.nextBoolean()){
+        if (rand.nextBoolean()) {
             list = marche0;
-        }
-        else{
+        } else {
             list = marcheI;
         }
-        do{
+        do {
             i = rand.nextInt(list.length);
-        }while(a == list[i]);
+        } while (a == list[i]);
         b = list[i];
 
-        if(rand.nextBoolean()){
+        if (rand.nextBoolean()) {
             list = marche0;
-        }
-        else{
+        } else {
             list = marcheI;
         }
-        do{
+        do {
             i = rand.nextInt(list.length);
-        }while(list[i] == b || list[i] == a);
+        } while (list[i] == b || list[i] == a);
 
         a.presente(reduc);
         b.presente(reduc);
@@ -737,7 +753,7 @@ public class Equipement {
         } while (a == list[i]);
         b = list[i];
 
-        if(nbo > 2) {
+        if (nbo > 2) {
             if (rand.nextBoolean()) {
                 list = marcheI;
             } else {
@@ -749,7 +765,7 @@ public class Equipement {
             c = list[i];
         }
 
-        if(nbo > 3){
+        if (nbo > 3) {
             if (rand.nextBoolean()) {
                 list = marcheI;
             } else {
@@ -763,10 +779,10 @@ public class Equipement {
 
         a.presente(reduc);
         b.presente(reduc);
-        if(nbo > 2){
+        if (nbo > 2) {
             c.presente(reduc);
         }
-        if(nbo > 3) {
+        if (nbo > 3) {
             d.presente(reduc);
         }
     }
@@ -774,23 +790,21 @@ public class Equipement {
     public static void marche_mer(int reduc) {
         System.out.println("Vous croisez un navire marchand qui vous propose 2 objets :");
         Equipement[] list;
-        if(rand.nextBoolean()){
+        if (rand.nextBoolean()) {
             list = marcheII;
-        }
-        else{
+        } else {
             list = marcheIII;
         }
         int i = rand.nextInt(list.length);
         Equipement a = list[i];
-        if(rand.nextBoolean()){
+        if (rand.nextBoolean()) {
             list = marcheII;
-        }
-        else{
+        } else {
             list = marcheIII;
         }
-        do{
+        do {
             i = rand.nextInt(list.length);
-        }while(list[i] == a);
+        } while (list[i] == a);
         a.presente(reduc);
         list[i].presente(reduc);
     }

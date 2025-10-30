@@ -40,24 +40,26 @@ public class Pre_Equipement {
 
     /**
      * Suprimme les équipements donnés
-     * @param nom le nom de l'équipement à supprimer
-     * @param rang le rang de l'équipement à supprimer
+     *
+     * @param nom   le nom de l'équipement à supprimer
+     * @param rang  le rang de l'équipement à supprimer
      * @param promo le type de promotion, significatif uniquement si le rang est PROMOTION
      */
-    public static void safe_delete(String nom, Rang rang, Promo_Type promo){
+    public static void safe_delete(String nom, Rang rang, Promo_Type promo) {
         safe_delete(nom, rang, promo, false);
     }
 
     /**
      * Suprimme les équipements donnés
-     * @param nom le nom de l'équipement à supprimer
-     * @param rang le rang de l'équipement à supprimer
-     * @param promo le type de promotion, significatif uniquement si le rang est PROMOTION
+     *
+     * @param nom     le nom de l'équipement à supprimer
+     * @param rang    le rang de l'équipement à supprimer
+     * @param promo   le type de promotion, significatif uniquement si le rang est PROMOTION
      * @param silence si on affiche le message de suppression
      */
     public static void safe_delete(String nom, Rang rang, Promo_Type promo, boolean silence) {
         boolean corect = false;
-        Pre_Equipement[] list = switch(rang){
+        Pre_Equipement[] list = switch (rang) {
             case O -> rang0;
             case I -> rang1;
             case II -> rang2;
@@ -68,18 +70,18 @@ public class Pre_Equipement {
                 yield getPromo(promo);
             }
         };
-        if(list == null) {
+        if (list == null) {
             System.out.println(promo + " ou " + rang + " n'existe pas.");
             return;
         }
-        for(int i = 0; i < list.length; i++){
-            if(list[i] != null && nom.equals(list[i].nom)){
-                if(!silence) {
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] != null && nom.equals(list[i].nom)) {
+                if (!silence) {
                     System.out.println(nom + " supprimé(e) avec succès.");
                 }
                 list[i] = null;
-                if(corect){
-                    switch(promo){
+                if (corect) {
+                    switch (promo) {
                         case MONTURE -> nb_monture--;
                         case AMELIORATION -> nb_boost--;
                         case ARTEFACT -> nb_arte--;
@@ -92,7 +94,7 @@ public class Pre_Equipement {
     }
 
     private static Pre_Equipement[] getPromo(Promo_Type promo) {
-        return switch(promo){
+        return switch (promo) {
             case MONTURE -> prom_list_mont;
             case ARTEFACT -> prom_list_arte;
             case AMELIORATION -> prom_list_boost;
@@ -104,7 +106,7 @@ public class Pre_Equipement {
      * Retire les objets uniques déjà droppés des listes de drops
      */
     private void safe_delete() {
-        if(this.is_unique) {
+        if (this.is_unique) {
             Output.dismiss_item(this);
             safe_delete(this.nom, this.rang, this.promo_type, true);
         }
@@ -117,10 +119,10 @@ public class Pre_Equipement {
         System.out.println("Vous récupérez un équipement rang 0 :");
         int t;
         Pre_Equipement equip;
-        do{
+        do {
             t = rand.nextInt(rang0.length);
             equip = rang0[t];
-        }while(equip == null);
+        } while (equip == null);
         equip.safe_delete();
         return equip;
     }
@@ -132,10 +134,10 @@ public class Pre_Equipement {
         System.out.println("Vous récupérez un équipement rang I :");
         int t;
         Pre_Equipement equip;
-        do{
+        do {
             t = rand.nextInt(rang1.length);
             equip = rang1[t];
-        }while(equip == null);
+        } while (equip == null);
         equip.safe_delete();
         return equip;
     }
@@ -147,10 +149,10 @@ public class Pre_Equipement {
         System.out.println("Vous récupérez un équipement rang II :");
         int t;
         Pre_Equipement equip;
-        do{
+        do {
             t = rand.nextInt(rang2.length);
             equip = rang2[t];
-        }while(equip == null);
+        } while (equip == null);
         equip.safe_delete();
         return equip;
     }
@@ -162,10 +164,10 @@ public class Pre_Equipement {
         System.out.println("Vous récupérez un équipement rang III :");
         int t;
         Pre_Equipement equip;
-        do{
+        do {
             t = rand.nextInt(rang3.length);
             equip = rang3[t];
-        }while(equip == null);
+        } while (equip == null);
         equip.safe_delete();
         return equip;
     }
@@ -177,10 +179,10 @@ public class Pre_Equipement {
         System.out.println("Vous récupérez un équipement rang IV :");
         int t;
         Pre_Equipement equip;
-        do{
+        do {
             t = rand.nextInt(rang4.length);
             equip = rang4[t];
-        }while(equip == null);
+        } while (equip == null);
         equip.safe_delete();
         return equip;
     }
@@ -194,7 +196,7 @@ public class Pre_Equipement {
         System.out.println("Vous récupérez une promotion.");
         Pre_Equipement[] list;
         Promo_Type type = Input.promo();
-        switch (type){
+        switch (type) {
             case MONTURE -> list = prom_list_mont;
             case AMELIORATION -> list = prom_list_boost;
             case ARTEFACT -> list = prom_list_arte;
@@ -205,10 +207,10 @@ public class Pre_Equipement {
         }
         int t;
         Pre_Equipement equip;
-        do{
+        do {
             t = rand.nextInt(list.length);
             equip = list[t];
-        }while(equip == null);
+        } while (equip == null);
         equip.safe_delete();
         return equip;
     }
@@ -234,7 +236,7 @@ public class Pre_Equipement {
     static Rang III = Rang.III;
     static Rang IV = Rang.IV;
     static Rang PROMOTION = Rang.PROMOTION;
-    
+
     static Effet_equip AUCUN = Effet_equip.AUCUN;
 
     static Pre_Equipement ceinture0 = new Pre_Equipement("vieille ceinture", CEINTURE, O, AUCUN, false);
@@ -422,7 +424,7 @@ public class Pre_Equipement {
     static Pre_Equipement parch_abso = new Pre_Equipement("Parchemin d'absorbtion", AUTRE, IV, Effet_equip.PARCH_ABSO, true);
 
     static Pre_Equipement[] rang4 = {nectar, ambroisie, fleche_plusIV, arcIV, main1IV, main2IV,
-        armureIV, casqueIV, bouclierIV, ceintureIV, braceletIV, parch_volcan, parch_abso};
+            armureIV, casqueIV, bouclierIV, ceintureIV, braceletIV, parch_volcan, parch_abso};
 
     static Pre_Equipement pegase = new Pre_Equipement("Pégase", MONTURE, PROMOTION, Effet_equip.PEGASE, Promo_Type.MONTURE);
     static Pre_Equipement cheval = new Pre_Equipement("Cheval", MONTURE, PROMOTION, Effet_equip.CHEVAL, Promo_Type.MONTURE);
@@ -441,7 +443,7 @@ public class Pre_Equipement {
     static Pre_Equipement fleche_plusP2 = new Pre_Equipement("Bénédiction magique", AUTRE, PROMOTION, Effet_equip.ARCA, Promo_Type.AMELIORATION);
     static Pre_Equipement fleche_plusP3 = new Pre_Equipement("Flèches chamaniques", AUTRE, PROMOTION, Effet_equip.ARCA, Promo_Type.AMELIORATION);
     static Pre_Equipement rune_arca = new Pre_Equipement("Rune arcanique", RUNE, PROMOTION, Effet_equip.RUNE_ARCA, Promo_Type.AMELIORATION);
-    static Pre_Equipement antidote = new Pre_Equipement("Vin d'Asclépios", CONSO_MAIN, PROMOTION,  Effet_equip.ANTIDODE, Promo_Type.AMELIORATION);
+    static Pre_Equipement antidote = new Pre_Equipement("Vin d'Asclépios", CONSO_MAIN, PROMOTION, Effet_equip.ANTIDODE, Promo_Type.AMELIORATION);
 
     static Pre_Equipement[] prom_list_boost = {broches, tal_ar, tal_a, tal_r, fleche_plusP, fleche_plusP2, fleche_plusP3,
             rune_arca, antidote};

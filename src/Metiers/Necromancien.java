@@ -35,37 +35,37 @@ public class Necromancien extends Joueur {
 
     @Override
     protected void actualiser_niveau() {
-        if(this.niveau >= 1){
+        if (this.niveau >= 1) {
             add_competence("Zombification");
         }
-        if(this.niveau >= 2){
+        if (this.niveau >= 2) {
             add_competence("Ressurection");
         }
-        if(this.niveau >= 3){
+        if (this.niveau >= 3) {
             pp_sacrifice += 1;
         }
-        if(this.niveau >= 4){
+        if (this.niveau >= 4) {
             nb_item += 2;
             nb_piece += 4;
         }
-        if(this.niveau >= 5){
+        if (this.niveau >= 5) {
             this.vie += 1;
             add_competence("Appel des morts");
         }
-        if(this.niveau >= 6){
+        if (this.niveau >= 6) {
             nb_piece += 2;
             nb_item += 1;
             pp_sacrifice += 1;
         }
-        if(this.niveau >= 7){
+        if (this.niveau >= 7) {
             this.PP_max += 1;
             this.PP_value += 1;
         }
-        if(this.niveau >= 8){
+        if (this.niveau >= 8) {
             nb_item += 1;
             nb_piece += 2;
         }
-        if(this.niveau >= 10){
+        if (this.niveau >= 10) {
             pp_sacrifice += 1;
             PP_max += 1;
         }
@@ -74,13 +74,13 @@ public class Necromancien extends Joueur {
     @Override
     protected void lvl_up() {
         int temp = this.niveau;
-        if(temp < 0){
+        if (temp < 0) {
             temp = 0;
         }
-        if(temp > 11){
+        if (temp > 11) {
             temp = 11;
         }
-        String text = switch(temp){
+        String text = switch (temp) {
             case 0 -> "Error : this function is not suposed to be called at level 0.";
             case 1 -> {
                 add_competence("Zombification");
@@ -105,13 +105,13 @@ public class Necromancien extends Joueur {
                 yield "Votre résistance a augmentée.\nNouvelle compétence débloquée !";
             }
             case 6 -> {
-                    nb_piece += 2;
-                    nb_item += 1;
-                    pp_sacrifice += 1;
-                    yield """
-                    Vos compétence de thaumaturge ont été légèrement renforcées.
-                    Vos sacrifices ont été légèrement renforcés.
-                    Vos compétence de zombifications ont été légèrement renforcées.""";
+                nb_piece += 2;
+                nb_item += 1;
+                pp_sacrifice += 1;
+                yield """
+                        Vos compétence de thaumaturge ont été légèrement renforcées.
+                        Vos sacrifices ont été légèrement renforcés.
+                        Vos compétence de zombifications ont été légèrement renforcées.""";
             }
             case 7 -> {
                 this.PP_max += 1;
@@ -123,19 +123,20 @@ public class Necromancien extends Joueur {
                 nb_piece += 2;
                 yield "Vos compétence de thaumaturge ont été légèrement renforcées.\nVos compétence de résurection ont été renforcées.";
             }
-            case 9 -> "Vos compétence de zombification ont été légèrement augmentées.\nVos compétences en appels des morts " +
-                    "ont été légèrement augmentées.";
+            case 9 ->
+                    "Vos compétence de zombification ont été légèrement augmentées.\nVos compétences en appels des morts " +
+                            "ont été légèrement augmentées.";
             case 10 -> {
-                    pp_sacrifice += 1;
-                    PP_max += 1;
-                    yield """
-                    Nouvelles recettes débloquées.
-                    Vos compétence de zombification ont été légèrement renforcées.
-                    Vos compétence en appels des morts ont été légèrement renforcées.
-                    Vos compétence en malédiction ont été légèrements renforcées.
-                    Vos sacrifices ont été légèrement renforcés.
-                    Votre réserve de mana a augmentée.
-                    """;
+                pp_sacrifice += 1;
+                PP_max += 1;
+                yield """
+                        Nouvelles recettes débloquées.
+                        Vos compétence de zombification ont été légèrement renforcées.
+                        Vos compétence en appels des morts ont été légèrement renforcées.
+                        Vos compétence en malédiction ont été légèrements renforcées.
+                        Vos sacrifices ont été légèrement renforcés.
+                        Votre réserve de mana a augmentée.
+                        """;
             }
             case 11 -> "Vous avez atteint le niveau max (frappe le dev c'est sa faute).";
             default -> throw new IllegalStateException("Unexpected value: " + temp);
@@ -144,7 +145,7 @@ public class Necromancien extends Joueur {
     }
 
     @Override
-    protected void presente_caracteristique(){
+    protected void presente_caracteristique() {
         System.out.println("Thaumaturge : Quand il meurt, un thaumaturge peut emporter avec lui " + nb_item +
                 " pièces d'équipements de son choix et " + nb_piece + "PO dans l'au-delà.");
     }
@@ -170,12 +171,12 @@ public class Necromancien extends Joueur {
         return metier;
     }
 
-    protected String nomMetier(){
+    protected String nomMetier() {
         return "mage noir";
     }
 
     @Override
-    public void mort_def(){
+    public void mort_def() {
         super.mort_def();
         System.out.println("Grace à vos talent de thaumaturge, vous conservez vos modifications physiques et emportez" +
                 "avec vous " + nb_piece + "PO et " + nb_item + " de vos items de votre choix (vous devez entrer à nouveau les effets cachées).");
@@ -188,12 +189,12 @@ public class Necromancien extends Joueur {
     }
 
     @Override
-    public String text_tour(){
+    public String text_tour() {
         String text = "";
-        if(this.niveau >= 5){
+        if (this.niveau >= 5) {
             text += "/(ap)pel des morts";
         }
-        if(a_familier()){
+        if (a_familier()) {
             text += "/(sa)crifier son familier";
         }
         return text;
@@ -201,9 +202,9 @@ public class Necromancien extends Joueur {
 
     @Override
     public boolean tour(String choix) throws IOException {
-        switch(choix) {
+        switch (choix) {
             case "ap" -> {
-                if(this.niveau >= 5) {
+                if (this.niveau >= 5) {
                     necromancie();
                     return true;
                 }
@@ -228,10 +229,10 @@ public class Necromancien extends Joueur {
 
     @Override
     public Action action(String choix, boolean est_familier) throws IOException {
-        if(est_familier){
+        if (est_familier) {
             return super.action(choix, true);
         }
-        if(choix.equals("ma") && !est_berserk() && !a_maudit) {
+        if (choix.equals("ma") && !est_berserk() && !a_maudit) {
             return Action.MAUDIR;
         }
         return super.action(choix, false);
@@ -248,8 +249,8 @@ public class Necromancien extends Joueur {
     }
 
     @Override
-    public boolean action_consomme_popo(Action action){
-        if(action == Action.MAUDIR){
+    public boolean action_consomme_popo(Action action) {
+        if (action == Action.MAUDIR) {
             return true;
         }
         return super.action_consomme_popo(action);
@@ -257,22 +258,19 @@ public class Necromancien extends Joueur {
 
     @Override
     public boolean ajouter_familier(int obeissance) throws IOException {
-        if (a_familier()){
-            if(Input.yn(nom + " possède déjà un familier, voulez vous ...'remplacer' l'ancien ? ")) {
+        if (a_familier()) {
+            if (Input.yn(nom + " possède déjà un familier, voulez vous ...'remplacer' l'ancien ? ")) {
                 System.out.println("Vous recupérez " + pp_sacrifice + "PP grâce au sacrifice de votre ancien compagnon.\n");
                 setOb(obeissance);
                 return true;
-            }
-            else{
+            } else {
                 System.out.println("Le nouveau venu a été convertie en " + pp_sacrifice + "PP.");
                 return false;
             }
-        }
-        else if(Input.yn("Voulez vous sacrifier votre nouveau familier ?")) {
+        } else if (Input.yn("Voulez vous sacrifier votre nouveau familier ?")) {
             System.out.println("Le nouveau venu a été convertie en " + pp_sacrifice + "PP.");
             return false;
-        }
-        else{
+        } else {
             setOb(obeissance);
             return true;
         }
@@ -285,17 +283,16 @@ public class Necromancien extends Joueur {
 
     @Override
     public boolean ressuciter(int malus) throws IOException {
-        if(this.niveau < 2){
+        if (this.niveau < 2) {
             return false;
         }
         if (malus > 5) {
             malus = 5;
         }
-        if(this.niveau >= 4){
+        if (this.niveau >= 4) {
             malus -= 1;
         }
-        if(this.niveau >= 8)
-        {
+        if (this.niveau >= 8) {
             malus -= 2;
         }
         int jet = Input.D8() - malus + rand.nextInt(3) - 1;
@@ -315,6 +312,7 @@ public class Necromancien extends Joueur {
 
     /**
      * Applique l'effet de la compétence "malédiction"
+     *
      * @param ennemi la cible de la malédiction
      * @throws IOException toujours
      */
@@ -323,13 +321,13 @@ public class Necromancien extends Joueur {
         int boost = rand.nextInt(3);
         int boost_lvl = 0;
         int[] paliers = {3, 7, 7, 10};
-        for(int palier : paliers){
-            if(this.niveau >= palier){
+        for (int palier : paliers) {
+            if (this.niveau >= palier) {
                 boost += 1;
                 boost_lvl += 1;
             }
         }
-        switch (Input.D6() + boost_lvl){
+        switch (Input.D6() + boost_lvl) {
             case 2 -> {
                 System.out.println("Vous maudissez faiblement " + ennemi.getNom() + ".");
                 ennemi.bostVie(-(1 + boost), true);
@@ -359,6 +357,7 @@ public class Necromancien extends Joueur {
 
     /**
      * Indique le résultat de la compétence "appel des morts"
+     *
      * @throws IOException toujours
      */
     private void necromancie() throws IOException {
@@ -367,10 +366,10 @@ public class Necromancien extends Joueur {
         System.out.println("Combien de PP mettez vous dans le sort ? (min 4) : ");
         int mana = Input.readInt();
         int jet = Input.D8() + mana + rand.nextInt(2) - 1;
-        if(this.niveau >= 9){
+        if (this.niveau >= 9) {
             jet += 1;
         }
-        if(this.niveau >= 10){
+        if (this.niveau >= 10) {
             jet += 1;
         }
         String monstre_nom;
@@ -381,36 +380,31 @@ public class Necromancien extends Joueur {
             m.bostVie(-9, true);
             m.bostArmure(-4, true);
             ob = 1 + rand.nextInt(2);
-        }
-        else if (jet <= 8) {
+        } else if (jet <= 8) {
             monstre_nom = "zombie écorché";
             m.bostAtk(-5, true);
             m.bostVie(-7, true);
             m.bostArmure(-4, true);
             ob = 1 + rand.nextInt(2);
-        }
-        else if (jet <= 11) {
+        } else if (jet <= 11) {
             monstre_nom = "esprit vengeur";
             m.bostAtk(3, true);
             m.bostVie(-7, true);
             m.bostArmure(-4, true);
             ob = 2 + rand.nextInt(3);
-        }
-        else if (jet <= 13) {
+        } else if (jet <= 13) {
             monstre_nom = "squellette blindé";
             m.bostAtk(-3, true);
             m.bostVie(4, true);
             m.bostArmure(1, true);
             ob = 3 + rand.nextInt(4);
-        }
-        else if (jet <= 15) {
+        } else if (jet <= 15) {
             monstre_nom = "abomination vengeresse";
             m.bostAtk(2, true);
             m.bostVie(4, true);
             m.bostArmure(0, true);
             ob = 3 + rand.nextInt(4);
-        }
-        else {
+        } else {
             monstre_nom = "Ancien gardien";
             m.bostAtk(3, true);
             m.bostVie(7, true);
@@ -423,28 +417,28 @@ public class Necromancien extends Joueur {
     }
 
 
-
     /**
      * Tente de ressuciter un ennemi par nécromancie, et l'ajoute en tant que familier le cas échéant
+     *
      * @param ennemi le monstre à ressuciter
      * @return la variation de l'état du familier
      * @throws IOException toujours
      */
-    private int zombifier (Monstre ennemi) throws IOException {
+    private int zombifier(Monstre ennemi) throws IOException {
         int jet = Input.D8() + (ennemi.getEtat() / 10) - 1;
         int[] paliers = {6, 9, 10};
-        for(int palier : paliers){
-            if(this.niveau >= palier){
+        for (int palier : paliers) {
+            if (this.niveau >= palier) {
                 jet += 1;
             }
         }
-        if(jet > 8 && niveau < 9){
+        if (jet > 8 && niveau < 9) {
             jet = 8;
         }
-        if(jet > 8 && jet < 11){
+        if (jet > 8 && jet < 11) {
             jet = 8;
         }
-        if(jet >= 11){
+        if (jet >= 11) {
             jet = 9;
         }
         int retour;
@@ -488,7 +482,7 @@ public class Necromancien extends Joueur {
             }
         }
         ennemi.presente_familier();
-        if(ajouter_familier(2)) {
+        if (ajouter_familier(2)) {
             return -100;
         }
         return retour - rand.nextInt(4); //pénalité de sacrifice
@@ -502,5 +496,4 @@ public class Necromancien extends Joueur {
             }
         }
     }
-
 }

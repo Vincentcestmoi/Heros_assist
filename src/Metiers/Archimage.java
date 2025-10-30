@@ -30,65 +30,65 @@ public class Archimage extends Joueur {
 
     @Override
     protected void actualiser_niveau() {
-        if(this.niveau >= 2){
+        if (this.niveau >= 2) {
             add_competence("Purge");
         }
-        if(this.niveau >= 3){
+        if (this.niveau >= 3) {
             add_caracteristique("Double sort");
         }
-        if(this.niveau >= 4){
+        if (this.niveau >= 4) {
             this.PP_max += 1;
             this.PP_value += 1;
             add_caracteristique("Maitre du mana");
         }
-        if(this.niveau >= 6){
+        if (this.niveau >= 6) {
             this.PP_max += 1;
             this.purge_cout -= 1;
         }
-        if(this.niveau >= 7){
+        if (this.niveau >= 7) {
             this.PP_value += 1;
             this.PP_max += 2;
         }
-        if(this.niveau >= 8){
+        if (this.niveau >= 8) {
             this.purge_cout -= 1;
         }
-        if(this.niveau >= 9){
+        if (this.niveau >= 9) {
             this.PP_max += 1;
             this.PP_value += 1;
         }
-        if(this.niveau >= 10){
+        if (this.niveau >= 10) {
             this.PP_max += 1;
         }
     }
 
     @Override
-    protected void presente_caracteristique(){
+    protected void presente_caracteristique() {
         System.out.println("Manchot : N'a qu'un bras.");
         System.out.println("Bruyant : Inflige un malus aux jets d'explorations.");
         System.out.println("Fier : N'utilise aucune magie autre que ses sorts d'archimage.");
         System.out.println("Addiction au mana : Votre corps ne peut se passer de mana.");
-        if(this.niveau >= 3) {
+        if (this.niveau >= 3) {
             System.out.println("Double sort : Permet de lancer deux sorts avec l'action Sort.");
         }
     }
 
     @Override
-    protected void presente_pouvoir(){
+    protected void presente_pouvoir() {
         System.out.println("Sort : Lance un puissant sort. L'intensité des sorts varie selon la quantité de mana utilisée.");
         affiche_sorts();
         System.out.println("Méditation : Se repose pour récuperer du mana.");
-        if(this.niveau >= 2) {
+        if (this.niveau >= 2) {
             System.out.println("Purge : sort curatif, pour " + purge_cout + " mana, guérie des alterations d'états.");
         }
     }
 
-    private void affiche_sorts(){
+    private void affiche_sorts() {
         System.out.println("\tBoule de feu : sort de feu, pour 2 mana ou plus, lance un sort offensif léger.");
         System.out.println("\tOnde de choc : sort sonore, pour 3 mana, étourdit tous les participants à l'exception du lanceur.");
-        if(this.niveau >= 1){
+        if (this.niveau >= 1) {
             System.out.println("\tArmure de glace : sort de glace, pour 3 mana ou plus, augmente la résistance d'une cible.");
         }
-        if(this.niveau >= 5){
+        if (this.niveau >= 5) {
             System.out.println("\tFoudre : sort de foudre, pour 7 mana ou plus, lance un puissant sort offensif.");
         }
     }
@@ -97,20 +97,20 @@ public class Archimage extends Joueur {
         return metier;
     }
 
-    protected String nomMetier(){
+    protected String nomMetier() {
         return "archimage";
     }
 
     @Override
     void lvl_up() {
         int temp = this.niveau;
-        if(temp < 0){
+        if (temp < 0) {
             temp = 0;
         }
-        if(temp > 11){
+        if (temp > 11) {
             temp = 11;
         }
-        String text = switch(temp){
+        String text = switch (temp) {
             case 0 -> "Error : this function is not suposed to be called at level 0.";
             case 1 -> "Nouveau sort débloqué !"; //AdG
             case 2 -> {
@@ -171,11 +171,11 @@ public class Archimage extends Joueur {
             case 10 -> {
                 PP_max += 1;
                 yield """
-                    Votre réserve de mana a légèrement augmentée.
-                    Vos sorts de feu ont été légèrement améliorés.
-                    Vos sorts de glace ont été légèrement améliorés.
-                    Vos sorts de foudre ont été améliorés.
-                    """;
+                        Votre réserve de mana a légèrement augmentée.
+                        Vos sorts de feu ont été légèrement améliorés.
+                        Vos sorts de glace ont été légèrement améliorés.
+                        Vos sorts de foudre ont été améliorés.
+                        """;
             }
             case 11 -> "Vous avez atteint le niveau max (frappe le dev c'est sa faute).";
             default -> throw new IllegalStateException("Unexpected value: " + temp);
@@ -184,13 +184,13 @@ public class Archimage extends Joueur {
     }
 
     @Override
-    public String text_tour(){
-        return  "/(me)ditation";
+    public String text_tour() {
+        return "/(me)ditation";
     }
 
     @Override
     public boolean tour(String choix) throws IOException {
-        if(choix.equalsIgnoreCase("me")){
+        if (choix.equalsIgnoreCase("me")) {
             meditation();
             return true;
         }
@@ -199,7 +199,7 @@ public class Archimage extends Joueur {
 
     @Override
     public void addiction() throws IOException {
-        if(Input.yn("Votre mana est-il descendu à 0 ?")){
+        if (Input.yn("Votre mana est-il descendu à 0 ?")) {
             mana_addiction();
         }
     }
@@ -209,7 +209,7 @@ public class Archimage extends Joueur {
         String text = super.text_action();
         if (!est_berserk()) {
             text += "/(me)ditation/(so)rt";
-            if(this.niveau >= 2 && (a_cecite() || poison1 || poison2)){
+            if (this.niveau >= 2 && (a_cecite() || poison1 || poison2)) {
                 text += "/(pu)rge";
             }
         }
@@ -218,10 +218,10 @@ public class Archimage extends Joueur {
 
     @Override
     public Action action(String choix, boolean est_familier) throws IOException {
-        if(est_familier){
+        if (est_familier) {
             return super.action(choix, true);
         }
-        switch(choix) {
+        switch (choix) {
             case "me" -> {
                 if (!est_berserk()) {
                     return Action.MEDITATION;
@@ -233,7 +233,7 @@ public class Archimage extends Joueur {
                 }
             }
             case "pu" -> {
-                if(!est_berserk() && (a_cecite() || poison1 || poison2)){
+                if (!est_berserk() && (a_cecite() || poison1 || poison2)) {
                     return Action.PURGE;
                 }
             }
@@ -243,7 +243,7 @@ public class Archimage extends Joueur {
 
     @Override
     public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
-        switch(action) {
+        switch (action) {
             case MEDITATION -> {
                 meditation();
                 return false;
@@ -261,26 +261,24 @@ public class Archimage extends Joueur {
     }
 
     @Override
-    public int bonus_exploration(){
+    public int bonus_exploration() {
         return rand.nextInt(2) - 1 /* bruyant */;
     }
 
     @Override
     public void essaie_reveil() throws IOException {
         // l'archimage peut se réveiller via un sort
-        if(est_assomme()) {
+        if (est_assomme()) {
             if (this.niveau >= 2 && Input.yn("Utiliser purge (" + purge_cout + "mana) pour reprendre conscience ?")) {
                 purge();
             }
-        }
-        else{
+        } else {
             super.essaie_reveil();
         }
-        if(est_assomme()){
-            if(this.niveau >= 8) {
+        if (est_assomme()) {
+            if (this.niveau >= 8) {
                 System.out.println(nom + " récupère 2 points de mana.");
-            }
-            else if(this.niveau >= 4) {
+            } else if (this.niveau >= 4) {
                 System.out.println(nom + " récupère 1 point de mana.");
             }
         }
@@ -290,22 +288,21 @@ public class Archimage extends Joueur {
      * Utilise la compétence purge, retire ou
      * diminue les altértions d'états.
      */
-    void purge(){
-        if(est_assomme()) {
+    void purge() {
+        if (est_assomme()) {
             System.out.println(nom + " se réveille.\n");
             conscient = true;
             reveil = 0;
         }
-        if(cecite){
+        if (cecite) {
             System.out.println(nom + " recouvre la vue.");
             cecite = false;
         }
-        if(this.poison2 && this.niveau < 6){
+        if (this.poison2 && this.niveau < 6) {
             System.out.println("Le poison dans le corps de " + nom + " s'affaiblit.");
             this.poison2 = false;
             this.poison1 = true;
-        }
-        else if(this.poison2 || this.poison1){
+        } else if (this.poison2 || this.poison1) {
             System.out.println("Le poison dans le corps dr " + nom + " se dissipe.");
             this.poison2 = false;
             this.poison1 = false;
@@ -314,25 +311,26 @@ public class Archimage extends Joueur {
 
     /**
      * Permet à l'archimage de lancer ses sorts
+     *
      * @param ennemi le monstre ennemi
      * @throws IOException toujours
      */
     private void sort(Monstre ennemi) throws IOException {
         lancer_sort(ennemi);
-        if(ennemi.est_mort()){
+        if (ennemi.est_mort()) {
             return;
         }
-        if(Input.yn("Votre mana est-il tombé à 0 ?")){
-            if(mana_addiction()){
+        if (Input.yn("Votre mana est-il tombé à 0 ?")) {
+            if (mana_addiction()) {
                 return;
             }
         }
-        if(this.niveau < 3){ //single casting
+        if (this.niveau < 3) { //single casting
             return;
         }
         System.out.println("Vous préparez votre second sort.");
         lancer_sort(ennemi);
-        if(Input.yn("Votre mana est-il tombé à 0 ?")){
+        if (Input.yn("Votre mana est-il tombé à 0 ?")) {
             mana_addiction();
         }
     }
@@ -343,15 +341,15 @@ public class Archimage extends Joueur {
      */
     private void lancer_sort(Monstre ennemi) throws IOException {
         String text = "Quel sort voulez vous lancer : (bo)ule de feu/(on)de de choc";
-        if(this.niveau >= 1) {
+        if (this.niveau >= 1) {
             text += "/(ar)mure de glace";
         }
-        if(this.niveau >= 5){
+        if (this.niveau >= 5) {
             text += "/(fo)udre";
         }
         text += " ?";
         System.out.println(text);
-        switch(Input.read().toLowerCase()){
+        switch (Input.read().toLowerCase()) {
             case "bo" -> boule_de_feu(ennemi);
             case "on" -> onde_choc(ennemi);
             case "ar" -> armure_de_glace();
@@ -365,27 +363,25 @@ public class Archimage extends Joueur {
 
     /**
      * Affiche les bienfaits de la méditation
+     *
      * @throws IOException toujours
      */
     void meditation() throws IOException {
         int jet = Input.D6() + rand.nextInt(3) - 1;
         int recup = 0;
-        if(this.niveau >= 6){
+        if (this.niveau >= 6) {
             recup += 1;
         }
-        if(this.niveau >= 9){
+        if (this.niveau >= 9) {
             recup += 1;
         }
         if (jet <= 2) {
             recup += 1;
-        }
-        else if(jet <= 4) {
+        } else if (jet <= 4) {
             recup += 2;
-        }
-        else if(jet <= 7) {
+        } else if (jet <= 7) {
             recup += 3;
-        }
-        else{
+        } else {
             recup += 4;
         }
         System.out.println("Vous récupérez " + recup + "PP.");
@@ -393,17 +389,18 @@ public class Archimage extends Joueur {
 
     /**
      * Applique les effets de la compétence "Onde de choc"
+     *
      * @param ennemi le monstre adverse
      * @throws IOException toujours
      */
     private void onde_choc(Monstre ennemi) throws IOException {
 
         int bonus = 0;
-        if(this.niveau >= 7){
+        if (this.niveau >= 7) {
             bonus = 1;
         }
         // sur les participants sauf le lanceur
-        for(int i = 0; i < Main.nbj; i++) {
+        for (int i = 0; i < Main.nbj; i++) {
             Joueur joueur = Main.joueurs[i];
             if (joueur != this && joueur.est_actif()) {
                 joueur.choc(bonus);
@@ -413,7 +410,7 @@ public class Archimage extends Joueur {
         // sur l'ennemi
         System.out.println(ennemi.getNom() + " est frappé par l'onde de choc.");
         System.out.print(this.getNom() + " : ");
-        switch (Input.D6() + bonus){
+        switch (Input.D6() + bonus) {
             case 2 -> ennemi.do_etourdi();
             case 3, 4 -> ennemi.affecte();
             case 5, 6, 7 -> ennemi.do_assomme();
@@ -423,6 +420,7 @@ public class Archimage extends Joueur {
 
     /**
      * Calcule et applique les dommages de la compétence "boule de feu"
+     *
      * @param ennemi la cible du sort
      * @throws IOException toujours
      */
@@ -430,10 +428,10 @@ public class Archimage extends Joueur {
         System.out.println("Vous vous préparez à lancer une boule de feu.");
         System.out.println("Combien de PP mettez vous dans le sort ? (min 2)");
         int mana = Input.readInt();
-        int jet = Input.D4() + mana + rand.nextInt(3) - 1 ;
+        int jet = Input.D4() + mana + rand.nextInt(3) - 1;
         int[] paliers = {4, 7, 10};
-        for(int palier : paliers){
-            if(this.niveau >= palier){
+        for (int palier : paliers) {
+            if (this.niveau >= palier) {
                 jet += 1;
             }
         }
@@ -441,45 +439,37 @@ public class Archimage extends Joueur {
         if (jet <= 2 || mana < 2) {
             System.out.println("Le sort ne fonctionne pas.");
             return;
-        }
-        else if (jet <= 4) {
+        } else if (jet <= 4) {
             System.out.println("Vous lancez une pitoyable boule de feu sur " + ennemi.getNom() + ".");
             dmg = 3;
-        }
-        else if (jet <= 6) {
+        } else if (jet <= 6) {
             System.out.println("Vous lancez une boule de feu sur " + ennemi.getNom() + ".");
             dmg = 6;
-        }
-        else if (jet <= 9) {
+        } else if (jet <= 9) {
             System.out.println("Vous lancez une impressionnante boule de feu sur " + ennemi.getNom() + ".");
             dmg = 8;
-        }
-        else if (jet == 10) {
+        } else if (jet == 10) {
             System.out.println("Un brasier s'abat sur " + ennemi.getNom() + " !");
             dmg = 11;
-        }
-        else if (jet == 11) {
+        } else if (jet == 11) {
             System.out.println("Un brasier s'abat sur " + ennemi.getNom() + " !");
             dmg = 13;
-            if(rand.nextBoolean()){
+            if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
-        }
-        else if (jet == 12) {
+        } else if (jet == 12) {
             System.out.println("Une tornade de flamme s'abat violement sur " + ennemi.getNom() + " !");
             dmg = 15;
-            if(rand.nextBoolean()){
+            if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
-        }
-        else if (jet == 13) {
+        } else if (jet == 13) {
             System.out.println("Une torent de flamme percute " + ennemi.getNom() + " brutalement !");
             dmg = 16;
-            if(rand.nextBoolean()){
+            if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
-        }
-        else{
+        } else {
             System.out.println("Les flammes de l'enfers brûlent intensemment " + ennemi.getNom() + ".");
             dmg = 18;
             ennemi.affecte();
@@ -489,6 +479,7 @@ public class Archimage extends Joueur {
 
     /**
      * Indique l'efficacité de la compétence "armure de glace"
+     *
      * @throws IOException toujours
      */
     public void armure_de_glace() throws IOException {
@@ -497,8 +488,8 @@ public class Archimage extends Joueur {
         int mana = Input.readInt();
         int jet = Input.D8() + mana + rand.nextInt(3) - 1;
         int[] paliers = {6, 8, 10};
-        for(int palier : paliers){
-            if(this.niveau >= palier){
+        for (int palier : paliers) {
+            if (this.niveau >= palier) {
                 jet += 1;
             }
         }
@@ -527,6 +518,7 @@ public class Archimage extends Joueur {
 
     /**
      * Calcule et applique les dommages de la compétence "foudre"
+     *
      * @param ennemi la cible du sort
      * @throws IOException toujours
      */
@@ -594,25 +586,24 @@ public class Archimage extends Joueur {
 
     /**
      * Applique les compétences "addiction au mana" et "maitre du mana" de l'archimage
+     *
      * @return si le joueur perd connaissance
      * @throws IOException toujours
      */
     private boolean mana_addiction() throws IOException {
         int jet = Input.D4() + rand.nextInt(3) - 1;
-        if(this.niveau >= 8){
+        if (this.niveau >= 8) {
             jet -= 1;
         }
         if (jet < 4) {
             System.out.println("Vous perdez connaissance.");
-            if(this.niveau >= 8){
+            if (this.niveau >= 8) {
                 assomme(-1);
-            }
-            else{
+            } else {
                 assomme();
             }
             return true;
-        }
-        else {
+        } else {
             jet = 0;
             if (this.niveau >= 8) {
                 jet += 1;
@@ -623,5 +614,4 @@ public class Archimage extends Joueur {
         }
         return false;
     }
-
 }

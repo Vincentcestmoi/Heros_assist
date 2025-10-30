@@ -22,7 +22,7 @@ import static java.lang.Math.max;
 
 
 public class Main {
-    
+
     static final Random rand = new Random();
     static final int nbj_max = 8;
 
@@ -32,13 +32,13 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        if(!Arrays.equals(args, new String[]{}))
+        if (!Arrays.equals(args, new String[]{}))
             Path = Integer.parseInt(args[0]);
 
         if (!Input.load()) {
             init_game();
         }
-        
+
         boolean run = true;
         int i = nbj;
         while (run) {
@@ -46,7 +46,7 @@ public class Main {
                 SaveManager.sauvegarder(true); // sauvegarde auto
                 i = 0;
             }
-            
+
             //tour de jeu
             Joueur joueur = joueurs[i];
             System.out.println(joueur.getNom() + " c'est votre tour, vous êtes " + texte_pos(joueur.getPosition()) + ".");
@@ -74,7 +74,7 @@ public class Main {
                 }
                 case FAMILIER_MOINS -> {
                     joueur.perdre_familier();
-                    i --;
+                    i--;
                 }
                 case STAT -> {
                     joueur.presente_detail();
@@ -85,7 +85,7 @@ public class Main {
             System.out.println();
             i++;
         }
-        
+
         //arrêt
         System.out.println("Sauvegarde des données joueurs.");
         SaveManager.sauvegarder(false);
@@ -103,6 +103,7 @@ public class Main {
 
     /**
      * Gère le départ en expédition et ses conscéquences
+     *
      * @param meneur le joueur principal
      * @throws IOException sans problème
      */
@@ -122,9 +123,9 @@ public class Main {
     static void expedition_enfer(int meneur) throws IOException {
         Monstre monstre = Lieu.enfers();
         int jet = Input.D4() + joueurs[meneur].bonus_exploration();
-        if(jet == 1 && rand.nextBoolean()){
+        if (jet == 1 && rand.nextBoolean()) {
             jet = 0;
-        } else if(jet > 5){
+        } else if (jet > 5) {
             jet = 5;
         }
         switch (jet) {
@@ -159,7 +160,7 @@ public class Main {
     static void expedition_prairie(int meneur) throws IOException {
         Monstre monstre = Lieu.prairie();
         int jet = Input.D6() + joueurs[meneur].bonus_exploration();
-        if(jet > 7){
+        if (jet > 7) {
             jet = 7;
         }
         switch (jet) {
@@ -175,11 +176,9 @@ public class Main {
             case 6, 7 -> {
                 if (rand.nextBoolean()) {
                     Equipement.drop_1();
-                }
-                else if (rand.nextBoolean()) {
+                } else if (rand.nextBoolean()) {
                     Equipement.drop_0();
-                }
-                else {
+                } else {
                     System.out.println("Vous apercevez un(e) " + monstre.getNom());
                     if (Input.yn("Voulez vous l'attaquer ?")) {
                         Combat.affrontement(Position.PRAIRIE, -1, monstre);
@@ -198,7 +197,7 @@ public class Main {
     static void expedition_vigne(int meneur) throws IOException {
         Monstre monstre = Lieu.vigne();
         int jet = Input.D6() + joueurs[meneur].bonus_exploration();
-        if(jet > 7){
+        if (jet > 7) {
             jet = 7;
         }
         switch (jet) {
@@ -217,11 +216,9 @@ public class Main {
                     for (int i = 0; i <= t; i++) {
                         Equipement.drop_1();
                     }
-                }
-                else if (rand.nextBoolean()) {
+                } else if (rand.nextBoolean()) {
                     Equipement.drop_0();
-                }
-                else {
+                } else {
                     System.out.println("Vous apercevez un(e) " + monstre.getNom());
                     if (Input.yn("Voulez vous l'attaquer ?")) {
                         Combat.affrontement(Position.VIGNES, -1, monstre);
@@ -247,7 +244,7 @@ public class Main {
     static void expedition_temple(int meneur) throws IOException {
         Monstre monstre = Lieu.temple();
         int jet = Input.D8() + joueurs[meneur].bonus_exploration();
-        if(jet > 9){
+        if (jet > 9) {
             jet = 9;
         }
         switch (jet) {
@@ -290,7 +287,7 @@ public class Main {
     static void expedition_mer(int meneur) throws IOException {
         Monstre monstre = Lieu.mer();
         int jet = Input.D8() + joueurs[meneur].bonus_exploration();
-        if(jet > 9){
+        if (jet > 9) {
             jet = 9;
         }
         switch (jet) {
@@ -333,7 +330,7 @@ public class Main {
     static void expedition_mont(int meneur) throws IOException {
         Monstre monstre = Lieu.mont();
         int jet = Input.D12() + joueurs[meneur].bonus_exploration();
-        if(jet > 13){
+        if (jet > 13) {
             jet = 13;
         }
         switch (jet) {
@@ -369,7 +366,7 @@ public class Main {
     static void expedition_olympe(int meneur) throws IOException {
         Monstre monstre = Lieu.olympe();
         int jet = Input.D20() + joueurs[meneur].bonus_exploration();
-        if(jet > 21){
+        if (jet > 21) {
             jet = 21;
         }
         switch (jet) {
@@ -394,6 +391,7 @@ public class Main {
 
     /**
      * Renvoie un texte du lieu
+     *
      * @param p la position à donner
      * @return un String nommant le lieu (avec un déterminant)
      */
@@ -413,6 +411,7 @@ public class Main {
 
     /**
      * Initialise les paramètres d'une partie de zéro
+     *
      * @throws IOException toujours
      */
     private static void init_game() throws IOException {
@@ -421,45 +420,45 @@ public class Main {
         do {
             System.out.print("Entrez le nom de la sauvegarde :");
             titre = Input.read();
-            if(titre.contains(":") || titre.contains("\"") || titre.contains("}") || titre.contains("{")){
+            if (titre.contains(":") || titre.contains("\"") || titre.contains("}") || titre.contains("{")) {
                 System.out.println("Le titre ne peut pas contenir les caractères ':', '\"', et '}' !");
                 titre = ":";
             }
-            if(titre.isEmpty() || titre.equals("\n")){
+            if (titre.isEmpty() || titre.equals("\n")) {
                 titre = ":";
             }
-        }while(titre.equals(":") || !Input.yn("Confirmez vous le titre : " + titre + "?"));
+        } while (titre.equals(":") || !Input.yn("Confirmez vous le titre : " + titre + "?"));
 
         //nbj
         System.out.print("Entrez le nombre de joueur :");
         Main.nbj = Input.readInt();
-        while(Main.nbj <= 0 || Main.nbj > Main.nbj_max) {
-            System.out.println("Impossible, le nombre de joueur doit être comprit entre 1 et " + Main.nbj_max +".");
+        while (Main.nbj <= 0 || Main.nbj > Main.nbj_max) {
+            System.out.println("Impossible, le nombre de joueur doit être comprit entre 1 et " + Main.nbj_max + ".");
             Main.nbj = Input.readInt();
         }
 
         joueurs = new Joueur[Main.nbj];
-        for(int i = 0; i < Main.nbj; i++) { //pour chaque joueur
+        for (int i = 0; i < Main.nbj; i++) { //pour chaque joueur
 
             // nom
             String nom;
-            do{
+            do {
                 System.out.println("Joueur " + (i + 1) + ", entrez votre nom :");
                 nom = Input.read();
-                if(nom.contains(":") || nom.contains("\"") || nom.contains("}") || nom.contains("{")){
+                if (nom.contains(":") || nom.contains("\"") || nom.contains("}") || nom.contains("{")) {
                     System.out.println("Le nom du joueur ne peut pas contenir les caractères ':', '\"', et '}' !");
                     nom = ":";
                 }
-                if(nom.isEmpty() || nom.equals("\n")){
+                if (nom.isEmpty() || nom.equals("\n")) {
                     nom = ":";
                 }
-            }while(nom.equals(":") || !Input.yn("Voulez vous confirmer le pseudo " + nom + " ?"));
+            } while (nom.equals(":") || !Input.yn("Voulez vous confirmer le pseudo " + nom + " ?"));
 
             // metier
             boolean run = true;
             Metier metier = Metier.TRYHARDER;
             String[] job = {"mage (no)ir", "archi(ma)ge", "(al)chimiste", "(gu)erriere", "(ra)nger", "(sh)aman", "(au)cun"};
-            while(run) {
+            while (run) {
                 run = false;
                 System.out.println(nom + ", choississez votre profession : ");
                 for (String s : job) {
@@ -472,7 +471,8 @@ public class Main {
                     case "al" -> metier = Metier.ALCHIMISTE;
                     case "gu" -> metier = Metier.GUERRIERE;
                     case "sh" -> metier = Metier.SHAMAN;
-                    case "au" -> {}
+                    case "au" -> {
+                    }
                     default -> {
                         System.out.println("Unknow Exterieur.Input");
                         run = true;
@@ -490,6 +490,7 @@ public class Main {
 
     /**
      * Renvoie l'arrondit de la valeur donnée minorée par 1.
+     *
      * @param valeur le float à corriger
      */
     public static int corriger(float valeur) {
@@ -498,20 +499,21 @@ public class Main {
 
     /**
      * Renvoie l'arrondit de la valeur donnée
-     * @param min un minorant au résultat
+     *
+     * @param min    un minorant au résultat
      * @param valeur le float à corriger
      */
-    public static int corriger(float valeur, int min){
+    public static int corriger(float valeur, int min) {
         return max(Math.round(valeur), min);
     }
 
     /**
      * Renvoie un parent divin aléatoire
+     *
      * @return un dieu
      */
-    public static Dieux get_parent(){
+    public static Dieux get_parent() {
         Dieux[] t = {Dieux.POSEIDON, Dieux.ZEUX, Dieux.HADES, Dieux.ARES, Dieux.DYONISOS, Dieux.APOLLON, Dieux.DEMETER};
         return t[rand.nextInt(t.length)];
     }
-
 }

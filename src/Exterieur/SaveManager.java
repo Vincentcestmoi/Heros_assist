@@ -38,6 +38,7 @@ public class SaveManager {
 
     /**
      * Charge les données d'une save
+     *
      * @return la liste des joueurs
      * @throws IOException toujours
      */
@@ -64,7 +65,8 @@ public class SaveManager {
 
     /**
      * Crée une sauvegarde de zéro
-     * @param titre le titre de la save
+     *
+     * @param titre         le titre de la save
      * @param nombreJoueurs le nombre de joueur
      * @throws IOException toujours
      */
@@ -74,7 +76,7 @@ public class SaveManager {
 
         if (!dir.exists()) {
             System.out.println("📁 Création du dossier " + dossier);
-            if(!dir.mkdir()){
+            if (!dir.mkdir()) {
                 throw new IOException("création dossier impossible.");
             }
         }
@@ -127,6 +129,7 @@ public class SaveManager {
 
     /**
      * Sauvegarde les données utilisateurs
+     *
      * @throws IOException toujours
      */
     public static void sauvegarder(boolean discret) throws IOException {

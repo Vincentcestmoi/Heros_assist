@@ -90,6 +90,7 @@ public abstract class Joueur {
 
     /**
      * Crée un joueur à partir de sa sauvegarde
+     *
      * @param chemin le nom du fichier où se trouve la sauvegarde
      * @return le joueur
      * @throws FileNotFoundException evidemment on cherche à charger un fichier
@@ -136,12 +137,13 @@ public abstract class Joueur {
 
     /**
      * Crée un joueur en fonction de ses données
-     * @param nom le nom du joueur à créer
+     *
+     * @param nom      le nom du joueur à créer
      * @param position la position du joueur à créer
-     * @param metier la classe du joueur à créer
-     * @param ob_f l'obéissance du joueur à créer (0 s'il n'en a pas).
-     * @param parent l'ancêtre divin du joueur à créer
-     * @param xp le total d'éxperience accumulée par lejoueur à créer
+     * @param metier   la classe du joueur à créer
+     * @param ob_f     l'obéissance du joueur à créer (0 s'il n'en a pas).
+     * @param parent   l'ancêtre divin du joueur à créer
+     * @param xp       le total d'éxperience accumulée par lejoueur à créer
      * @return le joueur
      */
     public static Joueur CreerJoueur(String nom, Position position, Metier metier, int ob_f, Dieux parent, int xp) {
@@ -158,12 +160,13 @@ public abstract class Joueur {
 
     /**
      * Met à jour les informations du personnage à partir de son niveau
+     *
      * @implNote : Ne dois pas être appellé, sauf par le super
      */
     protected abstract void actualiser_niveau();
 
     private void super_actualiser_niveau() {
-        if(this.niveau >= 6){
+        if (this.niveau >= 6) {
             this.attaque += 1;
         }
         actualiser_niveau();
@@ -198,20 +201,20 @@ public abstract class Joueur {
         System.out.println(nom + " descendant de " + getParent() + ", " + nomMetier() + " niveau " + this.niveau);
         System.out.print("Base : Résistance : " + this.vie);
         int temp = bonusResLieux();
-        if(temp > 0){
+        if (temp > 0) {
             System.out.print("(+" + temp + ")");
         }
         System.out.print(" ; attaque : " + this.attaque);
         temp = bonusAtkLieux();
-        if(temp > 0){
+        if (temp > 0) {
             System.out.print("(+" + temp + ")");
         }
         System.out.print(" ; armure : " + this.armure);
         temp = bonusArmLieux();
-        if(temp > 0){
+        if (temp > 0) {
             System.out.print("(+" + temp + ")");
         }
-        System.out.println( " ; " + this.PP + " : " + this.PP_value + "/" + this.PP_max);
+        System.out.println(" ; " + this.PP + " : " + this.PP_value + "/" + this.PP_max);
         System.out.println("Caractéristiques : " + this.caracteristique);
         System.out.println("Pouvoir : " + this.competences);
         System.out.println();
@@ -240,11 +243,11 @@ public abstract class Joueur {
 
     //************************************************GETTER**********************************************************//
 
-    public int getXp(){
+    public int getXp() {
         return xp;
     }
 
-    public Dieux getParent(){
+    public Dieux getParent() {
         return parent;
     }
 
@@ -252,8 +255,8 @@ public abstract class Joueur {
 
     abstract protected String nomMetier();
 
-    protected String nomDieux(){
-        return switch(parent){
+    protected String nomDieux() {
+        return switch (parent) {
             case ZEUX -> "Zeus";
             case ARES -> "Ares";
             case HADES -> "Hades";
@@ -268,14 +271,14 @@ public abstract class Joueur {
      * Applique les caractéristiques et capacités héréditaires
      */
     protected void SetEffetParent() {
-        switch(parent) {
+        switch (parent) {
             case ARES -> {
                 if (getMetier() != Metier.GUERRIERE) {
                     add_competence("Berserk");
                 }
             }
             case HADES -> {
-                if(getMetier() != Metier.NECROMANCIEN){
+                if (getMetier() != Metier.NECROMANCIEN) {
                     add_caracteristique("Thaumaturge");
                 }
             }
@@ -289,10 +292,11 @@ public abstract class Joueur {
 
     /**
      * Ajoute proprement la caractéristique à celles existantes
+     *
      * @param new_caracteristique la caractéristique à ajouter
      */
     protected void add_caracteristique(String new_caracteristique) {
-        if(this.caracteristique.isEmpty()){
+        if (this.caracteristique.isEmpty()) {
             this.caracteristique = new_caracteristique;
         } else {
             this.caracteristique += ", " + new_caracteristique;
@@ -301,10 +305,11 @@ public abstract class Joueur {
 
     /**
      * Ajoute proprement la competence à celles existantes
+     *
      * @param new_competence la competence à ajouter
      */
     protected void add_competence(String new_competence) {
-        if(this.competences.isEmpty()){
+        if (this.competences.isEmpty()) {
             this.competences = new_competence;
         } else {
             this.competences += ", " + new_competence;
@@ -315,7 +320,7 @@ public abstract class Joueur {
      * Présente les caractéristiques et capacités héréditaires
      */
     private String DescribeEffetParent() {
-        return switch(parent) {
+        return switch (parent) {
             case ARES -> {
                 if (getMetier() != Metier.GUERRIERE) {
                     yield "Berserk : pour 1 mana/aura, imprègne de folie meutrière l'esprit du lanceur avant qu'il " +
@@ -324,7 +329,7 @@ public abstract class Joueur {
                 yield "";
             }
             case HADES -> {
-                if(getMetier() != Metier.NECROMANCIEN){
+                if (getMetier() != Metier.NECROMANCIEN) {
                     yield "Thaumaturge : Quand il meurt, un thaumaturge peut emporter avec lui 3 pièces d'équipements " +
                             "de son choix et 6PO dans l'au-delà.";
                 }
@@ -341,11 +346,12 @@ public abstract class Joueur {
     /**
      * Convertie l'expérience en niveau et expérience
      * Remplit les champs nécessaires
+     *
      * @param experience l'expérience totale du joueur
      */
-    private void setNiveau(int experience){
+    private void setNiveau(int experience) {
         int niveau = 0;
-        while(experience >= 5 * (niveau + 1)){
+        while (experience >= 5 * (niveau + 1)) {
             niveau++;
             experience -= niveau * 5;
         }
@@ -355,14 +361,15 @@ public abstract class Joueur {
 
     /**
      * Convertie les niveaux et l'expérience du joueur en valeur d'xp uniquement
+     *
      * @return l'ensemble de l'xp que le joueur possède
      */
-    private int GetXpTotal(){
+    private int GetXpTotal() {
         int xp_totale = this.xp;
-        if(xp_totale < 0){
+        if (xp_totale < 0) {
             xp_totale = 0;
         }
-        for(int nv = this.niveau; nv > 0; nv--){
+        for (int nv = this.niveau; nv > 0; nv--) {
             xp_totale += 5 * nv;
         }
         return xp_totale;
@@ -413,7 +420,7 @@ public abstract class Joueur {
     }
 
     public boolean familier_peut_pas_jouer() {
-        if(f_skip_joindre){
+        if (f_skip_joindre) {
             f_skip_joindre = false;
             return true;
         }
@@ -441,7 +448,7 @@ public abstract class Joueur {
     }
 
     public boolean est_pas_activable() {
-        if(skip_joindre){
+        if (skip_joindre) {
             System.out.println(nom + " débarque en plein combat !");
             skip_joindre = false;
             f_skip_joindre = false;
@@ -553,8 +560,8 @@ public abstract class Joueur {
         return f_poison2;
     }
 
-    protected int bonusResLieux(){
-        return switch(position){
+    protected int bonusResLieux() {
+        return switch (position) {
             case ASCENDANT, OLYMPE -> 0;
             case ENFERS -> parent == Dieux.HADES ? 2 : 0;
             case PRAIRIE -> parent == Dieux.DEMETER ? 2 : 0;
@@ -565,59 +572,55 @@ public abstract class Joueur {
         };
     }
 
-    protected int bonusAtkLieux(){
-        return switch(position){
+    protected int bonusAtkLieux() {
+        return switch (position) {
             case ASCENDANT -> 0;
             case ENFERS -> {
-                if(parent == Dieux.HADES){
+                if (parent == Dieux.HADES) {
                     yield 1;
                 }
                 yield 0;
             }
             case PRAIRIE -> {
-                if(parent == Dieux.DEMETER){
+                if (parent == Dieux.DEMETER) {
                     yield 2;
-                }
-                else if(parent == Dieux.ARES){
+                } else if (parent == Dieux.ARES) {
                     yield 1;
                 }
                 yield 0;
             }
             case VIGNES -> {
-                if(parent == Dieux.DYONISOS){
+                if (parent == Dieux.DYONISOS) {
                     yield 1;
-                }
-                else if(parent == Dieux.ARES){
+                } else if (parent == Dieux.ARES) {
                     yield 1;
                 }
                 yield 0;
             }
             case TEMPLE -> {
-                if(parent == Dieux.APOLLON || parent == Dieux.ARES){
+                if (parent == Dieux.APOLLON || parent == Dieux.ARES) {
                     yield 2;
                 }
                 yield 0;
             }
             case MER -> {
-                if(parent == Dieux.POSEIDON){
+                if (parent == Dieux.POSEIDON) {
                     yield 2;
-                }
-                else if(parent == Dieux.ARES){
+                } else if (parent == Dieux.ARES) {
                     yield 3;
                 }
                 yield 0;
             }
             case MONTS -> {
-                if(parent == Dieux.ZEUX){
+                if (parent == Dieux.ZEUX) {
                     yield 5;
-                }
-                else if(parent == Dieux.ARES){
+                } else if (parent == Dieux.ARES) {
                     yield 3;
                 }
                 yield 0;
             }
             case OLYMPE -> {
-                if(parent == Dieux.ARES){
+                if (parent == Dieux.ARES) {
                     yield 4;
                 }
                 yield 0;
@@ -625,8 +628,8 @@ public abstract class Joueur {
         };
     }
 
-    protected int bonusArmLieux(){
-        if((position == Position.MONTS && parent == Dieux.ZEUX) || (position == Position.MER && parent == Dieux.POSEIDON)){
+    protected int bonusArmLieux() {
+        if ((position == Position.MONTS && parent == Dieux.ZEUX) || (position == Position.MER && parent == Dieux.POSEIDON)) {
             return 1;
         }
         return 0;
@@ -636,12 +639,13 @@ public abstract class Joueur {
 
     /**
      * Donne de l'expérience au joueur de 1.
+     *
      * @implNote Ce qui agmente l'xp : participer à un combat, domestiquer un monstre, porter le dernier coup,
      * ressuciter un allié, avoir affronté un monstre nommé (victoire ou fuite)
      */
-    public void gagneXp(){
+    public void gagneXp() {
         this.xp += 1;
-        if(this.xp >= (this.niveau + 1) * 5){
+        if (this.xp >= (this.niveau + 1) * 5) {
             this.niveau += 1;
             this.xp -= this.niveau * 5;
             System.out.println(nom + " a gagné un niveau !");
@@ -652,26 +656,27 @@ public abstract class Joueur {
     /**
      * Méthode permettant aux classes filles d'ajouter de l'expérience
      */
-    protected void gagneXpLocal(){
+    protected void gagneXpLocal() {
         this.xp += 1;
     }
 
     /**
      * Méthode permettant aux classes filles d'analyser la quantité d'expérience
      */
-    protected int getXplocal(){
+    protected int getXplocal() {
         return this.xp;
     }
 
     /**
      * Méthode permettant de remettre à 0 l'expérience d'un joueur
      */
-    protected void resetXpLocal(){
+    protected void resetXpLocal() {
         this.xp = 0;
     }
 
     /**
      * Ajoute les données dû à la montée de niveau
+     *
      * @implNote ne dois pas être appellé, sauf par le super
      */
     abstract void lvl_up();
@@ -679,8 +684,8 @@ public abstract class Joueur {
     /**
      * Ajoute les données dû à la montée de niveau
      */
-    protected void super_lvl_up(){
-        System.out.print(switch(this.niveau){
+    protected void super_lvl_up() {
+        System.out.print(switch (this.niveau) {
             case 4 -> "Votre vitesse de fuite a augmenté.\n";
             case 6 -> {
                 this.vie += 1;
@@ -762,15 +767,16 @@ public abstract class Joueur {
 
     /**
      * Permet aux joueurs qui en sont abscent de rejoindre un combat
+     *
      * @param pos le lieu du combat
      * @throws IOException toujours
      */
     static public void joindre(Position pos) throws IOException {
-        for(Joueur j : Main.joueurs){
-            if(j.peut_joindre){
+        for (Joueur j : Main.joueurs) {
+            if (j.peut_joindre) {
                 j.init_affrontement(false, pos);
             }
-            if(j.est_actif()){
+            if (j.est_actif()) {
                 j.skip_joindre = true;
                 j.f_skip_joindre = true;
             }
@@ -838,6 +844,7 @@ public abstract class Joueur {
 
     /**
      * Traite la fin de combat des joueurs
+     *
      * @param ennemi_nomme si l'ennemi était un monstre nommé (bonus d'xp).
      * @throws IOException toujours
      */
@@ -849,9 +856,9 @@ public abstract class Joueur {
                 mort_def();
             }
         }
-        if(est_actif()){
+        if (est_actif()) {
             gagneXp();
-            if(ennemi_nomme){
+            if (ennemi_nomme) {
                 gagneXp();
             }
         }
@@ -861,6 +868,7 @@ public abstract class Joueur {
 
     /**
      * Essaie de se réveiller (assommé)
+     *
      * @throws IOException toujours
      */
     public void essaie_reveil() throws IOException {
@@ -901,7 +909,7 @@ public abstract class Joueur {
     /**
      * Calcule et applique les effets d'une attaque à distance
      *
-     * @param ennemi le monstre ennemi
+     * @param ennemi     le monstre ennemi
      * @param bonus_popo les dommages additionel des popo (ici uniquement les instables)
      * @throws IOException toujours
      */
@@ -924,20 +932,22 @@ public abstract class Joueur {
 
     /**
      * Calcule et applique les effets d'une attaque classique sur un monstre
+     *
      * @param ennemi le monstre ennemi
      * @throws IOException toujours
      */
     public void attaquer(Monstre ennemi, int bonus_popo) throws IOException {
         int base = Input.atk();
         float bonus = calcule_bonus_atk(base, bonus_popo);
-        if(bonus != berserk_atk_alliee){
+        if (bonus != berserk_atk_alliee) {
             ennemi.dommage(base + Main.corriger(bonus, 0));
         }
     }
 
     /**
      * Calcule les dommages bonus d'une attaque classique
-     * @param base les dommages de base de l'attaque
+     *
+     * @param base       les dommages de base de l'attaque
      * @param bonus_popo les dommages des consommables
      * @return la valeur des dommages bonus (arrondits)
      * @throws IOException toujours
@@ -996,19 +1006,18 @@ public abstract class Joueur {
         System.out.println(nom + " est mort.");
         ob_f = 0;
         position = Position.ENFERS;
-        if(this.parent == Dieux.HADES || getMetier() != Metier.NECROMANCIEN){
+        if (this.parent == Dieux.HADES || getMetier() != Metier.NECROMANCIEN) {
             System.out.println("Grâce à vos dons héréditaires, vous pouvez choisir 3 pièces d'équipements " +
                     "que vous conservez (vous devez entrer à nouveau les effets cachées). De plus, vous pouvez conserver" +
                     " jusqu'à 6 PO.");
-            for(int i = this.niveau; i > 0; i--){
-                if(rand.nextInt(3) == 0){
+            for (int i = this.niveau; i > 0; i--) {
+                if (rand.nextInt(3) == 0) {
                     this.xp -= 1;
                 }
             }
-        }
-        else{
-            for(int i = this.niveau; i > 0; i--){
-                if(rand.nextBoolean()){
+        } else {
+            for (int i = this.niveau; i > 0; i--) {
+                if (rand.nextBoolean()) {
                     this.xp -= 1;
                 }
             }
@@ -1167,8 +1176,8 @@ public abstract class Joueur {
     /**
      * Avertie si le joueur à des bonus de lieu
      */
-    public void check_bonus_lieux(){
-        if(bonusAtkLieux() > 0 || bonusResLieux() > 0 || bonusArmLieux() > 0){
+    public void check_bonus_lieux() {
+        if (bonusAtkLieux() > 0 || bonusResLieux() > 0 || bonusArmLieux() > 0) {
             System.out.println("Votre sang divin réagit à votre environnement !");
         }
     }
@@ -1284,7 +1293,7 @@ public abstract class Joueur {
 
     public void aller_au_marche() {
         int reduc = 0;
-        if(getParent() == Dieux.DYONISOS){
+        if (getParent() == Dieux.DYONISOS) {
             reduc = 2;
         }
         switch (position) {
@@ -1348,16 +1357,16 @@ public abstract class Joueur {
             if (getParent() == Dieux.ARES && getMetier() != Metier.GUERRIERE) {
                 text += "/(b)erserker";
             }
-            if(getParent() == Dieux.APOLLON){
+            if (getParent() == Dieux.APOLLON) {
                 text += "/(i)nfection";
             }
-            if(getParent() == Dieux.DEMETER){
+            if (getParent() == Dieux.DEMETER) {
                 text += "/sé(r)enité";
             }
-            if(getParent() == Dieux.POSEIDON){
+            if (getParent() == Dieux.POSEIDON) {
                 text += "/(i)nondation";
             }
-            if(getParent() == Dieux.ZEUX){
+            if (getParent() == Dieux.ZEUX) {
                 text += "/(f)oudre";
             }
         }
@@ -1383,38 +1392,38 @@ public abstract class Joueur {
     /**
      * Extension de la fonction Input.action, permet de jouer les action de métier
      *
-     * @param choix le choix fait par le joueur (en lowercase)
+     * @param choix        le choix fait par le joueur (en lowercase)
      * @param est_familier s'il s'agit d'un familier ou d'un joueur
      * @return l'action à jouer, ou AUCUNE si le choix n'est pas reconnu
      */
     public Action action(String choix, boolean est_familier) throws IOException {
-        if(est_familier){
+        if (est_familier) {
             return Action.AUCUNE;
         }
         return switch (choix) {
             case "b" -> {
-                if(!est_berserk() && getParent() == Dieux.ARES && getMetier() != Metier.GUERRIERE){
+                if (!est_berserk() && getParent() == Dieux.ARES && getMetier() != Metier.GUERRIERE) {
                     yield Action.BERSERK; //version légèrement différente de la guerrière
                 }
                 yield Action.AUCUNE;
             }
             case "i" -> {
-                if(getParent() == Dieux.APOLLON){
+                if (getParent() == Dieux.APOLLON) {
                     yield Action.INFECTION;
                 }
-                if(getParent() == Dieux.POSEIDON){
+                if (getParent() == Dieux.POSEIDON) {
                     yield Action.INONDATION;
                 }
                 yield Action.AUCUNE;
             }
             case "r" -> {
-                if(getParent() == Dieux.DEMETER){
+                if (getParent() == Dieux.DEMETER) {
                     yield Action.SERENITE;
                 }
                 yield Action.AUCUNE;
             }
             case "f" -> {
-                if(getParent() == Dieux.ZEUX){
+                if (getParent() == Dieux.ZEUX) {
                     yield Action.FOUDRE;
                 }
                 yield Action.AUCUNE;
@@ -1425,6 +1434,7 @@ public abstract class Joueur {
 
     /**
      * Extension du switch principal de main.combat, permet de réaliser des actions exclusives aux métiers
+     *
      * @param action l'action à réaliser
      * @return s'il faut encore réaliser l'action
      */
@@ -1456,10 +1466,11 @@ public abstract class Joueur {
 
     /**
      * Extension du switch principal de main.combat, indique si les dommages de potion ont été utilisés
+     *
      * @param action l'action réalisée
      * @return s'il faut annuler les dégats des potions (s'ils ont déjà été appliqués).
      */
-    public boolean action_consomme_popo(Action action){
+    public boolean action_consomme_popo(Action action) {
         return false;
     }
 
@@ -1506,6 +1517,7 @@ public abstract class Joueur {
 
     /**
      * Traite l'action bonus potion
+     *
      * @return les dégats additionnel des potions (en négatif si les dommages ne s'appliquent qu'à l'attaque au corps à corps).
      */
     public int popo() throws IOException {
@@ -1518,7 +1530,7 @@ public abstract class Joueur {
                 5 : Explosive (E)
                 6 : Aucune/Custom""");
         int temp = Input.readInt();
-        if(temp <= 0 || temp > 6){
+        if (temp <= 0 || temp > 6) {
             System.out.println("Unknow input.");
             return popo();
         }
@@ -1538,6 +1550,7 @@ public abstract class Joueur {
 
     /**
      * Calcule et traite les soin
+     *
      * @return 0
      * @throws IOException toujours
      */
@@ -1570,6 +1583,7 @@ public abstract class Joueur {
 
     /**
      * Calcule et traite les bonus de vie
+     *
      * @return 0
      * @throws IOException toujours
      */
@@ -1598,6 +1612,7 @@ public abstract class Joueur {
 
     /**
      * Calcule et traite les bonus d'attaque
+     *
      * @return 0
      * @throws IOException toujours
      */
@@ -1629,6 +1644,7 @@ public abstract class Joueur {
 
     /**
      * Calcule et traite les dommage au corps à corps
+     *
      * @return le négatif du bonus de dommage
      * @throws IOException toujours
      */
@@ -1647,7 +1663,7 @@ public abstract class Joueur {
             return popo_cd();
         }
         int poison = 0;
-        switch (temp){
+        switch (temp) {
             case 1 -> poison = rand.nextInt(2) + rand.nextInt(2);
             case 2 -> poison = 1 + rand.nextInt(3);
             case 3 -> poison = 2 + rand.nextInt(4);
@@ -1739,18 +1755,20 @@ public abstract class Joueur {
 
     /**
      * Contablise les bonus d'exploration des métiers
+     *
      * @return le bonus
      */
-    public int bonus_exploration(){
+    public int bonus_exploration() {
         return 0;
     }
 
     /**
      * Contabilise les bonus de dressage
+     *
      * @return le bonus
      */
-    public int bonus_dresser(){
-        if (this.niveau >= 7){
+    public int bonus_dresser() {
+        if (this.niveau >= 7) {
             return 1;
         }
         return 0;
@@ -1759,19 +1777,19 @@ public abstract class Joueur {
     /**
      * Réalise les actions de fin de tour (en combat)
      */
-    public void fin_tour_combat(){
+    public void fin_tour_combat() {
         skip = false;
         f_skip = false;
-        if(a_poison1()){
+        if (a_poison1()) {
             System.out.println(nom + " souffre d'empoisonnement et subit " + (rand.nextInt(3) + 1) + " dommage(s).");
         }
-        if(a_poison2()){
+        if (a_poison2()) {
             System.out.println(nom + " souffre d'empoisonnement et subit " + (rand.nextInt(4) + 2) + " dommages.");
         }
-        if(f_a_poison1()){
+        if (f_a_poison1()) {
             System.out.println("Le familier de " + nom + " souffre d'empoisonnement et subit " + (rand.nextInt(3) + 1) + " dommage(s).");
         }
-        if(f_a_poison2()){
+        if (f_a_poison2()) {
             System.out.println("Le familier de " + nom + " souffre d'empoisonnement et subit " + (rand.nextInt(4) + 2) + " dommages.");
         }
     }
@@ -1782,25 +1800,22 @@ public abstract class Joueur {
     protected void choc(int bonus) throws IOException {
         System.out.println(nom + " est frappé par l'onde de choc.");
         int jet = Input.D6() - rand.nextInt(4) - 2 + bonus;
-        if(est_assomme()){
+        if (est_assomme()) {
             reveil -= Math.max(1, jet);
-        }
-        else if (jet < 0) {
+        } else if (jet < 0) {
             System.out.println(nom + " perd connaissance.");
             assomme();
-        } 
-        else {
+        } else {
             System.out.println(nom + " parvient à rester conscient.");
         }
         //familier
-        if(!a_familier_actif()){
+        if (!a_familier_actif()) {
             return;
         }
         jet = Input.D4() - 2 - rand.nextInt(2) + bonus;
-        if(f_est_assomme()){
+        if (f_est_assomme()) {
             f_reveil -= Math.max(1, jet);
-        }
-        else if (jet < 0) {
+        } else if (jet < 0) {
             System.out.println("Le familier de " + nom + " perd connaissance.");
             f_assomme();
         } else {
@@ -1810,6 +1825,7 @@ public abstract class Joueur {
 
     /**
      * Indique si le joueur est capable de jouer, c'est-à-dire de choisir une action et de la réaliser
+     *
      * @return true si le joueur peut jouer
      */
     public boolean peut_jouer() {
@@ -1818,51 +1834,56 @@ public abstract class Joueur {
 
     /**
      * Indique si le joueur est capable de ressuciter un autre joueur
+     *
      * @return un booléan correspondant
      */
-    public boolean peut_ressuciter(){
+    public boolean peut_ressuciter() {
         return false;
     }
 
     /**
      * Tente de ressuciter un joueur
+     *
      * @param malus un malus à appliquer à la tentative
      * @return true si la résurection est un succès, false sinon
      * @throws IOException toujours
      */
-    public boolean ressuciter(int malus) throws IOException{
+    public boolean ressuciter(int malus) throws IOException {
         return false;
     }
 
     /**
      * Tente de ressuciter tout seul
+     *
      * @param malus un malus à appliquer à la tentative
      * @return true si la résurection est un succès, false sinon
      * @throws IOException toujours
      */
-    public boolean auto_ressuciter(int malus) throws IOException{
+    public boolean auto_ressuciter(int malus) throws IOException {
         return false;
     }
 
     /**
      * Indique si le joueur est capable de diriger son familier, c'est-à-dire de lui donner un ordre
+     *
      * @return true si le joueur a un familier et peut lui donner un ordre
      */
-    public boolean peut_diriger_familier(){
+    public boolean peut_diriger_familier() {
         return est_actif() && est_vivant() && !est_assomme() && a_familier_actif();
     }
 
     /**
      * Gère les effets de coup critique à l'arc
+     *
      * @param base la puissance de tir originale
      * @return le bonus de dommages
      */
     protected float critique_tir(int base) {
         int imprecision = 50;
-        if(this.niveau >= 9){
+        if (this.niveau >= 9) {
             imprecision = 40;
         }
-        if(rand.nextInt(imprecision) == 0) { //2%~2.5%
+        if (rand.nextInt(imprecision) == 0) { //2%~2.5%
             return base * 0.1f * (rand.nextInt(5) + 1); //10% à 50% de bonus
         }
         return 0;
@@ -1870,6 +1891,7 @@ public abstract class Joueur {
 
     /**
      * Calcule si un joueur succombe à sa folie de berserker ou non
+     *
      * @return si le joueur frappe sans savoir qui
      */
     protected boolean folie_berserk() throws IOException {
@@ -1878,36 +1900,38 @@ public abstract class Joueur {
 
     /**
      * Augmente l'état de rage meutrière du joueur
+     *
      * @param is_crazy si le joueur est déjà dans un état de folie (augmente la déterioration).
      */
     protected void berserk_boost(boolean is_crazy) {
-        if(is_crazy){
+        if (is_crazy) {
             berserk += 0.1f + rand.nextInt(5) * 0.1f; //0.1 à 0.5 de boost
+        } else {
+            this.berserk += 0.1f + rand.nextInt(3) * 0.1f; //0.1 à 0.3 de boost
         }
-        else{
-        this.berserk += 0.1f + rand.nextInt(3) * 0.1f; //0.1 à 0.3 de boost
-            }
     }
 
     /**
      * Indique les bonus d'attaque à l'arc
+     *
      * @return la quantité de dommages aditionnel
      */
-    protected int bonus_tir(){
+    protected int bonus_tir() {
         return 0;
     }
 
     /**
      * Gère les effets de coup critique
+     *
      * @param base la puissance de frappe originale
      * @return le bonus de dommages
      */
     protected float critique_atk(int base) {
         int imprecision = 50;
-        if(this.niveau >= 9){
+        if (this.niveau >= 9) {
             imprecision -= 10;
         }
-        if(rand.nextInt(imprecision) == 0) { //2% à 2.5%
+        if (rand.nextInt(imprecision) == 0) { //2% à 2.5%
             return base * 0.1f * (rand.nextInt(5) + 1); //10% à 50% de bonus
         }
         return 0;
@@ -1916,7 +1940,7 @@ public abstract class Joueur {
     /**
      * Lance le sort berserk : rend le joueur berserk
      */
-    protected void berserk(){
+    protected void berserk() {
         System.out.println(nom + " est prit d'une folie meurtrière !");
         berserk = 0.1f + 0.1f * rand.nextInt(7); //0.1 à 0.7
     }
@@ -1924,7 +1948,7 @@ public abstract class Joueur {
     /**
      * Lance le sort infection : améliore les attaques de l'arc
      */
-    protected void infection(){
+    protected void infection() {
         System.out.println("Les flèches de " + nom + " s'emplissent de maladies.");
         bonus_infection += 2;
     }
@@ -1932,7 +1956,7 @@ public abstract class Joueur {
     /**
      * Lance le sort sérénité : guérie un joueur
      */
-    protected void serenite(){
+    protected void serenite() {
         System.out.println("Ciblez un joueur ou familier.");
         System.out.println("La cible guérie de " + (5 + rand.nextInt(3) + "."));
     }
@@ -1955,10 +1979,14 @@ public abstract class Joueur {
         ennemi.affecte();
     }
 
-    /**Nombre spécifique indiquant qu'un joueur berserk a tiré/attaqué un allié**/
+    /**
+     * Nombre spécifique indiquant qu'un joueur berserk a tiré/attaqué un allié
+     **/
     static float berserk_atk_alliee = -256;
+
     /**
      * Gère les effets de la folie du berserk lors d'attaque
+     *
      * @param base la puissance de frappe
      * @return le bonus de dommages, ou berserk_atk_alliee si le joueur attaque un allié
      * @throws IOException toujours
@@ -1989,10 +2017,11 @@ public abstract class Joueur {
 
     /**
      * Indique les bonus d'attaque à l'arc
+     *
      * @return la quantité de dommages aditionnel
      */
-    protected int bonus_atk(){
-        if(a_cecite()){
+    protected int bonus_atk() {
+        if (a_cecite()) {
             return -1;
         }
         return 0;
@@ -2000,25 +2029,26 @@ public abstract class Joueur {
 
     /**
      * Tente de fuir le combat
+     *
      * @param ennemi Le monstre adverse (peut complexifier la tâche et changer le gain d'xp).
      * @throws IOException ça roule
      */
     public void fuir(Monstre ennemi) throws IOException {
         int bonus = -1 + rand.nextInt(3);
-        if(ennemi.est_nomme()){
+        if (ennemi.est_nomme()) {
             bonus -= 1;
         }
         bonus += bonus_fuite();
         bonus += berserk_fuite();
         bonus += position_fuite();
         if (Input.D6() + bonus >= 3) {
-            if(ennemi.est_pantin()){
+            if (ennemi.est_pantin()) {
                 System.out.println(nom + " aurait réussit à fuir le combat.");
                 return;
             }
             System.out.println(nom + " a fuit le combat.");
             inactiver();
-            if(ennemi.est_nomme()){
+            if (ennemi.est_nomme()) {
                 gagneXp();
             }
         } else {
@@ -2028,6 +2058,7 @@ public abstract class Joueur {
 
     /**
      * Tente de fuir le combat (votre familier)
+     *
      * @throws IOException comme d'hab'
      */
     public void f_fuir() throws IOException {
@@ -2044,10 +2075,11 @@ public abstract class Joueur {
 
     /**
      * Indique les bonus de fuite
+     *
      * @return le bonus
      */
     protected int bonus_fuite() {
-        if (this.niveau >= 4){
+        if (this.niveau >= 4) {
             return 1;
         }
         return 0;
@@ -2055,11 +2087,12 @@ public abstract class Joueur {
 
     /**
      * Indique le malus de fuite dû à l'état de berserk
+     *
      * @return le malus (négatif)
      * @throws IOException toujours
      */
     protected int berserk_fuite() throws IOException {
-        if(!est_berserk()){
+        if (!est_berserk()) {
             return 0;
         }
         return Math.min(0, Math.round(Input.D4() * 0.5f - berserk));
@@ -2067,11 +2100,12 @@ public abstract class Joueur {
 
     /**
      * Indique les bonus de fuite dû à la position (première ligne)
+     *
      * @return le malus
      */
     protected int position_fuite() {
-        if(est_front()){
-            if(est_front_f()){
+        if (est_front()) {
+            if (est_front_f()) {
                 return -2;
             }
             return -3;
@@ -2081,11 +2115,12 @@ public abstract class Joueur {
 
     /**
      * Indique les bonus de fuite dû à la position (première ligne) du familier
+     *
      * @return le malus
      */
-    protected int f_position_fuite(){
-        if(est_front()){
-            if(est_front_f()){
+    protected int f_position_fuite() {
+        if (est_front()) {
+            if (est_front_f()) {
                 return -3;
             }
             return -2;
@@ -2122,35 +2157,36 @@ public abstract class Joueur {
     /**
      * Propose les actions métiers sur un cadavre
      */
-    protected void monstre_mort_perso(Monstre ennemi) throws IOException{
+    protected void monstre_mort_perso(Monstre ennemi) throws IOException {
     }
 
     /**
      * Renvoie le résultat d'un jet de dé
-     * @param paliers_de les différents niveaux demandant différents dés, dans l'ordre décroissant
-     * @param de le dé à lancer selon le niveau, doit contenir un élément de plus que paliers_de
+     *
+     * @param paliers_de   les différents niveaux demandant différents dés, dans l'ordre décroissant
+     * @param de           le dé à lancer selon le niveau, doit contenir un élément de plus que paliers_de
      * @param palier_bonus les niveaux ajoutant un bonus de 1 au dé
-     * @param do_random si une variable aléatoire de 1 doit être appliqué
+     * @param do_random    si une variable aléatoire de 1 doit être appliqué
      * @return la valeur du jet avec les modificateurs appliqué
      * @throws IOException toujours
      */
     protected int jet(int[] paliers_de, int[] de, int[] palier_bonus, boolean do_random) throws IOException {
         int jet = 0;
-        for(int i = 0; i < paliers_de.length; i++){
-            if(this.niveau >= paliers_de[i]){
+        for (int i = 0; i < paliers_de.length; i++) {
+            if (this.niveau >= paliers_de[i]) {
                 jet = de_par_palier(de[i]);
                 break;
             }
         }
-        if(jet == 0){
-            jet = de_par_palier(de[de.length-1]);
+        if (jet == 0) {
+            jet = de_par_palier(de[de.length - 1]);
         }
-        for(int palier : palier_bonus){
-            if(this.niveau >= palier){
+        for (int palier : palier_bonus) {
+            if (this.niveau >= palier) {
                 jet += 1;
             }
         }
-        if(do_random){
+        if (do_random) {
             jet += rand.nextInt(3) - 1;
         }
         return jet;
@@ -2158,13 +2194,14 @@ public abstract class Joueur {
 
     /**
      * Renvoie le résultat d'un jet du type spécifié
+     *
      * @param de_type le nombre de face du dé demandé (4, 6, 8, 10, 12 ou 20)
      * @return le résultat du jet de dé
-     * @throws IOException toujours
+     * @throws IOException           toujours
      * @throws IllegalStateException si le dé demandé n'est pas reconnu
      */
     protected int de_par_palier(int de_type) throws IOException {
-        return switch (de_type){
+        return switch (de_type) {
             case 4 -> Input.D4();
             case 6 -> Input.D6();
             case 8 -> Input.D8();
@@ -2174,5 +2211,4 @@ public abstract class Joueur {
             default -> throw new IllegalStateException("Unexpected value: " + de_type);
         };
     }
-
 }
