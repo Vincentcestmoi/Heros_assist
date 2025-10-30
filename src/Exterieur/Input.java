@@ -121,7 +121,7 @@ public class Input {
     /**
      * Lit le texte en terminal
      * @return le texte lu
-     * @throws IOException en cas de problème ?
+     * @throws IOException toujours
      */
     public static String read() throws IOException {
         StringBuilder readed = new StringBuilder();
@@ -137,7 +137,7 @@ public class Input {
     /**
      * Lit une valeur en terminal et la renvoie (doit être en chiffre uniquement)
      * @return la valeur
-     * @throws IOException en cas de problème ?
+     * @throws IOException toujours
      */
     public static int readInt() throws IOException {
         int number;
@@ -172,7 +172,7 @@ public class Input {
     
     /**
      * Demande au joueur le résultat d'un jet 4 et le renvoie
-     * majoration par 6.
+     * majoration par 4, minoration par 1.
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -180,15 +180,17 @@ public class Input {
         System.out.print("D4 : ");
         Output.jouerSonDe();
         int temp = readInt();
-        if (temp > 6) {
-            return 6;
+        if (temp > 4) {
+            return 4;
+        } else if (temp < 1) {
+            return 1;
         }
-        return Math.max(temp, 1);
+        return temp;
     }
     
     /**
      * Demande au joueur le résultat d'un jet 6 et le renvoie
-     * majoration par 8.
+     * majoration par 6, minoration par 1.
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -196,15 +198,17 @@ public class Input {
         System.out.print("D6 : ");
         Output.jouerSonDe();
         int temp = readInt();
-        if (temp > 8) {
-            return 8;
+        if (temp > 6) {
+            return 6;
+        } else if (temp < 1) {
+            return 1;
         }
-        return Math.max(temp, 1);
+        return temp;
     }
     
     /**
      * Demande au joueur le résultat d'un jet 8 et le renvoie
-     * majoration par 10
+     * majoration par 8, minoration par 1.
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -212,15 +216,17 @@ public class Input {
         System.out.print("D8 : ");
         Output.jouerSonDe();
         int temp = readInt();
-        if (temp > 10) {
-            return 10;
+        if (temp > 8) {
+            return 8;
+        } else if (temp < 1) {
+            return 1;
         }
-        return Math.max(temp, 1);
+        return temp;
     }
     
     /**
      * Demande au joueur le résultat d'un jet 10 et le renvoie
-     * majoration par 12
+     * majoration par 10, minoration par 1.
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -228,15 +234,17 @@ public class Input {
         System.out.print("D10 : ");
         Output.jouerSonDe();
         int temp = readInt();
-        if (temp > 12) {
-            return 12;
+        if (temp > 10) {
+            return 10;
+        } else if (temp < 1) {
+            return 1;
         }
-        return Math.max(temp, 1);
+        return temp;
     }
     
     /**
      * Demande au joueur le résultat d'un jet 12 et le renvoie
-     * majoration par 14
+     * majoration par 12, minoration par 1.
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -244,15 +252,17 @@ public class Input {
         System.out.print("D12 : ");
         Output.jouerSonDe();
         int temp = readInt();
-        if (temp > 14) {
-            return 14;
+        if (temp > 12) {
+            return 12;
+        } else if (temp < 1) {
+            return 1;
         }
-        return Math.max(temp, 1);
+        return temp;
     }
     
     /**
      * Demande au joueur le résultat d'un jet 20 et le renvoie
-     * majoration par 22
+     * majoration par 20, minoration par 1.
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -260,10 +270,12 @@ public class Input {
         System.out.print("D20 : ");
         Output.jouerSonDe();
         int temp = readInt();
-        if (temp > 22) {
-            return 22;
+        if (temp > 20) {
+            return 20;
+        } else if (temp < 1) {
+            return 1;
         }
-        return Math.max(temp, 1);
+        return temp;
     }
     
     /**
@@ -273,11 +285,11 @@ public class Input {
     public static boolean yn(String question) throws IOException {
         while (true) {
             System.out.print(question + " O/n ");
-            String reponse = read();
-            if (reponse.equals("O") || reponse.equals("o") || reponse.isEmpty()) {
+            String reponse = read().toLowerCase();
+            if (reponse.equals("o") || reponse.isEmpty()) {
                 return true;
             }
-            if (reponse.equals("n") || reponse.equals("N")) {
+            if (reponse.equals("n")) {
                 return false;
             }
             System.out.println("Réponse non comprise.");
