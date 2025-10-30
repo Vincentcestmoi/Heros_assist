@@ -251,6 +251,7 @@ public class Output {
                 clip.start();
                 
             } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+                System.out.println("Erreur located ici");
                 System.err.println("Erreur lors de la lecture du son : " + e.getMessage());
             }
         }
