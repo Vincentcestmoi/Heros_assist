@@ -23,6 +23,7 @@ public class Input {
 
     /**
      * Sauvegarde les données des précedéntes partie et propose aux joueurs de charger une sauvegarde
+     *
      * @return true si la sauvegarde est complété, et false si elle doit être faite à la main
      */
     public static boolean load() throws IOException {
@@ -40,12 +41,11 @@ public class Input {
         Main.Path = reponse;
 
         // charger ou nouvelle partie
-        if (!sauvegardeExiste || !yn("Sauvegarde détectée, charger cette sauvegarde ?")) {
-            if (yn("Confirmez la suppression")) {
-                Output.viderSauvegarde(reponse);
-                System.out.println("lancement du jeu.\n\n");
-                return false;
-            }
+        if (!sauvegardeExiste ||
+                (!yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la suppression"))) {
+            Output.viderSauvegarde(reponse);
+            System.out.println("lancement du jeu.\n\n");
+            return false;
         }
 
         // Chargement des joueurs
@@ -182,6 +182,7 @@ public class Input {
     /**
      * Demande au joueur le résultat d'un jet 4 et le renvoie
      * majoration par 6.
+     *
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -189,7 +190,7 @@ public class Input {
         System.out.print("D4 : ");
         Output.jouerSonDe();
         int temp = readInt();
-        if(temp > 6){
+        if (temp > 6) {
             return 6;
         }
         return Math.max(temp, 1);
@@ -198,6 +199,7 @@ public class Input {
     /**
      * Demande au joueur le résultat d'un jet 6 et le renvoie
      * majoration par 8.
+     *
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -205,7 +207,7 @@ public class Input {
         System.out.print("D6 : ");
         Output.jouerSonDe();
         int temp = readInt();
-        if(temp > 8){
+        if (temp > 8) {
             return 8;
         }
         return Math.max(temp, 1);
@@ -214,6 +216,7 @@ public class Input {
     /**
      * Demande au joueur le résultat d'un jet 8 et le renvoie
      * majoration par 10
+     *
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -221,7 +224,7 @@ public class Input {
         System.out.print("D8 : ");
         Output.jouerSonDe();
         int temp = readInt();
-        if(temp > 10){
+        if (temp > 10) {
             return 10;
         }
         return Math.max(temp, 1);
@@ -230,6 +233,7 @@ public class Input {
     /**
      * Demande au joueur le résultat d'un jet 10 et le renvoie
      * majoration par 12
+     *
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -237,7 +241,7 @@ public class Input {
         System.out.print("D10 : ");
         Output.jouerSonDe();
         int temp = readInt();
-        if(temp > 12){
+        if (temp > 12) {
             return 12;
         }
         return Math.max(temp, 1);
@@ -246,6 +250,7 @@ public class Input {
     /**
      * Demande au joueur le résultat d'un jet 12 et le renvoie
      * majoration par 14
+     *
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -253,7 +258,7 @@ public class Input {
         System.out.print("D12 : ");
         Output.jouerSonDe();
         int temp = readInt();
-        if(temp > 14){
+        if (temp > 14) {
             return 14;
         }
         return Math.max(temp, 1);
@@ -262,6 +267,7 @@ public class Input {
     /**
      * Demande au joueur le résultat d'un jet 20 et le renvoie
      * majoration par 22
+     *
      * @return le chiffre donné par le joueur
      * @throws IOException en cas de problème ?
      */
@@ -269,7 +275,7 @@ public class Input {
         System.out.print("D20 : ");
         Output.jouerSonDe();
         int temp = readInt();
-        if(temp > 22){
+        if (temp > 22) {
             return 22;
         }
         return Math.max(temp, 1);
@@ -277,10 +283,11 @@ public class Input {
 
     /**
      * Pose une question au joueur
+     *
      * @return s'il a répondu oui
      */
     public static boolean yn(String question) throws IOException {
-        while(true) {
+        while (true) {
             System.out.print(question + " O/n ");
             String reponse = read();
             if (reponse.equals("O") || reponse.equals("o") || reponse.isEmpty()) {
@@ -350,38 +357,39 @@ public class Input {
 
     /**
      * Laisse le joueur choisir sa promotion
+     *
      * @return un indice sur le type de promotion que le joueur veut
      */
     public static Promo_Type promo() throws IOException {
         String texte = "Choississez votre type de récompense : ";
-        if(Pre_Equipement.nb_monture > 0){
+        if (Pre_Equipement.nb_monture > 0) {
             texte += "(m)onture ";
         }
-        if(Pre_Equipement.nb_boost > 0){
+        if (Pre_Equipement.nb_boost > 0) {
             texte += "(r)enforcement ";
         }
-        if(Pre_Equipement.nb_arte > 0){
+        if (Pre_Equipement.nb_arte > 0) {
             texte += "(a)rtéfact ";
         }
         System.out.println(texte);
-        switch(read()){
+        switch (read()) {
             case "m", "M", "monture", "Monture" -> {
-                if(Pre_Equipement.nb_monture > 0) {
+                if (Pre_Equipement.nb_monture > 0) {
                     return Promo_Type.MONTURE;
                 }
             }
             case "r", "R", "renforcement", "Renforcement" -> {
-                if(Pre_Equipement.nb_boost > 0) {
+                if (Pre_Equipement.nb_boost > 0) {
                     return Promo_Type.AMELIORATION;
                 }
             }
             case "a", "A", "Artefact", "artefact", "Artéfact", "artéfact" -> {
-                if(Pre_Equipement.nb_arte > 0) {
+                if (Pre_Equipement.nb_arte > 0) {
                     return Promo_Type.ARTEFACT;
                 }
             }
             case "q", "Q" -> {
-                if(yn("Confirmez : ")){
+                if (yn("Confirmez : ")) {
                     return Promo_Type.QUIT;
                 }
             }
@@ -391,16 +399,17 @@ public class Input {
 
     /**
      * Demande au joueur l'action qu'il veut mener et la transmet
-     * @param joueur le joueur qui réalise l'action
+     *
+     * @param joueur       le joueur qui réalise l'action
      * @param est_familier s'il s'agit d'un familier
      * @return l'action choisit
      * @throws IOException toujours
      */
     public static Action action(Joueur joueur, boolean est_familier) throws IOException {
-        if(est_familier && joueur.familier_peut_pas_jouer()){
+        if (est_familier && joueur.familier_peut_pas_jouer()) {
             return Action.AUTRE;
         }
-        if(est_familier && !joueur.peut_diriger_familier()){
+        if (est_familier && !joueur.peut_diriger_familier()) {
             return Action.F_SEUL;
         }
         String text;
@@ -424,7 +433,7 @@ public class Input {
 
             // actions joueur
             case "t" -> {
-                if (!est_familier && ! joueur.a_cecite()) {
+                if (!est_familier && !joueur.a_cecite()) {
                     yield Action.TIRER;
                 }
                 System.out.println("Action non reconnue.");
@@ -454,7 +463,7 @@ public class Input {
                         yield Action.AVANCER;
                     }
                 }
-                if (joueur.est_front() && !joueur.a_familier_front()){
+                if (joueur.est_front() && !joueur.a_familier_front()) {
                     yield Action.AVANCER;
                 }
                 System.out.println("Action non reconnue.");
@@ -469,14 +478,14 @@ public class Input {
                 yield action(joueur, est_familier);
             }
             case "d" -> {
-                if (joueur.est_front() && !est_familier &&!joueur.est_berserk()) {
+                if (joueur.est_front() && !est_familier && !joueur.est_berserk()) {
                     yield Action.DOMESTIQUER;
                 }
                 System.out.println("Action non reconnue.");
                 yield action(joueur, est_familier);
             }
             case "v" -> {
-                if(est_familier && joueur.est_front() && !joueur.a_familier_front()){
+                if (est_familier && joueur.est_front() && !joueur.a_familier_front()) {
                     yield Action.PROTEGER;
                 }
                 yield action(joueur, est_familier);
@@ -492,7 +501,7 @@ public class Input {
 
             default -> {
                 Action act = joueur.action(input, est_familier);
-                if(act != Action.AUCUNE){
+                if (act != Action.AUCUNE) {
                     yield act;
                 }
                 System.out.println("Action non reconnue.");
@@ -502,8 +511,8 @@ public class Input {
     }
 
     public static Action_extra extra(Joueur joueur, Action action) throws IOException {
-        if(action == Action.AUCUNE || action == Action.END || action == Action.CONCOCTION || action == Action.DOMESTIQUER
-        || action == Action.DEXTERITE || action == Action.LIEN || action == Action.MEDITATION || action == Action.FUIR){
+        if (action == Action.AUCUNE || action == Action.END || action == Action.CONCOCTION || action == Action.DOMESTIQUER
+                || action == Action.DEXTERITE || action == Action.LIEN || action == Action.MEDITATION || action == Action.FUIR) {
             return Action_extra.AUCUNE;
         }
         String text = joueur.text_extra(action);
@@ -516,7 +525,7 @@ public class Input {
             case "p" -> Action_extra.POTION;
             default -> {
                 Action_extra temp = joueur.extra(reponse);
-                if(temp != Action_extra.AUCUNE){
+                if (temp != Action_extra.AUCUNE) {
                     yield temp;
                 }
                 System.out.println("Unkown input.");
@@ -527,6 +536,7 @@ public class Input {
 
     /**
      * Demande au joueur qui il veut soigner
+     *
      * @param premier_ligne l'indice du participant de première ligne
      * @return si la cible est en première ligne
      */
@@ -546,6 +556,7 @@ public class Input {
 
     /**
      * Demande au joueur ce qu'il fait de son tour
+     *
      * @param index l'index du joueur dont c'est le tour
      * @return : un choix correspondant
      */
@@ -554,21 +565,21 @@ public class Input {
         Position position = joueur.getPosition();
         while (true) {
             String text = "Que voulez-vous faire : (E)xplorer";
-            boolean peut_descendre =  position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
+            boolean peut_descendre = position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
             boolean peut_monter = position != Position.OLYMPE;
             boolean market = position != Position.OLYMPE && position != Position.ENFERS;
             boolean peut_entrainer = joueur.a_familier() && !joueur.familier_loyalmax();
             text += joueur.text_tour();
-            if(peut_descendre){
+            if (peut_descendre) {
                 text += "/(d)escendre";
             }
-            if(peut_monter){
+            if (peut_monter) {
                 text += "/(m)onter";
             }
-            if(market){
+            if (market) {
                 text += "/(a)ller au marché/(f)rapper un pantin";
             }
-            if(peut_entrainer){
+            if (peut_entrainer) {
                 text += "/(en)trainer son familier";
             }
             text += "/(c)ustom/(s)tatistique ?";
@@ -581,31 +592,31 @@ public class Input {
                     return Choix.EXPLORER;
                 }
                 case "d", "descendre" -> {
-                    if(peut_descendre){
+                    if (peut_descendre) {
                         return Choix.DESCENDRE;
                     }
                     System.out.println("Exterieur.Input unknow");
                 }
-                case "m", "monter" ->{
-                    if(peut_monter){
+                case "m", "monter" -> {
+                    if (peut_monter) {
                         return Choix.MONTER;
                     }
                     System.out.println("Exterieur.Input unknow");
                 }
                 case "a", "aller au marche", "aller au marché", "aller", "marche", "marché" -> {
-                    if(market){
+                    if (market) {
                         return Choix.MARCHE;
                     }
                     System.out.println("Exterieur.Input unknow");
                 }
                 case "frapper un pantin", "frapper", "f" -> {
-                    if(market){
-                    return Choix.DUMMY;
+                    if (market) {
+                        return Choix.DUMMY;
+                    }
+                    System.out.println("Exterieur.Input unknow");
                 }
-                System.out.println("Exterieur.Input unknow");
-            }
                 case "entrainer son familier", "en" -> {
-                    if(peut_entrainer) {
+                    if (peut_entrainer) {
                         return Choix.DRESSER;
                     }
                     System.out.println("Exterieur.Input unknow");
@@ -620,13 +631,13 @@ public class Input {
                 // caché
                 case "q" -> {
                     System.out.println("Confirmez l'arret");
-                    if(read().equals("q")) {
+                    if (read().equals("q")) {
                         return Choix.QUITTER;
                     }
                 }
                 case "add" -> {
                     System.out.println("Confirmez l'addition");
-                    if(read().equals("add")) {
+                    if (read().equals("add")) {
                         return Choix.FAMILIER_PLUS;
                     }
                 }
@@ -638,13 +649,13 @@ public class Input {
                 }
                 case "re" -> {
                     System.out.println("Confirmez");
-                    if(read().equals("re")) {
+                    if (read().equals("re")) {
                         return Choix.RETOUR;
                     }
                 }
                 case "sui" -> {
                     System.out.println("Confirmez");
-                    if(read().equals("sui")) {
+                    if (read().equals("sui")) {
                         return Choix.SUICIDE;
                     }
                 }
