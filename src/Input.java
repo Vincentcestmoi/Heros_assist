@@ -39,11 +39,9 @@ public class Input {
             //joueurs
             for(int i = 0; i < Main.nbj_max; i++) {
                 if (load_j(fichLoad[i], i)) {
-                    System.out.println(Main.nom[i] + ", " + Output.texte_metier(Main.metier[i]) + ", chargé(e) avec succès " + Main.texte_pos(Main.positions[i]) + ".");
                     Main.nbj++;
                 }
                 else{
-                    System.out.println(Main.nbj + " joueur(s) chargé(s) avec succés.");
                     break;
                 }
             }
@@ -222,10 +220,8 @@ public class Input {
         StringBuilder text = new StringBuilder();
 
         if (!fichier.exists()) {
-            System.out.println("Le fichier '" + cheminFichier + "' n'existe pas.");
             try {
                 if (fichier.createNewFile()) {
-                    System.out.println("✅ Fichier '" + cheminFichier + "' créé avec succès !");
                     return text.toString();
                 }
             }
