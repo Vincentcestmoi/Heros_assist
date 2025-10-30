@@ -168,7 +168,7 @@ public class Combat {
                 }
                 else if(alter_attaque[0] > 0){
                     alter_attaque[0] = 0;
-                    System.out.println("Le attaque commentce à se calmer");
+                    System.out.println("Le vent commence à se calmer");
                 }
 
                 n = nom[i]; // on stocke le nom par commodité
@@ -307,8 +307,8 @@ public class Combat {
                     }
                     case BERSERK -> {
                         System.out.println(n + " est prit d'une folie meurtrière !");
-                        berserk[i] = 0.2f + 0.1f * rand.nextInt(9);
-                        ennemi.dommage(input.atk() + alter_attaque[0], berserk[i]);
+                        berserk[i] = 0.2f + 0.1f * rand.nextInt(9); //0.2~1
+                        ennemi.dommage(input.atk() + alter_attaque[0], 1 + berserk[i]);
                     }
                     case LAME_DAURA -> {
                         if (berserk[i] > 0 && input.D6() < 4) {
