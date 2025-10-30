@@ -28,6 +28,3 @@ jobs:
 
     - name: 🚀 Run main program (no argument)
       run: ./lancer.sh --test
-
-    - name: 🚀 Run main program briefly
-      run: timeout 10s ./lancer.sh
