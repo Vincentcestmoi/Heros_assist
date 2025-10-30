@@ -30,6 +30,10 @@ public class Combat {
         
         int nb_part = 0;
         
+        if(joueur_force != -1){
+            Output.jouerSonAttaque();
+        }
+        
         // préparer les participants
         for (int i = 0; i < Main.nbj; i++) {
             Main.joueurs[i].init_affrontement(i == joueur_force, position);

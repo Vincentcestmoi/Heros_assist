@@ -3,6 +3,7 @@ package Metiers;
 import Enum.*;
 import Equipement.Equipement;
 import Exterieur.Input;
+import Exterieur.Output;
 import Monstre.Lieu;
 import Monstre.Monstre;
 import main.Combat;
@@ -631,6 +632,7 @@ public abstract class Joueur {
             this.niveau += 1;
             this.xp -= this.niveau * 5;
             System.out.println(nom + " a gagné un niveau !");
+            Output.JouerSonLvlUp();
             super_lvl_up();
         }
     }
@@ -963,6 +965,7 @@ public abstract class Joueur {
      * réinitialise ses états à l'exception de la mort
      */
     public void rendre_mort() {
+        Output.JouerSonMort();
         vivant = false;
         reveil = 0;
         conscient = true;
@@ -974,6 +977,7 @@ public abstract class Joueur {
      */
     public void mort_def() {
         System.out.println(nom + " est mort.");
+        Output.JouerSonMortDef();
         ob_f = 0;
         position = Position.ENFERS;
         if (this.parent == Dieux.HADES || getMetier() != Metier.NECROMANCIEN) {

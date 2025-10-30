@@ -499,7 +499,9 @@ public class Input {
     }
     
     public static Action_extra extra(Joueur joueur, Action action) throws IOException {
-        if (action == Action.AUCUNE || action == Action.END || action == Action.CONCOCTION || action == Action.DOMESTIQUER || action == Action.DEXTERITE || action == Action.LIEN || action == Action.MEDITATION || action == Action.FUIR) {
+        if (action == Action.AUCUNE || action == Action.END || action == Action.CONCOCTION || action == Action.DOMESTIQUER
+                || action == Action.DEXTERITE || action == Action.LIEN || action == Action.MEDITATION
+                || action == Action.FUIR || action == Action.OFF) {
             return Action_extra.AUCUNE;
         }
         String text = joueur.text_extra(action);
@@ -581,31 +583,31 @@ public class Input {
                     if (peut_descendre) {
                         return Choix.DESCENDRE;
                     }
-                    System.out.println("Exterieur.Input unknow");
+                    System.out.println("Input unknow");
                 }
                 case "m", "monter" -> {
                     if (peut_monter) {
                         return Choix.MONTER;
                     }
-                    System.out.println("Exterieur.Input unknow");
+                    System.out.println("Input unknow");
                 }
                 case "a", "aller au marche", "aller au marché", "aller", "marche", "marché" -> {
                     if (market) {
                         return Choix.MARCHE;
                     }
-                    System.out.println("Exterieur.Input unknow");
+                    System.out.println("Input unknow");
                 }
                 case "frapper un pantin", "frapper", "f" -> {
                     if (market) {
                         return Choix.DUMMY;
                     }
-                    System.out.println("Exterieur.Input unknow");
+                    System.out.println("Input unknow");
                 }
                 case "entrainer son familier", "en" -> {
                     if (peut_entrainer) {
                         return Choix.DRESSER;
                     }
-                    System.out.println("Exterieur.Input unknow");
+                    System.out.println("Input unknow");
                 }
                 case "c", "custom" -> {
                     return Choix.ATTENDRE;
@@ -650,7 +652,7 @@ public class Input {
                     if (joueur.tour(readed)) {
                         return Choix.AUCUN;
                     }
-                    System.out.println("Exterieur.Input unknow");
+                    System.out.println("Input unknow");
                 }
             }
         }

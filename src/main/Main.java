@@ -6,6 +6,7 @@ import Enum.Metier;
 import Enum.Position;
 import Equipement.Equipement;
 import Exterieur.Input;
+import Exterieur.Output;
 import Exterieur.SaveManager;
 import Metiers.Joueur;
 import Monstre.Lieu;
@@ -136,6 +137,7 @@ public class Main {
             }
             case 4, 5 -> {
                 if (rand.nextInt(3) == 0) {
+                    Output.jouerSonCoffre();
                     Equipement.drop_0();
                 } else {
                     System.out.println("Vous apercevez un(e) " + monstre.getNom());
@@ -171,8 +173,10 @@ public class Main {
             }
             case 6, 7 -> {
                 if (rand.nextBoolean()) {
+                    Output.jouerSonCoffre();
                     Equipement.drop_1();
                 } else if (rand.nextBoolean()) {
+                    Output.jouerSonCoffre();
                     Equipement.drop_0();
                 } else {
                     System.out.println("Vous apercevez un(e) " + monstre.getNom());
@@ -208,11 +212,13 @@ public class Main {
             }
             case 6 -> {
                 if (rand.nextBoolean()) {
+                    Output.jouerSonCoffre();
                     int t = rand.nextInt(2) + 1;
                     for (int i = 0; i <= t; i++) {
                         Equipement.drop_1();
                     }
                 } else if (rand.nextBoolean()) {
+                    Output.jouerSonCoffre();
                     Equipement.drop_0();
                 } else {
                     System.out.println("Vous apercevez un(e) " + monstre.getNom());
@@ -224,6 +230,7 @@ public class Main {
                 }
             }
             case 7 -> {
+                Output.jouerSonCoffre();
                 if (rand.nextBoolean()) {
                     Equipement.drop_1();
                 } else {
@@ -255,18 +262,21 @@ public class Main {
             }
             case 8 -> {
                 if (rand.nextBoolean()) {
+                    Output.jouerSonCoffre();
                     int t = rand.nextInt(2) + 1;
                     for (int i = 0; i <= t; i++) {
-                        Equipement.drop_1();
+                        Output.jouerSonCoffre();
                     }
                 } else {
+                    Output.jouerSonCoffre();
                     int t = rand.nextInt(2) + 1;
                     for (int i = 0; i <= t; i++) {
-                        Equipement.drop_2();
+                        Output.jouerSonCoffre();
                     }
                 }
             }
             case 9 -> {
+                Output.jouerSonCoffre();
                 if (rand.nextBoolean() || rand.nextBoolean()) {
                     Equipement.drop_1();
                 } else {
@@ -297,6 +307,7 @@ public class Main {
                 
             }
             case 8 -> {
+                Output.jouerSonCoffre();
                 if (rand.nextBoolean()) {
                     int t = rand.nextInt(3) + 1;
                     for (int i = 0; i <= t; i++) {
@@ -310,6 +321,7 @@ public class Main {
                 }
             }
             case 9 -> {
+                Output.jouerSonCoffre();
                 if (rand.nextBoolean()) {
                     Equipement.drop_2();
                 } else {
@@ -340,6 +352,7 @@ public class Main {
                 
             }
             case 12, 13 -> {
+                Output.jouerSonCoffre();
                 if (rand.nextBoolean()) {
                     int t = rand.nextInt(3) + 1;
                     for (int i = 0; i <= t; i++) {

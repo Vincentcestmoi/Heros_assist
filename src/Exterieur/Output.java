@@ -136,7 +136,7 @@ public class Output {
      * Si oui, elle récupère le tableau JSON existant, sinon elle initialise un tableau vide.
      * Elle ajoute ensuite le nom de l'objet {@code item} à l'ensemble des noms (sans doublons),
      * puis reconstruit le tableau JSON et l'ajoute au {@code promoBuilder}.
-     * @param item         le pré-équipment à ajouter (son nom sera inséré dans le tableau)
+     * @param item         le pré-équipment à ajouter (son nom sera inséré dans le tableau).
      * @param promoObj     l'objet JSON source contenant éventuellement des entrées existantes
      * @param promoBuilder le constructeur JSON dans lequel le tableau mis à jour sera inséré
      * @param promoKey     la clé sous laquelle le tableau des noms est stocké dans le JSON
@@ -161,16 +161,86 @@ public class Output {
     /**
      * Joue un son de dés
      */
-    static void jouerSonDe() {
-        try {
-            File fichierAudio = new File("Audio/son_des.wav");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(fichierAudio);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.start();
-            
-        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-            System.err.println("Erreur lors de la lecture du son : " + e.getMessage());
+    public static void jouerSonDe() {
+        jouerSon("Audio/son_des.wav");
+    }
+    
+    /**
+     * Joue un bruit de musique
+     */
+    public static void jouerSonOr(){
+        jouerSon("Audio/money.wav");
+    }
+    
+    /**
+     * Joue le rugissement d'un ours
+     */
+    public static void jouerSonAttaque(){
+        jouerSon("Audio/attaque.wav");
+    }
+    
+    /**
+     * Joue le son d'ouverture d'un coffre
+     */
+    public static void jouerSonCoffre(){
+        jouerSon("Audio/coffre.wav");
+    }
+    
+    /**
+     * Joue un son encourageant
+     */
+    public static void JouerSonLvlUp(){
+        jouerSon("Audio/level_up.wav");
+    }
+    
+    /**
+     * Joue un cri d'agonie
+     */
+    public static void JouerSonMortDef(){
+        jouerSon("Audio/mort_def.wav");
+    }
+    
+    /**
+     * Joue un (autre) cri d'agonie
+     */
+    public static void JouerSonMort(){
+        jouerSon("Audio/mort.wav");
+    }
+    
+    /**
+     * Joue le son d'un tir à l'arc
+     */
+    public static void JouerSonTir(){
+        jouerSon("Audio/tir.wav");
+    }
+    
+    /**
+     * Joue le son d'une attaque
+     */
+    public static void JouerSonDommage(){
+        jouerSon("Audio/degat.wav");
+    }
+    
+    public static void jouerSonMonstreMort(){
+        jouerSon("Audio/mort_monstre.wav");
+    }
+    
+    /**
+     * Joue un son
+     * @param pathName le nom du fichier à jouer
+     */
+    static void jouerSon(String pathName) {
+        {
+            try {
+                File fichierAudio = new File(pathName);
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(fichierAudio);
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioStream);
+                clip.start();
+                
+            } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+                System.err.println("Erreur lors de la lecture du son : " + e.getMessage());
+            }
         }
     }
     

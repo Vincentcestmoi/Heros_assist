@@ -4,6 +4,7 @@ import Enum.Competence;
 import Enum.Position;
 import Equipement.Equipement;
 import Exterieur.Input;
+import Exterieur.Output;
 import Metiers.Joueur;
 import main.Combat;
 import main.Main;
@@ -525,6 +526,9 @@ public class Monstre {
             return;
         }
         int degat = applique_competence_tir(max(quantite - this.armure, 1));
+        if(degat > 0){
+            Output.JouerSonTir();
+        }
         subit_dommage(degat, false);
     }
     
@@ -711,8 +715,10 @@ public class Monstre {
                 }
                 case DUO -> {
                     System.out.println("Un des " + this.nom + " est mort(e).");
+                    Output.jouerSonMonstreMort();
                     this.competence = Competence.DUO_PASSED;
                     this.vie = this.vie_base;
+                    return true;
                 }
                 default -> System.out.println(this.nom + " est mort(e).");
             }
@@ -720,10 +726,21 @@ public class Monstre {
             etat += vie; //on retire les dégats en trop
             Joueur.monstre_mort(this);
             
+            Output.jouerSonMonstreMort();
             if (etat <= 0 || pos == Position.ENFERS || pos == Position.OLYMPE || pos == Position.ASCENDANT) {
                 return false;
             }
-            System.out.println("Vous pouvez vendre le cadavre de " + nom + " pour " + (1 + (etat - 1) / 10) + " PO.");
+            int value = (1 + (etat - 1) / 10);
+            System.out.println("Vous pouvez vendre le cadavre de " + nom + " pour " + value + " PO.");
+            for (int i = 0; i < value; i++) {
+                Output.jouerSonOr();
+                try {
+                    Thread.sleep(500); // pause de 0.5 seconde
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // bonne pratique : réinterrompre le thread
+                    System.err.println("Interruption pendant la pause : " + e.getMessage());
+                }
+            }
             return false;
         }
         return true;
@@ -741,6 +758,9 @@ public class Monstre {
             return;
         }
         int degas = applique_competence_dommage(max(quantite - this.armure, 1));
+        if(degas > 0){
+            Output.JouerSonDommage();
+        }
         subit_dommage(degas, false);
         if (!est_mort()) {
             applique_competence_post_dommage();
