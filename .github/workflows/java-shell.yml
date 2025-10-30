@@ -26,5 +26,8 @@ jobs:
     - name: 🛠️ Compile Java sources
       run: ./compiler.sh
 
-    - name: 🚀 Run main program (no argument)
+    - name: 🚀 Run main program (no play)
       run: ./lancer.sh --test
+
+    - name: 🧪 Run automated test session
+      run: timeout 10s ./lancer.sh --test2
