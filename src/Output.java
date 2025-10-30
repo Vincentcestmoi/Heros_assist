@@ -5,15 +5,13 @@ import java.io.IOException;
 
 public class Output {
 
-    static boolean write(String fichier, String contenu) {
+    static void write(String fichier, String contenu) {
         try {
             FileWriter writer = new FileWriter(Main.Path + fichier + Main.Ext);
             writer.write(contenu);
             writer.close();
-            return true;
         } catch (IOException e) {
             System.err.println("Erreur lors de l'écriture : " + e.getMessage());
-            return false;
         }
     }
 
@@ -40,9 +38,7 @@ public class Output {
      * @param nomFichier le chemin du fichier
      */
     public static void delete_fichier(String nomFichier) {
-        if(write(nomFichier, ";")) {
-            System.out.println(nomFichier + " écrasé avec succès");
-        }
+        write(nomFichier, ";");
     }
 
     /**
