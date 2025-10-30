@@ -264,7 +264,6 @@ public class Output {
             if (!f.delete()) {
                 throw new IOException("Impossible de supprimer : " + f.getName());
             }
-            System.out.println("Fichier supprimé : " + f.getName());
         }
     }
 }
