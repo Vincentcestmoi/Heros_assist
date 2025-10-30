@@ -6,7 +6,7 @@ public class Main {
 
     static final Input input = new Input();
     static final Random rand = new Random();
-    static final String Path = "../Save/";
+    static final String Path = "Save/";
     static final String Ext = ".txt";
     static final int f_max = 7;
     static final int nbj_max = 8;
