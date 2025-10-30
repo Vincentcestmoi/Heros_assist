@@ -16,7 +16,7 @@ public class Input {
     // sauvegarde
     
     /**
-     * Sauvegarde les données des précedéntes partie et propose aux joueurs de charger une sauvegarde
+     * Sauvegarde les données des précédentes partie et propose aux joueurs de charger une sauvegarde
      * @return true si la sauvegarde est complété, et false si elle doit être faite à la main
      */
     public static boolean load() throws IOException {
