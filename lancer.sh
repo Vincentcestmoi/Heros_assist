@@ -33,6 +33,11 @@ if [ $# -eq 0 ]; then
     java -cp "bin${SEP}lib/*" main.Main
 elif [ "$1" == "--test" ]; then
     java -cp "bin${SEP}lib/*" main.Main --test
+elif [ "$1" == "--test2" ]; then
+    cd Save0
+    rm -rf info.json
+    cd ..
+    printf "0\ntest\nO\n3\nJ1\nO\nno\nJ2\nO\nau\nJ3\nO\ngu\nq\nq\n" | java -cp "bin${SEP}lib/*" main.Main
 else
     java -cp "bin${SEP}lib/*" main.Main "$@"
 fi
