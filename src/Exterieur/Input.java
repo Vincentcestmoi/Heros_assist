@@ -10,6 +10,8 @@ import javax.json.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.EnumSet;
+import java.util.Set;
 
 public class Input {
     
@@ -95,7 +97,7 @@ public class Input {
     
     
     /**
-     * Supprime les monstres nommés enregistrés comme abscent
+     * Supprime les monstres nommés enregistrés comme absent
      */
     private static void corrige_nomme() {
         try (JsonReader reader = Json.createReader(new FileReader("Save" + Main.Path + "/info.json"))) {
@@ -351,7 +353,7 @@ public class Input {
      * @return un indice sur le type de promotion que le joueur veut
      */
     public static Promo_Type promo() throws IOException {
-        String texte = "Choississez votre type de récompense : ";
+        String texte = "Choisissez votre type de récompense : ";
         if (Pre_Equipement.nb_monture > 0) {
             texte += "(m)onture ";
         }
@@ -499,7 +501,9 @@ public class Input {
     }
     
     public static Action_extra extra(Joueur joueur, Action action) throws IOException {
-        if (action == Action.AUCUNE || action == Action.END || action == Action.CONCOCTION || action == Action.DOMESTIQUER || action == Action.DEXTERITE || action == Action.LIEN || action == Action.MEDITATION || action == Action.FUIR || action == Action.OFF) {
+        Set<Action> actionsSansExtra = EnumSet.of(Action.AUCUNE, Action.END, Action.CONCOCTION, Action.DOMESTIQUER,
+                Action.DEXTERITE, Action.LIEN, Action.MEDITATION, Action.FUIR, Action.OFF);
+        if (actionsSansExtra.contains(action)) {
             return Action_extra.AUCUNE;
         }
         String text = joueur.text_extra(action);
@@ -515,7 +519,7 @@ public class Input {
                 if (temp != Action_extra.AUCUNE) {
                     yield temp;
                 }
-                System.out.println("Unkown input.");
+                System.out.println("Unknown input.");
                 yield extra(joueur, action);
             }
         };
@@ -581,31 +585,31 @@ public class Input {
                     if (peut_descendre) {
                         return Choix.DESCENDRE;
                     }
-                    System.out.println("Input unknow");
+                    System.out.println("Input unknown");
                 }
                 case "m", "monter" -> {
                     if (peut_monter) {
                         return Choix.MONTER;
                     }
-                    System.out.println("Input unknow");
+                    System.out.println("Input unknown");
                 }
                 case "a", "aller au marche", "aller au marché", "aller", "marche", "marché" -> {
                     if (market) {
                         return Choix.MARCHE;
                     }
-                    System.out.println("Input unknow");
+                    System.out.println("Input unknown");
                 }
                 case "frapper un pantin", "frapper", "f" -> {
                     if (market) {
                         return Choix.DUMMY;
                     }
-                    System.out.println("Input unknow");
+                    System.out.println("Input unknown");
                 }
                 case "entrainer son familier", "en" -> {
                     if (peut_entrainer) {
                         return Choix.DRESSER;
                     }
-                    System.out.println("Input unknow");
+                    System.out.println("Input unknown");
                 }
                 case "c", "custom" -> {
                     return Choix.ATTENDRE;
@@ -616,7 +620,7 @@ public class Input {
                 
                 // caché
                 case "q" -> {
-                    System.out.println("Confirmez l'arret");
+                    System.out.println("Confirmez l'arrêt");
                     if (read().equals("q")) {
                         return Choix.QUITTER;
                     }
@@ -628,7 +632,7 @@ public class Input {
                     }
                 }
                 case "del" -> {
-                    System.out.println("Confirmez le descès");
+                    System.out.println("Confirmez décès");
                     if (read().equals("del")) {
                         return Choix.FAMILIER_MOINS;
                     }
@@ -650,7 +654,7 @@ public class Input {
                     if (joueur.tour(readed)) {
                         return Choix.AUCUN;
                     }
-                    System.out.println("Input unknow");
+                    System.out.println("Input unknown");
                 }
             }
         }

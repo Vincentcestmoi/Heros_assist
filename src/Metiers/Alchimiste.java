@@ -89,7 +89,7 @@ public class Alchimiste extends Joueur {
     
     @Override
     protected void presente_pouvoir() {
-        System.out.println("Dissection : permet de récuperer des ingrédients sur un cadavres. Dégrade l'état du " +
+        System.out.println("Dissection : permet de récupérer des ingrédients sur un cadavres. Dégrade l'état du " +
                 "cadavre.");
         System.out.println("Concoction : Dépenses des ingrédients pour réaliser une potion.");
         if (niveau >= 2) {
@@ -729,8 +729,8 @@ public class Alchimiste extends Joueur {
                 "poison" + " (P#3)", "potion instable (E#1)", "potion de feu (E#2)", "potion de force (ATK#1)",
                 "potion de vie " + "(PV#2)", "potion énergétique (PP#1)", "potion de santé (PV#3)",
                 "potion " + "d" + "'énergie" + " (PP#2)", "potion " + "de vigeur (RES#1)", "potion de résistance " +
-                "(RES#2)", "potion de " + "puissance " + "(ATK#2)", "flasque nécrosé " + "(P#4)", "potion nécrotyque " +
-                "(P#5)", "potion explosive " + "(E#4)", "potion" + " divine (Div#A)"};
+                "(RES#2)", "potion de " + "puissance " + "(ATK#2)", "flasque nécrosé " + "(P#4)", "potion nécrotyque "
+                + "(P#5)", "potion explosive " + "(E#4)", "potion" + " divine (Div#A)"};
         
         
         System.out.println("Combien d'ingrédient allez-vous utiliser ? ");
