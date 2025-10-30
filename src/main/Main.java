@@ -478,7 +478,6 @@ public class Main {
             
             joueurs[i] = Joueur.CreerJoueur(nom, Position.DEFAULT, metier, 0, get_parent(), 0);
             joueurs[i].presente_detail();
-            joueurs[i].presente();
             System.out.println();
         }
         SaveManager.creerSauvegarde(titre, Main.nbj);
