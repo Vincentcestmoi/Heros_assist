@@ -34,8 +34,6 @@ public class Main {
             return;
         }
         
-        if (!Arrays.equals(args, new String[]{})) Path = Integer.parseInt(args[0]);
-        
         if (!Input.load()) {
             init_game();
         }
