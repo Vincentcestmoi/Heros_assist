@@ -31,3 +31,9 @@ jobs:
 
     - name: 🧪 Run automated test session
       run: timeout 10s ./lancer.sh --test2
+
+    - name: 🧪 Run automated test session
+      run: timeout 10s ./lancer.sh --test3
+
+    - name: 🧪 Run automated test session
+      run: timeout 10s ./lancer.sh --test4
