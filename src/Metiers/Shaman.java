@@ -69,10 +69,10 @@ public class Shaman extends Joueur {
     protected void presente_pouvoir() {
         System.out.println("Incantation : lance de mystérieuses incantations invoquant les forces de la nature et " + "les" + " esprits de ses ancêtres.");
         if (this.niveau >= 2) {
-            System.out.println("Lien : Projete son âme dans celle d'un monstre pour tenter de les lier de force. Un " + "monstre" + " en bonne santé aura une âme puissante, alors que l'âme d'un monstre blessé est plus" + " faible.");
+            System.out.println("Lien : Projette son âme dans celle d'un monstre pour tenter de les lier de force. Un " + "monstre" + " en bonne santé aura une âme puissante, alors que l'âme d'un monstre blessé est plus" + " faible.");
         }
         if (this.niveau >= 3) {
-            System.out.println("Paix intérieure : Regagne instantannement sa santé mentale et son calme.");
+            System.out.println("Paix intérieure : Regagne instantanément sa santé mentale et son calme.");
         }
     }
     
@@ -154,7 +154,7 @@ public class Shaman extends Joueur {
                             Les esprits de puissants anciens guerriers rejoignent vos rangs.
                             Les esprits d'anciens guérisseurs rejoignent vos rangs.
                             Nouvelle incantation apprise !
-                            Votre âme dévellope son indépendance.
+                            Votre âme développe son indépendance.
                             """;
             case 10 -> {
                 this.vie += 1;
@@ -164,7 +164,7 @@ public class Shaman extends Joueur {
                         Votre attaque s'en trouve légèrement renforcée.
                         Votre résistance s'en trouve légèrement renforcée.
                         Votre âme s'en trouve grandement renforcée.
-                        Votre compréhension du monde s'accroie grandement
+                        Votre compréhension du monde s'accroit grandement
                         """; //bonus lien, bonus type dé tout incantation
             }
             case 11 -> "Vous avez atteint le niveau max (frappe le dev c'est sa faute).";
@@ -472,7 +472,7 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void colere_boost() throws IOException {
-        int jet = jet(new int[]{9}, new int[]{8, 6}, new int[]{4, 10, 10, 10}, true);
+        int jet = jet(new int[]{9}, new int[]{8, 6}, new int[]{4, 10, 10, 10});
         if (jet <= 2) {
             System.out.println("Les esprits des ancients guerriers vous encouragent.");
             possession_atk += 1;
@@ -506,7 +506,7 @@ public class Shaman extends Joueur {
     private void colere_attaque(Monstre ennemi) throws IOException {
         System.out.println("Les esprits de vos ancêtres déchainent leur colère sur " + ennemi.getNom());
         int attaque;
-        int jet = jet(new int[]{9, 4}, new int[]{10, 8, 6}, new int[]{10, 10, 10}, true);
+        int jet = jet(new int[]{9, 4}, new int[]{10, 8, 6}, new int[]{10, 10, 10});
         //D6
         if (jet <= 2) {
             attaque = 2;
@@ -547,7 +547,7 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void colere_berserk() throws IOException {
-        int jet = jet(new int[]{9, 4}, new int[]{8, 6, 4}, new int[]{10, 10}, true);
+        int jet = jet(new int[]{9, 4}, new int[]{8, 6, 4}, new int[]{10, 10});
         // D4
         if (jet <= 2) {
             System.out.println("Un esprit provoque votre colère.");
@@ -623,7 +623,7 @@ public class Shaman extends Joueur {
      */
     private void nuage_pluie() throws IOException {
         System.out.println("Des nuages apparaissent dans le ciel et une pluie légère commence à tomber.");
-        int jet = jet(new int[]{8, 6}, new int[]{8, 6, 4}, new int[]{10, 10}, true);
+        int jet = jet(new int[]{8, 6}, new int[]{8, 6, 4}, new int[]{10, 10});
         //D4
         if (jet <= 1) {
             System.out.println("La pluie tombante recouvre vos blessures.");
@@ -668,7 +668,7 @@ public class Shaman extends Joueur {
      */
     private void nuage_grele(Monstre ennemi) throws IOException {
         System.out.println("De sombres nuages s'amoncèlent au dessus de vous");
-        int jet = jet(new int[]{8, 6}, new int[]{8, 6, 4}, new int[]{10, 10}, true);
+        int jet = jet(new int[]{8, 6}, new int[]{8, 6, 4}, new int[]{10, 10});
         // D4
         if (jet <= 1) {
             System.out.println("Une fine grèle vous frappe.");
@@ -731,7 +731,7 @@ public class Shaman extends Joueur {
      */
     private void nuage_brume(Monstre ennemi) throws IOException {
         System.out.println("Un nuage apparait au dessus de vous et commence à se rapprocher du sol");
-        int jet = jet(new int[]{8, 6}, new int[]{8, 6, 4}, new int[]{10, 10, 10}, true);
+        int jet = jet(new int[]{8, 6}, new int[]{8, 6, 4}, new int[]{10, 10, 10});
         //D4
         if (jet <= 1) {
             System.out.println("Une légère brûme vous entoure.");
@@ -791,7 +791,7 @@ public class Shaman extends Joueur {
      */
     private void nuage_foudre(Monstre ennemi) throws IOException {
         System.out.println("Un nuage menaçant apparait au dessus de vous et commence à se rapprocher du sol");
-        int jet = jet(new int[]{8}, new int[]{8, 6}, new int[]{8, 10, 10}, true);
+        int jet = jet(new int[]{8}, new int[]{8, 6}, new int[]{8, 10, 10});
         // D6
         if (jet <= 1) {
             System.out.println("C'est... joli ?");
@@ -873,7 +873,7 @@ public class Shaman extends Joueur {
      */
     private void vent(Monstre ennemi) throws IOException {
         System.out.println("Le vent se lève...");
-        int jet = jet(new int[]{}, new int[]{6}, new int[]{10, 10}, true);
+        int jet = jet(new int[]{}, new int[]{6}, new int[]{10, 10});
         // D6
         if (jet <= 1) {
             System.out.println("Une légère brise se fait sentir.");
@@ -950,7 +950,7 @@ public class Shaman extends Joueur {
      */
     private void terre(Monstre ennemi) throws IOException {
         System.out.println("La terre commence à trembler...");
-        int jet = jet(new int[]{}, new int[]{6}, new int[]{10, 10}, true);
+        int jet = jet(new int[]{}, new int[]{6}, new int[]{10, 10});
         // D6
         if (jet <= 1) {
             System.out.println("Vous entendez un léger grondement.");
@@ -998,7 +998,7 @@ public class Shaman extends Joueur {
      */
     private void feu(Monstre ennemi) throws IOException {
         System.out.println("Vous entendez de légers crépitements...");
-        int jet = jet(new int[]{}, new int[]{6}, new int[]{10, 10}, true);
+        int jet = jet(new int[]{}, new int[]{6}, new int[]{10, 10});
         int dommage;
         // D6
         if (jet <= 1) {
@@ -1033,7 +1033,7 @@ public class Shaman extends Joueur {
      */
     private void eau(Monstre ennemi) throws IOException {
         System.out.println("Vous entendez un léger gargouillement...");
-        int jet = jet(new int[]{}, new int[]{6}, new int[]{10, 10}, true);
+        int jet = jet(new int[]{}, new int[]{6}, new int[]{10, 10});
         // D
         if (jet <= 1) {
             System.out.println("Vous sentez quelques gouttes de pluie.");
@@ -1114,7 +1114,7 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void benir_soin() throws IOException {
-        int jet = jet(new int[]{9}, new int[]{8, 6}, new int[]{10, 10, 10}, true);
+        int jet = jet(new int[]{9}, new int[]{8, 6}, new int[]{10, 10, 10});
         int soin;
         //D6
         if (jet <= 1) {
@@ -1144,7 +1144,7 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void benir_vie() throws IOException {
-        int jet = jet(new int[]{9}, new int[]{8, 6}, new int[]{10, 10, 10}, true);
+        int jet = jet(new int[]{9}, new int[]{8, 6}, new int[]{10, 10, 10});
         int boost;
         // D6
         if (jet <= 1) {
@@ -1174,7 +1174,7 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void benir_force() throws IOException {
-        int jet = jet(new int[]{9}, new int[]{8, 6}, new int[]{10, 10}, true);
+        int jet = jet(new int[]{9}, new int[]{8, 6}, new int[]{10, 10});
         int boost;
         // D6
         if (jet <= 1) {
@@ -1198,7 +1198,7 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void benir_def() throws IOException {
-        int jet = jet(new int[]{}, new int[]{8}, new int[]{10, 10}, true);
+        int jet = jet(new int[]{}, new int[]{8}, new int[]{10, 10});
         int def;
         if (jet <= 3) {
             def = 1;

@@ -44,5 +44,5 @@ public enum Action {
     SORT_FEU,
     SORT_DODO,
     SORT_LUMIERE,
-    SORT_VOLCAN;
+    SORT_VOLCAN,
 }
