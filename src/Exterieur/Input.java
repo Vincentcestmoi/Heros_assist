@@ -355,7 +355,7 @@ public class Input {
     public static Promo_Type promo() throws IOException {
         String texte = "Choisissez votre type de récompense : ";
         if (Pre_Equipement.nb_monture > 0) {
-            texte += "(m)onture ";
+            texte += "(c)réature ";
         }
         if (Pre_Equipement.nb_boost > 0) {
             texte += "(r)enforcement ";
@@ -364,23 +364,23 @@ public class Input {
             texte += "(a)rtéfact ";
         }
         System.out.println(texte);
-        switch (read()) {
-            case "m", "M", "monture", "Monture" -> {
+        switch (read().toLowerCase()) {
+            case "c", "créature", "creature" -> {
                 if (Pre_Equipement.nb_monture > 0) {
-                    return Promo_Type.MONTURE;
+                    return Promo_Type.CREATURE;
                 }
             }
-            case "r", "R", "renforcement", "Renforcement" -> {
+            case "r", "renforcement" -> {
                 if (Pre_Equipement.nb_boost > 0) {
                     return Promo_Type.AMELIORATION;
                 }
             }
-            case "a", "A", "Artefact", "artefact", "Artéfact", "artéfact" -> {
+            case "a", "artefact", "artéfact" -> {
                 if (Pre_Equipement.nb_arte > 0) {
                     return Promo_Type.ARTEFACT;
                 }
             }
-            case "q", "Q" -> {
+            case "q" -> {
                 if (yn("Confirmez : ")) {
                     return Promo_Type.QUIT;
                 }

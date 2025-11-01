@@ -80,7 +80,7 @@ public class Pre_Equipement {
                 list[i] = null;
                 if (corect) {
                     switch (promo) {
-                        case MONTURE -> nb_monture--;
+                        case CREATURE -> nb_monture--;
                         case AMELIORATION -> nb_boost--;
                         case ARTEFACT -> nb_arte--;
                     }
@@ -93,7 +93,7 @@ public class Pre_Equipement {
     
     private static Pre_Equipement[] getPromo(Promo_Type promo) {
         return switch (promo) {
-            case MONTURE -> prom_list_mont;
+            case CREATURE -> prom_list_animal;
             case ARTEFACT -> prom_list_arte;
             case AMELIORATION -> prom_list_boost;
             case QUIT -> null;
@@ -194,11 +194,11 @@ public class Pre_Equipement {
         Pre_Equipement[] list;
         Promo_Type type = Input.promo();
         switch (type) {
-            case MONTURE -> list = prom_list_mont;
+            case CREATURE -> list = prom_list_animal;
             case AMELIORATION -> list = prom_list_boost;
             case ARTEFACT -> list = prom_list_arte;
             default -> {
-                System.out.println("Erreur : Equipement.Equipement non reconnu.");
+                System.out.println("Erreur : Equipement non reconnu.");
                 return new Pre_Equipement("Erreur", AUTRE, PROMOTION, AUCUN, false);
             }
         }
@@ -225,7 +225,7 @@ public class Pre_Equipement {
     static Base CONSO_MAIN = Base.CONSO_MAIN;
     static Base SAC = Base.SAC;
     static Base RUNE = Base.RUNE;
-    static Base MONTURE = Base.MONTURE;
+    static Base CREATURE = Base.CREATURE;
     
     static Rang O = Rang.O;
     static Rang I = Rang.I;
@@ -455,25 +455,35 @@ public class Pre_Equipement {
             true);
     static Pre_Equipement parch_volcan = new Pre_Equipement("parchemin d'éruption volcanique", AUTRE, IV,
             Effet_equip.PARCH_VOLCAN, true);
-    static Pre_Equipement parch_abso = new Pre_Equipement("Parchemin d'absorbtion", AUTRE, IV, Effet_equip.PARCH_ABSO
+    static Pre_Equipement parch_abso = new Pre_Equipement("Parchemin d'absorption", AUTRE, IV, Effet_equip.PARCH_ABSO
             , true);
     
     static Pre_Equipement[] rang4 = {nectar, ambroisie, fleche_plusIV, arcIV, main1IV, main2IV, armureIV, casqueIV,
             bouclierIV, ceintureIV, braceletIV, parch_volcan, parch_abso};
     
-    static Pre_Equipement pegase = new Pre_Equipement("Pégase", MONTURE, PROMOTION, Effet_equip.PEGASE,
-            Promo_Type.MONTURE);
-    static Pre_Equipement cheval = new Pre_Equipement("Cheval", MONTURE, PROMOTION, Effet_equip.CHEVAL,
-            Promo_Type.MONTURE);
-    static Pre_Equipement molosse = new Pre_Equipement("Molosse infernal", MONTURE, PROMOTION, Effet_equip.MOLOSSE,
-            Promo_Type.MONTURE);
-    static Pre_Equipement pie = new Pre_Equipement("Pie voleuse", MONTURE, PROMOTION, Effet_equip.PIE,
-            Promo_Type.MONTURE);
-    static Pre_Equipement sphinx = new Pre_Equipement("Sphinx", MONTURE, PROMOTION, Effet_equip.SPHINX,
-            Promo_Type.MONTURE);
+    static Pre_Equipement pegase = new Pre_Equipement("Pégase", CREATURE, PROMOTION, Effet_equip.PEGASE,
+            Promo_Type.CREATURE);
+    static Pre_Equipement cheval = new Pre_Equipement("Cheval", CREATURE, PROMOTION, Effet_equip.CHEVAL,
+            Promo_Type.CREATURE);
+    static Pre_Equipement molosse = new Pre_Equipement("Molosse infernal", CREATURE, PROMOTION, Effet_equip.MOLOSSE,
+            Promo_Type.CREATURE);
+    static Pre_Equipement pie = new Pre_Equipement("Pie voleuse", CREATURE, PROMOTION, Effet_equip.PIE,
+            Promo_Type.CREATURE);
+    static Pre_Equipement sphinx = new Pre_Equipement("Sphinx", CREATURE, PROMOTION, Effet_equip.SPHINX,
+            Promo_Type.CREATURE);
+    static Pre_Equipement mule = new Pre_Equipement("Mûle", CREATURE, PROMOTION, Effet_equip.MULE,
+            Promo_Type.CREATURE);
+    static Pre_Equipement arcagolem = new Pre_Equipement("Arcagolem", CREATURE, PROMOTION, Effet_equip.BATTERIE,
+            Promo_Type.CREATURE);
+    static Pre_Equipement araigne = new Pre_Equipement("Araignée géante", CREATURE, PROMOTION, Effet_equip.ARAIGNE,
+            Promo_Type.CREATURE);
+    static Pre_Equipement elephant = new Pre_Equipement("Eléphant", CREATURE, PROMOTION, Effet_equip.ELEPHANT,
+            Promo_Type.CREATURE);
+    static Pre_Equipement fee = new Pre_Equipement("fée", CREATURE, PROMOTION, Effet_equip.FEE,
+            Promo_Type.CREATURE);
     
-    static Pre_Equipement[] prom_list_mont = {pegase, cheval, molosse, pie, sphinx};
-    static public int nb_monture = prom_list_mont.length;
+    static Pre_Equipement[] prom_list_animal = {pegase, cheval, molosse, pie, sphinx, mule, arcagolem, araigne, elephant, fee};
+    static public int nb_monture = prom_list_animal.length;
     
     static Pre_Equipement broches = new Pre_Equipement("Broche souverraine", AUTRE, PROMOTION, Effet_equip.ALTRUISME,
             Promo_Type.AMELIORATION);
@@ -492,7 +502,7 @@ public class Pre_Equipement {
     static Pre_Equipement rune_arca = new Pre_Equipement("Rune arcanique", RUNE, PROMOTION, Effet_equip.RUNE_ARCA,
             Promo_Type.AMELIORATION);
     static Pre_Equipement antidote = new Pre_Equipement("Vin d'Asclépios", CONSO_MAIN, PROMOTION,
-            Effet_equip.ANTIDODE, Promo_Type.AMELIORATION);
+            Effet_equip.ANTIDOTE, Promo_Type.AMELIORATION);
     
     static Pre_Equipement[] prom_list_boost = {broches, tal_ar, tal_a, tal_r, fleche_plusP, fleche_plusP2,
             fleche_plusP3, rune_arca, antidote};
@@ -500,7 +510,7 @@ public class Pre_Equipement {
     
     
     static Pre_Equipement rune_anni = new Pre_Equipement("Inverteur de fision", AUTRE, PROMOTION,
-            Effet_equip.ANNIHILITON, Promo_Type.ARTEFACT);
+            Effet_equip.ANNIHILATION, Promo_Type.ARTEFACT);
     static Pre_Equipement rez = new Pre_Equipement("Tatouage de Résurection", AUTRE, PROMOTION, Effet_equip.REZ,
             Promo_Type.ARTEFACT);
     static Pre_Equipement fuite = new Pre_Equipement("Téleporteur courte porté", AUTRE, PROMOTION, Effet_equip.FUITE,

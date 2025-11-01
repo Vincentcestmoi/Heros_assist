@@ -319,15 +319,13 @@ public class Equipement {
     private void applique_effet(Effet_equip effet) {
         this.effet = null;
         switch (effet) {
-            case ARCA -> {
-                switch (rang) {
-                    case O, I -> this.effet = "Augmente de 1 l'attaque des arcs.";
-                    case II -> this.effet = "Augmente de 3 l'attaque des arcs.";
-                    case III -> this.effet = "Augmente de 4 l'attaque des arcs.";
-                    case IV -> this.effet = "Augmente de 15 l'attaque des arcs.";
-                    case PROMOTION -> this.effet = "Augmente de " + (rand.nextInt(4) + 1) + " l'attaque des arcs.";
-                }
-            }
+            case ARCA -> this.effet = switch (rang) {
+                case O, I -> "Augmente de 1 l'attaque des arcs.";
+                case II -> "Augmente de 3 l'attaque des arcs.";
+                case III -> "Augmente de 4 l'attaque des arcs.";
+                case IV -> "Augmente de 15 l'attaque des arcs.";
+                case PROMOTION -> "Augmente de " + (rand.nextInt(4) + 1) + " l'attaque des arcs.";
+            };
             case ARCEXP -> this.effet = "Augmente de 6 une attaque à l'arc, se consomme à l'usage.";
             case RESISTANCE1 -> this.resistance += 1;
             case RESISTANCE2 -> this.resistance += 2;
@@ -442,16 +440,16 @@ public class Equipement {
                 this.attaque -= 3;
                 this.effet = "+4 attaques pour les descendant d'Hypnos";
             }
-            case RUNE_RESIDU -> this.effet = "Peut être consummé à la place de 2 PP.";
+            case RUNE_RESIDU -> this.effet = "Peut être consumé à la place de 2 PP.";
             case PARCH_FEU ->
-                    this.effet = "Permet de lancer le sort Boule de feu : pour 2PP, inflige 5 dégats magiques.";
-            case PARCH_DODO -> this.effet = "Permet de lancer le sort Sommeil : pour 2PP, arrête un combat.";
+                    this.effet = "Permet de lancer le sort Boule de feu : pour 2 mana, inflige 5 dégas magiques.";
+            case PARCH_DODO -> this.effet = "Permet de lancer le sort Sommeil : pour 2 mana, arrête un combat.";
             case PARCH_FORCE ->
                     this.effet =
                             "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement " + "l" +
                                     "'attaque" + " de 1, se détruit après usage.";
             case PARCH_LUMIERE ->
-                    this.effet = "Permet de lancer le sort Lumière : pour 2PP, diminue de 2 points l'attaque de " +
+                    this.effet = "Permet de lancer le sort Lumière : pour 2 mana, diminue de 2 points l'attaque de " +
                             "l'ennemie (augmentez tous de 2 votre armure pour le code).";
             case RUNE_CROISS -> this.effet = "Diminue de 1 le coût de la compétence Embranchement végétal.";
             case RUNE_PLUIE -> this.effet = "Diminue de 1 le coût de la compétence Déferlante.";
@@ -470,7 +468,7 @@ public class Equipement {
                     this.effet = "Peut être utilisé pour ignorer des dommages (avant de les calculer). Une seule " +
                             "utilisation.";
             case RUNE_VENGEANCE ->
-                    this.effet = "Récuperez 2PP chaque fois qu'un familier ou joueur allié est tué par un monstre.";
+                    this.effet = "Récupérez 2PP chaque fois qu'un familier ou joueur allié est tué par un monstre.";
             case RUNE_INTERDITE ->
                     this.effet = "Augmente de 1 le coût de la compétence Nécromancie, mais augmente de 1 le résultat "
                             + "du jet de dé.";
@@ -486,7 +484,7 @@ public class Equipement {
             case ALCHI -> this.effet = "Augmente de 2 le résultat de tout vos dé de concoction.";
             case PARCH_BERSERK ->
                     this.effet =
-                            "Permet de lancer le sort Folie meurtrière : pour 2PP," + "augmente temporairement " +
+                            "Permet de lancer le sort Folie meurtrière : pour 2 mana," + "augmente temporairement " +
                                     "de 5 points l'attaque et diminue de 7 la résistances.";
             case BOURDON -> {
                 this.effet = "Quand vous lancez un sort, lancez un dé 4 : si vous faites 3 ou plus, votre sort coute "
@@ -495,7 +493,7 @@ public class Equipement {
                 armure -= 2;
             }
             case PARCH_VOLCAN ->
-                    this.effet = "Permet de lancer le sort Folie meurtrière : pour 6PP, infliges 55 dégats magiques";
+                    this.effet = "Permet de lancer le sort Eruption volcanique : pour 6 mana, infliges 55 dégas magiques";
             case PARCH_ABSO ->
                     this.effet =
                             "Quand vous tuez un monstre, vous gagnez définitivement 7 points de résistances, 3 " +
@@ -521,15 +519,32 @@ public class Equipement {
             case SPHINX -> {
                 this.attaque += 1;
                 this.resistance += 2;
-                this.effet = "Pour 1PP, augmente temporairement votre résistance de 3 points.";
+                this.effet = "Une fois par combat, augmente temporairement la résistance d'une cible de 5 points.";
+            }
+            case MULE -> {
+                this.resistance += 1;
+                this.effet = "Peut porter jusqu'à 3 sacs et leurs contenue. Les effets des sacs sont appliqués.";
+            }
+            case BATTERIE -> {
+                this.attaque += 1;
+                this.effet = "Contient 3/5 mana. Peut absorber ou décharger son mana sur une cible consentante.";
+            }
+            case ARAIGNE -> this.attaque += 5;
+            case ELEPHANT -> {
+                this.resistance += 4;
+                this.armure += 1;
+            }
+            case FEE -> {
+                this.resistance += 1;
+                this.effet = "Une fois par combat, soigne une cible de 10.";
             }
             case ALTRUISME ->
                     this.effet =
                             "Au début de chaque combat, répartissez 5 points temporaires de résistance entre " + "vos"
                                     + " alliés (familiers inclus)." + "Vous ne pouvez les attribuer à vous même.";
             case RUNE_ARCA -> this.effet = "Diminue de 1 la coût de tout vos sort";
-            case ANTIDODE -> this.effet = "Le consommer fournit une immunité définitive au poison et à la cécité.";
-            case ANNIHILITON ->
+            case ANTIDOTE -> this.effet = "Le consommer fournit une immunité définitive au poison et à la cécité.";
+            case ANNIHILATION ->
                     this.effet = "En sacrifiant une rune, vous pouvez lancer un attaque magique de puissance le " +
                             "triple de votre attaque classique.";
             case REZ ->
@@ -538,19 +553,19 @@ public class Equipement {
             case FUITE ->
                     this.effet = "A tout moment, vous pouvez utiliser cet objet pour fuir un combat. Se détruit " +
                             "après" + " usage. Ne peut être utilisé si vous êtes mort.";
-            case GRENADE -> this.effet = "Inflige 4 dommages additionels. Utilisable 3 fois au total.";
+            case GRENADE -> this.effet = "Inflige 4 dommages additionnels. Utilisable 3 fois au total.";
             case MER_EXP ->
                     this.effet =
                             "Si vous vous trouvez en mer, vous pouvez choisir n'importe quel résultat entre 1 " + "et"
                                     + " 7 au lieu de lancer le dé." + "Un résultat choisi ignore le bonus de dé.";
             case ITEM_IMMUN ->
-                    this.effet = "Qu'importe la cause et le contexte, chaque fois que vous perdez un équipement, " +
-                            "récuperez le." + "(ne fonctionne pas si vous mourrez, vendez, échangez ou dépensez un " + "équipement)";
+                    this.effet = "Chaque fois que vous perdez un équipement, récupérez le."
+                            + " (ne fonctionne pas si vous mourrez, vendez, échangez ou dépensez un équipement)";
             case SAC_TEMP ->
                     this.effet = "Lorsque vous utilisez un objet à usage limité pour la dernière fois," + "vous " +
-                            "pouvez choisir de détruire cette sacoche à la place et récuperer tous les utilisations " + "de votre objet.";
-            default -> {
-            } //inclus AUCUN
+                            "pouvez choisir de détruire cette sacoche à la place et récupérez tous les utilisations " + "de votre objet.";
+            case AUCUN -> {
+            }
         }
     }
     
@@ -609,7 +624,7 @@ public class Equipement {
             case CONSO_MAIN -> type = "consommable";
             case SAC -> type = "sac";
             case RUNE -> type = "rune";
-            case MONTURE -> type = "monture";
+            case CREATURE -> type = "monture";
             case AUTRE -> type = "divers";
             default -> type = "Erreur : type non reconnu.";
         }
@@ -648,7 +663,7 @@ public class Equipement {
     //Equipement.Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix,
     // String effet)
     
-    static Equipement lotterie = new Equipement("ticket de lotterie", Rang.O, Base.AUTRE, 0, 0, 0, 3,
+    static Equipement loterie = new Equipement("ticket de loterie", Rang.O, Base.AUTRE, 0, 0, 0, 3,
             "Lancez un dé " + "à" + " 6 face, si vous faite 6, gagnez 15PO. Jetez ce ticket.");
     
     static Equipement main1_0 = new Equipement("branche solide", Rang.O, Base.MAIN_1, 1, 0, 0, 5);
@@ -673,7 +688,7 @@ public class Equipement {
     static Equipement ingredients2_I = new Equipement("2 ingrédients", Rang.O, Base.AUTRE, 0, 0, 0, 8);
     
     static Equipement[] marcheI = {arc_I, main1_I, main2_I, armure_I, bouclier_I, casque_I, ingredients_I,
-            ingredients2_I, lotterie};
+            ingredients2_I, loterie};
     
     static Equipement arc_II = new Equipement("grand arc", Rang.II, Base.ARC, 3, 0, 0, 5);
     static Equipement bouclier_II = new Equipement("bouclier", Rang.II, Base.BOUCLIER, 2, 3, 0, 9);
@@ -683,7 +698,7 @@ public class Equipement {
     static Equipement casque_II = new Equipement("casque", Rang.II, Base.CASQUE, 0, 3, 0, 6);
     
     static Equipement[] marcheII = {arc_II, main1_II, main2_II, armure_II, bouclier_II, casque_II, ingredients_0,
-            ingredients2_0, lotterie};
+            ingredients2_0, loterie};
     
     static Equipement arc_III = new Equipement("arc à poulie", Rang.III, Base.ARC, 5, 0, 0, 7);
     static Equipement bouclier_III = new Equipement("bon bouclier", Rang.III, Base.BOUCLIER, 4, 5, 0, 13);
@@ -773,7 +788,7 @@ public class Equipement {
      * @param reduc réduction appliquée à l'affichage
      */
     public static void marche_monts(int reduc) {
-        System.out.println("Vous croisez un pelerin qui vous propose de vous vendre un objet :");
+        System.out.println("Vous croisez un pèlerin qui vous propose de vous vendre un objet :");
         marche_global(reduc, marcheIII, 1);
     }
 }

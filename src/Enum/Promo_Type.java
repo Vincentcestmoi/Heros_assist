@@ -1,7 +1,7 @@
 package Enum;
 
 public enum Promo_Type {
-    MONTURE,
+    CREATURE,
     ARTEFACT,
     AMELIORATION,
     QUIT,
