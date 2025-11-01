@@ -296,12 +296,12 @@ public class Necromancien extends Joueur {
     }
     
     @Override
-    public boolean peut_ressuciter() {
+    public boolean peut_ressusciter() {
         return this.niveau >= 2;
     }
     
     @Override
-    public boolean ressuciter(int malus) throws IOException {
+    public boolean ressusciter(int malus) throws IOException {
         if (this.niveau < 2) {
             return false;
         }

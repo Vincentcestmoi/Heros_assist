@@ -517,7 +517,7 @@ public class Main {
      * @return un dieu
      */
     public static Dieux get_parent() {
-        Dieux[] t = {Dieux.POSEIDON, Dieux.ZEUX, Dieux.HADES, Dieux.ARES, Dieux.DYONISOS, Dieux.APOLLON, Dieux.DEMETER};
+        Dieux[] t = {Dieux.POSEIDON, Dieux.ZEUS, Dieux.HADES, Dieux.ARES, Dieux.DIONYSOS, Dieux.APOLLON, Dieux.DEMETER};
         return t[rand.nextInt(t.length)];
     }
 }

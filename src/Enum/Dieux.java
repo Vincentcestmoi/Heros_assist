@@ -2,10 +2,10 @@ package Enum;
 
 public enum Dieux {
     POSEIDON,
-    ZEUX,
+    ZEUS,
     HADES,
     ARES,
-    DYONISOS,
+    DIONYSOS,
     APOLLON,
     DEMETER,
 }

@@ -90,7 +90,7 @@ public abstract class Joueur {
      * Crée un joueur à partir de sa sauvegarde
      * @param chemin le nom du fichier où se trouve la sauvegarde
      * @return le joueur
-     * @throws FileNotFoundException evidemment on cherche à charger un fichier
+     * @throws FileNotFoundException évidemment on cherche à charger un fichier
      */
     public static Joueur chargerJoueur(String chemin) throws FileNotFoundException {
         try (JsonReader reader = Json.createReader(new FileReader(chemin))) {
@@ -106,25 +106,25 @@ public abstract class Joueur {
             try {
                 ob_f = json.getInt("ob_f");
             } catch (Exception e) {
-                System.out.println("Erreur : impossible de récuperer l'obéissance du familier. " + e.getMessage());
+                System.out.println("Erreur : impossible de récupérer l'obéissance du familier. " + e.getMessage());
                 System.out.println("Valeur par défaut appliquée : aucun familier");
             }
             try {
                 position = Position.valueOf(json.getString("position"));
             } catch (Exception e) {
-                System.out.println("Erreur : impossible de récuperer la zone. " + e.getMessage());
+                System.out.println("Erreur : impossible de récupérer la zone. " + e.getMessage());
                 System.out.println("Valeur par défaut appliquée : Prairie");
             }
             try {
                 parent = Dieux.valueOf(json.getString("parent"));
             } catch (Exception e) {
-                System.out.println("Erreur : impossible de récuperer le parent divin. " + e.getMessage());
+                System.out.println("Erreur : impossible de récupérer le parent divin. " + e.getMessage());
                 System.out.println("Valeur par défaut appliquée : aléatoire : " + parent.toString());
             }
             try {
                 xp = json.getInt("xp");
             } catch (Exception e) {
-                System.out.println("Erreur : impossible de récuperer l'xp du joueur. " + e.getMessage());
+                System.out.println("Erreur : impossible de récupérer l'xp du joueur. " + e.getMessage());
                 System.out.println("Valeur par défaut appliquée : 0");
             }
             
@@ -139,7 +139,7 @@ public abstract class Joueur {
      * @param metier   la classe du joueur à créer
      * @param ob_f     l'obéissance du joueur à créer (0 s'il n'en a pas).
      * @param parent   l'ancêtre divin du joueur à créer
-     * @param xp       le total d'éxperience accumulée par lejoueur à créer
+     * @param xp       le total d'experience accumulée par le joueur à créer
      * @return le joueur
      */
     public static Joueur CreerJoueur(String nom, Position position, Metier metier, int ob_f, Dieux parent, int xp) {
@@ -246,12 +246,12 @@ public abstract class Joueur {
     
     protected String nomDieux() {
         return switch (parent) {
-            case ZEUX -> "Zeus";
+            case ZEUS -> "Zeus";
             case ARES -> "Ares";
             case HADES -> "Hades";
             case APOLLON -> "Apollon";
             case DEMETER -> "Demeter";
-            case DYONISOS -> "Dyonisos";
+            case DIONYSOS -> "Dionysos";
             case POSEIDON -> "Poseidon";
         };
     }
@@ -273,9 +273,9 @@ public abstract class Joueur {
             }
             case APOLLON -> add_competence("Infection");
             case DEMETER -> add_competence("Sérénité");
-            case DYONISOS -> add_caracteristique("Sens des affaires");
+            case DIONYSOS -> add_caracteristique("Sens des affaires");
             case POSEIDON -> add_competence("Inondation");
-            case ZEUX -> add_competence("Foudre");
+            case ZEUS -> add_competence("Foudre");
         }
     }
     
@@ -310,7 +310,7 @@ public abstract class Joueur {
         return switch (parent) {
             case ARES -> {
                 if (getMetier() != Metier.GUERRIERE) {
-                    yield "Berserk : pour 1 mana/aura, imprègne de folie meutrière l'esprit du lanceur avant qu'il " + "ne frappe, augmentant sa puissance au prix de sa santé mentale.";
+                    yield "Berserk : pour 1 mana/aura, imprègne de folie meurtrière l'esprit du lanceur avant qu'il " + "ne frappe, augmentant sa puissance au prix de sa santé mentale.";
                 }
                 yield "";
             }
@@ -323,9 +323,9 @@ public abstract class Joueur {
             }
             case APOLLON -> "Infection : pour 1 mana, augmente les dommages de vos tirs pour un combat.";
             case DEMETER -> "Sérénité : pour 2 mana/aura, soigne une cible.";
-            case DYONISOS -> "Sens des affaires : diminue les prix des objets en vente aux marchés.";
+            case DIONYSOS -> "Sens des affaires : diminue les prix des objets en vente aux marchés.";
             case POSEIDON -> "Inondation : Un sort qui consomme 4 mana et inflige de gros dommages magiques.";
-            case ZEUX -> "Foudre : Un sort qui consomme 5 mana et inflige de puissants dommages magiques.";
+            case ZEUS -> "Foudre : Un sort qui consomme 5 mana et inflige de puissants dommages magiques.";
         };
     }
     
@@ -549,10 +549,10 @@ public abstract class Joueur {
             case ASCENDANT, OLYMPE -> 0;
             case ENFERS -> parent == Dieux.HADES ? 2 : 0;
             case PRAIRIE -> parent == Dieux.DEMETER ? 2 : 0;
-            case VIGNES -> parent == Dieux.DYONISOS ? 4 : 0;
+            case VIGNES -> parent == Dieux.DIONYSOS ? 4 : 0;
             case TEMPLE -> parent == Dieux.APOLLON ? 4 : 0;
             case MER -> parent == Dieux.POSEIDON ? 5 : 0;
-            case MONTS -> parent == Dieux.ZEUX ? 5 : 0;
+            case MONTS -> parent == Dieux.ZEUS ? 5 : 0;
         };
     }
     
@@ -574,7 +574,7 @@ public abstract class Joueur {
                 yield 0;
             }
             case VIGNES -> {
-                if (parent == Dieux.DYONISOS) {
+                if (parent == Dieux.DIONYSOS) {
                     yield 1;
                 } else if (parent == Dieux.ARES) {
                     yield 1;
@@ -596,7 +596,7 @@ public abstract class Joueur {
                 yield 0;
             }
             case MONTS -> {
-                if (parent == Dieux.ZEUX) {
+                if (parent == Dieux.ZEUS) {
                     yield 5;
                 } else if (parent == Dieux.ARES) {
                     yield 3;
@@ -613,18 +613,18 @@ public abstract class Joueur {
     }
     
     protected int bonusArmLieux() {
-        if ((position == Position.MONTS && parent == Dieux.ZEUX) || (position == Position.MER && parent == Dieux.POSEIDON)) {
+        if ((position == Position.MONTS && parent == Dieux.ZEUS) || (position == Position.MER && parent == Dieux.POSEIDON)) {
             return 1;
         }
         return 0;
     }
     
-    //************************************************METHODE INDEPENDANTE********************************************//
+    //************************************************METHODE INDEPENDENTE********************************************//
     
     /**
      * Donne de l'expérience au joueur de 1.
-     * @implNote Ce qui agmente l'xp : participer à un combat, domestiquer un monstre, porter le dernier coup,
-     * ressuciter un allié, avoir affronté un monstre nommé (victoire ou fuite)
+     * @implNote Ce qui augmente l'xp : avoir affronté un monstre (victoire ou fuite) (*2 si nommé), porter le dernier coup,
+     * ressusciter un allié,
      */
     public void gagneXp() {
         this.xp += 1;
@@ -748,7 +748,7 @@ public abstract class Joueur {
     }
     
     /**
-     * Permet aux joueurs qui en sont abscent de rejoindre un combat
+     * Permet aux joueurs qui en sont absent de rejoindre un combat
      * @param pos le lieu du combat
      * @throws IOException toujours
      */
@@ -799,7 +799,7 @@ public abstract class Joueur {
     }
     
     /**
-     * Simule l'action d'un familer auquel on ne donne pas d'ordre
+     * Simule l'action d'un familier auquel on ne donne pas d'ordre
      * @param ennemi le monstre ennemi
      * @throws IOException toujours
      */
@@ -807,7 +807,7 @@ public abstract class Joueur {
         if (!a_familier_actif() || ob_f <= 3 || f_est_assomme()) {
             return;
         }
-        System.out.println("Votre familier attaque l'ennemi pour proteger " + nom + ".");
+        System.out.println("Le familier attaque l'ennemi pour protéger " + nom + ".");
         f_attaque(ennemi);
     }
     
@@ -828,7 +828,7 @@ public abstract class Joueur {
      */
     public void fin_affrontement(boolean ennemi_nomme) throws IOException {
         if (est_actif() && !est_vivant() && Input.yn(getNom() + " est mort durant le combat, le reste-t-il/elle ?")) {
-            if (auto_ressuciter(0)) {
+            if (auto_ressusciter(0)) {
                 System.out.println(getNom() + " résiste à la mort.");
             } else {
                 mort_def();
@@ -885,7 +885,7 @@ public abstract class Joueur {
     /**
      * Calcule et applique les effets d'une attaque à distance
      * @param ennemi     le monstre ennemi
-     * @param bonus_popo les dommages additionel des popo (ici uniquement les instables)
+     * @param bonus_popo les dommages additionnel des popo (ici uniquement les instables)
      * @throws IOException toujours
      */
     public void tirer(Monstre ennemi, int bonus_popo) throws IOException {
@@ -922,7 +922,7 @@ public abstract class Joueur {
      * Calcule les dommages bonus d'une attaque classique
      * @param base       les dommages de base de l'attaque
      * @param bonus_popo les dommages des consommables
-     * @return la valeur des dommages bonus (arrondits)
+     * @return la valeur des dommages bonus (arrondit).
      * @throws IOException toujours
      */
     protected float calcule_bonus_atk(int base, int bonus_popo) throws IOException {
@@ -1123,7 +1123,7 @@ public abstract class Joueur {
                 return;
             }
             default -> {
-                System.out.println("Erreur : résultat inatendu. Action annulée.");
+                System.out.println("Erreur : résultat inattendu. Action annulée.");
                 position = pos;
                 return;
             }
@@ -1259,7 +1259,7 @@ public abstract class Joueur {
     
     public void aller_au_marche() {
         int reduc = 0;
-        if (getParent() == Dieux.DYONISOS) {
+        if (getParent() == Dieux.DIONYSOS) {
             reduc = 2;
         }
         switch (position) {
@@ -1329,7 +1329,7 @@ public abstract class Joueur {
             if (getParent() == Dieux.POSEIDON) {
                 text += "/(i)nondation";
             }
-            if (getParent() == Dieux.ZEUX) {
+            if (getParent() == Dieux.ZEUS) {
                 text += "/(f)oudre";
             }
         }
@@ -1384,7 +1384,7 @@ public abstract class Joueur {
                 yield Action.AUCUNE;
             }
             case "f" -> {
-                if (getParent() == Dieux.ZEUX) {
+                if (getParent() == Dieux.ZEUS) {
                     yield Action.FOUDRE;
                 }
                 yield Action.AUCUNE;
@@ -1438,7 +1438,7 @@ public abstract class Joueur {
      * @return le texte à ajouter
      */
     public String text_extra(Action action) {
-        String text = "choississez une action bonus : ";
+        String text = "choisissez une action bonus : ";
         if (!est_berserk()) {
             text += "a(n)alyser/";
             if (getMetier() != Metier.ARCHIMAGE || action != Action.SORT) {
@@ -1474,7 +1474,7 @@ public abstract class Joueur {
     
     /**
      * Traite l'action bonus potion
-     * @return les dégats additionnel des potions (en négatif si les dommages ne s'appliquent qu'à l'attaque au corps
+     * @return les dégas additionnel des potions (en négatif si les dommages ne s'appliquent qu'à l'attaque au corps
      * à corps).
      */
     public int popo() throws IOException {
@@ -1489,7 +1489,7 @@ public abstract class Joueur {
                 7 : Aucune/Custom""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 7) {
-            System.out.println("Unknow input.");
+            System.out.println("Unknown input.");
             return popo();
         }
         return switch (temp) {
@@ -1501,7 +1501,7 @@ public abstract class Joueur {
             case 6 -> popo_berserk();
             case 7 -> 0;
             default -> {
-                System.out.println("Unknow input");
+                System.out.println("Unknown input");
                 yield popo();
             }
         };
@@ -1522,7 +1522,7 @@ public abstract class Joueur {
                 5 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 6) {
-            System.out.println("Unknow input");
+            System.out.println("Unknown input");
             return popo_soin();
         }
         int soin = 0;
@@ -1552,7 +1552,7 @@ public abstract class Joueur {
                 3 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 3) {
-            System.out.println("Unknow input");
+            System.out.println("Unknown input");
             return popo_res();
         }
         int res = 0;
@@ -1582,7 +1582,7 @@ public abstract class Joueur {
                 4 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 4) {
-            System.out.println("Unknow input");
+            System.out.println("Unknown input");
             return popo_force();
         }
         int force = 0;
@@ -1610,11 +1610,11 @@ public abstract class Joueur {
                 2 : potion toxique      (P#2)
                 3 : potion de poison    (P#3)
                 4 : flasque nécrosé     (P#4)
-                5 : potion nécrotyque   (P#5)
+                5 : potion nécrotique   (P#5)
                 6 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 6) {
-            System.out.println("Unknow input");
+            System.out.println("Unknown input");
             return popo_cd();
         }
         int poison = 0;
@@ -1649,7 +1649,7 @@ public abstract class Joueur {
             case 4 -> explo_bombe();
             case 5 -> popo();
             default -> {
-                System.out.println("Unknow input");
+                System.out.println("Unknown input");
                 yield popo_instable();
             }
         };
@@ -1688,7 +1688,7 @@ public abstract class Joueur {
             }
             case 5 -> popo();
             default -> {
-                System.out.println("Unknow input");
+                System.out.println("Unknown input");
                 yield popo_berserk();
             }
         };
@@ -1726,7 +1726,7 @@ public abstract class Joueur {
             System.out.println("La potion détone au contacte de l'ennemi.");
             return temp + 4;
         }
-        System.out.println("La potion herte violemment l'ennemi avant de lui exploser à la face.");
+        System.out.println("La potion heurte violemment l'ennemi avant de lui exploser à la face.");
         return 12;
     }
     
@@ -1742,12 +1742,12 @@ public abstract class Joueur {
             System.out.println("La bombe percute l'ennemi et lui explose dessus.");
             return temp + 8;
         }
-        System.out.println("La bombe herte violement l'ennemi avant de lui exploser violement au village.");
+        System.out.println("La bombe heurte violemment l'ennemi avant de lui exploser au visage.");
         return 18;
     }
     
     /**
-     * Contablise les bonus d'exploration des métiers
+     * Comptabilise les bonus d'exploration des métiers
      * @return le bonus
      */
     public int bonus_exploration() {
@@ -1755,7 +1755,7 @@ public abstract class Joueur {
     }
     
     /**
-     * Contabilise les bonus de dressage
+     * Comptabilise les bonus de dressage
      * @return le bonus
      */
     public int bonus_dresser() {
@@ -1823,30 +1823,30 @@ public abstract class Joueur {
     }
     
     /**
-     * Indique si le joueur est capable de ressuciter un autre joueur
+     * Indique si le joueur est capable de ressusciter un autre joueur
      * @return un booléan correspondant
      */
-    public boolean peut_ressuciter() {
+    public boolean peut_ressusciter() {
         return false;
     }
     
     /**
-     * Tente de ressuciter un joueur
+     * Tente de ressusciter un joueur
      * @param malus un malus à appliquer à la tentative
-     * @return true si la résurection est un succès, false sinon
+     * @return true si la resurrection est un succès, false sinon
      * @throws IOException toujours
      */
-    public boolean ressuciter(int malus) throws IOException {
+    public boolean ressusciter(int malus) throws IOException {
         return false;
     }
     
     /**
-     * Tente de ressuciter tout seul
+     * Tente de ressusciter tout seul
      * @param malus un malus à appliquer à la tentative
-     * @return true si la résurection est un succès, false sinon
+     * @return true si la resurrection est un succès, false sinon
      * @throws IOException toujours
      */
-    public boolean auto_ressuciter(int malus) throws IOException {
+    public boolean auto_ressusciter(int malus) throws IOException {
         return false;
     }
     
@@ -1875,7 +1875,7 @@ public abstract class Joueur {
     }
     
     /**
-     * Calcule si un joueur succombe à sa folie de berserker ou non
+     * Calcule si un joueur succombe à sa folie de berserk ou non
      * @return si le joueur frappe sans savoir qui
      */
     protected boolean folie_berserk() throws IOException {
@@ -1883,7 +1883,7 @@ public abstract class Joueur {
     }
     
     /**
-     * Augmente l'état de rage meutrière du joueur
+     * Augmente l'état de rage meurtrière du joueur
      * @param is_crazy si le joueur est déjà dans un état de folie (augmente la déterioration).
      */
     protected void berserk_boost(boolean is_crazy) {
@@ -1896,7 +1896,7 @@ public abstract class Joueur {
     
     /**
      * Indique les bonus d'attaque à l'arc
-     * @return la quantité de dommages aditionnel
+     * @return la quantité de dommages additionnelle
      */
     protected int bonus_tir() {
         return 0;
@@ -1972,7 +1972,7 @@ public abstract class Joueur {
      * @throws IOException toujours
      */
     protected float berserk_atk(int base) throws IOException {
-        System.out.println("Vous êtes pris(e) de folie mertrière et distinguez mal vos alliés de vos ennemis.");
+        System.out.println("Vous êtes pris(e) de folie meurtrière et distinguez mal vos alliés de vos ennemis.");
         if (folie_berserk()) {
             int i;
             do {
@@ -1998,7 +1998,7 @@ public abstract class Joueur {
     
     /**
      * Indique les bonus d'attaque à l'arc
-     * @return la quantité de dommages aditionnel
+     * @return la quantité de dommages additionnel
      */
     protected int bonus_atk() {
         if (a_cecite()) {
@@ -2121,7 +2121,7 @@ public abstract class Joueur {
                 break;
             case 7, 8, 9, 10:
                 ennemi.bostEncaissement(0.7F);
-                System.out.println("Votre familier concentre chaque fibre de son être à se préparer à vous proteger.");
+                System.out.println("Votre familier concentre chaque fibre de son être à se préparer à vous protéger.");
                 break;
             default:
                 System.out.println("Le résultat n'a pas été comprit, compétence ignorée.");

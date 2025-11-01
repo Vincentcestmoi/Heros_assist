@@ -419,10 +419,10 @@ public class Combat {
             int malus = 0;
             for (int k = 0; k < Main.nbj; k++) {
                 Joueur j_temp = Main.joueurs[k];
-                if (j_temp.peut_ressuciter() && j_temp.peut_jouer()) {
+                if (j_temp.peut_ressusciter() && j_temp.peut_jouer()) {
                     if (Input.yn("Est-ce que " + j_temp.getNom() + " veux tenter de ressuciter " + joueur.getNom() +
                             " ?")) {
-                        if (j_temp.ressuciter(malus)) {
+                        if (j_temp.ressusciter(malus)) {
                             System.out.println(joueur.getNom() + " a été arraché(e) à l'emprise de la mort.");
                             joueur.do_ressucite(malus);
                             j_temp.gagneXp();
@@ -486,13 +486,13 @@ public class Combat {
                 }
             }
             case HATE_DEMETER -> hate(ennemi, Dieux.DEMETER);
-            case HATE_DYONISOS -> hate(ennemi, Dieux.DYONISOS);
+            case HATE_DYONISOS -> hate(ennemi, Dieux.DIONYSOS);
             case HATE_POSEIDON -> hate(ennemi, Dieux.POSEIDON);
-            case HATE_ZEUS -> hate(ennemi, Dieux.ZEUX);
-            case FEAR_ZEUS -> fear(ennemi, Dieux.ZEUX);
+            case HATE_ZEUS -> hate(ennemi, Dieux.ZEUS);
+            case FEAR_ZEUS -> fear(ennemi, Dieux.ZEUS);
             case FEAR_DEMETER -> fear(ennemi, Dieux.DEMETER);
             case FEAR_POSEIDON -> fear(ennemi, Dieux.POSEIDON);
-            case FEAR_DYONISOS -> fear(ennemi, Dieux.DYONISOS);
+            case FEAR_DYONISOS -> fear(ennemi, Dieux.DIONYSOS);
             case CIBLE_CASQUE -> {
                 if (Input.yn(nom + " porte-il/elle un casque ?") && Input.D6() <= 4) {
                     System.out.println(ennemi.getNom() + " fait tomber votre casque pour le combat.");

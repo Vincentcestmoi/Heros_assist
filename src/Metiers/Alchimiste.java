@@ -472,12 +472,12 @@ public class Alchimiste extends Joueur {
     }
     
     @Override
-    public boolean peut_ressuciter() {
+    public boolean peut_ressusciter() {
         return this.niveau >= 5;
     }
     
     @Override
-    public boolean ressuciter(int malus) throws IOException {
+    public boolean ressusciter(int malus) throws IOException {
         if (this.niveau < 5) {
             return false;
         }

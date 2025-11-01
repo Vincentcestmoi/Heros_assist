@@ -1215,7 +1215,7 @@ public class Shaman extends Joueur {
     }
     
     @Override
-    public boolean auto_ressuciter(int malus) throws IOException {
+    public boolean auto_ressusciter(int malus) throws IOException {
         if (this.niveau < 5) {
             return false;
         }
