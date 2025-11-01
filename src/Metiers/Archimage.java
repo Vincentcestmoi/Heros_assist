@@ -334,6 +334,14 @@ public class Archimage extends Joueur {
         }
     }
     
+    private int bonus_sort(){
+        int bonus = 0;
+        if(bourdon){
+            bonus += 2;
+        }
+        return bonus;
+    }
+    
     /**
      * Fonction auxiliaire de sort
      * demande au joueur quel sort il veut lancer et le lance
@@ -424,7 +432,7 @@ public class Archimage extends Joueur {
         System.out.println("Vous vous préparez à lancer une boule de feu.");
         System.out.println("Combien de PP mettez vous dans le sort ? (min 2)");
         int mana = Input.readInt();
-        int jet = Input.D4() + mana + rand.nextInt(3) - 1;
+        int jet = Input.D4() + mana + rand.nextInt(3) - 1 + bonus_sort();
         int[] paliers = {4, 7, 10};
         for (int palier : paliers) {
             if (this.niveau >= palier) {
@@ -454,19 +462,19 @@ public class Archimage extends Joueur {
                 ennemi.affecte();
             }
         } else if (jet == 12) {
-            System.out.println("Une tornade de flamme s'abat violement sur " + ennemi.getNom() + " !");
+            System.out.println("Une tornade de flamme s'abat violemment sur " + ennemi.getNom() + " !");
             dmg = 15;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
         } else if (jet == 13) {
-            System.out.println("Une torent de flamme percute " + ennemi.getNom() + " brutalement !");
+            System.out.println("Une torrent de flamme percute " + ennemi.getNom() + " brutalement !");
             dmg = 16;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
         } else {
-            System.out.println("Les flammes de l'enfers brûlent intensemment " + ennemi.getNom() + ".");
+            System.out.println("Les flammes de l'enfers brûlent intensément " + ennemi.getNom() + ".");
             dmg = 18;
             ennemi.affecte();
         }
@@ -481,7 +489,7 @@ public class Archimage extends Joueur {
         System.out.println("Vous vous préparez à créer une armure de glace.");
         System.out.println("Combien de PP mettez vous dans le sort ? (min 3): ");
         int mana = Input.readInt();
-        int jet = Input.D8() + mana + rand.nextInt(3) - 1;
+        int jet = Input.D8() + mana + rand.nextInt(3) - 1 + bonus_sort();
         int[] paliers = {6, 8, 10};
         for (int palier : paliers) {
             if (this.niveau >= palier) {
@@ -520,7 +528,7 @@ public class Archimage extends Joueur {
         System.out.println("Vous vous préparez à lancer un puissant éclair.");
         System.out.println("Combien de PP mettez vous dans le sort ? (min 7) : ");
         int mana = Input.readInt();
-        int jet = Input.D12() + mana + rand.nextInt(3) - 1;
+        int jet = Input.D12() + mana + rand.nextInt(3) - 1 + bonus_sort();
         if (this.niveau >= 10) {
             jet += 2;
         }
@@ -574,7 +582,7 @@ public class Archimage extends Joueur {
             ennemi.do_assomme();
         } else {
             System.out.println("Un déchainement de pure énergie fend l'espace entre le ciel et la terre, " +
-                    "transpersant" + " " + ennemi.getNom() + " sur son passage.");
+                    "transperçant" + " " + ennemi.getNom() + " sur son passage.");
             dmg = 30;
             ennemi.do_assomme();
         }

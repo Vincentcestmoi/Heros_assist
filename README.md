@@ -28,6 +28,12 @@ La majorité des données doivent être suivies par les joueurs eux-mêmes.
 L’usage d’un classeur Excel ou d’un tableau est fortement recommandé. (voir le dossier `Table` pour des exemples)
 
 ### 🎒 Règles d’équipement
+
+Tout équipement à l'exception des armes à 1 et 2 mains est considéré comme un objet.  
+Certains items ont un effet spécial calculé par le jeu, indiqué par un code (ex : #31), pensez à noter ce code !  
+Le terme "PP" désigne du mana ou de l'aura.
+
+#### Quantité :
 - Casques, boucliers, (tout équipement sauf contre-indication) : 1 par joueur
 - Mains : 2 maximum (sauf Archimage : 1 seule)
 - Bracelets : 4 maximum

@@ -304,7 +304,7 @@ public class Pre_Equipement {
     static Pre_Equipement bracelet_a1 = new Pre_Equipement("Bracelet de force", BRACELET, I, Effet_equip.ATTAQUE1,
             true);
     static Pre_Equipement bracelet_ra1 = new Pre_Equipement("Bracelet de colère", BRACELET, I, Effet_equip.RAGE1, true);
-    static Pre_Equipement epee_dodo = new Pre_Equipement("Epee du sommeil", MAIN2, I, Effet_equip.LAME_DODO, true);
+    static Pre_Equipement epee_fertile = new Pre_Equipement("Epee fertile", MAIN2, I, Effet_equip.LAME_FERTILE, true);
     static Pre_Equipement parchemin_feu = new Pre_Equipement("Parchemin de feu", AUTRE, I, Effet_equip.PARCH_FEU, true);
     static Pre_Equipement parch_force = new Pre_Equipement("Parchemin de puissance", AUTRE, I,
             Effet_equip.PARCH_FORCE, true);
@@ -316,15 +316,16 @@ public class Pre_Equipement {
     static Pre_Equipement rune_orage = new Pre_Equipement("Rune orageuse", AUTRE, I, Effet_equip.RUNE_ORAGE, true);
     static Pre_Equipement rune_mort = new Pre_Equipement("Rune mortifère", AUTRE, I, Effet_equip.RUNE_MORT, true);
     static Pre_Equipement rune_dodo = new Pre_Equipement("Rune endormie", AUTRE, I, Effet_equip.RUNE_DODO, true);
+    static Pre_Equipement rune_commerce = new Pre_Equipement("Rune de commerce", AUTRE, I, Effet_equip.RUNE_COMMERCE, true);
     static Pre_Equipement popoI = new Pre_Equipement("Soupe magique", CONSO_MAIN, I, Effet_equip.SOUPE_MAGIQUE, true);
     
     static Pre_Equipement[] rang1 = {fleche_plusI, fleche_plusI2, fleche_plusI3, fleche_plusI4, fleche_plusI5,
             ceintureI, arcI, dagueI, epeeI, armureI, casqueI, bouclierI, healPPI, healI, sacI, armure_w, casque_w,
             bouclier_w, armure_a, casque_a, bouclier_a, main1_a, main1_a, main2_a, armure_r, casque_r, bouclier_r,
             main2_r, main1_ba, main1_ba, main2_ba, armure_ar, elem_main, elem_casque, elem_armure, elem_bouclier,
-            bracelet_r1, bracelet_r1, bracelet_ar1, bracelet_a1, bracelet_a1, bracelet_ra1, epee_dodo, parchemin_feu,
+            bracelet_r1, bracelet_r1, bracelet_ar1, bracelet_a1, bracelet_a1, bracelet_ra1, epee_fertile, parchemin_feu,
             parch_force, rune_croiss, rune_feu, rune_feu, rune_pluie, rune_haine, rune_virale, rune_orage, rune_mort,
-            rune_dodo, popoI};
+            rune_dodo, rune_commerce, popoI};
     
     static Pre_Equipement ceintureII = new Pre_Equipement("ceinture de fer", CEINTURE, II, AUCUN, false);
     static Pre_Equipement arcII = new Pre_Equipement("grand arc", ARC, II, AUCUN, false);
@@ -411,8 +412,6 @@ public class Pre_Equipement {
             Effet_equip.RESISTANCE6, true);
     static Pre_Equipement bracelet_ra3 = new Pre_Equipement("Bracelet du guerrier fou", BRACELET, III,
             Effet_equip.RAGE3, true);
-    static Pre_Equipement parchemin_folie = new Pre_Equipement("parchemin de folie guerrière", AUTRE, III,
-            Effet_equip.PARCH_BERSERK, true);
     static Pre_Equipement popo_max = new Pre_Equipement("potion ancestrale", Base.CONSO_MAIN, III, Effet_equip.PPMAX,
             true);
     static Pre_Equipement casque_III_ar = new Pre_Equipement("casque renforcé", CASQUE, III, Effet_equip.ARMURE1, true);
@@ -437,7 +436,7 @@ public class Pre_Equipement {
     
     static Pre_Equipement[] rang3 = {fleche_plusIII, fleche_plusIII2, fleche_plusIII3, ceintureIII, arcIII, dagueIII,
             epeeIII, armureIII, casqueIII, bouclierIII, sacIII, bracelet_ar3, bracelet_r3, bracelet_ra3,
-            parchemin_folie, popo_max, popoIII, healIII, healPPIII, casque_III_ar, bouclierIII_ar, armureIII_r,
+            popo_max, popoIII, healIII, healPPIII, casque_III_ar, bouclierIII_ar, armureIII_r,
             casque_III_r, bouclierIII_r, main1III_ba, main1III_ba, main2III_ba, main2III_ga, lame_mont, armureIII_ar,
             main1III_a, bracelet_max};
     
@@ -519,7 +518,7 @@ public class Pre_Equipement {
     static Pre_Equipement grenade = new Pre_Equipement("Grenades", CONSO_EX, PROMOTION, Effet_equip.GRENADE,
             Promo_Type.ARTEFACT);
     static Pre_Equipement popo_vitesse = new Pre_Equipement("Potion de vitesse", AUTRE, PROMOTION,
-            Effet_equip.PROTECTION, Promo_Type.ARTEFACT);
+            Effet_equip.PROTECTION, Promo_Type.ARTEFACT); //TODO
     static Pre_Equipement popo_PP = new Pre_Equipement("Potion lente", CONSO_MAIN, PROMOTION, Effet_equip.PPL,
             Promo_Type.ARTEFACT);
     static Pre_Equipement barque = new Pre_Equipement("Navire magique", AUTRE, PROMOTION, Effet_equip.MER_EXP,

@@ -11,4 +11,8 @@ public enum Action_extra {
     
     //Shaman
     CALME,
+    
+    //item
+    SOIGNER,
+    RENFORCER,
 }

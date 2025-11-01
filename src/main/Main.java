@@ -110,10 +110,43 @@ public class Main {
             System.out.println("Format invalide, l'identifiant doit être de la forme #xx");
         }
         switch(temp){
-            case "#00" -> {
-                return;
-            }
-            case "#01" -> {}
+            case "#00" -> {}
+            case "#01" -> joueur.add_lame_infernale();
+            case "#02" -> joueur.add_lame_vegetale();
+            case "#03" -> joueur.add_trident();
+            case "#04" -> joueur.add_lame_mont();
+            case "#05" -> joueur.add_nectar();
+            case "#06" -> joueur.add_ambroisie();
+            case "#07" -> joueur.add_guerre();
+            case "#08" -> joueur.add_lame_vent();
+            case "#09" -> joueur.add_lame_fertile();
+            case "#10" -> joueur.add_parch_feu();
+            case "#11" -> joueur.add_parch_dodo();
+            case "#12" -> joueur.add_parch_lumiere();
+            case "#13" -> joueur.add_rune_croissance();
+            case "#14" -> joueur.add_rune_pluie();
+            case "#15" -> joueur.add_rune_haine();
+            case "#16" -> joueur.add_rune_virale();
+            case "#17" -> joueur.add_rune_ardente();
+            case "#18" -> joueur.add_rune_ardente2();
+            case "#19" -> joueur.add_rune_dodo();
+            case "#20" -> joueur.add_rune_mortifere();
+            case "#21" -> joueur.add_rune_orage();
+            case "#22" -> joueur.add_rune_commerce();
+            case "#23" -> joueur.add_soin();
+            case "#24" -> joueur.add_bracelet_protec();
+            case "#25" -> joueur.add_rune_noire();
+            case "#26" -> joueur.add_absorption();
+            case "#27" -> joueur.add_lunette();
+            case "#28" -> joueur.add_dissec();
+            case "#29" -> joueur.add_concoc();
+            case "#30" -> joueur.add_bourdon();
+            case "#31" -> joueur.add_parch_volcan();
+            case "#32" -> joueur.add_absorption2();
+            case "#33" -> joueur.add_pegase();
+            case "#34" -> joueur.add_cheval();
+            case "#35" -> joueur.add_pie();
+            case "#36" -> joueur.add_sphinx();
             default -> {
                 System.out.println("Input unknown.");
                 ajouter_item(joueur);
@@ -121,9 +154,60 @@ public class Main {
         }
     }
     
-    private static void retirer_item(Joueur joueur) {
-        System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 pour quitter.");
-        
+    private static void retirer_item(Joueur joueur) throws IOException {
+        //noinspection DuplicatedCode
+        System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 pour quitter, #99 pour retirer tous vos items spéciaux.");
+        String temp = Input.read();
+        if(temp.charAt(0) != '#'){
+            System.out.println("Format invalide, l'identifiant doit commencer par #");
+        }
+        if(temp.length() != 3){
+            System.out.println("Format invalide, l'identifiant doit être de la forme #xx");
+        }
+        switch(temp){
+            case "#00" -> {}
+            case "#01" -> joueur.retire_lame_infernale();
+            case "#02" -> joueur.retire_lame_vegetale();
+            case "#03" -> joueur.retire_trident();
+            case "#04" -> joueur.retire_lame_mont();
+            case "#05" -> joueur.retire_nectar();
+            case "#06" -> joueur.retire_ambroisie();
+            case "#07" -> joueur.retire_guerre();
+            case "#08" -> joueur.retire_lame_vent();
+            case "#09" -> joueur.retire_lame_fertile();
+            case "#10" -> joueur.retire_parch_feu();
+            case "#11" -> joueur.retire_parch_dodo();
+            case "#12" -> joueur.retire_parch_lumiere();
+            case "#13" -> joueur.retire_rune_croissance();
+            case "#14" -> joueur.retire_rune_pluie();
+            case "#15" -> joueur.retire_rune_haine();
+            case "#16" -> joueur.retire_rune_virale();
+            case "#17" -> joueur.retire_rune_ardente();
+            case "#18" -> joueur.retire_rune_ardente2();
+            case "#19" -> joueur.retire_rune_dodo();
+            case "#20" -> joueur.retire_rune_mortifere();
+            case "#21" -> joueur.retire_rune_orage();
+            case "#22" -> joueur.retire_rune_commerce();
+            case "#23" -> joueur.retire_soin();
+            case "#24" -> joueur.retire_bracelet_protec();
+            case "#25" -> joueur.retire_rune_noire();
+            case "#26" -> joueur.retire_absorption();
+            case "#27" -> joueur.retire_lunette();
+            case "#28" -> joueur.retire_dissec();
+            case "#29" -> joueur.retire_concoc();
+            case "#30" -> joueur.retire_bourdon();
+            case "#31" -> joueur.retire_parch_volcan();
+            case "#32" -> joueur.retire_absorption2();
+            case "#33" -> joueur.retire_pegase();
+            case "#34" -> joueur.retire_cheval();
+            case "#35" -> joueur.retire_pie();
+            case "#36" -> joueur.retire_sphinx();
+            case "#99" -> joueur.retirer_tout();
+            default -> {
+                System.out.println("Input unknown.");
+                retirer_item(joueur);
+            }
+        }
     }
     
     private static void frapper_pantin(int i) throws IOException {

@@ -524,6 +524,9 @@ public class Alchimiste extends Joueur {
                 temp += 1;
             }
         }
+        if(dissec){
+            temp += 2;
+        }
         if (temp <= 10 + rand.nextInt(10)) {
             System.out.println("Vous ne trouvez rien.");
         } else if (temp <= 18 + rand.nextInt(4)) {
@@ -546,6 +549,9 @@ public class Alchimiste extends Joueur {
             if (this.niveau >= palier) {
                 temp += 1;
             }
+        }
+        if(dissec){
+            temp += 1;
         }
         if (this.niveau >= 6 && etat >= 25) {
             temp += 2;
@@ -951,13 +957,18 @@ public class Alchimiste extends Joueur {
      * @return la valeur du bonus
      */
     private int bonus_concoc() {
-        //bonus de 1 à 9 et 10
-        if (this.niveau < 9) {
-            return 0;
-        } else if (this.niveau == 9) {
-            return 1;
+        int bonus = 0;
+        //bonus à 9 et 10
+        if (this.niveau >= 9) {
+            bonus += 1;
         }
-        return 2;
+        if(this.niveau >= 10){
+            bonus += 1;
+        }
+        if(concoct){
+            bonus += 2;
+        }
+        return bonus;
     }
     
     @Override

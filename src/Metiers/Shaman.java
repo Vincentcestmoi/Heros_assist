@@ -736,32 +736,32 @@ public class Shaman extends Joueur {
         if (jet <= 1) {
             System.out.println("Une légère brûme vous entoure.");
             System.out.println("Chaque joueur et familier perds temporairement 1 point d'attaque.");
-            ennemi.bostVie(-1, false);
+            ennemi.boostVie(-1, false);
         } else if (jet <= 3) {
             System.out.println("C'est... joli ?");
-            ennemi.bostVie(-1, false);
+            ennemi.boostVie(-1, false);
         } else if (jet == 4) {
             System.out.println("La brûme se lève.");
             System.out.println("Chaque joueur et familier perds temporairement 2 points d'attaque.");
-            ennemi.bostVie(-3, false);
+            ennemi.boostVie(-3, false);
         } //D6
         else if (jet == 5) {
             System.out.println("La brûme commence à vous encercler.");
             System.out.println("Chaque joueur et familier perds temporairement 2 point d'attaque.");
-            ennemi.bostAtk(-5, false);
+            ennemi.boostAtk(-5, false);
         } else if (jet == 6) {
             System.out.println("Une brûme épaisse commence à vous encercler.");
             System.out.println("Chaque joueur et familier perds temporairement 3 point d'attaque.");
-            ennemi.bostAtk(-6, false);
+            ennemi.boostAtk(-6, false);
         } //D8
         else if (jet == 7) {
             System.out.println("Un épais brouillard vous recouvre.");
             System.out.println("Chaque joueur et familier perds temporairement 3 points d'attaque.");
-            ennemi.bostAtk(-8, false);
+            ennemi.boostAtk(-8, false);
         } else if (jet == 8) {
             System.out.println("Un épais brouillard vous recouvre.");
             System.out.println("Chaque joueur et familier perds temporairement 4 points d'attaque.");
-            ennemi.bostAtk(-9, false);
+            ennemi.boostAtk(-9, false);
         } //D8+
         else if (jet == 9) {
             System.out.println("Un brouillard dense vous entoure.");
@@ -773,14 +773,14 @@ public class Shaman extends Joueur {
                 j.p_prend_cecite();
                 j.f_prend_cecite();
             }
-            ennemi.bostAtk(-11, false);
+            ennemi.boostAtk(-11, false);
         } else {
             System.out.println("Une brûme vous entoure, si dense que vous ne vous voyez presque plus.");
             System.out.println("Il est désormais impossible de tirer.");
             System.out.println("Il est désormais impossible de lancer un sort ciblé sur une autre cible que " + "soit"
                     + "-même" + ".");
             System.out.println("Chaque joueur et familier perds temporairement 8 points d'attaque.");
-            ennemi.bostAtk(-15, false);
+            ennemi.boostAtk(-15, false);
         }
     }
     
@@ -814,12 +814,12 @@ public class Shaman extends Joueur {
         else if (jet == 7) {
             System.out.println("Le nuage s'abat sur le monstre ennemi, suivi d'un éclair.");
             ennemi.dommage(5 + rand.nextInt(6)); //5~10
-            ennemi.bostAtk(-2, false);
+            ennemi.boostAtk(-2, false);
             ennemi.affecte();
         } else if (jet == 8) {
             System.out.println("Le nuage s'abat sur le monstre ennemi, suivi d'un éclair.");
             ennemi.dommage(6 + rand.nextInt(7)); //6~12
-            ennemi.bostAtk(-2, false);
+            ennemi.boostAtk(-2, false);
             ennemi.affecte();
         } //D8+
         else if (jet <= 10) {
@@ -827,7 +827,7 @@ public class Shaman extends Joueur {
             for (int i = 0; i < rand.nextInt(3) + 2; i++) { //2 à 5 fois
                 ennemi.dommage(6 + rand.nextInt(7)); //6~12
             }
-            ennemi.bostAtk(-4, false);
+            ennemi.boostAtk(-4, false);
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
@@ -837,7 +837,7 @@ public class Shaman extends Joueur {
             for (int i = 0; i < rand.nextInt(3) + 3; i++) { //3 à 6 fois
                 ennemi.dommage(7 + rand.nextInt(9)); //7~15
             }
-            ennemi.bostAtk(-5, false);
+            ennemi.boostAtk(-5, false);
             ennemi.do_assomme();
         }
     }

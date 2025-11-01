@@ -39,4 +39,10 @@ public enum Action {
     SERENITE,
     INONDATION,
     FOUDRE,
+    
+    //item
+    SORT_FEU,
+    SORT_DODO,
+    SORT_LUMIERE,
+    SORT_VOLCAN;
 }

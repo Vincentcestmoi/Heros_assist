@@ -370,19 +370,19 @@ public class Equipement {
             }
             case ENFERS4 -> {
                 this.attaque -= 2;
-                this.effet = "Augmente de 4 l'attaque aux enfers.";
+                this.effet = "Augmente l'attaque selon certaines conditions (#01).";
             }
             case PRAIRIE3 -> {
                 this.attaque -= 1;
-                this.effet = "Augmente de 3 l'attaque en prairie.";
+                this.effet = "Augmente l'attaque selon certaines conditions (#02).";
             }
             case TRIDENT -> {
                 this.attaque -= 2;
-                this.effet = "Augmente de 4 l'attaque en mer.";
+                this.effet = "Augmente l'attaque selon certaines conditions (#03).";
             }
             case MONT5 -> {
                 this.attaque -= 2;
-                this.effet = "Augmente de 5 l'attaque en montagne.";
+                this.effet = "Augmente l'attaque selon certaines conditions (#04).";
             }
             case CONSO_EXT1 -> this.effet = "Soigne de 1 et régénère 1PP.";
             case CONSO_EXT2 -> this.effet = "Soigne de 2 et régénère 2PP.";
@@ -396,33 +396,33 @@ public class Equipement {
             case PPL -> this.effet = "Pour ce combat, récupérez 1PP à chacun de vos débuts de tour.";
             case PPMAX ->
                     this.effet =
-                            "Pour ce combat, vous avez un nombre infini de PP ; à la fin du combat, mettez vos " +
+                            "Pour un combat, vous avez un nombre infini de PP ; à la fin du combat, mettez vos " +
                                     "PP à 0.";
             case SOUPE_MAGIQUE ->
                     this.effet = "Soigne de 4, augmente temporairement la résistance de 3 et l'attaque de 2.";
-            case NECTAR -> this.effet = "Combinez le à l'ambroisie pour gagner.";
-            case AMBROISIE -> this.effet = "Combinez le au nectar pour gagner";
-            case SAC0 -> this.effet = "Permet de stocker 1 objet (pas d'arme).";
+            case NECTAR -> this.effet = "Un met délicat (#05).";
+            case AMBROISIE -> this.effet = "Une boisson délicate (#06)";
+            case SAC0 -> this.effet = "Permet de stocker 1 objet.";
             case SAC1 -> {
                 switch (rand.nextInt(4)) {
-                    case 0 -> this.effet = "Permet de stocker 1 objet (pas d'arme) et 1 arme à une main.";
-                    case 1 -> this.effet = "Permet de stocker 1 objet ou arme à une main.";
-                    case 2 -> this.effet = "Permet de stocker 2 objets (pas d'arme).";
+                    case 0 -> this.effet = "Permet de stocker 1 objet et 1 arme à une main.";
+                    case 1 -> this.effet = "Permet de stocker 1 objet ou 1 arme à une main.";
+                    case 2 -> this.effet = "Permet de stocker 2 objets.";
                     case 3 -> this.effet = "Permet de stocker l'équivalent de 2 mains en arme.";
                 }
             }
             case SAC2 -> {
                 switch (rand.nextInt(4)) {
-                    case 0 -> this.effet = "Permet de stocker 2 objets (pas d'armes) et 1 arme à une main.";
-                    case 1 -> this.effet = "Permet de stocker (2 objets ou armes à une main) ou 1 arme à deux mains.";
-                    case 2 -> this.effet = "Permet de stocker 2 armes sans contraintes.";
+                    case 0 -> this.effet = "Permet de stocker 2 objets et 1 arme à une main.";
+                    case 1 -> this.effet = "Permet de stocker l'équivalent de 2 objets ou mains.";
+                    case 2 -> this.effet = "Permet de stocker 2 armes.";
                     case 3 -> this.effet = "Permet de stocker l'équivalent de 3 mains en arme.";
                 }
             }
-            case GUERRE -> this.effet = "+1 attaque pour les descendant d'Ares.";
+            case GUERRE -> this.effet = "Réagit à certain(s) dieu(x) (#07).";
             case LAME_VENT -> {
                 this.attaque += 1;
-                this.effet = "Votre première attaque inflige 3 dommages supplémentaires.";
+                this.effet = "Votre première attaque inflige des dommages supplémentaires (#08).";
             }
             case ARMURE_GLACE -> {
                 this.armure += 1;
@@ -436,76 +436,63 @@ public class Equipement {
                 this.attaque += 2;
                 this.effet = "Vous devez payer 2PP pour porter cette coiffe";
             }
-            case LAME_DODO -> {
+            case LAME_FERTILE -> {
                 this.attaque -= 3;
-                this.effet = "+4 attaques pour les descendant d'Hypnos";
+                this.effet = "Réagit à certain(s) dieu(x) (#09).";
             }
             case RUNE_RESIDU -> this.effet = "Peut être consumé à la place de 2 PP.";
             case PARCH_FEU ->
-                    this.effet = "Permet de lancer le sort Boule de feu : pour 2 mana, inflige 5 dégas magiques.";
-            case PARCH_DODO -> this.effet = "Permet de lancer le sort Sommeil : pour 2 mana, arrête un combat.";
+                    this.effet = "Contient un sort de feu mineur pouvant être lancé pour 2 mana (#10)";
+            case PARCH_DODO -> this.effet = "Contient un sort de sommeil pouvant être lancé pour 2 mana (#11).";
             case PARCH_FORCE ->
                     this.effet =
-                            "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement " + "l" +
-                                    "'attaque" + " de 1, se détruit après usage.";
+                            "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement l'attaque de 1, se détruit après usage.";
             case PARCH_LUMIERE ->
                     this.effet =
-                            "Permet de lancer le sort Lumière : pour 2 mana, diminue de 2 points l'attaque de " + "l" +
-                                    "'ennemie (augmentez tous de 2 votre armure pour le code).";
-            case RUNE_CROISS -> this.effet = "Diminue de 1 le coût de la compétence Embranchement végétal.";
-            case RUNE_PLUIE -> this.effet = "Diminue de 1 le coût de la compétence Déferlante.";
+                            "Permet de lancer le sort Lumière pour 2 mana (#12).";
+            case RUNE_CROISS -> this.effet = "Améliore certaines compétences... A condition de les posséder (#13).";
+            case RUNE_PLUIE -> this.effet = "Améliore certaines compétences... A condition de les posséder (#14).";
             case RUNE_HAINE ->
-                    this.effet = "Augmente le bonus d'attaque sous Berserk, mais aussi le malus de résistance.";
-            case RUNE_VIRALE -> this.effet = "Double les dommages infligés par la compétence Maladie.";
-            case RUNE_ARDENTE -> this.effet = "augmente de 3 les dommages du sort Boule de feu";
+                    this.effet = "Améliore certaines compétences... A condition de les posséder (#15).";
+            case RUNE_VIRALE -> this.effet = "Améliore certaines compétences... A condition de les posséder (#16).";
+            case RUNE_ARDENTE -> this.effet = "Améliore certaines compétences... A condition de les posséder (#17).";
             case RUNE_ARDENTE2 ->
-                    this.effet = "augmente de 5 les dommages du sort Boule de feu, mais augmente de 1 son coût.";
-            case RUNE_DODO -> this.effet = "Diminue de 1 le coût de la compétence Sommeil.";
-            case RUNE_MORT -> this.effet = "Double l'efficacité de la compétence Thaumaturge";
-            case RUNE_ORAGE -> this.effet = "Diminue de 1 le coût de la compétence Foudre.";
-            case SOIN ->
-                    this.effet = "Vous pouvez, une fois par combat, utiliser votre action pour soigner une cible de 6.";
-            case PROTECTION ->
-                    this.effet = "Peut être utilisé pour ignorer des dommages (avant de les calculer). Une seule " +
-                            "utilisation.";
+                    this.effet = "Améliore certaines compétences... A condition de les posséder (#18).";
+            case RUNE_DODO -> this.effet = "Améliore certaines compétences... A condition de les posséder (#19).";
+            case RUNE_MORT -> this.effet = "Améliore certaines compétences... A condition de les posséder (#20).";
+            case RUNE_ORAGE -> this.effet = "Améliore certaines compétences... A condition de les posséder (#21).";
+            case RUNE_COMMERCE -> this.effet = "Améliore certaines compétences... A condition de les posséder (#22).";
+            case SOIN -> this.effet = "Permet de soigner une cible (#23).";
+            case PROTECTION -> this.effet = "??? (#24)";
             case RUNE_VENGEANCE ->
-                    this.effet = "Récupérez 2PP chaque fois qu'un familier ou joueur allié est tué par un monstre.";
+                    this.effet = "Récupérez de l'énergie chaque fois qu'un familier ou joueur allié est tué par un monstre.";
             case RUNE_INTERDITE ->
-                    this.effet = "Augmente de 1 le coût de la compétence Nécromancie, mais augmente de 1 le résultat "
-                            + "du jet de dé.";
+                    this.effet = "Améliore certaines compétences... A condition de les posséder (#25).";
             case BRACELET_ABSO ->
-                    this.effet = "Gagnez 1 PP chaque fois qe vous tuez un monstre (vous ou votre familier doit " +
-                            "porter" + " le dernier coup).";
-            case LUNETTE -> this.effet = "Vous êtes immunisé à l'altération cécité";
+                    this.effet = "Vous pouvez absorber l'énergie de vos victimes (#26) (ne se cumule pas).";
+            case LUNETTE -> this.effet = "Vous confère une vue spirituelle (#27).";
             case BRACELET_MAUDIT -> {
                 this.resistance -= 3;
                 this.armure += 1;
             }
-            case DISSEC -> this.effet = "Augmente de 1 le résultat de dé des compétence Dissection et Fouille.";
-            case ALCHI -> this.effet = "Augmente de 2 le résultat de tout vos dé de concoction.";
-            case PARCH_BERSERK ->
-                    this.effet = "Permet de lancer le sort Folie meurtrière : pour 2 mana," + "augmente " +
-                            "temporairement " + "de 5 points l'attaque et diminue de 7 la résistances.";
+            case DISSEC -> this.effet = "Augmente les compétences Dissection et Fouille (#28)";
+            case ALCHI -> this.effet = "Augmente vos compétences de concoction (#29).";
             case BOURDON -> {
-                this.effet = "Quand vous lancez un sort, lancez un dé 4 : si vous faites 3 ou plus, votre sort coute "
-                        + "1 de moins.";
+                this.effet = "Il est dit qu'il permet de mieux lancer des sorts... (#30)";
                 attaque += 2;
                 armure -= 2;
             }
             case PARCH_VOLCAN ->
-                    this.effet = "Permet de lancer le sort Eruption volcanique : pour 6 mana, infliges 55 dégas " +
-                            "magiques";
+                    this.effet = "Permet de lancer le sort Eruption volcanique pour 6 mana (#31).";
             case PARCH_ABSO ->
-                    this.effet =
-                            "Quand vous tuez un monstre, vous gagnez définitivement 7 points de résistances, 3 " +
-                                    "points" + "d'attaques, 1 point d'armure et 4PP. (vous ou votre familier devez " + "porter le " + "dernier coup).";
+                    this.effet = "Vous pouvez absorber la force vitale de vos victimes (#32) (ne se cumule pas).";
             case PEGASE -> {
                 this.resistance += 3;
-                this.effet = "Ajoutez 1 à tout vos dés d'exploration et d'ascension.";
+                this.effet = "Vous permet de voyager plus efficacement (#33).";
             }
             case CHEVAL -> {
                 this.resistance += 5;
-                this.effet = "Vos dés de fuites sont automatiquement maximaux.";
+                this.effet = "Vous aides à fuir plus efficacement (#34).";
             }
             case MOLOSSE -> {
                 this.resistance += 4;
@@ -513,14 +500,12 @@ public class Equipement {
             }
             case PIE -> {
                 this.attaque += 1;
-                this.effet =
-                        "A la fin de chaque combat auquel vous participez, gagnez 1PO, ne s'active pas si vous " +
-                                "avez fuit. Gagnez 1 sur vos dés de fuite.";
+                this.effet = "Ramasse parfois des pièces et vous aide à fuir (#35).";
             }
             case SPHINX -> {
                 this.attaque += 1;
                 this.resistance += 2;
-                this.effet = "Une fois par combat, augmente temporairement la résistance d'une cible de 5 points.";
+                this.effet = "Une fois par combat, augmente temporairement la résistance d'une cible (#36).";
             }
             case MULE -> {
                 this.resistance += 1;
@@ -535,6 +520,7 @@ public class Equipement {
                 this.resistance += 4;
                 this.armure += 1;
             }
+            //TODO
             case FEE -> {
                 this.resistance += 1;
                 this.effet = "Une fois par combat, soigne une cible de 10.";
@@ -565,6 +551,7 @@ public class Equipement {
             case SAC_TEMP ->
                     this.effet = "Lorsque vous utilisez un objet à usage limité pour la dernière fois," + "vous " +
                             "pouvez choisir de détruire cette sacoche à la place et récupérez tous les utilisations " + "de votre objet.";
+            //fin TODO
             case AUCUN -> {
             }
         }

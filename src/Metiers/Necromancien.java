@@ -1,5 +1,6 @@
 package Metiers;
 
+import Auxiliaire.Texte;
 import Enum.Action;
 import Enum.Dieux;
 import Enum.Metier;
@@ -164,16 +165,16 @@ public class Necromancien extends Joueur {
         System.out.println("Sacrifice : Tuer un allié (familier comprit) régénère " + pp_sacrifice + " mana.");
         System.out.println("Malédiction : Diminue définitivement la résistance d'une cible.");
         if (this.niveau >= 1) {
-            System.out.println("Zombification : Pour 2 mana, tente de ramener un monstre fraichement tué à la vie " +
-                    "sous la forme d'un fidèle serviteur. Peut endommager le cadavre.");
+            System.out.printf("Zombification : Pour %d mana, tente de ramener un monstre fraichement tué à la vie " +
+                    "sous la forme d'un fidèle serviteur. Peut endommager le cadavre.\n", rune_noire ? 3 : 2);
         }
         if (this.niveau >= 2) {
             System.out.println("Resurrection : Pour 2 mana, ramène un joueur à la vie.");
         }
         if (this.niveau >= 5) {
-            System.out.println("Appel des morts : Pour 4 mana ou plus, ramène à la vie un monstre mort depuis " +
+            System.out.printf("Appel des morts : Pour %d mana ou plus, ramène à la vie un monstre mort depuis " +
                     "longtemps. La réussite du sort et la puissance de l'entité invoquée dépend de la quantité de " +
-                    "mana utilisée.");
+                    "mana utilisée.\n", rune_noire ? 5 : 4);
         }
     }
     
@@ -188,9 +189,11 @@ public class Necromancien extends Joueur {
     @Override
     public void mort_def() {
         super.mort_def();
-        System.out.println("Grace à vos talent de thaumaturge, vous conservez vos modifications physiques et " +
-                "emportez avec vous " + nb_piece + "PO et " + nb_item + " de vos items de votre choix (vous " +
-                "devrez entrer à nouveau les effets cachées).");
+        if(rune_mortifere){
+            Texte.thaumaturge(2 * nb_item, 2 * nb_piece);
+        } else {
+            Texte.thaumaturge(nb_item, nb_piece);
+        }
     }
     
     @Override
@@ -352,23 +355,23 @@ public class Necromancien extends Joueur {
         switch (Input.D6() + boost_lvl) {
             case 2 -> {
                 System.out.println("Vous maudissez faiblement " + ennemi.getNom() + ".");
-                ennemi.bostVie(-(1 + boost), true);
+                ennemi.boostVie(-(1 + boost), true);
             }
             case 3, 4 -> {
                 System.out.println("Vous maudissez " + ennemi.getNom() + ".");
-                ennemi.bostVie(-(2 + boost), true);
+                ennemi.boostVie(-(2 + boost), true);
             }
             case 5 -> {
                 System.out.println("Vous maudissez agressivement " + ennemi.getNom() + ".");
-                ennemi.bostVie(-(3 + boost), true);
+                ennemi.boostVie(-(3 + boost), true);
             }
             case 6, 7, 8 -> {
                 System.out.println("Vous maudissez puissament " + ennemi.getNom() + ".");
-                ennemi.bostVie(-(5 + boost), true);
+                ennemi.boostVie(-(5 + boost), true);
             }
             case 9, 10 -> {
                 System.out.println("Vous arracher à " + ennemi.getNom() + " des fragments de son âme !");
-                ennemi.bostVie(-(8 + boost), true);
+                ennemi.boostVie(-(8 + boost), true);
             }
             default -> {
                 System.out.println("vous n'arrivez pas à maudir " + ennemi.getNom() + ".");
@@ -384,9 +387,12 @@ public class Necromancien extends Joueur {
     private void necromancie() throws IOException {
         Monstre m = Lieu.true_monstre(getPosition());
         System.out.println("Vous rappelez à la vie les cadavres de ces terres.");
-        System.out.println("Combien de PP mettez vous dans le sort ? (min 4) : ");
+        System.out.printf("Combien de PP mettez vous dans le sort ? (min %d) : ", rune_noire ? 5 : 4);
         int mana = Input.readInt();
         int jet = Input.D8() + mana + rand.nextInt(2) - 1;
+        if(rune_noire){
+            jet += 2;
+        }
         if (this.niveau >= 9) {
             jet += 1;
         }
@@ -397,39 +403,39 @@ public class Necromancien extends Joueur {
         int ob;
         if (jet <= 6) {
             monstre_nom = "carcasse putréfié";
-            m.bostAtk(-7, true);
-            m.bostVie(-9, true);
-            m.bostArmure(-4, true);
+            m.boostAtk(-7, true);
+            m.boostVie(-9, true);
+            m.boostArmure(-4, true);
             ob = 1 + rand.nextInt(2);
         } else if (jet <= 8) {
             monstre_nom = "zombie écorché";
-            m.bostAtk(-5, true);
-            m.bostVie(-7, true);
-            m.bostArmure(-4, true);
+            m.boostAtk(-5, true);
+            m.boostVie(-7, true);
+            m.boostArmure(-4, true);
             ob = 1 + rand.nextInt(2);
         } else if (jet <= 11) {
             monstre_nom = "esprit vengeur";
-            m.bostAtk(3, true);
-            m.bostVie(-7, true);
-            m.bostArmure(-4, true);
+            m.boostAtk(3, true);
+            m.boostVie(-7, true);
+            m.boostArmure(-4, true);
             ob = 2 + rand.nextInt(3);
         } else if (jet <= 13) {
             monstre_nom = "squelette blindé";
-            m.bostAtk(-3, true);
-            m.bostVie(4, true);
-            m.bostArmure(1, true);
+            m.boostAtk(-3, true);
+            m.boostVie(4, true);
+            m.boostArmure(1, true);
             ob = 3 + rand.nextInt(4);
         } else if (jet <= 15) {
             monstre_nom = "abomination vengeresse";
-            m.bostAtk(2, true);
-            m.bostVie(4, true);
-            m.bostArmure(0, true);
+            m.boostAtk(2, true);
+            m.boostVie(4, true);
+            m.boostArmure(0, true);
             ob = 3 + rand.nextInt(4);
         } else {
             monstre_nom = "Ancien gardien";
-            m.bostAtk(3, true);
-            m.bostVie(7, true);
-            m.bostArmure(2, true);
+            m.boostAtk(3, true);
+            m.boostVie(7, true);
+            m.boostArmure(2, true);
             ob = 4 + rand.nextInt(3);
         }
         m.rename(monstre_nom);
@@ -452,6 +458,9 @@ public class Necromancien extends Joueur {
                 jet += 1;
             }
         }
+        if(rune_noire){
+            jet += 2;
+        }
         if (jet > 8 && niveau < 9) {
             jet = 8;
         }
@@ -464,36 +473,36 @@ public class Necromancien extends Joueur {
         int retour;
         switch (jet) {
             case 3 -> { //-8
-                System.out.println(ennemi.getNom() + " a été... rapellé");
-                ennemi.bostAtk(-6, true);
-                ennemi.bostVie(-8, true);
-                ennemi.bostArmure(-3, true);
+                System.out.println(ennemi.getNom() + " a été... rappellé");
+                ennemi.boostAtk(-6, true);
+                ennemi.boostVie(-8, true);
+                ennemi.boostArmure(-3, true);
                 retour = -rand.nextInt(6) - 7;
             }
             case 4, 5 -> { //-5
-                System.out.println(ennemi.getNom() + " a été partiellement ressucité");
-                ennemi.bostAtk(-3, true);
-                ennemi.bostVie(-5, true);
-                ennemi.bostArmure(-2, true);
+                System.out.println(ennemi.getNom() + " a été partiellement ressuscité");
+                ennemi.boostAtk(-3, true);
+                ennemi.boostVie(-5, true);
+                ennemi.boostArmure(-2, true);
                 retour = -rand.nextInt(6) - 4;
             }
             case 6, 7 -> { // -2
-                System.out.println(ennemi.getNom() + " a été ressucité");
-                ennemi.bostAtk(-1, true);
-                ennemi.bostVie(-2, true);
+                System.out.println(ennemi.getNom() + " a été ressuscité");
+                ennemi.boostAtk(-1, true);
+                ennemi.boostVie(-2, true);
                 retour = -rand.nextInt(6) - 1;
             }
             case 8 -> { //+2
-                System.out.println(ennemi.getNom() + " a été parfaitement ressucité");
-                ennemi.bostAtk(1, true);
-                ennemi.bostVie(2, true);
+                System.out.println(ennemi.getNom() + " a été parfaitement ressuscité");
+                ennemi.boostAtk(1, true);
+                ennemi.boostVie(2, true);
                 retour = 1;
             }
             case 9 -> { //+5
                 System.out.println(ennemi.getNom() + " a été invoqué, plus fort que de son vivant.");
-                ennemi.bostAtk(3, true);
-                ennemi.bostVie(5, true);
-                ennemi.bostArmure(1, true);
+                ennemi.boostAtk(3, true);
+                ennemi.boostVie(5, true);
+                ennemi.boostArmure(1, true);
                 retour = 3;
             }
             default -> {

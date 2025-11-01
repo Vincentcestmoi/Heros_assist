@@ -1,6 +1,7 @@
 package Metiers;
 
 import Enum.*;
+import Auxiliaire.Texte;
 import Equipement.Equipement;
 import Exterieur.Input;
 import Exterieur.Output;
@@ -68,8 +69,49 @@ public abstract class Joueur {
     protected static int attaque_bonus = 0;
     protected static int tir_bonus = 0;
     protected static int tour_modif = 0;
-    
     protected int bonus_infection;
+    
+    //item
+    private boolean lame_infernale;
+    private boolean lame_vegetale;
+    private boolean trident;
+    private boolean lame_mont;
+    private boolean nectar;
+    private boolean ambroisie;
+    private int guerre;
+    private boolean lame_vent;
+    private boolean first_attaque;
+    private boolean lame_fertile;
+    private boolean parch_feu;
+    private boolean parch_dodo;
+    private boolean parch_lumiere;
+    private boolean a_aveugle;
+    private boolean rune_croissance;
+    private boolean rune_pluie;
+    protected boolean rune_haine;
+    private boolean rune_virale;
+    private boolean rune_dodo;
+    protected boolean rune_mortifere;
+    private boolean rune_orage;
+    private boolean rune_commerce;
+    private int rune_ardente;
+    private int rune_ardente2;
+    private boolean soin;
+    private boolean a_soigne;
+    private boolean bracelet_protect;
+    protected boolean rune_noire;
+    private boolean absorption;
+    private boolean lunette;
+    protected boolean dissec;
+    protected boolean concoct;
+    protected boolean bourdon;
+    private boolean parch_volcan;
+    private boolean absorption2;
+    private boolean pegase;
+    private boolean cheval;
+    private boolean pie;
+    private boolean sphinx;
+    private boolean a_renforce;
     
     Joueur(String nom, Position position, int ob_f, Dieux parent, int xp) {
         this.nom = nom;
@@ -82,6 +124,7 @@ public abstract class Joueur {
         this.armure = 0;
         super_actualiser_niveau();
         SetEffetParent();
+        retirer_tout();
     }
     
     //************************************************CHARGEMENT******************************************************//
@@ -213,6 +256,8 @@ public abstract class Joueur {
         presente_pouvoir();
         System.out.println();
         System.out.println(DescribeEffetParent());
+        System.out.println();
+        System.out.println(Describe_effet_item());
     }
     
     /**
@@ -310,23 +355,51 @@ public abstract class Joueur {
         return switch (parent) {
             case ARES -> {
                 if (getMetier() != Metier.GUERRIERE) {
-                    yield "Berserk : pour 1 mana/aura, imprègne de folie meurtrière l'esprit du lanceur avant qu'il " + "ne frappe, augmentant sa puissance au prix de sa santé mentale.";
+                    yield "Berserk : pour 1PP, imprègne de folie meurtrière l'esprit du lanceur avant qu'il " + "ne frappe, augmentant sa puissance au prix de sa santé mentale.";
                 }
                 yield "";
             }
             case HADES -> {
                 if (getMetier() != Metier.NECROMANCIEN) {
-                    yield "Thaumaturge : Quand il meurt, un thaumaturge peut emporter avec lui 3 pièces " + "d" +
-                            "'équipements" + " " + "de son choix et 6PO dans l'au-delà.";
+                    yield "Thaumaturge : Quand il meurt, un thaumaturge peut emporter avec lui une partie de ses possession dans l'au-delà.";
                 }
                 yield "";
             }
-            case APOLLON -> "Infection : pour 1 mana, augmente les dommages de vos tirs pour un combat.";
-            case DEMETER -> "Sérénité : pour 2 mana/aura, soigne une cible.";
+            case APOLLON -> "Infection : pour 1PP, augmente les dommages de vos tirs pour un combat.";
+            case DEMETER -> "Sérénité : pour %dPP, soigne une cible.".formatted(rune_croissance ? 1 : 2);
             case DIONYSOS -> "Sens des affaires : diminue les prix des objets en vente aux marchés.";
-            case POSEIDON -> "Inondation : Un sort qui consomme 4 mana et inflige de gros dommages magiques.";
-            case ZEUS -> "Foudre : Un sort qui consomme 5 mana et inflige de puissants dommages magiques.";
+            case POSEIDON -> "Inondation : Un sort qui consomme %dPP et inflige de gros dommages magiques.".formatted(rune_pluie ? 3 : 4);
+            case ZEUS -> "Foudre : Un sort qui consomme %dPP et inflige de puissants dommages magiques.".formatted(rune_orage ? 4 : 5);
         };
+    }
+    
+    /**
+     * Présente les caractéristiques et capacités obtenues via item
+     */
+    private String Describe_effet_item(){
+        String text = "";
+        if(lame_vent){
+            text += "Lame des vents : Déchaine des violentes lame de vent lors de certains assaut.\n";
+        }
+        if(parch_feu && getMetier() != Metier.ARCHIMAGE){
+            text += "Parchemin de feu : Permet de lancer un sort de feu mineur pour %d mana.\n".formatted(2 + rune_ardente2);
+        }
+        if(parch_dodo && getMetier() != Metier.ARCHIMAGE){
+            text += "Parchemin de sommeil : Permet de lancer un sort de sommeil pour %d mana.\n".formatted(rune_dodo ? 1 : 2);
+        }
+        if(parch_lumiere && getMetier() != Metier.ARCHIMAGE){
+            text += "Parchemin de lumière : permet de lancer un sort aveuglant pour 2 mana.\n";
+        }
+        if(parch_volcan && getMetier() != Metier.ARCHIMAGE){
+            text += "Parchemin volcanique : permet de lancer le sort  éruption volcanique pour 6 mana.\n";
+        }
+        if(soin){
+            text += "Bracelet de soin : permet, une fois par bataille, de soigner une cible.\n";
+        }
+        if(sphinx){
+            text += "Sphinx : permet, une fois par combat, de renforcer une cible.\n";
+        }
+        return text;
     }
     
     /**
@@ -453,7 +526,7 @@ public abstract class Joueur {
     }
     
     public boolean a_cecite() {
-        return cecite;
+        return !lunette && cecite;
     }
     
     private boolean f_a_cecite() {
@@ -471,6 +544,9 @@ public abstract class Joueur {
     protected void p_prend_cecite() {
         cecite = true;
         System.out.println(nom + " est empoisonné(e) et atteint(e) de cécité.");
+        if(lunette){
+            System.out.println("Celui ne l'affecte en rien.");
+        }
     }
     
     protected void f_prend_cecite() {
@@ -557,59 +633,76 @@ public abstract class Joueur {
     }
     
     protected int bonusAtkLieux() {
-        return switch (position) {
-            case ASCENDANT -> 0;
+        int bonus = 0;
+        // bonus de sang
+        if(this.parent == Dieux.ARES){
+            bonus += guerre;
+        }
+        if(this.parent == Dieux.DIONYSOS || this.parent == Dieux.DEMETER){
+            if(this.lame_fertile){
+                bonus += 5;
+            }
+        }
+        //véritable bonus de lieu
+        switch (position) {
+            case ASCENDANT -> {}
             case ENFERS -> {
-                if (parent == Dieux.HADES) {
-                    yield 1;
+                if(lame_infernale){
+                    bonus += 4;
                 }
-                yield 0;
+                if (parent == Dieux.HADES) {
+                    bonus += 1;
+                }
             }
             case PRAIRIE -> {
-                if (parent == Dieux.DEMETER) {
-                    yield 2;
-                } else if (parent == Dieux.ARES) {
-                    yield 1;
+                if(lame_vegetale){
+                    bonus += 3;
                 }
-                yield 0;
+                if (parent == Dieux.DEMETER) {
+                    bonus += 2;
+                } else if (parent == Dieux.ARES) {
+                    bonus += 1;
+                }
             }
             case VIGNES -> {
                 if (parent == Dieux.DIONYSOS) {
-                    yield 1;
+                    bonus += 1;
                 } else if (parent == Dieux.ARES) {
-                    yield 1;
+                    bonus += 1;
                 }
-                yield 0;
             }
             case TEMPLE -> {
                 if (parent == Dieux.APOLLON || parent == Dieux.ARES) {
-                    yield 2;
+                    bonus += 2;
                 }
-                yield 0;
             }
             case MER -> {
-                if (parent == Dieux.POSEIDON) {
-                    yield 2;
-                } else if (parent == Dieux.ARES) {
-                    yield 3;
+                if(trident){
+                    bonus += 3;
                 }
-                yield 0;
+                if (parent == Dieux.POSEIDON) {
+                    bonus += 2;
+                } else if (parent == Dieux.ARES) {
+                    bonus += 3;
+                }
             }
             case MONTS -> {
-                if (parent == Dieux.ZEUS) {
-                    yield 5;
-                } else if (parent == Dieux.ARES) {
-                    yield 3;
+                if(lame_mont){
+                    bonus += 5;
                 }
-                yield 0;
+                if (parent == Dieux.ZEUS) {
+                    bonus += 5;
+                } else if (parent == Dieux.ARES) {
+                    bonus += 3;
+                }
             }
             case OLYMPE -> {
                 if (parent == Dieux.ARES) {
-                    yield 4;
+                    bonus += 4;
                 }
-                yield 0;
             }
-        };
+        }
+        return bonus;
     }
     
     protected int bonusArmLieux() {
@@ -635,6 +728,19 @@ public abstract class Joueur {
             System.out.println(nom + " a gagné un niveau !");
             Output.JouerSonLvlUp();
             super_lvl_up();
+        }
+    }
+    
+    /**
+     * Traite le fait qu'un joueur a porté le dernier coup sur un monstre
+     */
+    public void dernier_coup(){
+        gagneXp();
+        if(absorption){
+            Texte.absorber(this.nom, 1 + rand.nextInt(2));
+        }
+        if(absorption2){
+            Texte.absorber2(this.nom, 5 + rand.nextInt(3), 2 + rand.nextInt(3), rand.nextInt(3), 3 + rand.nextInt(3));
         }
     }
     
@@ -735,6 +841,10 @@ public abstract class Joueur {
         bonus_infection = 0;
         tour_modif = 0;
         peut_joindre = false;
+        first_attaque = true;
+        a_aveugle = false;
+        a_soigne = false;
+        a_renforce = false;
         if (a_familier() && Input.yn("Est-ce que votre familier vous rejoint au combat ?")) {
             f_actif = true;
             f_conscient = true;
@@ -749,7 +859,7 @@ public abstract class Joueur {
     }
     
     /**
-     * Permet aux joueurs qui en sont absent de rejoindre un combat
+     * Permet aux joueurs qui en sont absents de rejoindre un combat
      * @param pos le lieu du combat
      * @throws IOException toujours
      */
@@ -833,12 +943,16 @@ public abstract class Joueur {
                 System.out.println(getNom() + " résiste à la mort.");
             } else {
                 mort_def();
+                actif = false; //pour pas trigueur la prochaine condition
             }
         }
         if (est_actif()) {
             gagneXp();
             if (ennemi_nomme) {
                 gagneXp();
+            }
+            if(pie && rand.nextInt(3) == 0){ //33%
+                Texte.pie(1 + rand.nextInt(3)); //1~3
             }
         }
         actif = false;
@@ -886,7 +1000,7 @@ public abstract class Joueur {
     /**
      * Calcule et applique les effets d'une attaque à distance
      * @param ennemi     le monstre ennemi
-     * @param bonus_popo les dommages additionnel des popo (ici uniquement les instables)
+     * @param bonus_popo les dommages additionnels des popo (ici uniquement les instables)
      * @throws IOException toujours
      */
     public void tirer(Monstre ennemi, int bonus_popo) throws IOException {
@@ -966,6 +1080,10 @@ public abstract class Joueur {
      * réinitialise ses états à l'exception de la mort
      */
     public void rendre_mort() {
+        if(bracelet_protect){
+            bracelet_protect = false;
+        }
+        Texte.bracelet_protect(this);
         Output.JouerSonMort();
         vivant = false;
         reveil = 0;
@@ -981,14 +1099,23 @@ public abstract class Joueur {
         Output.JouerSonMortDef();
         ob_f = 0;
         position = Position.ENFERS;
+        retirer_tout();
         if (this.parent == Dieux.HADES || getMetier() != Metier.NECROMANCIEN) {
-            System.out.println("Grâce à vos dons héréditaires, vous pouvez choisir 3 pièces d'équipements " + "que " + "vous conservez (vous devez entrer à nouveau les effets cachées). De plus, vous pouvez conserver" + " jusqu'à 6 PO.");
+            int PO = rune_mortifere ? 13 : 6;
+            int PIT = rune_mortifere ? 6 : 3;
+            Texte.thaumaturge(PIT, PO);
+            if(rune_mortifere || this.niveau <= 0){
+                return;
+            }
             for (int i = this.niveau; i > 0; i--) {
                 if (rand.nextInt(3) == 0) {
                     this.xp -= 1;
                 }
             }
         } else {
+            if(rune_mortifere || this.niveau <= 0){
+                return;
+            }
             for (int i = this.niveau; i > 0; i--) {
                 if (rand.nextBoolean()) {
                     this.xp -= 1;
@@ -1149,7 +1276,7 @@ public abstract class Joueur {
      */
     public void check_bonus_lieux() {
         if (bonusAtkLieux() > 0 || bonusResLieux() > 0 || bonusArmLieux() > 0) {
-            System.out.println("Votre sang divin réagit à votre environnement !");
+            Texte.bonus_lieu();
         }
     }
     
@@ -1262,6 +1389,9 @@ public abstract class Joueur {
         int reduc = 0;
         if (getParent() == Dieux.DIONYSOS) {
             reduc = 2;
+            if(rune_commerce){
+                reduc += 3;
+            }
         }
         switch (position) {
             case PRAIRIE -> Equipement.marche_prairie(reduc);
@@ -1318,6 +1448,7 @@ public abstract class Joueur {
         }
         if (!est_berserk()) {
             text += "/(p)remier soin";
+            // sort héréditaire
             if (getParent() == Dieux.ARES && getMetier() != Metier.GUERRIERE) {
                 text += "/(b)erserker";
             }
@@ -1333,6 +1464,19 @@ public abstract class Joueur {
             if (getParent() == Dieux.ZEUS) {
                 text += "/(f)oudre";
             }
+        }
+        //item
+        if(parch_feu && !est_berserk() && getMetier() != Metier.ARCHIMAGE){
+            text += "/sort de (feu) mineur";
+        }
+        if(parch_dodo && !est_berserk() && getMetier() != Metier.ARCHIMAGE){
+            text += "/sort de (som)meil";
+        }
+        if(parch_lumiere && !est_berserk() && getMetier() != Metier.ARCHIMAGE && !a_aveugle){
+            text += "/sort de (lum)iere";
+        }
+        if(parch_volcan && !est_berserk() && getMetier() != Metier.ARCHIMAGE){
+            text += "/sort (vol)canique";
         }
         text += "/(f)uir/(c)ustom/(o)ff";
         return text;
@@ -1363,6 +1507,7 @@ public abstract class Joueur {
             return Action.AUCUNE;
         }
         return switch (choix) {
+            // action héréditaire
             case "b" -> {
                 if (!est_berserk() && getParent() == Dieux.ARES && getMetier() != Metier.GUERRIERE) {
                     yield Action.BERSERK; //version légèrement différente de la guerrière
@@ -1390,6 +1535,31 @@ public abstract class Joueur {
                 }
                 yield Action.AUCUNE;
             }
+            //item
+            case "feu" -> {
+                if(parch_feu && !est_berserk() && getMetier() != Metier.ARCHIMAGE){
+                    yield Action.SORT_FEU;
+                }
+                yield Action.AUCUNE;
+            }
+            case "som" -> {
+                if(parch_dodo && !est_berserk() && getMetier() != Metier.ARCHIMAGE){
+                    yield Action.SORT_DODO;
+                }
+                yield Action.AUCUNE;
+            }
+            case "lum" -> {
+                if(parch_lumiere && !est_berserk() && getMetier() != Metier.ARCHIMAGE && !a_aveugle){
+                    yield Action.SORT_LUMIERE;
+                }
+                yield Action.AUCUNE;
+            }
+            case "vol" -> {
+                if(parch_volcan && !est_berserk() && getMetier() != Metier.ARCHIMAGE){
+                    yield Action.SORT_VOLCAN;
+                }
+                yield Action.AUCUNE;
+            }
             default -> Action.AUCUNE;
         };
     }
@@ -1401,6 +1571,7 @@ public abstract class Joueur {
      */
     public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         return switch (action) {
+            //action héréditaire
             case BERSERK -> {
                 berserk();
                 yield true;
@@ -1421,6 +1592,24 @@ public abstract class Joueur {
                 foudre_zeus(ennemi, bonus_popo);
                 yield false;
             }
+            //item
+            case SORT_FEU -> {
+                boule_feu_mineure(ennemi, bonus_popo);
+                yield false;
+            }
+            case SORT_DODO -> {
+                Combat.stop_run();
+                Texte.sort_dodo();
+                yield false;
+            }
+            case SORT_LUMIERE -> {
+                sort_lumiere(ennemi);
+                yield false;
+            }
+            case SORT_VOLCAN -> {
+                sort_volcan(ennemi, bonus_popo);
+                yield false;
+            }
             default -> true;
         };
     }
@@ -1428,10 +1617,11 @@ public abstract class Joueur {
     /**
      * Extension du switch principal de main.combat, indique si les dommages de potion ont été utilisés
      * @param action l'action réalisée
-     * @return s'il faut annuler les dégats des potions (s'ils ont déjà été appliqués).
+     * @return s'il faut annuler les dégas des potions (s'ils ont déjà été appliqués).
      */
     public boolean action_consomme_popo(Action action) {
-        return false;
+        return action == Action.SORT_FEU || action == Action.SORT_VOLCAN || action == Action.SORT_DODO || action == Action.FOUDRE
+                || action == Action.INONDATION;
     }
     
     /**
@@ -1446,6 +1636,13 @@ public abstract class Joueur {
                 text += "(p)otion/";
             }
         }
+        //item
+        if(soin || !a_soigne){
+            text += "(soi)gner/";
+        }
+        if(sphinx && !a_renforce){
+            text += "(ren)forcer/";
+        }
         text += "(c)ustom/(A)ucune";
         return text;
     }
@@ -1456,21 +1653,83 @@ public abstract class Joueur {
      * @return si le tour a été joué
      */
     public Action_extra extra(String choix) {
+        if(choix.equals("soi") && soin && !a_soigne){
+            return Action_extra.SOIGNER;
+        }
+        if(choix.equals("ren") && sphinx && !a_renforce){
+            return Action_extra.RENFORCER;
+        }
         return Action_extra.AUCUNE;
     }
     
     public void jouer_extra(Action_extra extra) {
-        if (extra == Action_extra.RAGE) {
-            rage();
+        switch(extra) {
+            case RAGE -> rage();
+            case SOIGNER -> soigner();
+            case RENFORCER -> renforcer();
         }
     }
     
     /**
      * Traite l'action bonus rage (initialement exclusive à la guerrière)
      */
-    public void rage() {
+    protected void rage() {
         System.out.println(nom + " s'enrage !");
         berserk += 0.1f + 0.1f * rand.nextInt(5); //0.1 à 0.5
+    }
+    
+    protected void soigner() {
+        int soin = 6 + rand.nextInt(3);
+        System.out.printf("Vous soignez votre cible de %d.\n", soin);
+        a_soigne = true;
+    }
+    
+    protected void renforcer(){
+        int renforcemnt = 5 + rand.nextInt(3);
+        System.out.printf("Votre cible gagne temporairement %d points de résistance.\n", renforcemnt);
+        a_renforce = true;
+    }
+    
+    /**
+     * Traite l'action boule de feus mineurs
+     * @param ennemi la cible du sort
+     * @param bonus_popo dommage additionnel
+     * @throws IOException toujours
+     */
+    private void boule_feu_mineure(Monstre ennemi, int bonus_popo) throws IOException {
+        int dmg = bonus_popo + switch(Input.D6()){
+            case 1 -> 3;
+            case 2, 3 -> 6;
+            case 4, 5 -> 9;
+            case 6 -> 12;
+            default -> {
+                System.out.println("Argument inconnu, sort ignoré");
+                yield 0;
+            }
+        };
+        dmg += rune_ardente * 3;
+        dmg += rune_ardente2 * 5;
+        ennemi.dommage_magique(dmg);
+    }
+    
+    /**
+     * Traite le sort lumière
+     * @param ennemi le monstre aveuglé
+     */
+    private void sort_lumiere(Monstre ennemi){
+        a_aveugle = true;
+        Texte.aveugler(ennemi);
+        ennemi.boostAtk(2, false);
+    }
+    
+    /**
+     * Traite le sort Eruption volcanique
+     * @param ennemi la cible du sort
+     * @param bonus_popo des dommages additionel à appliquer
+     * @throws IOException toujours
+     */
+    private void sort_volcan(Monstre ennemi, int bonus_popo) throws IOException {
+        ennemi.dommage_magique(48 + rand.nextInt(17) + bonus_popo);
     }
     
     /**
@@ -1752,6 +2011,9 @@ public abstract class Joueur {
      * @return le bonus
      */
     public int bonus_exploration() {
+        if(pegase){
+            return 1;
+        }
         return 0;
     }
     
@@ -1925,6 +2187,9 @@ public abstract class Joueur {
     protected void berserk() {
         System.out.println(nom + " est prit d'une folie meurtrière !");
         berserk = 0.1f + 0.1f * rand.nextInt(7); //0.1 à 0.7
+        if(rune_haine && getParent() == Dieux.ARES){
+            berserk += 0.1f + rand.nextInt(5) * 0.1f; //0.1~0.5
+        }
     }
     
     /**
@@ -1932,7 +2197,7 @@ public abstract class Joueur {
      */
     protected void infection() {
         System.out.println("Les flèches de " + nom + " s'emplissent de maladies.");
-        bonus_infection += 2;
+        bonus_infection += rune_virale ? 4 : 2;
     }
     
     /**
@@ -1940,7 +2205,13 @@ public abstract class Joueur {
      */
     protected void serenite() {
         System.out.println("Ciblez un joueur ou familier.");
-        System.out.println("La cible guérie de " + (5 + rand.nextInt(3) + "."));
+        int soin = 5;
+        soin += rand.nextInt(3);
+        if(rune_croissance){
+            soin += 5;
+            soin += rand.nextInt(5);
+        }
+        System.out.printf("La cible guérie de %d.\n", soin);
     }
     
     /**
@@ -1948,7 +2219,7 @@ public abstract class Joueur {
      */
     protected void inondation(Monstre ennemi, int dps_bonus) throws IOException {
         System.out.println("Une vague d'eau percute " + ennemi.getNom() + " de plein fouet.");
-        ennemi.dommage_magique(10 + dps_bonus);
+        ennemi.dommage_magique((rune_pluie ? 10 : 15) + dps_bonus);
         ennemi.affecte();
     }
     
@@ -1957,7 +2228,7 @@ public abstract class Joueur {
      */
     protected void foudre_zeus(Monstre ennemi, int dps_bonus) throws IOException {
         System.out.println("Un éclair s'abat sur " + ennemi.getNom() + ".");
-        ennemi.dommage_magique(15 + dps_bonus);
+        ennemi.dommage_magique(dps_bonus + (rune_orage ? 15 : 20));
         ennemi.affecte();
     }
     
@@ -1999,13 +2270,19 @@ public abstract class Joueur {
     
     /**
      * Indique les bonus d'attaque à l'arc
-     * @return la quantité de dommages additionnel
+     * @return la quantité de dommages additionnels
      */
     protected int bonus_atk() {
+        int bonus = 0;
         if (a_cecite()) {
-            return -1;
+            bonus -= 1;
         }
-        return 0;
+        if(lame_vent && first_attaque){
+            bonus += 3 + rand.nextInt(3);
+            Texte.lame_vent();
+            first_attaque = false;
+        }
+        return bonus;
     }
     
     /**
@@ -2017,6 +2294,12 @@ public abstract class Joueur {
         int bonus = -1 + rand.nextInt(3);
         if (ennemi.est_nomme()) {
             bonus -= 1;
+        }
+        if(cheval){
+            bonus += 3;
+        }
+        if(pie){
+            bonus += 1;
         }
         bonus += bonus_fuite();
         bonus += berserk_fuite();
@@ -2109,19 +2392,19 @@ public abstract class Joueur {
     public void f_proteger(Monstre ennemi) throws IOException {
         switch (Input.D6() + get_ob_f() / 3) {
             case 1, 2:
-                ennemi.bostEncaissement(0.1F);
+                ennemi.boostEncaissement(0.1F);
                 System.out.println("Votre familier vous protège maladroitement.");
                 break;
             case 3, 4:
-                ennemi.bostEncaissement(0.3F);
+                ennemi.boostEncaissement(0.3F);
                 System.out.println("Votre familier vous protège.");
                 break;
             case 5, 6:
-                ennemi.bostEncaissement(0.5F);
+                ennemi.boostEncaissement(0.5F);
                 System.out.println("Votre familier vous protège.");
                 break;
             case 7, 8, 9, 10:
-                ennemi.bostEncaissement(0.7F);
+                ennemi.boostEncaissement(0.7F);
                 System.out.println("Votre familier concentre chaque fibre de son être à se préparer à vous protéger.");
                 break;
             default:
@@ -2140,11 +2423,10 @@ public abstract class Joueur {
      * @param paliers_de   les différents niveaux demandant différents dés, dans l'ordre décroissant
      * @param de           le dé à lancer selon le niveau, doit contenir un élément de plus que paliers_de
      * @param palier_bonus les niveaux ajoutant un bonus de 1 au dé
-     * @param do_random    si une variable aléatoire de 1 doit être appliqué
      * @return la valeur du jet avec les modificateurs appliqué
      * @throws IOException toujours
      */
-    protected int jet(int[] paliers_de, int[] de, int[] palier_bonus, boolean do_random) throws IOException {
+    protected int jet(int[] paliers_de, int[] de, int[] palier_bonus) throws IOException {
         int jet = 0;
         for (int i = 0; i < paliers_de.length; i++) {
             if (this.niveau >= paliers_de[i]) {
@@ -2160,9 +2442,7 @@ public abstract class Joueur {
                 jet += 1;
             }
         }
-        if (do_random) {
-            jet += rand.nextInt(3) - 1;
-        }
+        jet += rand.nextInt(3) - 1;
         return jet;
     }
     
@@ -2183,5 +2463,413 @@ public abstract class Joueur {
             case 20 -> Input.D20();
             default -> throw new IllegalStateException("Unexpected value: " + de_type);
         };
+    }
+    
+    //************************************************ITEM************************************************************//
+    
+    public void add_lame_infernale(){
+        this.lame_infernale = true;
+        if(this.position == Position.ENFERS){
+            Texte.reaction_equipement();
+        }
+    }
+    
+    public void retire_lame_infernale(){
+        this.lame_infernale = false;
+    }
+    
+    public void add_lame_vegetale(){
+        this.lame_vegetale = true;
+        if(this.position == Position.PRAIRIE){
+            Texte.reaction_equipement();
+        }
+    }
+    
+    public void retire_lame_vegetale(){
+        this.lame_vegetale = false;
+    }
+    
+    public void add_trident(){
+        this.trident = true;
+        if(this.position == Position.MER){
+            Texte.reaction_equipement();
+        }
+    }
+    
+    public void retire_trident(){
+        this.trident = false;
+    }
+    
+    public void add_lame_mont(){
+        this.lame_mont = true;
+        if(this.position == Position.MONTS){
+            Texte.reaction_equipement();
+        }
+    }
+    
+    public void retire_lame_mont(){
+        this.lame_mont = false;
+    }
+    
+    public void add_nectar(){
+        if(ambroisie){
+            Texte.victoire(this.nom);
+        }
+        this.nectar = true;
+    }
+    
+    public void retire_nectar(){
+        this.nectar = false;
+    }
+    
+    public void add_ambroisie(){
+        if(this.nectar){
+            Texte.victoire(this.nom);
+        }
+        this.ambroisie = true;
+    }
+    
+    public void retire_ambroisie(){
+        this.ambroisie = false;
+    }
+    
+    public void add_guerre(){
+        if(this.parent == Dieux.ARES) {
+            Texte.reaction_equipement();
+        }
+        this.guerre += 1;
+    }
+    
+    public void retire_guerre(){
+        this.guerre -= 1;
+    }
+    
+    public void add_lame_vent(){
+        this.lame_vent = true;
+    }
+    
+    public void retire_lame_vent(){
+        this.lame_vent = false;
+    }
+    
+    public void add_lame_fertile(){
+        if(this.parent == Dieux.DEMETER || this.parent == Dieux.DIONYSOS) {
+            Texte.reaction_equipement();
+        }
+        lame_fertile = true;
+    }
+    
+    public void retire_lame_fertile(){
+        lame_fertile = false;
+    }
+    
+    public void add_parch_feu(){
+        if(getMetier() == Metier.ARCHIMAGE){
+            Texte.parchemin_archimage();
+        }
+        if(rune_ardente2 > 0 || rune_ardente > 0){
+            Texte.reaction_equipement();
+        }
+        this.parch_feu = true;
+    }
+    
+    public void retire_parch_feu(){
+        this.parch_feu = false;
+    }
+    
+    public void add_parch_dodo(){
+        if(getMetier() == Metier.ARCHIMAGE){
+            Texte.parchemin_archimage();
+        }
+        if(rune_dodo){
+            Texte.reaction_equipement();
+        }
+        this.parch_dodo = true;
+    }
+    
+    public void retire_parch_dodo(){
+        this.parch_dodo = false;
+    }
+    
+    public void add_parch_lumiere(){
+        if(getMetier() == Metier.ARCHIMAGE){
+            Texte.parchemin_archimage();
+        }
+        this.parch_lumiere = true;
+    }
+    
+    public void retire_parch_lumiere(){
+        this.parch_lumiere = false;
+    }
+    
+    public void add_rune_croissance(){
+        if(this.parent == Dieux.DEMETER) {
+            Texte.reaction_equipement();
+        }
+        this.rune_croissance = true;
+    }
+    
+    public void retire_rune_croissance(){
+        this.rune_croissance = false;
+    }
+    
+    public void add_rune_pluie(){
+        if(this.parent == Dieux.POSEIDON) {
+            Texte.reaction_equipement();
+        }
+        this.rune_pluie = true;
+    }
+    
+    public void retire_rune_pluie(){
+        this.rune_pluie = false;
+    }
+    
+    public void add_rune_haine(){
+        if(this.parent == Dieux.ARES || getMetier() == Metier.GUERRIERE) {
+            Texte.reaction_equipement();
+        }
+        this.rune_haine = true;
+    }
+    
+    public void retire_rune_haine(){
+        this.rune_haine = false;
+    }
+    
+    public void add_rune_virale(){
+        if(this.parent == Dieux.APOLLON) {
+            Texte.reaction_equipement();
+        }
+        this.rune_virale = true;
+    }
+    
+    public void retire_rune_virale(){
+        this.rune_virale = false;
+    }
+    
+    public void add_rune_dodo(){
+        if(parch_dodo) {
+            Texte.reaction_equipement();
+        }
+        this.rune_dodo = true;
+    }
+    
+    public void retire_rune_dodo(){
+        this.rune_dodo = false;
+    }
+    
+    public void add_rune_mortifere(){
+        if(this.parent == Dieux.HADES || getMetier() == Metier.NECROMANCIEN) {
+            Texte.reaction_equipement();
+        }
+        this.rune_mortifere = true;
+    }
+    
+    public void retire_rune_mortifere(){
+        this.rune_mortifere = false;
+    }
+    
+    public void add_rune_orage(){
+        if(this.parent == Dieux.ZEUS) {
+            Texte.reaction_equipement();
+        }
+        this.rune_orage = true;
+    }
+    
+    public void retire_rune_orage(){
+        this.rune_orage = false;
+    }
+    
+    public void add_rune_ardente(){
+        if(parch_feu || getMetier() == Metier.ARCHIMAGE) {
+            Texte.reaction_equipement();
+        }
+        this.rune_ardente += 1;
+    }
+    
+    public void retire_rune_ardente(){
+        this.rune_ardente -= 1;
+    }
+    
+    public void add_rune_ardente2(){
+        if(parch_feu || getMetier() == Metier.ARCHIMAGE) {
+            Texte.reaction_equipement();
+        }
+        this.rune_ardente2 += 1;
+    }
+    
+    public void retire_rune_ardente2(){
+        this.rune_ardente2 -= 1;
+    }
+    
+    public void add_rune_commerce(){
+        if(this.parent == Dieux.DIONYSOS) {
+            Texte.reaction_equipement();
+        }
+        this.rune_commerce = true;
+    }
+    
+    public void retire_rune_commerce(){
+        this.rune_commerce = false;
+    }
+    
+    public void add_soin(){
+        this.soin = true;
+    }
+    
+    public void retire_soin(){
+        this.soin = false;
+    }
+    
+    public void add_bracelet_protec(){
+        this.bracelet_protect = true;
+    }
+    
+    public void retire_bracelet_protec(){
+        this.bracelet_protect = false;
+    }
+    
+    public void add_rune_noire(){
+        if(getMetier() == Metier.NECROMANCIEN){
+            Texte.reaction_equipement();
+        }
+        this.rune_noire = true;
+    }
+    
+    public void retire_rune_noire(){
+        this.rune_noire = false;
+    }
+    
+    public void add_absorption(){
+        this.absorption = true;
+    }
+    
+    public void retire_absorption(){
+        this.absorption = false;
+    }
+    
+    public void add_lunette(){
+        this.lunette = true;
+    }
+    
+    public void retire_lunette(){
+        this.lunette = false;
+    }
+    
+    public void add_dissec(){
+        this.dissec = true;
+    }
+    
+    public void retire_dissec(){
+        this.dissec = false;
+    }
+    
+    public void add_concoc(){
+        this.concoct = true;
+    }
+    
+    public void retire_concoc(){
+        this.concoct = false;
+    }
+    
+    public void add_bourdon(){
+        if(getMetier() == Metier.ARCHIMAGE){
+            Texte.reaction_equipement();
+        }
+        this.bourdon = true;
+    }
+    
+    public void retire_bourdon(){
+        this.bourdon = false;
+    }
+    
+    public void add_parch_volcan(){
+        if(getMetier() == Metier.ARCHIMAGE){
+            Texte.parchemin_archimage();
+        }
+        this.parch_volcan = true;
+    }
+    
+    public void retire_parch_volcan(){
+        this.parch_volcan = false;
+    }
+    
+    public void add_absorption2(){
+        this.absorption2 = true;
+    }
+    
+    public void retire_absorption2(){
+        this.absorption2 = false;
+    }
+    
+    public void add_cheval(){
+        this.cheval = true;
+    }
+    
+    public void retire_cheval(){
+        this.cheval = false;
+    }
+    
+    public void add_pegase(){
+        this.pegase = true;
+    }
+    
+    public void retire_pegase(){
+        this.pegase = false;
+    }
+    
+    public void add_pie(){
+        this.pie = true;
+    }
+    
+    public void retire_pie(){
+        this.pie = false;
+    }
+    
+    public void add_sphinx(){
+        this.sphinx = true;
+    }
+    
+    public void retire_sphinx(){
+        this.sphinx = false;
+    }
+    
+    public void retirer_tout(){
+        Texte.retirer_tout();
+        lame_infernale = false;
+        lame_vegetale = false;
+        trident = false;
+        lame_mont = false;
+        nectar = false;
+        ambroisie = false;
+        guerre = 0;
+        lame_vent = false;
+        lame_fertile = false;
+        parch_feu = false;
+        parch_dodo = false;
+        parch_lumiere = false;
+        rune_croissance = false;
+        rune_pluie = false;
+        rune_haine = false;
+        rune_virale = false;
+        rune_dodo = false;
+        rune_mortifere = false;
+        rune_orage = false;
+        rune_ardente = 0;
+        rune_ardente2 = 0;
+        rune_commerce = false;
+        soin = false;
+        bracelet_protect = false;
+        rune_noire = false;
+        absorption = false;
+        lunette = false;
+        dissec = false;
+        concoct = false;
+        bourdon = false;
+        parch_volcan = false;
+        absorption2 = false;
+        cheval = false;
+        pegase = false;
+        pie = false;
+        sphinx = false;
     }
 }

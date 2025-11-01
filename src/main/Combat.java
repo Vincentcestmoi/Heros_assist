@@ -299,7 +299,7 @@ public class Combat {
                 if (run) {
                     if (verifie_mort(ennemi, pos)) {
                         stop_run();
-                        joueur.gagneXp();
+                        joueur.dernier_coup();
                     }
                 }
             }
@@ -498,19 +498,19 @@ public class Combat {
                     System.out.println(ennemi.getNom() + " fait tomber votre casque pour le combat.");
                 }
             }
-            case ARMURE_GLACE -> ennemi.bostArmure(1, false);
-            case ARMURE_NATURELLE -> ennemi.bostArmure(1, true);
-            case ARMURE_GLACE2 -> ennemi.bostArmure(2, false);
-            case ARMURE_NATURELLE2 -> ennemi.bostArmure(2, true);
-            case ARMURE_NATURELLE3 -> ennemi.bostArmure(3, true);
-            case ARMURE_NATURELLE4 -> ennemi.bostArmure(4, true);
-            case VITALITE_NATURELLE -> ennemi.bostVie(3, true);
-            case VITALITE_NATURELLE2 -> ennemi.bostVie(6, true);
-            case VITALITE_NATURELLE3 -> ennemi.bostVie(9, true);
-            case FLAMME_ATTAQUE -> ennemi.bostAtk(2, false);
-            case FORCE_NATURELLE -> ennemi.bostAtk(2, true);
-            case FORCE_NATURELLE2 -> ennemi.bostAtk(4, true);
-            case FORCE_NATURELLE3 -> ennemi.bostAtk(6, true);
+            case ARMURE_GLACE -> ennemi.boostArmure(1, false);
+            case ARMURE_NATURELLE -> ennemi.boostArmure(1, true);
+            case ARMURE_GLACE2 -> ennemi.boostArmure(2, false);
+            case ARMURE_NATURELLE2 -> ennemi.boostArmure(2, true);
+            case ARMURE_NATURELLE3 -> ennemi.boostArmure(3, true);
+            case ARMURE_NATURELLE4 -> ennemi.boostArmure(4, true);
+            case VITALITE_NATURELLE -> ennemi.boostVie(3, true);
+            case VITALITE_NATURELLE2 -> ennemi.boostVie(6, true);
+            case VITALITE_NATURELLE3 -> ennemi.boostVie(9, true);
+            case FLAMME_ATTAQUE -> ennemi.boostAtk(2, false);
+            case FORCE_NATURELLE -> ennemi.boostAtk(2, true);
+            case FORCE_NATURELLE2 -> ennemi.boostAtk(4, true);
+            case FORCE_NATURELLE3 -> ennemi.boostAtk(6, true);
             case PRUDENT -> { //n'attaque pas s'il se fait OS
                 int tolerance = ennemi.getVieMax() + ennemi.getArmure();
                 for (int i = 0; i < Main.nbj; i++) {
@@ -580,7 +580,7 @@ public class Combat {
                     System.out.println(nom + " est terrifié(e) et perd 3 points d'attaque pour la durée du combat");
                 }
             }
-            case FAIBLE -> ennemi.bostAtk(-3, true);
+            case FAIBLE -> ennemi.boostAtk(-3, true);
             case BENEDICTION -> {
                 System.out.println(ennemi.getNom() + " béni " + nom + " qui gagne définitivement 1 point de " + "r" + "ésistance.");
                 System.out.println(ennemi.getNom() + " a disparu...");
@@ -588,47 +588,47 @@ public class Combat {
             }
             case EQUIPE -> {
                 System.out.println(ennemi.getNom() + " est lourdement équipé.");
-                ennemi.bostAtk(rand.nextInt(3), false);
-                ennemi.bostVie(rand.nextInt(5), false);
-                ennemi.bostArmure(rand.nextInt(2), false);
+                ennemi.boostAtk(rand.nextInt(3), false);
+                ennemi.boostVie(rand.nextInt(5), false);
+                ennemi.boostArmure(rand.nextInt(2), false);
             }
             case DUO -> System.out.println("Il y a deux " + ennemi.getNom() + "s !");
             case GEANT -> {
-                ennemi.bostAtk(Main.corriger(ennemi.getAtk() * 0.2f), true);
-                ennemi.bostVie(Main.corriger((ennemi.getVieMax() * 0.2f) + 2), true);
-                ennemi.bostArmure(-1, true);
+                ennemi.boostAtk(Main.corriger(ennemi.getAtk() * 0.2f), true);
+                ennemi.boostVie(Main.corriger((ennemi.getVieMax() * 0.2f) + 2), true);
+                ennemi.boostArmure(-1, true);
             }
             case BRUME -> System.out.println(ennemi.getNom() + "crée un rideau de brûme.");
             case GOLEM_PIERRE -> {
                 ennemi.golemNom(" de pierre");
-                ennemi.bostAtk(rand.nextInt(3) + 1, true);
-                ennemi.bostVie(rand.nextInt(4) + 3, true);
-                ennemi.bostArmure(rand.nextInt(4) + 1, true);
+                ennemi.boostAtk(rand.nextInt(3) + 1, true);
+                ennemi.boostVie(rand.nextInt(4) + 3, true);
+                ennemi.boostArmure(rand.nextInt(4) + 1, true);
             }
             case GOLEM_FER -> {
                 ennemi.golemNom(" de fer");
-                ennemi.bostAtk(rand.nextInt(4) + 2, true);
-                ennemi.bostVie(rand.nextInt(8) + 5, true);
-                ennemi.bostArmure(rand.nextInt(5) + 2, true);
-                ennemi.bostDropMax(1);
+                ennemi.boostAtk(rand.nextInt(4) + 2, true);
+                ennemi.boostVie(rand.nextInt(8) + 5, true);
+                ennemi.boostArmure(rand.nextInt(5) + 2, true);
+                ennemi.boostDropMax(1);
             }
             case GOLEM_ACIER -> {
                 ennemi.golemNom(" d'acier'");
-                ennemi.bostAtk(rand.nextInt(6) + 3, true);
-                ennemi.bostVie(rand.nextInt(10) + 7, true);
-                ennemi.bostArmure(rand.nextInt(6) + 3, true);
-                ennemi.bostDropMax(1);
-                ennemi.bostDropMin(1);
-                ennemi.bostDrop(1);
+                ennemi.boostAtk(rand.nextInt(6) + 3, true);
+                ennemi.boostVie(rand.nextInt(10) + 7, true);
+                ennemi.boostArmure(rand.nextInt(6) + 3, true);
+                ennemi.boostDropMax(1);
+                ennemi.boostDropMin(1);
+                ennemi.boostDrop(1);
             }
             case GOLEM_MITHRIL -> {
                 ennemi.golemNom(" de mithril");
-                ennemi.bostAtk(rand.nextInt(8) + 4, true);
-                ennemi.bostVie(rand.nextInt(12) + 9, true);
-                ennemi.bostArmure(rand.nextInt(6) + 4, true);
-                ennemi.bostDropMax(2);
-                ennemi.bostDropMin(1);
-                ennemi.bostDrop(2);
+                ennemi.boostAtk(rand.nextInt(8) + 4, true);
+                ennemi.boostVie(rand.nextInt(12) + 9, true);
+                ennemi.boostArmure(rand.nextInt(6) + 4, true);
+                ennemi.boostDropMax(2);
+                ennemi.boostDropMin(1);
+                ennemi.boostDrop(2);
             }
         }
         return false;
@@ -643,7 +643,7 @@ public class Combat {
         for (int i = 0; i < Main.nbj; i++) {
             if (Main.joueurs[i].getParent() == dieu) {
                 System.out.println(ennemi.getNom() + " vous regarde avec haine.");
-                ennemi.bostAtk(1 + rand.nextInt(2), false);
+                ennemi.boostAtk(1 + rand.nextInt(2), false);
                 return;
             }
         }
@@ -658,7 +658,7 @@ public class Combat {
         for (int i = 0; i < Main.nbj; i++) {
             if (Main.joueurs[i].getParent() == dieu) {
                 System.out.println(ennemi.getNom() + " vous crains.");
-                ennemi.bostAtk(-1 - rand.nextInt(2), false);
+                ennemi.boostAtk(-1 - rand.nextInt(2), false);
             }
         }
     }

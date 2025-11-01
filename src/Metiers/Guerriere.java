@@ -398,6 +398,9 @@ public class Guerriere extends Joueur {
                 berserk += 0.1f;
             }
         }
+        if(rune_haine){
+            berserk += 0.1f + rand.nextInt(5) * 0.1f; //0.1~0.5
+        }
     }
     
     /**
