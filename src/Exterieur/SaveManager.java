@@ -83,7 +83,7 @@ public class SaveManager {
         JsonObjectBuilder itemsBuilder = Json.createObjectBuilder().add("O", Json.createArrayBuilder().build()).add(
                 "I", Json.createArrayBuilder().build()).add("II", Json.createArrayBuilder().build()).add("III",
                 Json.createArrayBuilder().build()).add("IV", Json.createArrayBuilder().build()).add("PROMOTION",
-                Json.createObjectBuilder().add("MONTURE", Json.createArrayBuilder().build()).add("ARTEFACT",
+                Json.createObjectBuilder().add("CREATURE", Json.createArrayBuilder().build()).add("ARTEFACT",
                         Json.createArrayBuilder().build()).add("AMELIORATION", Json.createArrayBuilder().build()).build());
         
         // Création du fichier info.json
