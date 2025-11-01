@@ -2,6 +2,7 @@ package Enum;
 
 public enum Concoction {
     RESISTANCE,
+    BERSERK,
     ALEATOIRE,
     DIVINE,
     SERIE,

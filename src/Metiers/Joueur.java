@@ -1485,9 +1485,10 @@ public abstract class Joueur {
                 3 : Force (ATK)
                 4 : Poison (P)
                 5 : Explosive (E)
-                6 : Aucune/Custom""");
+                6 : drogue de guerre (BSRK)
+                7 : Aucune/Custom""");
         int temp = Input.readInt();
-        if (temp <= 0 || temp > 6) {
+        if (temp <= 0 || temp > 7) {
             System.out.println("Unknow input.");
             return popo();
         }
@@ -1497,7 +1498,8 @@ public abstract class Joueur {
             case 3 -> popo_force();
             case 4 -> popo_cd();
             case 5 -> popo_instable();
-            case 6 -> 0;
+            case 6 -> popo_berserk();
+            case 7 -> 0;
             default -> {
                 System.out.println("Unknow input");
                 yield popo();
@@ -1649,6 +1651,45 @@ public abstract class Joueur {
             default -> {
                 System.out.println("Unknow input");
                 yield popo_instable();
+            }
+        };
+    }
+    
+    /**
+     * Calcule et traite la Folie meurtrière (Berserk)
+     * @return 0
+     * @throws IOException toujours
+     */
+    @SuppressWarnings("DuplicatedCode") //la fonction fille dans Alchimiste.java
+    private int popo_berserk() throws IOException {
+        System.out.println("""
+                Entrez la potion que vous utilisez :
+                1 : boulette irritante          (BSRK#1)
+                2 : capsule de colère           (BSRK#2)
+                3 : potion de violence          (BSRK#3)
+                4 : pilule de folie meurtrière  (BSRK#4)
+                5 : aucune (reviens au choix des potions))""");
+        return switch (Input.readInt()) {
+            case 1 -> {
+                this.berserk += 0.1f + rand.nextInt(2) * 0.1f; //0.1~0.2
+                yield 0;
+            }
+            case 2 -> {
+                this.berserk += 0.1f + rand.nextInt(5) * 0.1f; //0.1~0.5
+                yield 0;
+            }
+            case 3 -> {
+                this.berserk += 0.25f + rand.nextInt(6) * 0.15f; //0.25~1
+                yield 0;
+            }
+            case 4 -> {
+                this.berserk += 0.5f + rand.nextInt(11) * 0.1f; //0.5~1.5
+                yield 0;
+            }
+            case 5 -> popo();
+            default -> {
+                System.out.println("Unknow input");
+                yield popo_berserk();
             }
         };
     }

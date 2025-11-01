@@ -207,14 +207,15 @@ public class Alchimiste extends Joueur {
                 3 : Force (ATK)
                 4 : Poison (P)
                 5 : Explosive (E)
-                6 : Energétique (PP)""");
+                6 : drogue de guerre (BSRK)
+                7 : Energétique (PP)""");
         if (niveau >= 5) {
-            System.out.println("7 : Divine(Div)\n8 : Aucune/Custom");
+            System.out.println("8 : Divine (Div)\n9 : Aucune/Custom");
         } else {
-            System.out.println("7 : Aucune/Custom");
+            System.out.println("8 : Aucune/Custom");
         }
         int temp = Input.readInt();
-        if (temp <= 0 || temp > 8) {
+        if (temp <= 0 || temp > 9) {
             System.out.println("Unknow input.");
             return popo();
         }
@@ -231,13 +232,14 @@ public class Alchimiste extends Joueur {
                 yield popo_instable() + super.popo();
             }
             case 6 -> local_popo_mana();
-            case 7 -> {
+            case 7 -> local_popo_berserk();
+            case 8 -> {
                 if (this.niveau >= 5) {
                     yield local_popo_divine();
                 }
                 yield 0;
             }
-            case 8 -> 0;
+            case 9 -> 0;
             default -> {
                 System.out.println("Unknow input");
                 yield popo();
@@ -391,6 +393,42 @@ public class Alchimiste extends Joueur {
         }
         System.out.println("La cible récupère " + PP + "PP.");
         return 0;
+    }
+    
+    /**
+     *
+     */
+    protected int local_popo_berserk() throws IOException {
+        System.out.println("""
+                Entrez la potion que vous utilisez :
+                1 : boulette irritante          (BSRK#1)
+                2 : capsule de colère           (BSRK#2)
+                3 : potion de violence          (BSRK#3)
+                4 : pilule de folie meurtrière  (BSRK#4)
+                5 : aucune (reviens au choix des potions))""");
+        return switch (Input.readInt()) {
+            case 1 -> {
+                this.berserk += 0.1f + rand.nextInt(2) * 0.1f; //0.1~0.2
+                yield super.popo();
+            }
+            case 2 -> {
+                this.berserk += 0.1f + rand.nextInt(5) * 0.1f; //0.1~0.5
+                yield super.popo();
+            }
+            case 3 -> {
+                this.berserk += 0.25f + rand.nextInt(6) * 0.15f; //0.25~1
+                yield super.popo();
+            }
+            case 4 -> {
+                this.berserk += 0.5f + rand.nextInt(11) * 0.1f; //0.5~1.5
+                yield super.popo();
+            }
+            case 5 -> popo();
+            default -> {
+                System.out.println("Unknow input");
+                yield local_popo_berserk();
+            }
+        };
     }
     
     /**
@@ -551,7 +589,7 @@ public class Alchimiste extends Joueur {
      * @throws IOException toujours
      */
     public Concoction concoction() throws IOException {
-        //palier : base → force, soin, toxique, 3 → resistance 4 → energie, aléatoire 6 → instable, en série 8 →
+        //palier : base → force, soin, toxique, 3 → resistance, berserk 4 → energie, aléatoire 6 → instable, en série 8 →
         // divin, 10 → elixir
         String text = text_concoc_possible();
         System.out.println(text);
@@ -563,6 +601,12 @@ public class Alchimiste extends Joueur {
             case "re" -> {
                 if (this.niveau >= 3) {
                     yield Concoction.RESISTANCE;
+                }
+                yield concoction();
+            }
+            case "dr" -> {
+                if (this.niveau >= 3) {
+                    yield Concoction.BERSERK;
                 }
                 yield concoction();
             }
@@ -612,7 +656,7 @@ public class Alchimiste extends Joueur {
     private String text_concoc_possible() {
         String text = "Quel type de potion voulez vous concocter : (fo)rce/(so)in/(to)xique";
         if (this.niveau >= 3) {
-            text += "/(re)sistance";
+            text += "/(re)sistance/(dr)ogue de guerre";
         }
         if (this.niveau >= 4) {
             text += "/(en)ergie/(al)éatoire";
@@ -637,6 +681,7 @@ public class Alchimiste extends Joueur {
     public void concocter() throws IOException {
         switch (concoction()) {
             case RESISTANCE -> concoc_resi();
+            case BERSERK -> concoc_berserk();
             case ALEATOIRE -> concoc_alea();
             case DIVINE -> concoc_divine();
             case SERIE -> concoc_serie();
@@ -670,15 +715,34 @@ public class Alchimiste extends Joueur {
     }
     
     /**
+     * Réalise une drogue de guerre
+     * @throws IOException toujours
+     */
+    protected void concoc_berserk() throws IOException {
+        System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 3): ");
+        int ingre = Input.readInt();
+        int jet = Input.D10() + ingre + rand.nextInt(3) - 1 + bonus_concoc();
+        if (jet < 8 || ingre < 3) {
+            System.out.println("Vous avez produit une boulette irritante (BSRK#1).");
+        } else if (jet < 14) {
+            System.out.println("Vous avez produit un capsule de colère (BSRK#2).");
+        } else if (jet < 19) {
+            System.out.println("Vous avez produit une potion de violence (BSRK#3).");
+        } else {
+            System.out.println("Vous avez produit une pilule de folie meurtrière (BSRK#4).");
+        }
+    }
+    
+    /**
      * Réalise une potion de difficulté 10 ou moins
      * @throws IOException toujours
      */
     protected void concoc_alea() throws IOException {
         
-        int[] popo_cost = {1, 1, 5, 8, 4, 9, 9, 6, 10};
-        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "potion toxique (P#2)", "potion de " +
-                "poison" + " (P#3)", "potion instable (E#1)", "potion de feu (E#2)", "de force (ATK#1)",
-                "potion de " + "vie (PV#2)", "potion énergétique (PP#1)"};
+        int[] popo_cost = {1, 1, 1, 9, 5, 8, 4, 9, 9, 6, 10};
+        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "boulette irritante (BSRK#1)",
+                "capsule de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion instable (E#1)",
+                "potion de feu (E#2)", "de force (ATK#1)", "potion de vie (PV#2)", "potion énergétique (PP#1)"};
         
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (max 4): ");
         int ingre = Input.readInt();
@@ -724,13 +788,13 @@ public class Alchimiste extends Joueur {
      */
     protected void concoc_serie() throws IOException {
         
-        int[] popo_cost = {1, 1, 5, 8, 4, 9, 9, 6, 10, 11, 13, 11, 14, 14, 11, 14, 15, 15};
-        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "potion toxique (P#2)", "potion de " +
-                "poison" + " (P#3)", "potion instable (E#1)", "potion de feu (E#2)", "potion de force (ATK#1)",
-                "potion de vie " + "(PV#2)", "potion énergétique (PP#1)", "potion de santé (PV#3)",
-                "potion " + "d" + "'énergie" + " (PP#2)", "potion " + "de vigeur (RES#1)", "potion de résistance " +
-                "(RES#2)", "potion de " + "puissance " + "(ATK#2)", "flasque nécrosé " + "(P#4)", "potion nécrotyque "
-                + "(P#5)", "potion explosive " + "(E#4)", "potion" + " divine (Div#A)"};
+        int[] popo_cost = {1, 1, 1, 9, 5, 8, 4, 9, 9, 6, 10, 11, 13, 11, 14, 14, 11, 14, 15, 15, 15};
+        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "boulette irritante (BSRK#1)",
+                "capsule de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion instable (E#1)",
+                "potion de feu (E#2)", "potion de force (ATK#1)", "potion de vie " + "(PV#2)", "potion énergétique (PP#1)",
+                "potion de santé (PV#3)", "potion d'énergie (PP#2)", "potion de vigeur (RES#1)",
+                "potion de résistance (RES#2)", "potion de puissance (ATK#2)", "flasque nécrosé (P#4)",
+                "potion nécrotyque (P#5)", "potion explosive (E#4)", "potion divine (Div#A)", "potion de violence (BSRK#3)"};
         
         
         System.out.println("Combien d'ingrédient allez-vous utiliser ? ");
