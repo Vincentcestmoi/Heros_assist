@@ -45,7 +45,7 @@ public class Alchimiste extends Joueur {
             temp = 11;
         }
         String text = switch (temp) {
-            case 0 -> "Error : this function is not suposed to be called at level 0.";
+            case 0 -> "Error : this function is not supposed to be called at level 0.";
             case 1 -> {
                 add_caracteristique("Dextérité");
                 yield "Nouvelle caractéristique débloqué !";
@@ -68,12 +68,12 @@ public class Alchimiste extends Joueur {
                 this.attaque += 1;
                 yield "Votre force a augmentée.";
             }
-            case 9 -> "Vos compétence de concoctions ont été légèrements améliorées.";
+            case 9 -> "Vos compétence de concoctions ont été légèrement améliorées.";
             case 10 -> """
                     Nouvelles recettes débloquées.
                     Vos compétence de dissection ont été légèrement renforcées.
                     Vos compétence de fouille ont été renforcées.
-                    Vos compétence de concoctions ont été légèrements améliorées.""";
+                    Vos compétence de concoctions ont été légèrement améliorées.""";
             case 11 -> "Vous avez atteint le niveau max (frappe le dev c'est sa faute).";
             default -> throw new IllegalStateException("Unexpected value: " + temp);
         };
@@ -207,8 +207,8 @@ public class Alchimiste extends Joueur {
                 3 : Force (ATK)
                 4 : Poison (P)
                 5 : Explosive (E)
-                6 : drogue de guerre (BSRK)
-                7 : Energétique (PP)""");
+                6 : Drogue de guerre (BSRK)
+                7 : Energetique (PP)""");
         if (niveau >= 5) {
             System.out.println("8 : Divine (Div)\n9 : Aucune/Custom");
         } else {
@@ -216,7 +216,7 @@ public class Alchimiste extends Joueur {
         }
         int temp = Input.readInt();
         if (temp <= 0 || temp > 9) {
-            System.out.println("Unknow input.");
+            System.out.println("Unknown input.");
             return popo();
         }
         return switch (temp) {
@@ -241,7 +241,7 @@ public class Alchimiste extends Joueur {
             }
             case 9 -> 0;
             default -> {
-                System.out.println("Unknow input");
+                System.out.println("Unknown input");
                 yield popo();
             }
         };
@@ -266,7 +266,7 @@ public class Alchimiste extends Joueur {
         
         int temp = Input.readInt();
         if (temp <= 0 || temp > 7) {
-            System.out.println("Unknow input");
+            System.out.println("Unknown input");
             return local_popo_soin();
         }
         int soin = 0;
@@ -307,7 +307,7 @@ public class Alchimiste extends Joueur {
         }
         int temp = Input.readInt();
         if (temp <= 0 || temp > 4) {
-            System.out.println("Unknow input");
+            System.out.println("Unknown input");
             return local_popo_res();
         }
         int res = 0;
@@ -344,7 +344,7 @@ public class Alchimiste extends Joueur {
                 4 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 4) {
-            System.out.println("Unknow input");
+            System.out.println("Unknown input");
             return local_popo_force();
         }
         int force = 0;
@@ -374,7 +374,7 @@ public class Alchimiste extends Joueur {
                 5 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 5) {
-            System.out.println("Unknow input");
+            System.out.println("Unknown input");
             return local_popo_mana();
         }
         int PP = 0;
@@ -425,7 +425,7 @@ public class Alchimiste extends Joueur {
             }
             case 5 -> popo();
             default -> {
-                System.out.println("Unknow input");
+                System.out.println("Unknown input");
                 yield local_popo_berserk();
             }
         };
@@ -443,7 +443,7 @@ public class Alchimiste extends Joueur {
                 3 : aucune (reviens au choix des potions))""");
         int temp = Input.readInt();
         if (temp <= 0 || temp > 3) {
-            System.out.println("Unknow input");
+            System.out.println("Unknown input");
             return local_popo_divine();
         }
         switch (temp) {
@@ -468,7 +468,7 @@ public class Alchimiste extends Joueur {
             case 18, 19 -> "11 et gagne temporairement 19";
             case 20, 21, 22 -> "12 et gagne temporairement 22";
             default -> "4 et gagne temporairement 3";
-        } + " points de résistance additionels.");
+        } + " points de résistance additionnels.");
     }
     
     @Override
@@ -485,7 +485,7 @@ public class Alchimiste extends Joueur {
             malus = 3;
         }
         if (Input.yn("Utilisez vous une potion divine ?")) {
-            System.out.println("Résurection avec " + switch (Input.D6() - malus) {
+            System.out.println("Resurrection avec " + switch (Input.D6() - malus) {
                 case 2 -> "2";
                 case 3, 4 -> "4";
                 case 5, 6 -> "6";
@@ -495,7 +495,7 @@ public class Alchimiste extends Joueur {
             return true;
         }
         if (Input.yn("Utilisez vous un élixir ?")) {
-            System.out.println("Résurection avec " + switch (Input.D20()) {
+            System.out.println("Resurrection avec " + switch (Input.D20()) {
                 case 4, 5, 6 -> "3 points de vie et 4";
                 case 7, 8 -> "5 points de vie et 7";
                 case 9, 10 -> "6 points de vie et 9";
@@ -505,10 +505,10 @@ public class Alchimiste extends Joueur {
                 case 18, 19 -> "9 points de vie et 14";
                 case 20, 21, 22 -> "9 points de vie et 16";
                 default -> "2 points de vie et 3";
-            } + " points de résistance additionels.");
+            } + " points de résistance additionnels.");
             return true;
         }
-        System.out.println("Vous n'avez aucun moyen de ressuciter la cible.");
+        System.out.println("Vous n'avez aucun moyen de ressusciter la cible.");
         return false;
     }
     
@@ -574,7 +574,7 @@ public class Alchimiste extends Joueur {
     }
     
     /**
-     * Applique la compétence "dextérité" de l'alchimiste : utiliser 2 potions additionelles
+     * Applique la compétence "dextérité" de l'alchimiste : utiliser 2 potions additionnelles
      * @throws IOException toujours
      */
     private void dexterite(Monstre ennemi, int popo_bonus) throws IOException {
@@ -589,7 +589,7 @@ public class Alchimiste extends Joueur {
      * @throws IOException toujours
      */
     public Concoction concoction() throws IOException {
-        //palier : base → force, soin, toxique, 3 → resistance, berserk 4 → energie, aléatoire 6 → instable, en série 8 →
+        //palier : base → force, soin, toxique, 3 → resistance, berserk 4 → énergie, aléatoire 6 → instable, en série 8 →
         // divin, 10 → elixir
         String text = text_concoc_possible();
         System.out.println(text);
@@ -647,7 +647,7 @@ public class Alchimiste extends Joueur {
                 yield concoction();
             }
             default -> {
-                System.out.println("Exterieur.Input unknow");
+                System.out.println("Input unknown");
                 yield concoction();
             }
         };
@@ -675,7 +675,7 @@ public class Alchimiste extends Joueur {
     }
     
     /**
-     * Laisse l'alchimiste concoter ses potions
+     * Laisse l'alchimiste concocter ses potions
      * @throws IOException toujours
      */
     public void concocter() throws IOException {
@@ -706,7 +706,7 @@ public class Alchimiste extends Joueur {
         if (jet < 11 || ingre < 5) {
             System.out.println("Vous avez produit une potion insipide (PV#1).");
         } else if (jet < 14) {
-            System.out.println("Vous avez produit une potion de vigeur (RES#1).");
+            System.out.println("Vous avez produit une potion de vigueur (RES#1).");
         } else if (jet < 19) {
             System.out.println("Vous avez produit une potion de résistance (RES#2).");
         } else {
@@ -794,7 +794,7 @@ public class Alchimiste extends Joueur {
                 "potion de feu (E#2)", "potion de force (ATK#1)", "potion de vie " + "(PV#2)", "potion énergétique (PP#1)",
                 "potion de santé (PV#3)", "potion d'énergie (PP#2)", "potion de vigeur (RES#1)",
                 "potion de résistance (RES#2)", "potion de puissance (ATK#2)", "flasque nécrosé (P#4)",
-                "potion nécrotyque (P#5)", "potion explosive (E#4)", "potion divine (Div#A)", "potion de violence (BSRK#3)"};
+                "potion nécrotique (P#5)", "potion explosive (E#4)", "potion divine (Div#A)", "potion de violence (BSRK#3)"};
         
         
         System.out.println("Combien d'ingrédient allez-vous utiliser ? ");
@@ -924,7 +924,7 @@ public class Alchimiste extends Joueur {
         } else if (jet < 14) {
             System.out.println("Vous avez produit une flasque nécrosé (P#4).");
         } else {
-            System.out.println("Vous avez produit une potion nécrotyque (P#5).");
+            System.out.println("Vous avez produit une potion nécrotique (P#5).");
         }
     }
     
@@ -962,7 +962,7 @@ public class Alchimiste extends Joueur {
     @Override
     protected void monstre_mort_perso(Monstre ennemi) throws IOException {
         if (ennemi.corps_utilisable() && est_actif() && est_vivant()) {
-            if (Input.yn("Voulez vous dissequer le cadavre ?")) {
+            if (Input.yn("Voulez vous disséquer le cadavre ?")) {
                 ennemi.alterEtat(dissection(ennemi.getEtat()));
             }
         }
