@@ -623,7 +623,8 @@ public abstract class Joueur {
     
     /**
      * Donne de l'expérience au joueur de 1.
-     * @implNote Ce qui augmente l'xp : avoir affronté un monstre (victoire ou fuite) (*2 si nommé), porter le dernier coup,
+     * @implNote Ce qui augmente l'xp : avoir affronté un monstre (victoire ou fuite) (*2 si nommé), porter le
+     * dernier coup,
      * ressusciter un allié,
      */
     public void gagneXp() {

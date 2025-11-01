@@ -4,7 +4,9 @@ import Enum.Position;
 
 import java.util.Random;
 
-/** Une classe dédiée uniquement à tirer aléatoirement des monstres */
+/**
+ * Une classe dédiée uniquement à tirer aléatoirement des monstres
+ */
 public class Lieu {
     
     static Random random = new Random();

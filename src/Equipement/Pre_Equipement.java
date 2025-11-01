@@ -471,18 +471,17 @@ public class Pre_Equipement {
             Promo_Type.CREATURE);
     static Pre_Equipement sphinx = new Pre_Equipement("Sphinx", CREATURE, PROMOTION, Effet_equip.SPHINX,
             Promo_Type.CREATURE);
-    static Pre_Equipement mule = new Pre_Equipement("Mûle", CREATURE, PROMOTION, Effet_equip.MULE,
-            Promo_Type.CREATURE);
+    static Pre_Equipement mule = new Pre_Equipement("Mûle", CREATURE, PROMOTION, Effet_equip.MULE, Promo_Type.CREATURE);
     static Pre_Equipement arcagolem = new Pre_Equipement("Arcagolem", CREATURE, PROMOTION, Effet_equip.BATTERIE,
             Promo_Type.CREATURE);
     static Pre_Equipement araigne = new Pre_Equipement("Araignée géante", CREATURE, PROMOTION, Effet_equip.ARAIGNE,
             Promo_Type.CREATURE);
     static Pre_Equipement elephant = new Pre_Equipement("Eléphant", CREATURE, PROMOTION, Effet_equip.ELEPHANT,
             Promo_Type.CREATURE);
-    static Pre_Equipement fee = new Pre_Equipement("fée", CREATURE, PROMOTION, Effet_equip.FEE,
-            Promo_Type.CREATURE);
+    static Pre_Equipement fee = new Pre_Equipement("fée", CREATURE, PROMOTION, Effet_equip.FEE, Promo_Type.CREATURE);
     
-    static Pre_Equipement[] prom_list_animal = {pegase, cheval, molosse, pie, sphinx, mule, arcagolem, araigne, elephant, fee};
+    static Pre_Equipement[] prom_list_animal = {pegase, cheval, molosse, pie, sphinx, mule, arcagolem, araigne,
+            elephant, fee};
     static public int nb_monture = prom_list_animal.length;
     
     static Pre_Equipement broches = new Pre_Equipement("Broche souverraine", AUTRE, PROMOTION, Effet_equip.ALTRUISME,

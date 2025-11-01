@@ -449,8 +449,9 @@ public class Equipement {
                             "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement " + "l" +
                                     "'attaque" + " de 1, se détruit après usage.";
             case PARCH_LUMIERE ->
-                    this.effet = "Permet de lancer le sort Lumière : pour 2 mana, diminue de 2 points l'attaque de " +
-                            "l'ennemie (augmentez tous de 2 votre armure pour le code).";
+                    this.effet =
+                            "Permet de lancer le sort Lumière : pour 2 mana, diminue de 2 points l'attaque de " + "l" +
+                                    "'ennemie (augmentez tous de 2 votre armure pour le code).";
             case RUNE_CROISS -> this.effet = "Diminue de 1 le coût de la compétence Embranchement végétal.";
             case RUNE_PLUIE -> this.effet = "Diminue de 1 le coût de la compétence Déferlante.";
             case RUNE_HAINE ->
@@ -483,9 +484,8 @@ public class Equipement {
             case DISSEC -> this.effet = "Augmente de 1 le résultat de dé des compétence Dissection et Fouille.";
             case ALCHI -> this.effet = "Augmente de 2 le résultat de tout vos dé de concoction.";
             case PARCH_BERSERK ->
-                    this.effet =
-                            "Permet de lancer le sort Folie meurtrière : pour 2 mana," + "augmente temporairement " +
-                                    "de 5 points l'attaque et diminue de 7 la résistances.";
+                    this.effet = "Permet de lancer le sort Folie meurtrière : pour 2 mana," + "augmente " +
+                            "temporairement " + "de 5 points l'attaque et diminue de 7 la résistances.";
             case BOURDON -> {
                 this.effet = "Quand vous lancez un sort, lancez un dé 4 : si vous faites 3 ou plus, votre sort coute "
                         + "1 de moins.";
@@ -493,7 +493,8 @@ public class Equipement {
                 armure -= 2;
             }
             case PARCH_VOLCAN ->
-                    this.effet = "Permet de lancer le sort Eruption volcanique : pour 6 mana, infliges 55 dégas magiques";
+                    this.effet = "Permet de lancer le sort Eruption volcanique : pour 6 mana, infliges 55 dégas " +
+                            "magiques";
             case PARCH_ABSO ->
                     this.effet =
                             "Quand vous tuez un monstre, vous gagnez définitivement 7 points de résistances, 3 " +
@@ -559,8 +560,8 @@ public class Equipement {
                             "Si vous vous trouvez en mer, vous pouvez choisir n'importe quel résultat entre 1 " + "et"
                                     + " 7 au lieu de lancer le dé." + "Un résultat choisi ignore le bonus de dé.";
             case ITEM_IMMUN ->
-                    this.effet = "Chaque fois que vous perdez un équipement, récupérez le."
-                            + " (ne fonctionne pas si vous mourrez, vendez, échangez ou dépensez un équipement)";
+                    this.effet = "Chaque fois que vous perdez un équipement, récupérez le." + " (ne fonctionne pas si" +
+                            " vous mourrez, vendez, échangez ou dépensez un équipement)";
             case SAC_TEMP ->
                     this.effet = "Lorsque vous utilisez un objet à usage limité pour la dernière fois," + "vous " +
                             "pouvez choisir de détruire cette sacoche à la place et récupérez tous les utilisations " + "de votre objet.";

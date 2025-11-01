@@ -589,7 +589,8 @@ public class Alchimiste extends Joueur {
      * @throws IOException toujours
      */
     public Concoction concoction() throws IOException {
-        //palier : base → force, soin, toxique, 3 → resistance, berserk 4 → énergie, aléatoire 6 → instable, en série 8 →
+        //palier : base → force, soin, toxique, 3 → resistance, berserk 4 → énergie, aléatoire 6 → instable, en série
+        // 8 →
         // divin, 10 → elixir
         String text = text_concoc_possible();
         System.out.println(text);
@@ -740,8 +741,8 @@ public class Alchimiste extends Joueur {
     protected void concoc_alea() throws IOException {
         
         int[] popo_cost = {1, 1, 1, 9, 5, 8, 4, 9, 9, 6, 10};
-        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "boulette irritante (BSRK#1)",
-                "capsule de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion instable (E#1)",
+        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "boulette irritante (BSRK#1)", "capsule " +
+                "de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion instable (E#1)",
                 "potion de feu (E#2)", "de force (ATK#1)", "potion de vie (PV#2)", "potion énergétique (PP#1)"};
         
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (max 4): ");
@@ -789,12 +790,12 @@ public class Alchimiste extends Joueur {
     protected void concoc_serie() throws IOException {
         
         int[] popo_cost = {1, 1, 1, 9, 5, 8, 4, 9, 9, 6, 10, 11, 13, 11, 14, 14, 11, 14, 15, 15, 15};
-        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "boulette irritante (BSRK#1)",
-                "capsule de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion instable (E#1)",
-                "potion de feu (E#2)", "potion de force (ATK#1)", "potion de vie " + "(PV#2)", "potion énergétique (PP#1)",
-                "potion de santé (PV#3)", "potion d'énergie (PP#2)", "potion de vigeur (RES#1)",
-                "potion de résistance (RES#2)", "potion de puissance (ATK#2)", "flasque nécrosé (P#4)",
-                "potion nécrotique (P#5)", "potion explosive (E#4)", "potion divine (Div#A)", "potion de violence (BSRK#3)"};
+        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "boulette irritante (BSRK#1)", "capsule " +
+                "de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion instable (E#1)",
+                "potion de feu (E#2)", "potion de force (ATK#1)", "potion de vie " + "(PV#2)", "potion énergétique " +
+                "(PP#1)", "potion de santé (PV#3)", "potion d'énergie (PP#2)", "potion de vigeur (RES#1)", "potion de" +
+                " résistance (RES#2)", "potion de puissance (ATK#2)", "flasque nécrosé (P#4)", "potion nécrotique " +
+                "(P#5)", "potion explosive (E#4)", "potion divine (Div#A)", "potion de violence (BSRK#3)"};
         
         
         System.out.println("Combien d'ingrédient allez-vous utiliser ? ");

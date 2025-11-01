@@ -129,10 +129,12 @@ public class Necromancien extends Joueur {
             case 8 -> {
                 nb_item += 1;
                 nb_piece += 2;
-                yield "Vos compétence de thaumaturge ont été légèrement renforcées.\nVos compétence de resurrection ont été renforcées.";
+                yield "Vos compétence de thaumaturge ont été légèrement renforcées.\nVos compétence de resurrection " +
+                        "ont été renforcées.";
             }
             case 9 ->
-                    "Vos compétences de zombification ont été légèrement augmentées.\nVos compétences d'appel des morts ont été légèrement augmentées.";
+                    "Vos compétences de zombification ont été légèrement augmentées.\nVos compétences d'appel des " +
+                            "morts ont été légèrement augmentées.";
             case 10 -> {
                 pp_sacrifice += 1;
                 PP_max += 1;
@@ -162,14 +164,16 @@ public class Necromancien extends Joueur {
         System.out.println("Sacrifice : Tuer un allié (familier comprit) régénère " + pp_sacrifice + " mana.");
         System.out.println("Malédiction : Diminue définitivement la résistance d'une cible.");
         if (this.niveau >= 1) {
-            System.out.println("Zombification : Pour 2 mana, tente de ramener un monstre fraichement tué à la vie sous la forme d'un fidèle serviteur. Peut endommager le cadavre.");
+            System.out.println("Zombification : Pour 2 mana, tente de ramener un monstre fraichement tué à la vie " +
+                    "sous la forme d'un fidèle serviteur. Peut endommager le cadavre.");
         }
         if (this.niveau >= 2) {
             System.out.println("Resurrection : Pour 2 mana, ramène un joueur à la vie.");
         }
         if (this.niveau >= 5) {
             System.out.println("Appel des morts : Pour 4 mana ou plus, ramène à la vie un monstre mort depuis " +
-                    "longtemps. La réussite du sort et la puissance de l'entité invoquée dépend de la quantité de mana utilisée.");
+                    "longtemps. La réussite du sort et la puissance de l'entité invoquée dépend de la quantité de " +
+                    "mana utilisée.");
         }
     }
     
@@ -204,7 +208,7 @@ public class Necromancien extends Joueur {
         if (a_familier()) {
             text += "/(sa)crifier son familier";
         }
-        if (this.niveau >= 3 && a_familier() && !familier_loyalmax()){
+        if (this.niveau >= 3 && a_familier() && !familier_loyalmax()) {
             text += "/(so)umettre son familier";
         }
         return text;
@@ -220,14 +224,14 @@ public class Necromancien extends Joueur {
                 }
             }
             case "sa" -> {
-                if(a_familier()) {
+                if (a_familier()) {
                     System.out.println("Vous récupérez " + pp_sacrifice + "PP.");
                     perdre_familier();
                     return false;
                 }
             }
             case "so" -> {
-                if(this.niveau >= 3 && a_familier() && !familier_loyalmax()){
+                if (this.niveau >= 3 && a_familier() && !familier_loyalmax()) {
                     soumission();
                     return true;
                 }
@@ -506,19 +510,19 @@ public class Necromancien extends Joueur {
     
     private void soumission() throws IOException {
         int jet = Input.D6();
-        if(this.niveau >= 7){
+        if (this.niveau >= 7) {
             jet += 1;
         }
-        if(jet > 6){
+        if (jet > 6) {
             jet = 6;
         }
         System.out.println("Vous soumettez votre familier à votre volonté.\n");
         this.ob_f += switch (jet + bonus_dresser()) {
             case 1 -> {
-                if(this.ob_f < 4) {
+                if (this.ob_f < 4) {
                     System.out.println("Votre familier résiste fortement à votre emprise.\n");
                     jet = Input.D4();
-                    if(this.niveau >= 7){
+                    if (this.niveau >= 7) {
                         jet += 1;
                     }
                     if (jet <= 2) {
@@ -531,7 +535,7 @@ public class Necromancien extends Joueur {
             case 4, 5 -> 3;
             case 6 -> {
                 jet = Input.D4();
-                if(this.niveau >= 7){
+                if (this.niveau >= 7) {
                     jet += 1;
                 }
                 if (jet >= 3) {
