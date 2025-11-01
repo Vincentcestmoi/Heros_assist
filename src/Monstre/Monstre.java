@@ -114,7 +114,7 @@ public class Monstre {
      * @param value       la modification à appliquer
      * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
      */
-    public void bostAtk(int value, boolean fondamental) {
+    public void boostAtk(int value, boolean fondamental) {
         this.attaque += value;
         if (this.attaque < 0) {
             this.attaque = 0;
@@ -132,7 +132,7 @@ public class Monstre {
      * @param value       la modification à appliquer
      * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
      */
-    public void bostArmure(int value, boolean fondamental) {
+    public void boostArmure(int value, boolean fondamental) {
         this.armure += value;
         if (this.armure < 0) {
             this.armure = 0;
@@ -150,7 +150,7 @@ public class Monstre {
      * @param value       la modification à appliquer
      * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
      */
-    public void bostVie(int value, boolean fondamental) {
+    public void boostVie(int value, boolean fondamental) {
         this.vie_max += value;
         if (this.vie_max <= 0) {
             this.vie_max = 1;
@@ -168,7 +168,7 @@ public class Monstre {
      * Augmente/Modifie la valeur d'encaissement
      * @param value la modification à appliquer
      */
-    public void bostEncaissement(float value) {
+    public void boostEncaissement(float value) {
         if (this.encaissement == 0) {
             this.encaissement = value;
         } else {
@@ -184,20 +184,20 @@ public class Monstre {
         this.nom = "golem" + materiaux;
     }
     
-    public void bostDropMax(int value) {
+    public void boostDropMax(int value) {
         this.niveau_drop_max += value;
     }
     
-    public void bostDropMin(int value) {
+    public void boostDropMin(int value) {
         this.niveau_drop_min += value;
     }
     
-    public void bostDrop(int value) {
+    public void boostDrop(int value) {
         this.drop_quantite += value;
     }
     
     /**
-     * Maquille l'illusioniste en lui donnant le nom de l'illusion
+     * Maquille l'illusionniste en lui donnant le nom de l'illusion
      */
     private void illu_check() {
         this.nom = switch (this.competence) {
