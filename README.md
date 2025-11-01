@@ -73,6 +73,8 @@ Le dossier `Table/` contient un des tableurs de gestion des statistiques.
 | `add`    | Ajoute un familier (obéissance minimale) |
 | `re`     | Revient au joueur précédent              |
 | `sui`    | Tue le joueur actif                      |
+| `addit`  | Ajout un objet particulier               |
+| `delit`  | Retire un objet particulier              |
 
 ⚠️ Chaque commande doit être confirmée en la réécrivant une seconde fois.
 

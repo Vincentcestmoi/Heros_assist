@@ -649,6 +649,20 @@ public class Input {
                         return Choix.SUICIDE;
                     }
                 }
+                case "addit" -> {
+                    System.out.println("Confirmez");
+                    if (read().equals("addit")) {
+                        return Choix.ITEM_PLUS;
+                    }
+                }
+                case "delit" -> {
+                    System.out.println("Confirmez");
+                    if (read().equals("delit")) {
+                        if(read().equals("delit")) {
+                            return Choix.ITEM_MOINS;
+                        }
+                    }
+                }
                 
                 default -> {
                     if (joueur.tour(readed)) {

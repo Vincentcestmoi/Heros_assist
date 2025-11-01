@@ -12,6 +12,8 @@ public enum Choix {
     QUITTER,
     FAMILIER_PLUS,
     FAMILIER_MOINS,
+    ITEM_PLUS,
+    ITEM_MOINS,
     RETOUR,
     SUICIDE,
     AUCUN,

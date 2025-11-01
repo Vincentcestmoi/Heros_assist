@@ -64,6 +64,10 @@ public class Main {
                 case DUMMY -> frapper_pantin(i);
                 case DRESSER -> joueur.dresser();
                 case ATTENDRE -> System.out.println(joueur.getNom() + " passe son tour.");
+                case STAT -> {
+                    joueur.presente_detail();
+                    i--;
+                }
                 
                 // action caché
                 case SUICIDE -> joueur.mort_def();
@@ -74,11 +78,15 @@ public class Main {
                 }
                 case FAMILIER_MOINS -> {
                     joueur.perdre_familier();
-                    i--;
+                    i -= 1;
                 }
-                case STAT -> {
-                    joueur.presente_detail();
-                    i--;
+                case ITEM_PLUS -> {
+                    ajouter_item(joueur);
+                    i -= 1;
+                }
+                case ITEM_MOINS -> {
+                    retirer_item(joueur);
+                    i -= 1;
                 }
                 case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
             }
@@ -90,6 +98,32 @@ public class Main {
         System.out.println("Sauvegarde des données joueurs.");
         SaveManager.sauvegarder(false);
         System.out.println("Fin du programme");
+    }
+    
+    private static void ajouter_item(Joueur joueur) throws IOException {
+        System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 pour quitter.");
+        String temp = Input.read();
+        if(temp.charAt(0) != '#'){
+            System.out.println("Format invalide, l'identifiant doit commencer par #");
+        }
+        if(temp.length() != 3){
+            System.out.println("Format invalide, l'identifiant doit être de la forme #xx");
+        }
+        switch(temp){
+            case "#00" -> {
+                return;
+            }
+            case "#01" -> {}
+            default -> {
+                System.out.println("Input unknown.");
+                ajouter_item(joueur);
+            }
+        }
+    }
+    
+    private static void retirer_item(Joueur joueur) {
+        System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 pour quitter.");
+        
     }
     
     private static void frapper_pantin(int i) throws IOException {
