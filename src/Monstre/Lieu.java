@@ -4,6 +4,7 @@ import Enum.Position;
 
 import java.util.Random;
 
+/** Une classe dédiée uniquement à tirer aléatoirement des monstres */
 public class Lieu {
     
     static Random random = new Random();
@@ -12,7 +13,7 @@ public class Lieu {
     
     /**
      * Recherche un monstre des enfers
-     * légère probabilité qu'il vienne de la pririe
+     * légère probabilité qu'il vienne de la prairie
      * @return un monstre
      */
     public static Monstre enfers() {
@@ -108,7 +109,7 @@ public class Lieu {
         Race race;
         do {
             race = Race.enfers[random.nextInt(Race.enfers.length)];
-        } while (race == null);
+        } while (race.spawn_pas());
         return new Monstre(race);
     }
     
@@ -120,7 +121,7 @@ public class Lieu {
         Race race;
         do {
             race = Race.prairie[random.nextInt(Race.prairie.length)];
-        } while (race == null);
+        } while (race.spawn_pas());
         return new Monstre(race);
     }
     
@@ -132,7 +133,7 @@ public class Lieu {
         Race race;
         do {
             race = Race.vigne[random.nextInt(Race.vigne.length)];
-        } while (race == null);
+        } while (race.spawn_pas());
         return new Monstre(race);
     }
     
@@ -144,7 +145,7 @@ public class Lieu {
         Race race;
         do {
             race = Race.temple[random.nextInt(Race.temple.length)];
-        } while (race == null);
+        } while (race.spawn_pas());
         return new Monstre(race);
     }
     
@@ -156,7 +157,7 @@ public class Lieu {
         Race race;
         do {
             race = Race.mer[random.nextInt(Race.mer.length)];
-        } while (race == null);
+        } while (race.spawn_pas());
         return new Monstre(race);
     }
     
@@ -168,7 +169,7 @@ public class Lieu {
         Race race;
         do {
             race = Race.mont[random.nextInt(Race.mont.length)];
-        } while (race == null);
+        } while (race.spawn_pas());
         return new Monstre(race);
     }
     
@@ -180,7 +181,7 @@ public class Lieu {
         Race race;
         do {
             race = Race.olympe[random.nextInt(Race.olympe.length)];
-        } while (race == null);
+        } while (race.spawn_pas());
         return new Monstre(race);
     }
     
