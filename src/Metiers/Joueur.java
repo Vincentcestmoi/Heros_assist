@@ -23,7 +23,7 @@ public abstract class Joueur {
     static final int f_max = 7;
     protected final String nom;
     private Position position;
-    private int ob_f;
+    protected int ob_f;
     private final Dieux parent;
     private int xp;
     protected int niveau;
@@ -1192,7 +1192,6 @@ public abstract class Joueur {
                     System.out.println("Votre familier désapprouve fortement vos méthodes d'entrainement.\n");
                     yield -1;
                 }
-                System.out.println();
                 yield 0;
             }
             case 2, 3 -> {
@@ -1208,7 +1207,6 @@ public abstract class Joueur {
                     System.out.println("Votre familier semble particulièrement apprécier votre entrainement !\n");
                     yield 2;
                 }
-                System.out.println();
                 yield 1;
             }
             default -> {
