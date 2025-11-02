@@ -650,18 +650,10 @@ public class Input {
                     }
                 }
                 case "addit" -> {
-                    System.out.println("Confirmez");
-                    if (read().equals("addit")) {
-                        return Choix.ITEM_PLUS;
-                    }
+                    return Choix.ITEM_PLUS;
                 }
                 case "delit" -> {
-                    System.out.println("Confirmez");
-                    if (read().equals("delit")) {
-                        if(read().equals("delit")) {
-                            return Choix.ITEM_MOINS;
-                        }
-                    }
+                    return Choix.ITEM_MOINS;
                 }
                 
                 default -> {
