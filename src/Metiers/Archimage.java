@@ -58,6 +58,10 @@ public class Archimage extends Joueur {
         if (this.niveau >= 10) {
             this.PP_max += 1;
         }
+        this.PP_value += bonus_sup10(16, 10);
+        this.PP_max += bonus_sup10(20, 10) + bonus_sup10(13, 10) + bonus_sup10(16, 10) + bonus_sup10(19, 10);
+        this.vie += bonus_sup10(15, 5);
+        this.attaque += bonus_sup10(14, 10);
     }
     
     @Override
@@ -68,6 +72,9 @@ public class Archimage extends Joueur {
         System.out.println("Addiction au mana : Votre corps ne peut se passer de mana.");
         if (this.niveau >= 3) {
             System.out.println("Double sort : Permet de lancer deux sorts avec l'action Sort.");
+        }
+        if(this.niveau >= 4){
+            System.out.println("Maitre du mana : Permet de récupérer du mana quand vous n'en avz plus ou êtes inconscient.");
         }
     }
     
@@ -179,10 +186,68 @@ public class Archimage extends Joueur {
                         Vos sorts de foudre ont été améliorés.
                         """;
             }
-            case 11 -> "Vous avez atteint le niveau max (frappe le dev c'est sa faute).";
+            case 11 -> niveau_sup();
             default -> throw new IllegalStateException("Unexpected value: " + temp);
         };
         System.out.println(text);
+    }
+    
+    /**
+     * Calcule les bonus de niveau supérieurs au niveau 10 (cyclique)
+     * @return L'affichage du texte
+     */
+    private String niveau_sup() {
+        int unit = this.niveau % 10;
+        String text = "";
+        if(unit == 1){ //11, 21, 31
+            text += "Vos sorts de feu ont été légèrement améliorés.\n";
+        }
+        if(unit == 2){ //12, 22, 32, ...
+            text += "Vos sorts de glace ont été légèrement améliorés.\n";
+        }
+        if(unit % 3 == 0) { // 13, 16, 19, 20, 23, 26, ...
+            PP_max += 1;
+            text += "Votre réserve de mana a légèrement augmentée.\n";
+        }
+        if(unit == 4){ //14, 24, 34, ...
+            this.attaque += 1;
+            text += "Votre attaque a légèrement augmentée.\n";
+        }
+        if(unit % 5 == 0){ // 15, 20, 25, ...
+            this.vie += 1;
+            text += "Votre résistance a légèrement augmenté.\n";
+        }
+        if(unit == 6){ // 16, 26, ...
+            PP_value += 1;
+        }
+        if(unit == 7){ //17, 27, 37, ...
+            text += "Vos compétence en magie ont été légèrement renforcées.\n";
+        }
+        if(unit == 8){ //18, 28, 38, ...
+            text += "Vos maitrise du mana s'est légèrement accrue.\n";
+        }
+        if(unit == 0){ //20, 30, ...
+            text += "Vos compétence en magie ont été légèrement renforcées.\n";
+        }
+        
+        if(niveau % 7 == 0){ //14, 21, 28, ...
+            text += "Vos sorts de feu se sont légèrement renforcés.\n";
+        }
+        if(niveau % 7 == 2){
+            if(niveau % 14 == 2) { //16, 30, 44, ...
+                text += "Vos sort de glace se sont renforcés.\n";
+            } else { // 23, 37, 51, ...
+                text += "Vos sort de glace se sont légèrement renforcés.\n";
+            }
+        }
+        if(niveau % 9 == 0){ //18, 27, 36, ...
+            text += "Vos sorts de foudre se sont légèrement renforcés.\n";
+        }
+        if(niveau % 8 == 0){ // 16, 24, 32, ...
+            text += "Vos sorts sonores se sont légèrement renforcés.\n";
+        }
+        
+        return text;
     }
     
     @Override
@@ -264,7 +329,7 @@ public class Archimage extends Joueur {
     
     @Override
     public int bonus_exploration() {
-        return rand.nextInt(2) - 1 /* bruyant */;
+        return rand.nextInt(2) - 1 /* bruyant */; //-1~0
     }
     
     @Override
@@ -279,11 +344,15 @@ public class Archimage extends Joueur {
         }
         // maître du mana
         if (est_assomme()) {
-            if (this.niveau >= 8) {
-                System.out.println(nom + " récupère 2 points de mana.");
-            } else if (this.niveau >= 4) {
-                System.out.println(nom + " récupère 1 point de mana.");
+            if(this.niveau < 4){
+                return;
             }
+            int mana = 1;
+            if(this.niveau >= 8){
+                mana += 1;
+            }
+            mana += bonus_sup10(18, 10);
+            Texte.recupere_mana(getNom(), mana);
         }
     }
     
@@ -306,7 +375,7 @@ public class Archimage extends Joueur {
             this.poison2 = false;
             this.poison1 = true;
         } else if (this.poison2 || this.poison1) {
-            System.out.println("Le poison dans le corps dr " + nom + " se dissipe.");
+            System.out.println("Le poison dans le corps de " + nom + " se dissipe.");
             this.poison2 = false;
             this.poison1 = false;
         }
@@ -338,7 +407,8 @@ public class Archimage extends Joueur {
     }
     
     private int bonus_sort(){
-        int bonus = 0;
+        int bonus = bonus_sup10(17, 10);
+        bonus += bonus_sup10(20, 10);
         if(bourdon){
             bonus += 2;
         }
@@ -365,7 +435,7 @@ public class Archimage extends Joueur {
             case "ar" -> armure_de_glace();
             case "fo" -> foudre(ennemi);
             default -> {
-                System.out.println("Input unknow");
+                System.out.println("Input unknown");
                 sort(ennemi);
             }
         }
@@ -376,14 +446,22 @@ public class Archimage extends Joueur {
      * @throws IOException toujours
      */
     void meditation() throws IOException {
-        int jet = Input.D6() + rand.nextInt(3) - 1;
+        int jet = 0;
         int recup = 0;
         if (this.niveau >= 6) {
+            jet += 1;
             recup += 1;
         }
         if (this.niveau >= 9) {
+            jet += 1;
             recup += 1;
         }
+        jet += rand.nextInt(3) - 1;
+        jet += bonus_sup10(18, 10);
+        if(jet <= 7){
+            jet += Input.D6();
+        }
+        
         if (jet <= 2) {
             recup += 1;
         } else if (jet <= 4) {
@@ -407,6 +485,7 @@ public class Archimage extends Joueur {
         if (this.niveau >= 7) {
             bonus = 1;
         }
+        bonus += bonus_sup10(16, 8);
         // sur les participants sauf le lanceur
         for (int i = 0; i < Main.nbj; i++) {
             Joueur joueur = Main.joueurs[i];
@@ -417,11 +496,16 @@ public class Archimage extends Joueur {
         
         // sur l'ennemi
         System.out.println(ennemi.getNom() + " est frappé par l'onde de choc.");
-        System.out.print(this.getNom() + " : ");
-        switch (Input.D6() + bonus) {
+        int jet = bonus;
+        if(jet <= 4){
+            System.out.print(this.getNom() + " ");
+            jet += Input.D6();
+        }
+        jet = Math.min(jet, 5);
+        switch (jet) {
             case 2 -> ennemi.do_etourdi();
             case 3, 4 -> ennemi.affecte();
-            case 5, 6, 7 -> ennemi.do_assomme();
+            case 5 -> ennemi.do_assomme();
             default -> System.out.println(ennemi.getNom() + " n'a pas l'air très affecté...");
         }
     }
@@ -436,50 +520,60 @@ public class Archimage extends Joueur {
         System.out.println("Vous vous préparez à lancer une boule de feu.");
         Texte.mana_sort(mini);
         int mana = Input.readInt();
-        int jet = Input.D4() + mana + rand.nextInt(3) - 1 + bonus_sort();
+        
+        int jet = mana;
+        jet += rand.nextInt(3) - 1;
+        jet += bonus_sort();
+        jet += bonus_sup10(11, 10);
         int[] paliers = {4, 7, 10};
         for (int palier : paliers) {
             if (this.niveau >= palier) {
                 jet += 1;
             }
         }
-        int dmg;
+        if(jet <= 13){
+            jet += Input.D4();
+        }
+        
+        int dmg = 0;
+        dmg += bonus_sup10(14, 7);
+        
         if (jet <= mini || mana < mini) {
             System.out.println("Le sort ne fonctionne pas.");
             return;
         } else if (jet <= 4) {
             System.out.println("Vous lancez une pitoyable boule de feu sur " + ennemi.getNom() + ".");
-            dmg = 3;
+            dmg += 3;
         } else if (jet <= 6) {
             System.out.println("Vous lancez une boule de feu sur " + ennemi.getNom() + ".");
-            dmg = 6;
+            dmg += 6;
         } else if (jet <= 9) {
             System.out.println("Vous lancez une impressionnante boule de feu sur " + ennemi.getNom() + ".");
-            dmg = 8;
+            dmg += 8;
         } else if (jet == 10) {
             System.out.println("Un brasier s'abat sur " + ennemi.getNom() + " !");
-            dmg = 11;
+            dmg += 11;
         } else if (jet == 11) {
             System.out.println("Un brasier s'abat sur " + ennemi.getNom() + " !");
-            dmg = 13;
+            dmg += 13;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
         } else if (jet == 12) {
             System.out.println("Une tornade de flamme s'abat violemment sur " + ennemi.getNom() + " !");
-            dmg = 15;
+            dmg += 15;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
         } else if (jet == 13) {
             System.out.println("Une torrent de flamme percute " + ennemi.getNom() + " brutalement !");
-            dmg = 16;
+            dmg += 16;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
         } else {
             System.out.println("Les flammes de l'enfers brûlent intensément " + ennemi.getNom() + ".");
-            dmg = 18;
+            dmg += 18;
             ennemi.affecte();
         }
         ennemi.dommage_magique(dmg);
@@ -494,33 +588,54 @@ public class Archimage extends Joueur {
         System.out.println("Vous vous préparez à créer une armure de glace.");
         Texte.mana_sort(mini);
         int mana = Input.readInt();
-        int jet = Input.D8() + mana + rand.nextInt(3) - 1 + bonus_sort();
+        
+        int jet = mana;
+        jet += rand.nextInt(3) - 1;
+        jet += bonus_sort();
+        jet += bonus_sup10(12, 10);
         int[] paliers = {6, 8, 10};
         for (int palier : paliers) {
             if (this.niveau >= palier) {
                 jet += 1;
             }
         }
+        if(jet <= 18){
+            jet += Input.D8();
+        }
+        int res = bonus_sup10(16, 7);
+        int arm = bonus_sup10(16, 14);
         if (jet <= mini || mana < mini) {
             System.out.println("Le sort ne fonctionne pas.");
+            return;
         } else if (jet <= 6) {
-            System.out.println("La cible gagne 3 points de résistance.");
+            res += 3;
         } else if (jet <= 8) {
-            System.out.println("La cible gagne 5 points de résistance.");
+            res += 5;
         } else if (jet <= 10) {
-            System.out.println("La cible gagne 6 points de résistance.");
+            res += 5;
         } else if (jet <= 12) {
-            System.out.println("La cible gagne 6 points de résistance et 1 point d'armure.");
+            res += 5;
+            arm += 1;
         } else if (jet <= 14) {
-            System.out.println("La cible gagne 8 points de résistance et 1 point d'armure.");
+            res += 8;
+            arm += 1;
         } else if (jet <= 16) {
-            System.out.println("La cible gagne 9 points de résistance et 1 point d'armure.");
+            res += 9;
+            arm += 1;
         } else if (jet == 17) {
-            System.out.println("La cible gagne 10 points de résistance et 1 point d'armure.");
+            res += 10;
+            arm += 1;
         } else if (jet == 18) {
-            System.out.println("La cible gagne 10 points de résistance et 2 point d'armure.");
+            res += 10;
+            arm += 2;
         } else {
-            System.out.println("La cible gagne 12 points de résistance et 2 point d'armure.");
+            res += 12;
+            arm += 2;
+        }
+        if(arm == 0){
+            System.out.printf("La cible gagne %d points de résistance.\n", res);
+        } else {
+            System.out.printf("La cible gagne %d points de résistance et %d point d'armure.\n", res, arm);
         }
     }
     
@@ -534,48 +649,55 @@ public class Archimage extends Joueur {
         System.out.println("Vous vous préparez à lancer un puissant éclair.");
         Texte.mana_sort(mini);
         int mana = Input.readInt();
-        int jet = Input.D12() + mana + rand.nextInt(3) - 1 + bonus_sort();
+        
+        int jet = mana;
+        jet += rand.nextInt(3) - 1;
+        jet += bonus_sort();
         if (this.niveau >= 10) {
             jet += 2;
         }
-        int dmg;
+        if(jet <= 23){
+            jet += Input.D12();
+        }
+        
+        int dmg = bonus_sup10(16, 8);
         if (jet <= mini || mana < mini) {
             System.out.println("Le sort ne fonctionne pas.");
             return;
         } else if (jet <= 10) {
             System.out.println("Un arc électrique vient frapper " + ennemi.getNom() + ".");
-            dmg = 12;
+            dmg += 12;
         } else if (jet <= 12) {
             System.out.println("Un arc électrique vient frapper " + ennemi.getNom() + ".");
-            dmg = 13;
+            dmg += 13;
         } else if (jet <= 14) {
             System.out.println("Un éclair s'abat sur " + ennemi.getNom() + ".");
-            dmg = 16;
+            dmg += 16;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
         } else if (jet <= 16) {
             System.out.println("Un puissant éclair s'abat sur " + ennemi.getNom() + ".");
-            dmg = 18;
+            dmg += 18;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
         } else if (jet <= 18) {
             System.out.println("Un puissant éclair s'abat sur " + ennemi.getNom() + ".");
-            dmg = 20;
+            dmg += 20;
             ennemi.affecte();
         } else if (jet == 19) {
             System.out.println("Un gigantesque éclair frappe  " + ennemi.getNom() + " de plein fouet !");
-            dmg = 22;
+            dmg += 22;
             ennemi.affecte();
         } else if (jet == 20) {
             System.out.println("Un gigantesque éclair frappe  " + ennemi.getNom() + " de plein fouet !");
-            dmg = 24;
+            dmg += 24;
             ennemi.affecte();
         } else if (jet <= 22) {
             System.out.println("L'espace d'un instant, les cieux s'illuminent et une miriade d'éclairs vient " +
                     "percuter" + " " + ennemi.getNom() + " avec grand fracas.");
-            dmg = 25;
+            dmg += 25;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             } else {
@@ -584,12 +706,12 @@ public class Archimage extends Joueur {
         } else if (jet == 23) {
             System.out.println("L'espace d'un instant, les cieux s'illuminent et une miriade d'éclairs vient " +
                     "percuter" + " " + ennemi.getNom() + " avec grand fracas.");
-            dmg = 27;
+            dmg += 27;
             ennemi.do_assomme();
         } else {
             System.out.println("Un déchainement de pure énergie fend l'espace entre le ciel et la terre, " +
                     "transperçant" + " " + ennemi.getNom() + " sur son passage.");
-            dmg = 30;
+            dmg += 30;
             ennemi.do_assomme();
         }
         ennemi.dommage_magique(dmg);
@@ -601,6 +723,7 @@ public class Archimage extends Joueur {
      * @throws IOException toujours
      */
     private boolean mana_addiction() throws IOException {
+        //addition
         int jet = Input.D4() + rand.nextInt(3) - 1;
         if (this.niveau >= 8) {
             jet -= 1;
@@ -613,14 +736,15 @@ public class Archimage extends Joueur {
                 assomme();
             }
             return true;
-        } else {
-            jet = 0;
+            
+        //maitre du mana
+        } else if(this.niveau >= 4){
+            int mana = 1;
             if (this.niveau >= 8) {
-                jet += 1;
+                mana += 1;
             }
-            if (this.niveau >= 4 && jet + Input.readInt() > 1) {
-                System.out.println("Vous récuperez " + (jet - 1) + "PP.");
-            }
+            mana += bonus_sup10(18, 10);
+            System.out.println("Vous récupérez " + mana + "PP.");
         }
         return false;
     }

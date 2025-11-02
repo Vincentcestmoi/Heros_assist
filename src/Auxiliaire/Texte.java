@@ -99,4 +99,8 @@ public class Texte {
     public static void jete_grenade(int nb){
         System.out.printf("Vous vous débarrassez de %d grenades\n", nb);
     }
+    
+    public static void recupere_mana(String nom, int quantite){
+        System.out.printf("%s récupère %d points de mana.", nom, quantite);
+    }
 }

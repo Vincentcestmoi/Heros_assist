@@ -2221,10 +2221,17 @@ public abstract class Joueur {
      */
     protected void choc(int bonus) throws IOException {
         System.out.println(nom + " est frappé par l'onde de choc.");
-        int jet = Input.D6() - rand.nextInt(4) - 2 + bonus;
+        int jet = bonus;
+        jet -= 2 + rand.nextInt(4); //2~5
         if (est_assomme()) {
+            jet += Input.D6();
             reveil -= Math.max(1, jet);
-        } else if (jet < 0) {
+            return;
+        }
+        if(jet < -1){
+            jet += Input.D6();
+        }
+        if (jet < 0) {
             System.out.println(nom + " perd connaissance.");
             assomme();
         } else {
@@ -2234,10 +2241,17 @@ public abstract class Joueur {
         if (!a_familier_actif()) {
             return;
         }
-        jet = Input.D4() - 2 - rand.nextInt(2) + bonus;
+        jet = bonus;
+        jet -= 2 - rand.nextInt(2); //2~3
         if (f_est_assomme()) {
+            jet += Input.D4();
             f_reveil -= Math.max(1, jet);
-        } else if (jet < 0) {
+            return;
+        }
+        if(jet < -1){
+            jet += Input.D4();
+        }
+        if (jet < 0) {
             System.out.println("Le familier de " + nom + " perd connaissance.");
             f_assomme();
         } else {
