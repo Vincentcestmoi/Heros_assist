@@ -68,6 +68,13 @@ public class Necromancien extends Joueur {
             pp_sacrifice += 1;
             PP_max += 1;
         }
+        PP_max += bonus_sup10(15, 5);
+        pp_sacrifice += bonus_sup10(14, 10) + bonus_sup10(18, 10);
+        attaque += bonus_sup10(11, 10);
+        vie += bonus_sup10(13, 10) + bonus_sup10(16, 10) + bonus_sup10(19, 10);
+        armure += bonus_sup10(14, 7);
+        nb_item += bonus_sup10(12, 6);
+        nb_piece += 2 * bonus_sup10(12, 6);
     }
     
     @Override
@@ -148,10 +155,61 @@ public class Necromancien extends Joueur {
                         Votre réserve de mana a augmentée.
                         """;
             }
-            case 11 -> "Vous avez atteint le niveau max (frappe le dev c'est sa faute).";
+            case 11 -> niveau_sup();
             default -> throw new IllegalStateException("Unexpected value: " + temp);
         };
         System.out.println(text);
+    }
+    
+    /**
+     * Calcule les bonus de niveau supérieurs au niveau 10 (cyclique)
+     * @return L'affichage du texte
+     */
+    private String niveau_sup() {
+        int unit = this.niveau % 10;
+        String text = "";
+        if(unit == 1) { // 11, 21, ...
+            this.attaque += 1;
+            text += "Votre attaque a légèrement augmenté.\n";
+        }
+        if(unit == 2){ //12, 22, 32, ...
+            text += "Vos compétences de soumission ont été légèrement augmentées.\n";
+        }
+        if(unit % 3 == 0){ // 13, 16, 19, 23, ...
+            this.vie += 1;
+            text += "Votre résistance a légèrement augmenté.\n";
+        }
+        if(unit % 4 == 0){ //14, 18, 24, 28, ...
+            pp_sacrifice += 1;
+            text += "Vos sacrifices ont été légèrement renforcés.\n";
+        }
+        if(unit % 5 == 0){ // 15, 20, 25, ...
+            PP_max += 1;
+            text += "Votre réserve de mana a légèrement augmentée.\n";
+        }
+        if(unit == 7){ //17, 27, 37, ...
+            text += "Vos compétences de resurrection ont été améliorées.\n";
+        }
+        if(unit == 9){ //19, 29, ...
+            text += "Vos compétence de zombification ont été légèrement renforcées.\n";
+        }
+        if(unit == 0){ //20, 30, ...
+            text += "Vos compétence en appels des morts ont été légèrement renforcées.\n";
+        }
+        
+        if(this.niveau % 7 == 0){ //14, 21, 28, ...
+            this.armure += 1;
+            text += "Votre armure a légèrement augmentée.\n";
+        }
+        if(this.niveau % 4 == 0){ // 12, 16, 20, 22, 26, ...
+            text += "Vos compétence en malédiction ont été légèrement augmentées.\n";
+        }
+        if(this.niveau % 6 == 0){ //12, 18, 24, 30, ...
+            nb_item += 1;
+            nb_piece += 2;
+            text += "Vos compétence de thaumaturge ont été légèrement renforcées.\n";
+        }
+        return text;
     }
     
     @Override
@@ -267,7 +325,7 @@ public class Necromancien extends Joueur {
     public boolean traite_action(Action action, Monstre ennemi, int bonus_popo) throws IOException {
         if (action == Action.MAUDIR && !est_berserk()) {
             ennemi.dommage(bonus_popo);
-            maudir(ennemi);
+            maudire(ennemi);
             return false;
         }
         return super.traite_action(action, ennemi, bonus_popo);
@@ -309,29 +367,46 @@ public class Necromancien extends Joueur {
     
     @Override
     public boolean ressusciter(int malus) throws IOException {
+        //niveau min de la compétence
         if (this.niveau < 2) {
             return false;
         }
+        
+        //état du cadavre
         if (malus > 5) {
             malus = 5;
         }
+        int jet = -malus;
+        
+        //bonus de niveau
         if (this.niveau >= 4) {
-            malus -= 1;
+            jet += 1;
         }
         if (this.niveau >= 8) {
-            malus -= 2;
+            jet += 2;
         }
-        int jet = Input.D8() - malus + rand.nextInt(3) - 1;
+        jet += bonus_sup10(17, 10);
+        
+        //modificateur aléatoire
+        jet += rand.nextInt(3) - 1;
+        
+        //jet joueur
+        if (jet < 12){
+            jet += Input.D8();
+        }
+        
         if (jet <= 3) {
-            System.out.println("Echec de la résurection");
+            System.out.println("échec de la resurrection");
             return false;
         }
         if (jet <= 5) {
-            System.out.println("Résurection avec 4 (max) points de vie");
+            System.out.println("Resurrection avec 4 (max) points de vie");
         } else if (jet <= 7) {
-            System.out.println("Résurection avec 8 (max) points de vie");
-        } else {
-            System.out.println("Résurection avec 12 (max) points de vie");
+            System.out.println("Resurrection avec 8 (max) points de vie");
+        } else if(jet <= 12){
+            System.out.println("Resurrection avec 12 (max) points de vie");
+        } else{
+            System.out.println("Resurrection avec 18 (max) points de vie");
         }
         return true;
     }
@@ -341,18 +416,24 @@ public class Necromancien extends Joueur {
      * @param ennemi la cible de la malédiction
      * @throws IOException toujours
      */
-    private void maudir(Monstre ennemi) throws IOException {
+    private void maudire(Monstre ennemi) throws IOException {
         a_maudit = true;
         int boost = rand.nextInt(3);
-        int boost_lvl = 0;
+        int jet = 0;
         int[] paliers = {3, 7, 7, 10};
         for (int palier : paliers) {
             if (this.niveau >= palier) {
                 boost += 1;
-                boost_lvl += 1;
+                jet += 1;
             }
         }
-        switch (Input.D6() + boost_lvl) {
+        boost += bonus_sup10(12, 4);
+        jet += bonus_sup10(12, 8);
+        if(jet < 12){
+            jet += Input.D6();
+        }
+        jet = Math.min(jet, 13);
+        switch (jet) {
             case 2 -> {
                 System.out.println("Vous maudissez faiblement " + ennemi.getNom() + ".");
                 ennemi.boostVie(-(1 + boost), true);
@@ -366,15 +447,21 @@ public class Necromancien extends Joueur {
                 ennemi.boostVie(-(3 + boost), true);
             }
             case 6, 7, 8 -> {
-                System.out.println("Vous maudissez puissament " + ennemi.getNom() + ".");
+                System.out.println("Vous maudissez puissamment " + ennemi.getNom() + ".");
                 ennemi.boostVie(-(5 + boost), true);
             }
-            case 9, 10 -> {
+            case 9, 10, 11, 12 -> {
                 System.out.println("Vous arracher à " + ennemi.getNom() + " des fragments de son âme !");
-                ennemi.boostVie(-(8 + boost), true);
+                ennemi.boostVie(-(10 + boost), true);
+            }
+            case 13 ->{
+                System.out.println("Vous déchirez en deux l'âme de " + ennemi.getNom() + " !");
+                ennemi.boostVie(-(ennemi.getVieMax()), true);
+                ennemi.boostVie(-(5 + boost), true);
+                ennemi.dommage_direct(1, false);
             }
             default -> {
-                System.out.println("vous n'arrivez pas à maudir " + ennemi.getNom() + ".");
+                System.out.println("vous n'arrivez pas à maudire " + ennemi.getNom() + ".");
                 a_maudit = false;
             }
         }
@@ -385,11 +472,17 @@ public class Necromancien extends Joueur {
      * @throws IOException toujours
      */
     private void necromancie() throws IOException {
-        Monstre m = Lieu.true_monstre(getPosition());
+        int mini = rune_noire ? 5 : 4;
         System.out.println("Vous rappelez à la vie les cadavres de ces terres.");
-        System.out.printf("Combien de PP mettez vous dans le sort ? (min %d) : ", rune_noire ? 5 : 4);
+        Texte.mana_sort(mini);
         int mana = Input.readInt();
-        int jet = Input.D8() + mana + rand.nextInt(2) - 1;
+        if(mana < mini){
+            System.out.println("Le sort échoue.");
+            return;
+        }
+        
+        int jet = mana;
+        jet += rand.nextInt(3) - 1;
         if(rune_noire){
             jet += 2;
         }
@@ -399,7 +492,13 @@ public class Necromancien extends Joueur {
         if (this.niveau >= 10) {
             jet += 1;
         }
+        jet += bonus_sup10(20, 10);
+        if(jet < 15){
+            jet += Input.D8();
+        }
+        
         String monstre_nom;
+        Monstre m = Lieu.true_monstre(getPosition());
         int ob;
         if (jet <= 6) {
             monstre_nom = "carcasse putréfié";
@@ -451,7 +550,7 @@ public class Necromancien extends Joueur {
      * @throws IOException toujours
      */
     private int zombifier(Monstre ennemi) throws IOException {
-        int jet = Input.D8() + (ennemi.getEtat() / 10) - 1;
+        int jet = (ennemi.getEtat() / 10) - 1;
         int[] paliers = {6, 9, 10};
         for (int palier : paliers) {
             if (this.niveau >= palier) {
@@ -461,15 +560,18 @@ public class Necromancien extends Joueur {
         if(rune_noire){
             jet += 2;
         }
-        if (jet > 8 && niveau < 9) {
-            jet = 8;
+        jet += bonus_sup10(19, 10);
+        
+        if(jet < 11){
+            jet += Input.D8();
         }
-        if (jet > 8 && jet < 11) {
-            jet = 8;
+        if (jet > 10 && niveau < 9) {
+            jet = 10;
         }
-        if (jet >= 11) {
-            jet = 9;
+        if(jet > 11){
+            jet = 11;
         }
+        
         int retour;
         switch (jet) {
             case 3 -> { //-8
@@ -492,13 +594,13 @@ public class Necromancien extends Joueur {
                 ennemi.boostVie(-2, true);
                 retour = -rand.nextInt(6) - 1;
             }
-            case 8 -> { //+2
+            case 8, 9, 10 -> { //+2
                 System.out.println(ennemi.getNom() + " a été parfaitement ressuscité");
                 ennemi.boostAtk(1, true);
                 ennemi.boostVie(2, true);
                 retour = 1;
             }
-            case 9 -> { //+5
+            case 11 -> { //+5
                 System.out.println(ennemi.getNom() + " a été invoqué, plus fort que de son vivant.");
                 ennemi.boostAtk(3, true);
                 ennemi.boostVie(5, true);
@@ -518,13 +620,19 @@ public class Necromancien extends Joueur {
     }
     
     private void soumission() throws IOException {
-        int jet = Input.D6();
+        int jet = 0;
+        
+        // Bonus de niveau
         if (this.niveau >= 7) {
-            jet += 1;
+            jet++;
         }
-        if (jet > 6) {
-            jet = 6;
+        jet += bonus_sup10(12, 10);
+        
+        if (jet < 6) {
+            jet += Input.D6();
         }
+        jet = Math.min(jet, 6);
+
         System.out.println("Vous soumettez votre familier à votre volonté.\n");
         this.ob_f += switch (jet + bonus_dresser()) {
             case 1 -> {
@@ -567,7 +675,7 @@ public class Necromancien extends Joueur {
     @Override
     protected void monstre_mort_perso(Monstre ennemi) throws IOException {
         if (ennemi.corps_utilisable() && est_actif() && est_vivant() && this.niveau >= 1) {
-            if (Exterieur.Input.yn("Voulez vous tenter de ressuciter " + ennemi.getNom() + " en tant que familier " + "pour 2PP ?")) {
+            if (Exterieur.Input.yn("Voulez vous tenter de ressusciter " + ennemi.getNom() + " en tant que familier " + "pour 2PP ?")) {
                 ennemi.alterEtat(zombifier(ennemi));
             }
         }
