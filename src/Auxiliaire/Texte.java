@@ -67,8 +67,8 @@ public class Texte {
                 " %d points d'attaque et %d point d'armure, ainsi que %dPP.\n", nom, vie, atk, def, pp);
     }
     
-    public static void pie(int quantite){
-        System.out.printf("Votre pie voleuse vous apporte %d PO.\n", quantite);
+    public static void pie(int quantite, String nom){
+        System.out.printf("Sa pie voleuse apporte %d PO à %s.\n", quantite, nom);
     }
     
     public static void retirer_tout(){

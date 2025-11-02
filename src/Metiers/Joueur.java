@@ -465,6 +465,22 @@ public abstract class Joueur {
     }
     
     /**
+     * Renvoie un bonus x via la formule y = ax + b (y étant le niveau).
+     * @param min le niveau minimum pour obtenir le bonus (b).
+     * @param palier le nombre de niveaux séparant chaque obtention de bonus (a).
+     * @return le bonus (x) (positif, arrondit à l'inférieur)
+     */
+    protected int bonus_sup10(int min, int palier){
+        int bonus = 0;
+        int temp = this.niveau;
+        while(temp >= min){
+            bonus += 1;
+            temp -= palier;
+        }
+        return bonus;
+    }
+    
+    /**
      * Convertie les niveaux et l'expérience du joueur en valeur d'xp uniquement
      * @return l'ensemble de l'xp que le joueur possède
      */
@@ -1003,7 +1019,7 @@ public abstract class Joueur {
                 gagneXp();
             }
             if(pie && rand.nextInt(3) == 0){ //33%
-                Texte.pie(1 + rand.nextInt(3)); //1~3
+                Texte.pie(1 + rand.nextInt(3), getNom()); //1~3
             }
         }
         actif = false;
