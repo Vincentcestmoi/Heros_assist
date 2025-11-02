@@ -10,17 +10,10 @@ import Monstre.Monstre;
 import main.Combat;
 import main.Main;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.EnumSet;
-import java.util.Random;
-import java.util.Set;
+import javax.json.*;
+import javax.json.stream.JsonGenerator;
+import java.io.*;
+import java.util.*;
 
 public abstract class Joueur {
     static final int f_max = 7;
@@ -135,56 +128,70 @@ public abstract class Joueur {
         setNiveau(xp);
         super_actualiser_niveau();
         SetEffetParent();
-        retirer_tout();
+        retirer_tout(true);
     }
     
     //************************************************CHARGEMENT******************************************************//
     
-    /**
-     * Crée un joueur à partir de sa sauvegarde
-     * @param chemin le nom du fichier où se trouve la sauvegarde
-     * @return le joueur
-     * @throws FileNotFoundException évidemment on cherche à charger un fichier
-     */
-    public static Joueur chargerJoueur(String chemin) throws FileNotFoundException {
-        try (JsonReader reader = Json.createReader(new FileReader(chemin))) {
-            JsonObject json = reader.readObject();
-            
-            // Les valeurs qui peuvent ne pas être écrite
-            int ob_f = 0, xp = 0;
-            Position position = Position.DEFAULT;
-            Dieux parent = Main.get_parent();
-            
-            String nom = json.getString("nom");
-            Metier metier = Metier.valueOf(json.getString("metier"));
-            try {
-                ob_f = json.getInt("ob_f");
-            } catch (Exception e) {
-                System.out.println("Erreur : impossible de récupérer l'obéissance du familier. " + e.getMessage());
-                System.out.println("Valeur par défaut appliquée : aucun familier");
-            }
-            try {
-                position = Position.valueOf(json.getString("position"));
-            } catch (Exception e) {
-                System.out.println("Erreur : impossible de récupérer la zone. " + e.getMessage());
-                System.out.println("Valeur par défaut appliquée : Prairie");
-            }
-            try {
-                parent = Dieux.valueOf(json.getString("parent"));
-            } catch (Exception e) {
-                System.out.println("Erreur : impossible de récupérer le parent divin. " + e.getMessage());
-                System.out.println("Valeur par défaut appliquée : aléatoire : " + parent.toString());
-            }
-            try {
-                xp = json.getInt("xp");
-            } catch (Exception e) {
-                System.out.println("Erreur : impossible de récupérer l'xp du joueur. " + e.getMessage());
-                System.out.println("Valeur par défaut appliquée : 0");
-            }
-            
-            return CreerJoueur(nom, position, metier, ob_f, parent, xp);
+    private static int safeGetInt(JsonObject json, String key) {
+        try {
+            return json.getInt(key, 0);
+        } catch (Exception e) {
+            System.err.println("⚠️ Champ " + key + " invalide, valeur par défaut appliquée : " + 0);
+            return 0;
         }
     }
+    
+    private static <E extends Enum<E>> E safeGetEnum(JsonObject json, String key, Class<E> enumClass, E def) {
+        try {
+            String value = json.getString(key, def.name());
+            return Enum.valueOf(enumClass, value);
+        } catch (Exception e) {
+            System.err.println("⚠️ Champ " + key + " invalide, valeur par défaut appliquée : " + def);
+            return def;
+        }
+    }
+    
+    /**
+     * Crée un joueur à partir de sa sauvegarde JSON.
+     *
+     * @param chemin le chemin du fichier de sauvegarde
+     * @return le joueur reconstruit
+     * @throws FileNotFoundException si le fichier n'existe pas
+     */
+    public static Joueur chargerJoueur(String chemin) throws FileNotFoundException {
+        File file = new File(chemin);
+        if (!file.exists()) {
+            throw new FileNotFoundException("Fichier de sauvegarde introuvable : " + chemin);
+        }
+        
+        try (JsonReader reader = Json.createReader(new FileReader(file))) {
+            JsonObject json = reader.readObject();
+            
+            String nom = json.getString("nom", "SansNom");
+            Metier metier = safeGetEnum(json, "metier", Metier.class, Metier.TRYHARDER);
+            int ob_f = safeGetInt(json, "ob_f");
+            int xp = safeGetInt(json, "xp");
+            Position position = safeGetEnum(json, "position", Position.class, Position.DEFAULT);
+            Dieux parent = safeGetEnum(json, "parent", Dieux.class, Main.get_parent());
+            
+            Joueur joueur = CreerJoueur(nom, position, metier, ob_f, parent, xp);
+            
+            // Effets
+            if (json.containsKey("effets")) {
+                try {
+                    joueur.load_effet_structure(json.getJsonArray("effets"));
+                } catch (Exception e) {
+                    System.err.println("⚠️ Impossible de charger les effets : " + e.getMessage());
+                }
+            }
+            
+            return joueur;
+        } catch (IOException e) {
+            throw new FileNotFoundException("Erreur de lecture du fichier : " + chemin + " (" + e.getMessage() + ")");
+        }
+    }
+    
     
     /**
      * Crée un joueur en fonction de ses données
@@ -224,15 +231,26 @@ public abstract class Joueur {
     //************************************************SAUVEGARDE******************************************************//
     
     public void sauvegarder(String chemin) throws IOException {
-        JsonObject joueurJson = Json.createObjectBuilder().add("nom", this.nom).add("metier",
-                        this.getMetier().name()).add("ob_f", this.ob_f).add("position", this.position.name()).add("xp"
-                        , this.GetXpTotal()).add("parent", this.parent.name()).add("effets", "") // TODO
+        JsonObject joueurJson = Json.createObjectBuilder()
+                .add("nom", this.nom)
+                .add("metier", this.getMetier().name())
+                .add("ob_f", this.ob_f)
+                .add("position", this.position.name())
+                .add("xp", this.GetXpTotal())
+                .add("parent", this.parent.name())
+                .add("effets", save_effet_structure())
                 .build();
         
-        try (JsonWriter writer = Json.createWriter(new FileWriter(chemin))) {
+        Map<String, Object> config = new HashMap<>();
+        config.put(JsonGenerator.PRETTY_PRINTING, true);
+        JsonWriterFactory writerFactory = Json.createWriterFactory(config);
+        
+        try (Writer fileWriter = new FileWriter(chemin);
+             JsonWriter writer = writerFactory.createWriter(fileWriter)) {
             writer.writeObject(joueurJson);
         }
     }
+    
     
     static Random rand = new Random();
     
@@ -267,7 +285,6 @@ public abstract class Joueur {
         presente_pouvoir();
         System.out.println();
         System.out.println(DescribeEffetParent());
-        System.out.println();
         System.out.println(Describe_effet_item());
     }
     
@@ -363,7 +380,7 @@ public abstract class Joueur {
      * Présente les caractéristiques et capacités héréditaires
      */
     private String DescribeEffetParent() {
-        return switch (parent) {
+        String temp = switch (parent) {
             case ARES -> {
                 if (getMetier() != Metier.GUERRIERE) {
                     yield "Berserk : pour 1PP, imprègne de folie meurtrière l'esprit du lanceur avant qu'il " + "ne frappe, augmentant sa puissance au prix de sa santé mentale.";
@@ -382,6 +399,10 @@ public abstract class Joueur {
             case POSEIDON -> "Inondation : Un sort qui consomme %dPP et inflige de gros dommages magiques.".formatted(rune_pluie ? 3 : 4);
             case ZEUS -> "Foudre : Un sort qui consomme %dPP et inflige de puissants dommages magiques.".formatted(rune_orage ? 4 : 5);
         };
+        if (!temp.isEmpty()) {
+            temp += "\n";
+        }
+        return temp;
     }
     
     /**
@@ -1134,7 +1155,7 @@ public abstract class Joueur {
         Output.JouerSonMortDef();
         ob_f = 0;
         position = Position.ENFERS;
-        retirer_tout();
+        retirer_tout(false);
         if (this.parent == Dieux.HADES || getMetier() != Metier.NECROMANCIEN) {
             int PO = rune_mortifere ? 13 : 6;
             int PIT = rune_mortifere ? 6 : 3;
@@ -3052,8 +3073,10 @@ public abstract class Joueur {
         this.bateau = false;
     }
     
-    public void retirer_tout(){
-        Texte.retirer_tout();
+    public void retirer_tout(boolean silence){
+        if(!silence) {
+            Texte.retirer_tout();
+        }
         lame_infernale = false;
         lame_vegetale = false;
         trident = false;
@@ -3099,4 +3122,112 @@ public abstract class Joueur {
         grenade = 0;
         bateau = false;
     }
+    
+    private JsonArray save_effet_structure() {
+        JsonArrayBuilder array = Json.createArrayBuilder();
+        
+        if (lame_infernale) array.add(Json.createObjectBuilder().add("id", "01"));
+        if (lame_vegetale) array.add(Json.createObjectBuilder().add("id", "02"));
+        if (trident) array.add(Json.createObjectBuilder().add("id", "03"));
+        if (lame_mont) array.add(Json.createObjectBuilder().add("id", "04"));
+        if (nectar) array.add(Json.createObjectBuilder().add("id", "05"));
+        if (ambroisie) array.add(Json.createObjectBuilder().add("id", "06"));
+        if (guerre > 0) array.add(Json.createObjectBuilder().add("id", "07").add("quantite", guerre));
+        if (lame_vent) array.add(Json.createObjectBuilder().add("id", "08"));
+        if (lame_fertile) array.add(Json.createObjectBuilder().add("id", "09"));
+        if (parch_feu) array.add(Json.createObjectBuilder().add("id", "10"));
+        if (parch_dodo) array.add(Json.createObjectBuilder().add("id", "11"));
+        if (parch_lumiere) array.add(Json.createObjectBuilder().add("id", "12"));
+        if (rune_croissance) array.add(Json.createObjectBuilder().add("id", "13"));
+        if (rune_pluie) array.add(Json.createObjectBuilder().add("id", "14"));
+        if (rune_haine) array.add(Json.createObjectBuilder().add("id", "15"));
+        if (rune_virale) array.add(Json.createObjectBuilder().add("id", "16"));
+        if (rune_ardente > 0) array.add(Json.createObjectBuilder().add("id", "17").add("quantite", rune_ardente));
+        if (rune_ardente2 > 0) array.add(Json.createObjectBuilder().add("id", "18").add("quantite", rune_ardente2));
+        if (rune_dodo) array.add(Json.createObjectBuilder().add("id", "19"));
+        if (rune_mortifere) array.add(Json.createObjectBuilder().add("id", "20"));
+        if (rune_orage) array.add(Json.createObjectBuilder().add("id", "21"));
+        if (rune_commerce) array.add(Json.createObjectBuilder().add("id", "22"));
+        if (soin) array.add(Json.createObjectBuilder().add("id", "23"));
+        if (bracelet_protect) array.add(Json.createObjectBuilder().add("id", "24"));
+        if (rune_noire) array.add(Json.createObjectBuilder().add("id", "25"));
+        if (absorption) array.add(Json.createObjectBuilder().add("id", "26"));
+        if (lunette) array.add(Json.createObjectBuilder().add("id", "27"));
+        if (dissec) array.add(Json.createObjectBuilder().add("id", "28"));
+        if (concoct) array.add(Json.createObjectBuilder().add("id", "29"));
+        if (bourdon) array.add(Json.createObjectBuilder().add("id", "30"));
+        if (parch_volcan) array.add(Json.createObjectBuilder().add("id", "31"));
+        if (absorption2) array.add(Json.createObjectBuilder().add("id", "32"));
+        if (cheval) array.add(Json.createObjectBuilder().add("id", "33"));
+        if (pegase) array.add(Json.createObjectBuilder().add("id", "34"));
+        if (pie) array.add(Json.createObjectBuilder().add("id", "35"));
+        if (sphinx) array.add(Json.createObjectBuilder().add("id", "36"));
+        if (fee) array.add(Json.createObjectBuilder().add("id", "37"));
+        if (rune_arca) array.add(Json.createObjectBuilder().add("id", "38"));
+        if (antidote) array.add(Json.createObjectBuilder().add("id", "39"));
+        if (rune_annihilation) array.add(Json.createObjectBuilder().add("id", "40"));
+        if (tatouage_resurection) array.add(Json.createObjectBuilder().add("id", "41"));
+        if (fuite) array.add(Json.createObjectBuilder().add("id", "42"));
+        if (grenade > 0) array.add(Json.createObjectBuilder().add("id", "43").add("quantite", grenade));
+        if (bateau) array.add(Json.createObjectBuilder().add("id", "44"));
+        
+        return array.build();
+    }
+    
+    public void load_effet_structure(JsonArray effets) {
+        for (JsonValue val : effets) {
+            if (!(val instanceof JsonObject obj)) continue;
+            String id = obj.getString("id", "");
+            int quantite = obj.containsKey("quantite") ? obj.getInt("quantite") : 0;
+            
+            switch (id) {
+                case "01": lame_infernale = true; break;
+                case "02": lame_vegetale = true; break;
+                case "03": trident = true; break;
+                case "04": lame_mont = true; break;
+                case "05": nectar = true; break;
+                case "06": ambroisie = true; break;
+                case "07": guerre = quantite; break;
+                case "08": lame_vent = true; break;
+                case "09": lame_fertile = true; break;
+                case "10": parch_feu = true; break;
+                case "11": parch_dodo = true; break;
+                case "12": parch_lumiere = true; break;
+                case "13": rune_croissance = true; break;
+                case "14": rune_pluie = true; break;
+                case "15": rune_haine = true; break;
+                case "16": rune_virale = true; break;
+                case "17": rune_ardente = quantite; break;
+                case "18": rune_ardente2 = quantite; break;
+                case "19": rune_dodo = true; break;
+                case "20": rune_mortifere = true; break;
+                case "21": rune_orage = true; break;
+                case "22": rune_commerce = true; break;
+                case "23": soin = true; break;
+                case "24": bracelet_protect = true; break;
+                case "25": rune_noire = true; break;
+                case "26": absorption = true; break;
+                case "27": lunette = true; break;
+                case "28": dissec = true; break;
+                case "29": concoct = true; break;
+                case "30": bourdon = true; break;
+                case "31": parch_volcan = true; break;
+                case "32": absorption2 = true; break;
+                case "33": cheval = true; break;
+                case "34": pegase = true; break;
+                case "35": pie = true; break;
+                case "36": sphinx = true; break;
+                case "37": fee = true; break;
+                case "38": rune_arca = true; break;
+                case "39": antidote = true; break;
+                case "40": rune_annihilation = true; break;
+                case "41": tatouage_resurection = true; break;
+                case "42": fuite = true; break;
+                case "43": grenade = quantite; break;
+                case "44": bateau = true; break;
+            }
+        }
+    }
+    
+    
 }

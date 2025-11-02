@@ -218,7 +218,7 @@ public class Main {
             case "#42" -> joueur.retire_fuite();
             case "#43" -> joueur.retire_grenade();
             case "#44" -> joueur.retire_bateau();
-            case "#99" -> joueur.retirer_tout();
+            case "#99" -> joueur.retirer_tout(false);
             default -> {
                 System.out.println("Input unknown.");
                 retirer_item(joueur);

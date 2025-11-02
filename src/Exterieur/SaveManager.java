@@ -4,10 +4,10 @@ import Metiers.Joueur;
 import main.Main;
 
 import javax.json.*;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.json.stream.JsonGenerator;
+import java.io.*;
+import java.util.Map;
+import java.util.*;
 
 public class SaveManager {
     
@@ -80,34 +80,57 @@ public class SaveManager {
         }
         
         // Préparation pour les objets
-        JsonObjectBuilder itemsBuilder = Json.createObjectBuilder().add("O", Json.createArrayBuilder().build()).add(
-                "I", Json.createArrayBuilder().build()).add("II", Json.createArrayBuilder().build()).add("III",
-                Json.createArrayBuilder().build()).add("IV", Json.createArrayBuilder().build()).add("PROMOTION",
-                Json.createObjectBuilder().add("CREATURE", Json.createArrayBuilder().build()).add("ARTEFACT",
-                        Json.createArrayBuilder().build()).add("AMELIORATION", Json.createArrayBuilder().build()).build());
+        JsonObjectBuilder itemsBuilder = Json.createObjectBuilder()
+                .add("O", Json.createArrayBuilder())
+                .add("I", Json.createArrayBuilder())
+                .add("II", Json.createArrayBuilder())
+                .add("III", Json.createArrayBuilder())
+                .add("IV", Json.createArrayBuilder())
+                .add("PROMOTION", Json.createObjectBuilder()
+                        .add("CREATURE", Json.createArrayBuilder())
+                        .add("ARTEFACT", Json.createArrayBuilder())
+                        .add("AMELIORATION", Json.createArrayBuilder()));
         
         // Création du fichier info.json
-        JsonObject info = Json.createObjectBuilder().add("titre", titre).add("nombre_joueurs", nombreJoueurs).add(
-                "monstres_nommes", Json.createArrayBuilder().build()).add("items_uniques", itemsBuilder.build()).build();
+        JsonObject info = Json.createObjectBuilder()
+                .add("titre", titre)
+                .add("nombre_joueurs", nombreJoueurs)
+                .add("monstres_nommes", Json.createArrayBuilder())
+                .add("items_uniques", itemsBuilder.build())
+                .build();
         
-        try (JsonWriter writer = Json.createWriter(new FileWriter(dossier + "/info.json"))) {
+        // Writer pretty-print
+        Map<String, Object> config = new HashMap<>();
+        config.put(JsonGenerator.PRETTY_PRINTING, true);
+        JsonWriterFactory writerFactory = Json.createWriterFactory(config);
+        
+        try (Writer fileWriter = new FileWriter(dossier + "/info.json");
+             JsonWriter writer = writerFactory.createWriter(fileWriter)) {
             writer.writeObject(info);
         }
         
         // Création des fichiers JoueurX.json vides
         for (int i = 0; i < nombreJoueurs; i++) {
             Joueur joueur = Main.joueurs[i];
-            JsonObject joueurVide = Json.createObjectBuilder().add("nom", joueur.getNom()).add("metier",
-                    joueur.getMetier().name()).add("ob_f", joueur.get_ob_f()).add("position",
-                    joueur.getPosition().name()).add("xp", joueur.getXp()).add("parent", joueur.getParent().name()).add("effets", Json.createArrayBuilder()).build();
+            JsonObject joueurVide = Json.createObjectBuilder()
+                    .add("nom", joueur.getNom())
+                    .add("metier", joueur.getMetier().name())
+                    .add("ob_f", joueur.get_ob_f())
+                    .add("position", joueur.getPosition().name())
+                    .add("xp", joueur.getXp())
+                    .add("parent", joueur.getParent().name())
+                    .add("effets", Json.createArrayBuilder())
+                    .build();
             
-            try (JsonWriter writer = Json.createWriter(new FileWriter(dossier + "/Joueur" + i + ".json"))) {
+            try (Writer fileWriter = new FileWriter(dossier + "/Joueur" + i + ".json");
+                 JsonWriter writer = writerFactory.createWriter(fileWriter)) {
                 writer.writeObject(joueurVide);
             }
         }
         
         System.out.println("✅ Sauvegarde " + titre + " créée avec " + nombreJoueurs + " joueur(s).\n");
     }
+    
     
     /**
      * Sauvegarde les données utilisateurs
@@ -122,8 +145,9 @@ public class SaveManager {
         }
         
         // Charger l'ancien info.json
-        JsonObject oldInfo = infoFile.exists() ? Json.createReader(new FileReader(infoFile)).readObject() :
-                Json.createObjectBuilder().build();
+        JsonObject oldInfo = infoFile.exists()
+                ? Json.createReader(new FileReader(infoFile)).readObject()
+                : Json.createObjectBuilder().build();
         
         String titre = oldInfo.getString("titre", "Sauvegarde sans nom");
         
@@ -137,16 +161,20 @@ public class SaveManager {
         
         // Conserver les anciennes clés sauf "nombre_joueurs"
         for (String key : oldInfo.keySet()) {
-            if (!key.equals("nombre_joueurs")) {
-                builder.add(key, oldInfo.get(key));
-            }
+            builder.add(key, oldInfo.get(key));
         }
         
         // Mettre à jour le titre et le nombre de joueurs
         builder.add("titre", titre);
         builder.add("nombre_joueurs", Main.joueurs.length);
         
-        try (JsonWriter writer = Json.createWriter(new FileWriter(infoFile))) {
+        // Writer pretty-print
+        Map<String, Object> config = new HashMap<>();
+        config.put(JsonGenerator.PRETTY_PRINTING, true);
+        JsonWriterFactory writerFactory = Json.createWriterFactory(config);
+        
+        try (Writer fileWriter = new FileWriter(infoFile);
+             JsonWriter writer = writerFactory.createWriter(fileWriter)) {
             writer.writeObject(builder.build());
         }
         
