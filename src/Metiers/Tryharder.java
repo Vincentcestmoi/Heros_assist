@@ -22,11 +22,12 @@ public class Tryharder extends Joueur {
         this.vie += this.niveau;
         this.attaque += (this.niveau + 1) / 3;
         this.PP_max += this.niveau / 3;
+        this.armure += this.niveau / 9;
         if (this.niveau >= 5) {
             add_caracteristique("Doué");
         }
         if (this.niveau >= 8) {
-            add_caracteristique("Talentieux");
+            add_caracteristique("Talentueux");
         }
     }
     
@@ -84,8 +85,12 @@ public class Tryharder extends Joueur {
             System.out.println("Nouvelle capacité débloquée !");
         }
         if (this.niveau == 8) {
-            add_caracteristique("Talentieux");
+            add_caracteristique("Talentueux");
             System.out.println("Nouvelle capacité débloquée !");
+        }
+        if(this.niveau % 9 == 0){
+            this.armure += 1;
+            System.out.println("Votre armure a légèrement augmentée.");
         }
     }
     
