@@ -45,4 +45,6 @@ public enum Action {
     SORT_DODO,
     SORT_LUMIERE,
     SORT_VOLCAN,
+    ANNIHILATION,
+    TP,
 }

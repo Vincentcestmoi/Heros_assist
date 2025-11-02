@@ -74,4 +74,29 @@ public class Texte {
     public static void retirer_tout(){
         System.out.println("Tous vos items ont été retirés.");
     }
+    
+    public static void duplicata_impossible(){
+        System.out.println("Application impossible : cet effet n'est pas cumulable.");
+    }
+    
+    public static void mana_sort(int value){
+        System.out.printf("Combien de mana mettez vous dans le sort ? (min %d) : ", value);
+    }
+    
+    public static void annihilation(){
+        System.out.println("Votre rune d'annihilation consomme une de vos rune (si ce n'est pas le cas, elle s'auto-détruit).");
+        System.out.println("Un faisceau iridescent percute l'ennemi de plein fouet.");
+    }
+    
+    public static void warning(){
+        System.out.println("Attention : cette action n'est pas censée être réalisable.");
+    }
+    
+    public static void resurection_tatouage(){
+        System.out.println("Votre tatouage s'éfface, ainsi que les affres de la mort. Vous vous réveillez en pleine forme.");
+    }
+    
+    public static void jete_grenade(int nb){
+        System.out.printf("Vous vous débarrassez de %d grenades\n", nb);
+    }
 }

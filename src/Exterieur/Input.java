@@ -502,7 +502,7 @@ public class Input {
     
     public static Action_extra extra(Joueur joueur, Action action) throws IOException {
         Set<Action> actionsSansExtra = EnumSet.of(Action.AUCUNE, Action.END, Action.CONCOCTION, Action.DOMESTIQUER,
-                Action.DEXTERITE, Action.LIEN, Action.MEDITATION, Action.FUIR, Action.OFF);
+                Action.DEXTERITE, Action.LIEN, Action.MEDITATION, Action.FUIR, Action.OFF, Action.TP);
         if (actionsSansExtra.contains(action)) {
             return Action_extra.AUCUNE;
         }

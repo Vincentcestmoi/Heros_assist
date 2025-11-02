@@ -383,11 +383,7 @@ public class Monstre {
                     }
                 }
             }
-            case POISON_CECITE -> {
-                if (!joueur.front_a_cecite() && Input.yn("L'attaque a-t-elle touchée ?")) {
-                    joueur.prend_cecite();
-                }
-            }
+            case POISON_CECITE -> joueur.prend_cecite();
             case GEL -> competence = Competence.AUCUNE;
             case MORSURE_MALADIVE -> {
                 System.out.println("La morsure provoque une grave infection qui fait définitivement perdre 1 point " + "de" + " résistance à " + joueur.getFrontNom() + ".");
@@ -401,16 +397,8 @@ public class Monstre {
                 System.out.println("La morsure provoque chez " + joueur.getFrontNom() + " une grave réaction et lui " + "fait perdre 1 point d'attaque définitivement.");
                 competence = Competence.AUCUNE;
             }
-            case POISON -> {
-                if (!joueur.front_a_poison1() && Input.yn("L'attaque a-t-elle touchée ?")) {
-                    joueur.prend_poison1();
-                }
-            }
-            case POISON2 -> {
-                if (!joueur.front_a_poison2() && Input.yn("L'attaque a-t-elle touchée ?")) {
-                    joueur.prend_poison2();
-                }
-            }
+            case POISON -> joueur.prend_poison1();
+            case POISON2 -> joueur.prend_poison2();
             case CHARGE -> {
                 this.attaque -= 3;
                 competence = Competence.AUCUNE;

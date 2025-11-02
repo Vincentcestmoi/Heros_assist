@@ -18,7 +18,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.Random;
+import java.util.Set;
 
 public abstract class Joueur {
     static final int f_max = 7;
@@ -112,6 +114,15 @@ public abstract class Joueur {
     private boolean pie;
     private boolean sphinx;
     private boolean a_renforce;
+    private boolean fee;
+    private boolean a_soigne_fee;
+    protected boolean rune_arca;
+    protected boolean antidote;
+    protected boolean rune_annihilation;
+    private boolean tatouage_resurection;
+    private boolean fuite;
+    private int grenade;
+    private boolean bateau;
     
     Joueur(String nom, Position position, int ob_f, Dieux parent, int xp) {
         this.nom = nom;
@@ -120,8 +131,8 @@ public abstract class Joueur {
         this.parent = parent;
         this.caracteristique = "";
         this.competences = "";
-        setNiveau(xp);
         this.armure = 0;
+        setNiveau(xp);
         super_actualiser_niveau();
         SetEffetParent();
         retirer_tout();
@@ -399,6 +410,21 @@ public abstract class Joueur {
         if(sphinx){
             text += "Sphinx : permet, une fois par combat, de renforcer une cible.\n";
         }
+        if (fee) {
+            text += "Fee : permet, une fois par bataille, de soigner une cible.\n";
+        }
+        if(rune_annihilation){
+            text += "Rune d'annihilation : consume une rune pour lancer un sort surpuissant. (Peut se consommer lui-même).\n";
+        }
+        if (fuite){
+            text += "Téléporteur courte porté : Permet de fuir d'un combat, peut se détruire à l'usage.\n";
+        }
+        if (grenade > 0){
+            text += "Grenades : inflige des dommages à l'adversaire. Vous possedez actuellement %d grenades.\n".formatted(grenade);
+        }
+        if(bateau){
+            text += "Navire magique : Vous ne pouvez pas être attaqué par surprise en mer.\n";
+        }
         return text;
     }
     
@@ -518,15 +544,8 @@ public abstract class Joueur {
         return berserk;
     }
     
-    public boolean front_a_cecite() {
-        if (a_familier_front()) {
-            return f_a_cecite();
-        }
-        return a_cecite();
-    }
-    
     public boolean a_cecite() {
-        return !lunette && cecite;
+        return !lunette && !antidote && cecite;
     }
     
     private boolean f_a_cecite() {
@@ -542,27 +561,26 @@ public abstract class Joueur {
     }
     
     protected void p_prend_cecite() {
+        if(cecite){
+            return;
+        }
         cecite = true;
         System.out.println(nom + " est empoisonné(e) et atteint(e) de cécité.");
-        if(lunette){
+        if(lunette || antidote){
             System.out.println("Celui ne l'affecte en rien.");
         }
     }
     
     protected void f_prend_cecite() {
+        if(f_a_cecite()){
+            return;
+        }
         f_cecite = true;
         System.out.println("Le familier de " + nom + " est empoisonné et atteint de cécité.");
     }
     
-    public boolean front_a_poison1() {
-        if (a_familier_front()) {
-            return f_a_poison1();
-        }
-        return a_poison1();
-    }
-    
     private boolean a_poison1() {
-        return poison1;
+        return poison1 && !antidote;
     }
     
     private boolean f_a_poison1() {
@@ -578,11 +596,20 @@ public abstract class Joueur {
     }
     
     private void p_prend_poison1() {
+        if(poison1){
+            return;
+        }
         poison1 = true;
         System.out.println(nom + " est empoisonné(e).");
+        if(antidote){
+            System.out.println("Celui ne l'affecte en rien.");
+        }
     }
     
     private void f_prend_poison1() {
+        if(f_poison1){
+            return;
+        }
         f_poison1 = true;
         System.out.println("Le familier de " + nom + " est empoisonné.");
     }
@@ -596,24 +623,26 @@ public abstract class Joueur {
     }
     
     private void p_prend_poison2() {
+        if(poison2){
+            return;
+        }
         poison2 = true;
         System.out.println(nom + " est empoisonné(e).");
+        if(antidote){
+            System.out.println("Celui ne l'affecte en rien.");
+        }
     }
     
     private void f_prend_poison2() {
-        System.out.println("Le familier de " + nom + " est empoisonné.");
-        f_poison2 = true;
-    }
-    
-    public boolean front_a_poison2() {
-        if (a_familier_front()) {
-            return f_a_poison2();
+        if(f_poison2){
+            return;
         }
-        return a_poison2();
+        f_poison2 = true;
+        System.out.println("Le familier de " + nom + " est empoisonné.");
     }
     
     private boolean a_poison2() {
-        return poison2;
+        return !antidote && poison2;
     }
     
     private boolean f_a_poison2() {
@@ -845,6 +874,7 @@ public abstract class Joueur {
         a_aveugle = false;
         a_soigne = false;
         a_renforce = false;
+        a_soigne_fee = false;
         if (a_familier() && Input.yn("Est-ce que votre familier vous rejoint au combat ?")) {
             f_actif = true;
             f_conscient = true;
@@ -1095,6 +1125,11 @@ public abstract class Joueur {
      * Met à jour les données d'un joueur mort hors combat
      */
     public void mort_def() {
+        if(tatouage_resurection){
+            tatouage_resurection = false;
+            Texte.resurection_tatouage();
+            return;
+        }
         System.out.println(nom + " est mort.");
         Output.JouerSonMortDef();
         ob_f = 0;
@@ -1182,6 +1217,9 @@ public abstract class Joueur {
                 } while (!Main.joueurs[l].est_actif());
                 int temp = Input.atk();
                 temp += Main.corriger(temp * (f_berserk / 2));
+                if(f_a_cecite()){
+                    temp -= 1;
+                }
                 System.out.println("Pris(e) de folie, le familier de " + nom + " attaque " + Main.joueurs[l].getNom() + " et lui inflige " + temp + " dommages !");
             } else {
                 ennemi.dommage(Input.atk(), f_berserk + 1);
@@ -1190,11 +1228,15 @@ public abstract class Joueur {
             return;
         }
         //attaque classique
+        int temp = Input.atk();
+        if(f_a_cecite()){
+            temp -= 1;
+        }
         if (rand.nextInt(255) == 0) {
-            ennemi.dommage(Input.atk(), 1.1f + 0.1f * rand.nextInt(5));
+            ennemi.dommage(temp, 1.1f + 0.1f * rand.nextInt(5));
             return;
         }
-        ennemi.dommage(Input.atk());
+        ennemi.dommage(temp);
     }
     
     //************************************************MAIN************************************************************//
@@ -1466,17 +1508,28 @@ public abstract class Joueur {
             }
         }
         //item
-        if(parch_feu && !est_berserk() && getMetier() != Metier.ARCHIMAGE){
-            text += "/sort de (feu) mineur";
+        if(!est_berserk()) {
+            //parchemin
+            if(getMetier() != Metier.ARCHIMAGE) {
+                if (parch_feu) {
+                    text += "/sort de (feu) mineur";
+                }
+                if (parch_dodo) {
+                    text += "/sort de (som)meil";
+                }
+                if (parch_lumiere && !a_aveugle) {
+                    text += "/sort de (lum)iere";
+                }
+                if (parch_volcan) {
+                    text += "/sort (vol)canique";
+                }
+            }
+            if (rune_annihilation && !est_berserk()){
+                text += "/(ann)ihiler";
+            }
         }
-        if(parch_dodo && !est_berserk() && getMetier() != Metier.ARCHIMAGE){
-            text += "/sort de (som)meil";
-        }
-        if(parch_lumiere && !est_berserk() && getMetier() != Metier.ARCHIMAGE && !a_aveugle){
-            text += "/sort de (lum)iere";
-        }
-        if(parch_volcan && !est_berserk() && getMetier() != Metier.ARCHIMAGE){
-            text += "/sort (vol)canique";
+        if(fuite){
+            text += "/se (tél)éporter";
         }
         text += "/(f)uir/(c)ustom/(o)ff";
         return text;
@@ -1560,6 +1613,18 @@ public abstract class Joueur {
                 }
                 yield Action.AUCUNE;
             }
+            case "ann" -> {
+                if(rune_annihilation && !est_berserk()){
+                    yield Action.ANNIHILATION;
+                }
+                yield Action.AUCUNE;
+            }
+            case "tél", "tel" -> {
+                if(fuite){
+                    yield Action.TP;
+                }
+                yield Action.AUCUNE;
+            }
             default -> Action.AUCUNE;
         };
     }
@@ -1610,6 +1675,14 @@ public abstract class Joueur {
                 sort_volcan(ennemi, bonus_popo);
                 yield false;
             }
+            case ANNIHILATION -> {
+                annihilation(ennemi, bonus_popo);
+                yield false;
+            }
+            case TP -> {
+                fuite_tp(ennemi);
+                yield false;
+            }
             default -> true;
         };
     }
@@ -1620,8 +1693,9 @@ public abstract class Joueur {
      * @return s'il faut annuler les dégas des potions (s'ils ont déjà été appliqués).
      */
     public boolean action_consomme_popo(Action action) {
-        return action == Action.SORT_FEU || action == Action.SORT_VOLCAN || action == Action.SORT_DODO || action == Action.FOUDRE
-                || action == Action.INONDATION;
+        Set<Action> actionsConsommant = EnumSet.of(Action.SORT_FEU, Action.SORT_VOLCAN, Action.SORT_DODO, Action.FOUDRE,
+                Action.INONDATION, Action.ANNIHILATION);
+        return actionsConsommant.contains(action);
     }
     
     /**
@@ -1637,11 +1711,17 @@ public abstract class Joueur {
             }
         }
         //item
-        if(soin || !a_soigne){
+        if(soin && !a_soigne){
             text += "(soi)gner/";
         }
         if(sphinx && !a_renforce){
             text += "(ren)forcer/";
+        }
+        if(fee && !a_soigne_fee){
+            text += "soin (fée)rique/";
+        }
+        if(grenade > 0){
+            text += "lancer une (gre)nade/";
         }
         text += "(c)ustom/(A)ucune";
         return text;
@@ -1653,21 +1733,42 @@ public abstract class Joueur {
      * @return si le tour a été joué
      */
     public Action_extra extra(String choix) {
-        if(choix.equals("soi") && soin && !a_soigne){
-            return Action_extra.SOIGNER;
-        }
-        if(choix.equals("ren") && sphinx && !a_renforce){
-            return Action_extra.RENFORCER;
+        switch (choix) {
+            case "soi" -> {
+                if (soin && !a_soigne) {
+                    return Action_extra.SOIGNER;
+                }
+            }
+            case "ren" -> {
+                if (sphinx && !a_renforce) {
+                    return Action_extra.RENFORCER;
+                }
+            }
+            case "fée", "fee" -> {
+                if(fee && !a_soigne_fee) {
+                    return Action_extra.SOIGNER_FEE;
+                }
+            }
+            case "gre" -> {
+                if(grenade > 0){
+                    return Action_extra.GRENADE;
+                }
+            }
         }
         return Action_extra.AUCUNE;
     }
     
-    public void jouer_extra(Action_extra extra) {
+    public int jouer_extra(Action_extra extra) {
         switch(extra) {
             case RAGE -> rage();
             case SOIGNER -> soigner();
             case RENFORCER -> renforcer();
+            case SOIGNER_FEE -> soigner_fee();
+            case GRENADE -> {
+                return lancer_grenade();
+            }
         }
+        return 0;
     }
     
     /**
@@ -1679,15 +1780,26 @@ public abstract class Joueur {
     }
     
     protected void soigner() {
-        int soin = 6 + rand.nextInt(3);
+        int soin = 6 + rand.nextInt(3); //6~8
         System.out.printf("Vous soignez votre cible de %d.\n", soin);
         a_soigne = true;
     }
     
     protected void renforcer(){
-        int renforcemnt = 5 + rand.nextInt(3);
-        System.out.printf("Votre cible gagne temporairement %d points de résistance.\n", renforcemnt);
+        int renforcement = 6 + rand.nextInt(3); //6~8
+        System.out.printf("Votre cible gagne temporairement %d points de résistance.\n", renforcement);
         a_renforce = true;
+    }
+    
+    protected void soigner_fee() {
+        int soin = 8 + rand.nextInt(5); //8~12
+        System.out.printf("Vous soignez votre cible de %d.\n", soin);
+        a_soigne_fee = true;
+    }
+    
+    protected int lancer_grenade(){
+        grenade -= 1;
+        return 6 + rand.nextInt(11);
     }
     
     /**
@@ -1730,6 +1842,18 @@ public abstract class Joueur {
      */
     private void sort_volcan(Monstre ennemi, int bonus_popo) throws IOException {
         ennemi.dommage_magique(48 + rand.nextInt(17) + bonus_popo);
+    }
+    
+    private void annihilation(Monstre ennemi, int bonus_popo) throws IOException {
+        Texte.annihilation();
+        int atk = Input.atk();
+        int tir = Input.tir();
+        if(tir > atk){
+            atk = tir;
+        }
+        ennemi.dommage_magique(atk);
+        ennemi.dommage(atk + bonus_popo);
+        ennemi.tir(atk);
     }
     
     /**
@@ -2017,6 +2141,13 @@ public abstract class Joueur {
         return 0;
     }
     
+    public int trajet_mer(int jet){
+        if (bateau && jet < 5){
+            jet = 5;
+        }
+        return jet;
+    }
+    
     /**
      * Comptabilise les bonus de dressage
      * @return le bonus
@@ -2035,16 +2166,16 @@ public abstract class Joueur {
         skip = false;
         f_skip = false;
         if (a_poison1()) {
-            System.out.println(nom + " souffre d'empoisonnement et subit " + (rand.nextInt(3) + 1) + " dommage(s).");
+            System.out.println(nom + " souffre d'empoisonnement et subit " + (rand.nextInt(3) + 1) + " dommage(s) directe(s).");
         }
         if (a_poison2()) {
-            System.out.println(nom + " souffre d'empoisonnement et subit " + (rand.nextInt(4) + 2) + " dommages.");
+            System.out.println(nom + " souffre d'empoisonnement et subit " + (rand.nextInt(4) + 3) + " dommages directes.");
         }
         if (f_a_poison1()) {
-            System.out.println("Le familier de " + nom + " souffre d'empoisonnement et subit " + (rand.nextInt(3) + 1) + " dommage(s).");
+            System.out.println("Le familier de " + nom + " souffre d'empoisonnement et subit " + (rand.nextInt(3) + 1) + " dommage(s) directe(s).");
         }
         if (f_a_poison2()) {
-            System.out.println("Le familier de " + nom + " souffre d'empoisonnement et subit " + (rand.nextInt(4) + 2) + " dommages.");
+            System.out.println("Le familier de " + nom + " souffre d'empoisonnement et subit " + (rand.nextInt(4) + 3) + " dommages directes.");
         }
     }
     
@@ -2316,6 +2447,22 @@ public abstract class Joueur {
             }
         } else {
             System.out.println(nom + " n'est pas parvenu à fuir le combat.");
+        }
+    }
+    
+    /**
+     * Fuit le combat grâce à un téléporteur court porté
+     */
+    private void fuite_tp(Monstre ennemi) {
+        if (ennemi.est_pantin()) {
+            System.out.println(nom + " aurait réussit à fuir le combat.");
+            return;
+        }
+        System.out.println(nom + " a fuit le combat.");
+        inactiver();
+        if(rand.nextInt(5) == 0){
+            System.out.println("Le téléporteur s'est détruit.");
+            fuite = false;
         }
     }
     
@@ -2740,6 +2887,9 @@ public abstract class Joueur {
     }
     
     public void add_absorption(){
+        if(this.absorption){
+            Texte.duplicata_impossible();
+        }
         this.absorption = true;
     }
     
@@ -2833,6 +2983,75 @@ public abstract class Joueur {
         this.sphinx = false;
     }
     
+    public void add_fee(){
+        this.fee = true;
+    }
+    
+    public void retire_fee(){
+        this.fee = false;
+    }
+    
+    public void add_rune_arca(){
+        if(getMetier() == Metier.ARCHIMAGE){
+            Texte.reaction_equipement();
+        }
+        this.rune_arca = true;
+    }
+    
+    public void retire_rune_arca(){
+        this.rune_arca = false;
+    }
+    
+    public void add_antidote(){
+        this.antidote = true;
+    }
+    
+    public void retire_antidote(){
+        this.antidote = false;
+    }
+    
+    public void add_rune_annihilation(){
+        this.rune_annihilation = true;
+    }
+    
+    public void retire_rune_annihilation(){
+        this.rune_annihilation = false;
+    }
+    
+    public void add_tatouage_resurection(){
+        this.tatouage_resurection = true;
+    }
+    
+    public void retire_tatouage_resurection(){
+        Texte.warning();
+        this.tatouage_resurection = false;
+    }
+    
+    public void add_fuite(){
+        this.fuite = true;
+    }
+    
+    public void retire_fuite(){
+        this.fuite = false;
+    }
+    
+    public void add_grenade(){
+        this.grenade += 8;
+    }
+    
+    public void retire_grenade(){
+        Texte.jete_grenade(grenade);
+        this.grenade = 0;
+    }
+    
+    public void add_bateau(){
+        this.bateau = true;
+    }
+    
+    public void retire_bateau(){
+        this.bateau = false;
+    }
+    
     public void retirer_tout(){
         Texte.retirer_tout();
         lame_infernale = false;
@@ -2871,5 +3090,13 @@ public abstract class Joueur {
         pegase = false;
         pie = false;
         sphinx = false;
+        fee = false;
+        rune_arca = false;
+        antidote = false;
+        rune_annihilation = false;
+        tatouage_resurection = false;
+        fuite = false;
+        grenade = 0;
+        bateau = false;
     }
 }

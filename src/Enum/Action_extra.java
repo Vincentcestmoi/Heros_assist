@@ -15,4 +15,6 @@ public enum Action_extra {
     //item
     SOIGNER,
     RENFORCER,
+    SOIGNER_FEE,
+    GRENADE,
 }

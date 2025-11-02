@@ -147,6 +147,14 @@ public class Main {
             case "#34" -> joueur.add_cheval();
             case "#35" -> joueur.add_pie();
             case "#36" -> joueur.add_sphinx();
+            case "#37" -> joueur.add_fee();
+            case "#38" -> joueur.add_rune_arca();
+            case "#39" -> joueur.add_antidote();
+            case "#40" -> joueur.add_rune_annihilation();
+            case "#41" -> joueur.add_tatouage_resurection();
+            case "#42" -> joueur.add_fuite();
+            case "#43" -> joueur.add_grenade();
+            case "#44" -> joueur.add_bateau();
             default -> {
                 System.out.println("Input unknown.");
                 ajouter_item(joueur);
@@ -202,6 +210,14 @@ public class Main {
             case "#34" -> joueur.retire_cheval();
             case "#35" -> joueur.retire_pie();
             case "#36" -> joueur.retire_sphinx();
+            case "#37" -> joueur.retire_fee();
+            case "#38" -> joueur.retire_rune_arca();
+            case "#39" -> joueur.retire_antidote();
+            case "#40" -> joueur.retire_rune_annihilation();
+            case "#41" -> joueur.retire_tatouage_resurection();
+            case "#42" -> joueur.retire_fuite();
+            case "#43" -> joueur.retire_grenade();
+            case "#44" -> joueur.retire_bateau();
             case "#99" -> joueur.retirer_tout();
             default -> {
                 System.out.println("Input unknown.");
@@ -411,6 +427,7 @@ public class Main {
     static void expedition_mer(int meneur) throws IOException {
         Monstre monstre = Lieu.mer();
         int jet = Input.D8() + joueurs[meneur].bonus_exploration();
+        jet = joueurs[meneur].trajet_mer(jet);
         if (jet > 9) {
             jet = 9;
         }

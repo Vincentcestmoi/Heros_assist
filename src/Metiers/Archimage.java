@@ -7,6 +7,7 @@ import Enum.Position;
 import Exterieur.Input;
 import Monstre.Monstre;
 import main.Main;
+import Auxiliaire.Texte;
 
 import java.io.IOException;
 
@@ -75,21 +76,22 @@ public class Archimage extends Joueur {
         System.out.println("Sort : Lance un puissant sort. L'intensité des sorts varie selon la quantité de mana " +
                 "utilisée.");
         affiche_sorts();
-        System.out.println("Méditation : Se repose pour récuperer du mana.");
+        System.out.println("Méditation : Se repose pour récupérer du mana.");
         if (this.niveau >= 2) {
-            System.out.println("Purge : sort curatif, pour " + purge_cout + " mana, guérie des alterations d'états.");
+            System.out.printf("Purge : sort curatif, pour %d mana, guérie des alterations d'états.\n", rune_arca ? purge_cout - 1 : purge_cout);
         }
     }
     
     private void affiche_sorts() {
-        System.out.println("\tBoule de feu : sort de feu, pour 2 mana ou plus, lance un sort offensif léger.");
-        System.out.println("\tOnde de choc : sort sonore, pour 3 mana, étourdit tous les participants à l'exception " + "du lanceur.");
+        System.out.printf("\tBoule de feu : sort de feu, pour %d mana ou plus, lance un sort offensif léger.\n", rune_arca ? 1 : 2);
+        System.out.printf("\tOnde de choc : sort sonore, pour %d mana, étourdit tous les participants à l'exception du " +
+                "lanceur.\n", rune_arca ? 2 : 3);
         if (this.niveau >= 1) {
-            System.out.println("\tArmure de glace : sort de glace, pour 3 mana ou plus, augmente la résistance d'une "
-                    + "cible.");
+            System.out.printf("\tArmure de glace : sort de glace, pour %d mana ou plus, augmente la résistance d'une "
+                    + "cible.\n", rune_arca ? 2 : 3);
         }
         if (this.niveau >= 5) {
-            System.out.println("\tFoudre : sort de foudre, pour 7 mana ou plus, lance un puissant sort offensif.");
+            System.out.printf("\tFoudre : sort de foudre, pour %d mana ou plus, lance un puissant sort offensif.\n", rune_arca ? 6 : 7);
         }
     }
     
@@ -111,7 +113,7 @@ public class Archimage extends Joueur {
             temp = 11;
         }
         String text = switch (temp) {
-            case 0 -> "Error : this function is not suposed to be called at level 0.";
+            case 0 -> "Error : this function is not supposed to be called at level 0.";
             case 1 -> "Nouveau sort débloqué !"; //AdG
             case 2 -> {
                 add_competence("Purge");
@@ -269,12 +271,13 @@ public class Archimage extends Joueur {
     public void essaie_reveil() throws IOException {
         // l'archimage peut se réveiller via un sort
         if (est_assomme()) {
-            if (this.niveau >= 2 && Input.yn("Utiliser purge (" + purge_cout + "mana) pour reprendre conscience ?")) {
+            if (this.niveau >= 2 && Input.yn("Utiliser purge (%d mana) pour reprendre conscience ?".formatted(rune_arca ? purge_cout - 1 : purge_cout))) {
                 purge();
             }
         } else {
             super.essaie_reveil();
         }
+        // maître du mana
         if (est_assomme()) {
             if (this.niveau >= 8) {
                 System.out.println(nom + " récupère 2 points de mana.");
@@ -429,8 +432,9 @@ public class Archimage extends Joueur {
      * @throws IOException toujours
      */
     public void boule_de_feu(Monstre ennemi) throws IOException {
+        int mini = rune_arca ? 1 : 2;
         System.out.println("Vous vous préparez à lancer une boule de feu.");
-        System.out.println("Combien de PP mettez vous dans le sort ? (min 2)");
+        Texte.mana_sort(mini);
         int mana = Input.readInt();
         int jet = Input.D4() + mana + rand.nextInt(3) - 1 + bonus_sort();
         int[] paliers = {4, 7, 10};
@@ -440,7 +444,7 @@ public class Archimage extends Joueur {
             }
         }
         int dmg;
-        if (jet <= 2 || mana < 2) {
+        if (jet <= mini || mana < mini) {
             System.out.println("Le sort ne fonctionne pas.");
             return;
         } else if (jet <= 4) {
@@ -486,8 +490,9 @@ public class Archimage extends Joueur {
      * @throws IOException toujours
      */
     public void armure_de_glace() throws IOException {
+        int mini = rune_arca ? 2 : 3;
         System.out.println("Vous vous préparez à créer une armure de glace.");
-        System.out.println("Combien de PP mettez vous dans le sort ? (min 3): ");
+        Texte.mana_sort(mini);
         int mana = Input.readInt();
         int jet = Input.D8() + mana + rand.nextInt(3) - 1 + bonus_sort();
         int[] paliers = {6, 8, 10};
@@ -496,7 +501,7 @@ public class Archimage extends Joueur {
                 jet += 1;
             }
         }
-        if (jet <= 3 || mana < 3) {
+        if (jet <= mini || mana < mini) {
             System.out.println("Le sort ne fonctionne pas.");
         } else if (jet <= 6) {
             System.out.println("La cible gagne 3 points de résistance.");
@@ -525,15 +530,16 @@ public class Archimage extends Joueur {
      * @throws IOException toujours
      */
     public void foudre(Monstre ennemi) throws IOException {
+        int mini = rune_arca ? 6 : 7;
         System.out.println("Vous vous préparez à lancer un puissant éclair.");
-        System.out.println("Combien de PP mettez vous dans le sort ? (min 7) : ");
+        Texte.mana_sort(mini);
         int mana = Input.readInt();
         int jet = Input.D12() + mana + rand.nextInt(3) - 1 + bonus_sort();
         if (this.niveau >= 10) {
             jet += 2;
         }
         int dmg;
-        if (jet <= 7 || mana < 7) {
+        if (jet <= mini || mana < mini) {
             System.out.println("Le sort ne fonctionne pas.");
             return;
         } else if (jet <= 10) {

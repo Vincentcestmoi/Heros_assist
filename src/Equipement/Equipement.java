@@ -485,7 +485,7 @@ public class Equipement {
             case PARCH_VOLCAN ->
                     this.effet = "Permet de lancer le sort Eruption volcanique pour 6 mana (#31).";
             case PARCH_ABSO ->
-                    this.effet = "Vous pouvez absorber la force vitale de vos victimes (#32) (ne se cumule pas).";
+                    this.effet = "Vous pouvez absorber la force vitale de vos victimes (#32).";
             case PEGASE -> {
                 this.resistance += 3;
                 this.effet = "Vous permet de voyager plus efficacement (#33).";
@@ -520,38 +520,31 @@ public class Equipement {
                 this.resistance += 4;
                 this.armure += 1;
             }
-            //TODO
             case FEE -> {
                 this.resistance += 1;
-                this.effet = "Une fois par combat, soigne une cible de 10.";
+                this.effet = "Permet de soigner une cible (#37).";
             }
             case ALTRUISME ->
                     this.effet =
-                            "Au début de chaque combat, répartissez 5 points temporaires de résistance entre " + "vos"
-                                    + " alliés (familiers inclus)." + "Vous ne pouvez les attribuer à vous même.";
-            case RUNE_ARCA -> this.effet = "Diminue de 1 la coût de tout vos sort";
-            case ANTIDOTE -> this.effet = "Le consommer fournit une immunité définitive au poison et à la cécité.";
+                            "Au début de chaque combat, répartissez 8 points temporaires de résistance entre vos"
+                                    + " alliés (familiers inclus). Vous ne pouvez les attribuer à vous même.";
+            case RUNE_ARCA -> this.effet = "Améliore certaines compétences... A condition de les posséder (#38).";
+            case ANTIDOTE -> this.effet = "Le consommer fournit une immunité définitive au poison et à la cécité (#39).";
             case ANNIHILATION ->
-                    this.effet = "En sacrifiant une rune, vous pouvez lancer un attaque magique de puissance le " +
-                            "triple de votre attaque classique.";
+                    this.effet = "Consomme une rune pour lancer une sort puissant (#40).";
             case REZ ->
-                    this.effet = "Si vous êtes mort à la fin d'un combat, vous ramène à la vie. S'efface après " +
-                            "utilisation. Ne peut être échangé.";
+                    this.effet = "Un étrange tatouage qui s'est incrusté dans votre corps. Ne peut être échangé. (#41)";
             case FUITE ->
-                    this.effet = "A tout moment, vous pouvez utiliser cet objet pour fuir un combat. Se détruit " +
-                            "après" + " usage. Ne peut être utilisé si vous êtes mort.";
-            case GRENADE -> this.effet = "Inflige 4 dommages additionnels. Utilisable 3 fois au total.";
-            case MER_EXP ->
-                    this.effet =
-                            "Si vous vous trouvez en mer, vous pouvez choisir n'importe quel résultat entre 1 " + "et"
-                                    + " 7 au lieu de lancer le dé." + "Un résultat choisi ignore le bonus de dé.";
+                    this.effet = "A tout moment, vous pouvez utiliser cet objet pour fuir un combat (#42).";
+            case GRENADE -> this.effet = "Peuvent être lancé pour infliger plus de dommages. Contient 8 grenades (#43).";
+            case MER_EXP -> this.effet = "En pleine mer, vous n'êtes jamais surprit par un monstre (#44).";
             case ITEM_IMMUN ->
-                    this.effet = "Chaque fois que vous perdez un équipement, récupérez le." + " (ne fonctionne pas si" +
+                    this.effet = "Chaque fois que vous devez perdez un équipement, conservez le. (ne fonctionne pas si" +
                             " vous mourrez, vendez, échangez ou dépensez un équipement)";
             case SAC_TEMP ->
-                    this.effet = "Lorsque vous utilisez un objet à usage limité pour la dernière fois," + "vous " +
-                            "pouvez choisir de détruire cette sacoche à la place et récupérez tous les utilisations " + "de votre objet.";
-            //fin TODO
+                    this.effet = "Lorsque vous utilisez un objet à usage limité pour la dernière fois, vous " +
+                            "pouvez choisir de détruire cette sacoche à la place et récupérez tous les utilisations de votre objet." +
+                            "(s'il s'agit d'un objet à effet, vous devez à nouveau entrer son code)";
             case AUCUN -> {
             }
         }

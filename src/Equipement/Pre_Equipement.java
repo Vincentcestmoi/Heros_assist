@@ -509,7 +509,7 @@ public class Pre_Equipement {
     
     static Pre_Equipement rune_anni = new Pre_Equipement("Inverteur de fision", AUTRE, PROMOTION,
             Effet_equip.ANNIHILATION, Promo_Type.ARTEFACT);
-    static Pre_Equipement rez = new Pre_Equipement("Tatouage de Résurection", AUTRE, PROMOTION, Effet_equip.REZ,
+    static Pre_Equipement rez = new Pre_Equipement("Tatouage de Resurrection", AUTRE, PROMOTION, Effet_equip.REZ,
             Promo_Type.ARTEFACT);
     static Pre_Equipement fuite = new Pre_Equipement("Téleporteur courte porté", AUTRE, PROMOTION, Effet_equip.FUITE,
             Promo_Type.ARTEFACT);

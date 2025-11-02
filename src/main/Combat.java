@@ -180,21 +180,22 @@ public class Combat {
                     case AUCUNE, AUTRE -> {
                     }
                     case ANALYSER -> analyser(joueur.est_front(), ennemi);
-                    case POTION -> {
-                        dps_popo = joueur.popo();
-                        if (dps_popo < 0) { //poison sur lame
-                            if (act == Action.ATTAQUER) {
-                                dps_popo = -dps_popo;
-                            } else {
-                                dps_popo = 0;
-                            }
-                        }
-                        if (dps_popo >= 10) { //seule la bombe ou la popo explosive au max peuvent atteindre
-                            ennemi.affecte();
-                        }
-                    }
-                    default -> joueur.jouer_extra(act_ex);
+                    case POTION -> dps_popo = joueur.popo();
+                    default -> dps_popo = joueur.jouer_extra(act_ex);
                 }
+                
+                //effet de bonus des potions
+                if (dps_popo < 0) { //poison sur lame
+                    if (act == Action.ATTAQUER) {
+                        dps_popo = -dps_popo;
+                    } else {
+                        dps_popo = 0;
+                    }
+                }
+                if (dps_popo >= 10) { //seule la bombe ou la popo explosive au max peuvent atteindre
+                    ennemi.affecte();
+                }
+                
                 switch (act) {
                     case END -> stop_run();
                     case OFF -> {
