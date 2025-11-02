@@ -251,11 +251,11 @@ public class Shaman extends Joueur {
         return super.extra(choix);
     }
     
-    public void jouer_extra(Action_extra extra) {
+    public int jouer_extra(Action_extra extra) {
         if (extra == Action_extra.CALME) {
             calme();
         }
-        super.jouer_extra(extra);
+        return super.jouer_extra(extra);
     }
     
     @Override
