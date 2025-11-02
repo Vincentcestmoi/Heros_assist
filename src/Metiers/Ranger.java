@@ -51,6 +51,9 @@ public class Ranger extends Joueur {
             this.vie += 1;
             this.attaque += 1;
         }
+        this.attaque += bonus_sup10(11, 10) + bonus_sup10(14, 10);
+        this.vie += bonus_sup10(13, 10) + bonus_sup10(16, 10);
+        this.PP_max += bonus_sup10(15, 10);
     }
     
     @Override
@@ -162,10 +165,57 @@ public class Ranger extends Joueur {
                         Vos compétences d'éclaireur se sont amélioré
                         """;
             }
-            case 11 -> "Vous avez atteint le niveau max (frappe le dev c'est sa faute).";
+            case 11 -> niveau_sup();
             default -> throw new IllegalStateException("Unexpected value: " + temp);
         };
         System.out.println(text);
+    }
+    
+    /**
+     * Calcule les bonus de niveau supérieurs au niveau 10 (cyclique)
+     * @return L'affichage du texte
+     */
+    private String niveau_sup() {
+        int unit = this.niveau % 10;
+        String text = "";
+        if(unit == 1) { // 11, 21, ...
+            this.attaque += 1;
+            text += "Votre attaque a légèrement augmenté.\n";
+        }
+        if(unit % 2 == 0){ //12, 14, 16, 18, 20, 22, ...
+            text += "Vos compétences de tireur se sont légèrement améliorées.\n";
+        }
+        if(unit == 3){ // 13, 23, 33, ...
+            this.vie += 1;
+            text += "Votre résistance a légèrement augmenté.\n";
+        }
+        if(unit == 4){ //14, 24, 34, ...
+            this.attaque += 1;
+            text += "Votre attaque a légèrement augmenté.\n";
+        }
+        if(unit == 5){ // 15, 25, 35, ...
+            PP_max += 1;
+            text += "Votre réserve de mana s'est légèrement accrue.\n";
+        }
+        if(unit == 6){ //16, 26, 36, ...
+            this.vie += 1;
+            text += "Votre résistance a légèrement augmenté.\n";
+        }
+        if(unit == 7){ //17, 27, 37, ...
+            text += "Votre précision s'est légèrement améliorée.\n";
+        }
+        if(unit == 9){ //19, 29, ...
+            text += "Votre précision a légèrement augmenté.\n";
+        }
+        
+        if(this.niveau % 7 == 0){ //14, 21, 28, ...
+            text += "Vos compétence d'analyse se sont améliorées.\n";
+        }
+        if(this.niveau % 9 == 0){ //18, 27, 36, ...
+            text += "Vos capacité d'exploration se sont légèrement améliorées.\n";
+        }
+        
+        return text;
     }
     
     @Override
@@ -252,6 +302,16 @@ public class Ranger extends Joueur {
                 bonus += rand.nextInt(3); //0~2
             }
         }
+        bonus += rand.nextInt(bonus_sup10(18, 9) + 1);
+        return bonus;
+    }
+    @Override
+    public int bonus_analyse(){
+        int bonus = super.bonus_analyse();
+        if(this.niveau >= 6){
+            bonus += 1;
+        }
+        bonus += bonus_sup10(14, 7);
         return bonus;
     }
     
@@ -275,7 +335,9 @@ public class Ranger extends Joueur {
             // paliers
         }
         if (rand.nextInt(imprecision) == 0) { //2% à 14.25%
-            return base * 0.15f * (rand.nextInt(6) + 1); //15% à 90% de bonus
+            float bonus = base * 0.15f * (rand.nextInt(6) + 1); //15% à 90% de bonus
+            bonus += base * 0.1f * rand.nextInt(bonus_sup10(17, 10) + bonus_sup10(19, 10) + 1);
+            return bonus;
         }
         return 0;
     }
@@ -296,7 +358,9 @@ public class Ranger extends Joueur {
             imprecision -= 1;
         }
         if (rand.nextInt(imprecision) == 0) { //2% à 14.25%
-            return base * 0.1f * (rand.nextInt(5) + 2); //20% à 60% de bonus
+            float bonus = base * 0.1f * (rand.nextInt(5) + 2); //20% à 60% de bonus
+            bonus += base * 0.1f * rand.nextInt(bonus_sup10(17, 10) + bonus_sup10(19, 10) + 1);
+            return bonus;
         }
         return 0;
     }
@@ -310,6 +374,7 @@ public class Ranger extends Joueur {
                 bonus += 1;
             }
         }
+        bonus += bonus_sup10(12, 2);
         return bonus;
     }
     
@@ -349,24 +414,22 @@ public class Ranger extends Joueur {
      */
     public void coup_critique(Monstre ennemi, int bonus_popo) throws IOException {
         int tir = Input.tir() + bonus_popo;
-        int jet = this.niveau >= 5 ? Input.D6() : Input.D4();
+        int jet = 0;
         if (this.niveau >= 3) {
             jet += rand.nextInt(2);
         }
         if (this.niveau >= 9) {
             jet += rand.nextInt(2);
         }
-        if (jet < 1) {
-            jet = 1;
+        jet += bonus_sup10(17, 10);
+        jet += bonus_sup10(19, 10);
+        if(jet <= 8){
+            jet += this.niveau >= 5 ? Input.D6() : Input.D4();
         }
-        if (jet > 8) {
-            jet = 8;
+        if (jet > 9) {
+            jet = 9;
         }
         switch (jet) {
-            case 1 -> {
-                System.out.println("La pointe de votre flèche éclate en plein vol.");
-                ennemi.tir(tir, 0.5F);
-            }
             case 2, 3 -> ennemi.tir(tir, 1.1F);
             case 4, 5 -> {
                 System.out.println("Votre flèche file droit sur " + ennemi.getNom() + " et lui porte un coup " +
@@ -382,9 +445,14 @@ public class Ranger extends Joueur {
                         "vitaux" + ".");
                 ennemi.tir(tir, 2.8F);
             }
+            case 9 -> {
+                System.out.println("Votre flèche transperce " + ennemi.getNom() + ", lui perforant des organes " +
+                        "vitaux" + ".");
+                ennemi.tir(tir, 4.1F);
+            }
             default -> {
-                System.out.println("Entré invalide, tir classique appliqué.");
-                ennemi.tir(tir);
+                System.out.println("La pointe de votre flèche éclate en plein vol.");
+                ennemi.tir(tir, 0.5F);
             }
         }
     }
@@ -405,8 +473,8 @@ public class Ranger extends Joueur {
             System.out.println("Vous vous faufilez derrière " + ennemi.getNom() + " sans qu'il ne vous remarque.");
             ennemi.dommage(Main.corriger(Input.atk() * 1.3f + 6.5f + bonus_popo));
         } else {
-            ennemi.dommage(bonus_popo);
             System.out.println("Vous jugez plus prudent de ne pas engagez pour l'instant...");
+            ennemi.dommage(bonus_popo);
         }
     }
     

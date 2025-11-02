@@ -163,7 +163,6 @@ public class Combat {
                     System.out.println("Le familier de " + joueur.getNom() + " ne peut pas réaliser d'action dans " + "l'immédiat.");
                 }
                 
-                
                 // action
                 do {
                     act = Input.action(joueur, false);
@@ -179,7 +178,7 @@ public class Combat {
                 switch (act_ex) {
                     case AUCUNE, AUTRE -> {
                     }
-                    case ANALYSER -> analyser(joueur.est_front(), ennemi);
+                    case ANALYSER -> analyser(joueur, ennemi);
                     case POTION -> dps_popo = joueur.popo();
                     default -> dps_popo = joueur.jouer_extra(act_ex);
                 }
@@ -697,16 +696,14 @@ public class Combat {
     
     /**
      * Analyse le monstre ennemi et écrit ses stats aux joueurs
-     * @param is_prl booléan indiquant si l'analyste est en première ligne
+     * @param joueur le joueur réalisant l'analyste
      * @param ennemi le monstre analysé
      * @throws IOException ce bon vieux throws
      */
-    static private void analyser(boolean is_prl, Monstre ennemi) throws IOException {
+    static private void analyser(Joueur joueur, Monstre ennemi) throws IOException {
         System.out.println("Vous analysez le monstre en face de vous.");
-        int temp = Input.D8() + rand.nextInt(2);
-        if (!is_prl) {
-            temp -= 2; //malus si en seconde ligne
-        }
+        int jet = Input.D8() + rand.nextInt(2);
+        jet += joueur.bonus_analyse();
         int pv, pvm, arm, atk;
         switch (ennemi.getCompetence()) {
             case ILLU_AURAI -> {
@@ -766,12 +763,12 @@ public class Combat {
         }
         System.out.println(ennemi.getNom() + " :");
         if (ennemi.est_pantin()) {
-            System.out.println("vie : " + (temp >= 5 ? "∞" : "???") + "/" + (temp >= 2 ? "∞" : "???"));
+            System.out.println("vie : " + (jet >= 5 ? "∞" : "???") + "/" + (jet >= 2 ? "∞" : "???"));
         } else {
-            System.out.println("vie : " + (temp >= 5 ? pv : "???") + "/" + (temp >= 2 ? pvm : "???"));
+            System.out.println("vie : " + (jet >= 5 ? pv : "???") + "/" + (jet >= 2 ? pvm : "???"));
         }
-        System.out.println("attaque : " + (temp >= 3 ? atk : "???"));
-        System.out.println("armure : " + (temp >= 7 ? arm : "???"));
+        System.out.println("attaque : " + (jet >= 3 ? atk : "???"));
+        System.out.println("armure : " + (jet >= 7 ? arm : "???"));
         System.out.println();
     }
     

@@ -2178,6 +2178,21 @@ public abstract class Joueur {
         return 0;
     }
     
+    /**
+     * Comptabilise les bonus d'analyse du joueur
+     * @return le bonus
+     */
+    public int bonus_analyse(){
+        int bonus = 0;
+        if(!est_front()){
+            bonus -= 2;
+        }
+        if(a_cecite()){
+            bonus -= 1;
+        }
+        return bonus;
+    }
+    
     public int trajet_mer(int jet){
         if (bateau && jet < 5){
             jet = 5;
