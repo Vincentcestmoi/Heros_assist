@@ -55,6 +55,11 @@ public class Guerriere extends Joueur {
             this.vie += 1;
             this.attaque += 1;
         }
+        this.armure += bonus_sup10(11, 10);
+        this.attaque += bonus_sup10(13, 10) + bonus_sup10(16, 10) +
+                bonus_sup10(19, 10) + bonus_sup10(20, 10) + bonus_sup10(17, 10);
+        this.vie += bonus_sup10(18, 10) + bonus_sup10(14, 10);
+        this.PP_max += bonus_sup10(19, 10);
     }
     
     @Override
@@ -170,10 +175,48 @@ public class Guerriere extends Joueur {
                         Votre précision s'été légèrement améliorée.
                         """;
             }
-            case 11 -> "Vous avez atteint le niveau max (frappe le dev c'est sa faute).";
+            case 11 -> niveau_sup();
             default -> throw new IllegalStateException("Unexpected value: " + temp);
         };
         System.out.println(text);
+    }
+    
+    /**
+     * Calcule les bonus de niveau supérieurs au niveau 10 (cyclique)
+     * @return L'affichage du texte
+     */
+    private String niveau_sup() {
+        int unit = this.niveau % 10;
+        String text = "";
+        if(unit == 1){ //11, 21, 31, ...
+            this.armure += 1;
+            text += "Votre armure a légèrement augmenté.\n";
+        }
+        if(unit % 2 == 0){ //12, 14, 16, 18, 20, 22, ...
+            text += "Votre force d'attaque a légèrement augmenté.\n";
+        }
+        if(unit % 3 == 0) { // 13, 16, 19, 20, ...
+            this.attaque += 1;
+            text += "Votre attaque a légèrement augmenté.\n";
+        }
+        if(unit % 4 == 0){ //14, 18, 24, 28, ...
+            this.vie += 1;
+            text += "Votre résistance a légèrement augmenté.\n";
+        }
+        if(unit % 5 == 0){ // 15, 20, 25, ...
+            text += "Votre précision s'est légèrement améliorée.\n";
+        }
+        if(unit == 7){ //17, 27, 37, ...
+            this.attaque += 1;
+            text += "Votre attaque a légèrement augmenté.\n";
+        }
+        if(unit == 9 ){ // 19, 29, 39, ...
+            this.PP_max += 1;
+            text += "Votre aura s'est renforcée.\n";
+        }
+        
+        
+        return text;
     }
     
     @Override
@@ -315,14 +358,15 @@ public class Guerriere extends Joueur {
     
     @Override
     protected int bonus_atk() {
-        int base = super.bonus_atk();
+        int bonus = super.bonus_atk();
         int[] paliers = {4, 7, 10};
         for (int palier : paliers) {
             if (this.niveau >= palier) {
-                base += 1;
+                bonus += 1;
             }
         }
-        return base;
+        bonus += bonus_sup10(12, 2);
+        return bonus;
     }
     
     @Override
@@ -383,7 +427,9 @@ public class Guerriere extends Joueur {
             imprecision -= 1;
         }
         if (rand.nextInt(imprecision) == 0) { //2% à 11.1%
-            return base * 0.15f * (rand.nextInt(5) + 1); //15% à 75% de bonus
+            float bonus = base * 0.15f * (rand.nextInt(5) + 1); //15% à 75% de bonus
+            bonus += base * 0.1f * rand.nextInt(bonus_sup10(15, 5));
+            return bonus;
         }
         return 0;
     }
