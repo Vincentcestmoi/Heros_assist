@@ -33,6 +33,8 @@ public class Alchimiste extends Joueur {
         if (this.niveau >= 7) {
             this.attaque += 1;
         }
+        this.vie += bonus_sup10(12, 4) + bonus_sup10(19, 10);
+        this.armure += bonus_sup10(12, 9);
     }
     
     @Override
@@ -74,10 +76,45 @@ public class Alchimiste extends Joueur {
                     Vos compétence de dissection ont été légèrement renforcées.
                     Vos compétence de fouille ont été renforcées.
                     Vos compétence de concoctions ont été légèrement améliorées.""";
-            case 11 -> "Vous avez atteint le niveau max (frappe le dev c'est sa faute).";
+            case 11 -> niveau_sup();
             default -> throw new IllegalStateException("Unexpected value: " + temp);
         };
         System.out.println(text);
+    }
+    
+    /**
+     * Calcule les bonus de niveau supérieurs au niveau 10 (cyclique)
+     * @return L'affichage du texte
+     */
+    private String niveau_sup() {
+        int unit = this.niveau % 10;
+        String text = "";
+        if(unit <= 2){ //11, 12, 20, 21, 22, 30, ...
+            text += "Vos compétences de fouilles ont légèrement augmenté.\n";
+        }
+        if(unit % 3 == 0) { // 13, 16, 19, 20, ...
+            text += "Vos compétence de dissection ont été légèrement renforcé.\n";
+        }
+        if(unit % 4 == 0){ //14, 18, 24, 28, ...
+            text += "Vos compétences de fouilles ont légèrement augmenté.\n";
+        }
+        if(unit % 5 == 0){ // 15, 20, 25, ...
+            text += "Vos compétence de concoctions ont été légèrement améliorées..\n";
+        }
+        if(unit == 7){ //17, 27, 37, ...
+            text += "Vos compétence de concoctions ont été légèrement améliorées..\n";
+        }
+        if(unit == 9 || this.niveau % 4 == 0){ // 12, 16, 19, 20, 24, 28, 29, ...
+            this.vie += 1;
+            text += "Votre résistance a légèrement augmentée.\n";
+        }
+        
+        if(this.niveau % 9 == 3){ //12, 21, 30, 39, ...
+            this.armure += 1;
+            text += "Votre armure a légèrement augmentée.\n";
+        }
+        
+        return text;
     }
     
     @Override
@@ -517,22 +554,32 @@ public class Alchimiste extends Joueur {
      */
     public void fouille() throws IOException {
         System.out.println("Vous chercher autour de vous tout ce qui pourrait être utile pour vos potions.");
-        int temp = Input.D20();
+        int jet = 0;
         int[] paliers = {3, 6, 8, 10, 10};
         for (int palier : paliers) {
             if (this.niveau >= palier) {
-                temp += 1;
+                jet += 1;
             }
         }
         if(dissec){
-            temp += 2;
+            jet += 2;
         }
-        if (temp <= 10 + rand.nextInt(10)) {
+        jet += bonus_sup10(11, 10);
+        jet += bonus_sup10(12, 10);
+        jet += bonus_sup10(20, 10);
+        jet += bonus_sup10(14, 10);
+        jet += bonus_sup10(18, 10);
+        if(jet <= 30){
+            jet += Input.D20();
+        }
+        if (jet <= 10 + rand.nextInt(10)) {
             System.out.println("Vous ne trouvez rien.");
-        } else if (temp <= 18 + rand.nextInt(4)) {
+        } else if (jet <= 18 + rand.nextInt(4)) {
             System.out.println("Vous trouvez 1 ingrédient.");
-        } else {
+        } else if(jet <= 30){
             System.out.println("Vous récoltez 2 ingrédients.");
+        } else {
+            System.out.println("Vous récoltez 3 ingrédients.");
         }
     }
     
@@ -543,40 +590,65 @@ public class Alchimiste extends Joueur {
      * @throws IOException toujours
      */
     public int dissection(int etat) throws IOException {
-        int temp = Input.D6();
+        int base = 0;
+        //niveau
         int[] paliers = {4, 4, 6, 10, 10};
         for (int palier : paliers) {
             if (this.niveau >= palier) {
-                temp += 1;
+                base += 1;
             }
         }
+        //item
         if(dissec){
-            temp += 1;
+            base += 1;
         }
+        
+        //compétence
         if (this.niveau >= 6 && etat >= 25) {
-            temp += 2;
+            base += 2;
         } else if (this.niveau >= 4 && etat >= 15) {
-            temp += 1;
+            base += 1;
         } else if (etat <= 0) {
-            temp -= 3;
+            base -= 3;
         } else if (etat < 5) {
-            temp -= 2;
+            base -= 2;
         } else if (etat < 10) {
-            temp -= 1;
+            base -= 1;
         }
-        if (temp <= 2 + rand.nextInt(2) - 1) {
+        
+        //niveau
+        base += bonus_sup10(13, 10);
+        base += bonus_sup10(16, 10);
+        base += bonus_sup10(19, 10);
+        base += bonus_sup10(20, 10);
+        
+        int jet = base, deterioration = base;
+        
+        if(jet <= 25){
+            jet += Input.D6();
+        }
+        
+        if (jet <= 2 + rand.nextInt(2) - 1) {
             System.out.println("Vous n'extrayez rien d'utile.");
-            return -1;
-        } else if (temp <= 6 + rand.nextInt(2) - 1) {
+            deterioration -= 1;
+        } else if (jet <= 6 + rand.nextInt(2) - 1) {
             System.out.println("Vous trouvez 1 ingrédient.");
-            return -8 - rand.nextInt(4);
-        } else if (temp <= 10) {
+            deterioration -= 8 + rand.nextInt(4);
+        } else if (jet <= 10) {
             System.out.println("Vous récoltez 2 ingrédients.");
-            return -13 - rand.nextInt(11);
-        } else {
+            deterioration -= 13 + rand.nextInt(11);
+        } else if(jet <= 16){
             System.out.println("Vous récoltez 3 ingrédients.");
-            return -20 - rand.nextInt(25);
+            deterioration -= 20 + rand.nextInt(25);
+        } else if(jet <= 25){
+            System.out.println("Vous extrayez 4 ingrédients.");
+            deterioration -= 45 + rand.nextInt(37);
+        } else {
+            System.out.println("Vous extrayez 4 ingrédients.");
+            deterioration -= 100 + rand.nextInt(101);
         }
+        deterioration = Math.min(-1, deterioration);
+        return deterioration;
     }
     
     /**
@@ -968,6 +1040,8 @@ public class Alchimiste extends Joueur {
         if(concoct){
             bonus += 2;
         }
+        bonus += bonus_sup10(15, 5);
+        bonus += bonus_sup10(17, 10);
         return bonus;
     }
     
