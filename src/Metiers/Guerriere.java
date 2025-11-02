@@ -428,7 +428,7 @@ public class Guerriere extends Joueur {
         }
         if (rand.nextInt(imprecision) == 0) { //2% à 11.1%
             float bonus = base * 0.15f * (rand.nextInt(5) + 1); //15% à 75% de bonus
-            bonus += base * 0.1f * rand.nextInt(bonus_sup10(15, 5));
+            bonus += base * 0.1f * rand.nextInt(bonus_sup10(15, 5) + 1);
             return bonus;
         }
         return 0;
