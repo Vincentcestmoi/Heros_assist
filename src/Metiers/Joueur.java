@@ -1072,6 +1072,7 @@ public abstract class Joueur {
      */
     public void tirer(Monstre ennemi, int bonus_popo) throws IOException {
         int base = Input.tir();
+        base += bonus_tir();
         float bonus = 0;
         if (est_berserk()) {
             bonus = berserk_atk(base);
@@ -1080,7 +1081,6 @@ public abstract class Joueur {
             }
         }
         bonus += critique_tir(base);
-        bonus += bonus_tir();
         bonus += tir_bonus;
         bonus += bonus_infection;
         bonus += bonus_popo;
@@ -1094,6 +1094,7 @@ public abstract class Joueur {
      */
     public void attaquer(Monstre ennemi, int bonus_popo) throws IOException {
         int base = Input.atk();
+        base += bonus_atk();
         float bonus = calcule_bonus_atk(base, bonus_popo);
         if (bonus != berserk_atk_alliee) {
             ennemi.dommage(base + Main.corriger(bonus, 0));
@@ -1116,7 +1117,6 @@ public abstract class Joueur {
             }
         }
         bonus += critique_atk(base);
-        bonus += bonus_atk();
         bonus += attaque_bonus;
         bonus += bonus_popo;
         return bonus;
@@ -2347,7 +2347,11 @@ public abstract class Joueur {
      * @return la quantité de dommages additionnelle
      */
     protected int bonus_tir() {
-        return 0;
+        int bonus = 0;
+        if(a_cecite()){
+            bonus -= 10;
+        }
+        return bonus;
     }
     
     /**
@@ -2454,7 +2458,7 @@ public abstract class Joueur {
     }
     
     /**
-     * Indique les bonus d'attaque à l'arc
+     * Indique les bonus d'attaque classique
      * @return la quantité de dommages additionnels
      */
     protected int bonus_atk() {
