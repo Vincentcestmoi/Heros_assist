@@ -149,7 +149,6 @@ public class Combat {
         if (!est_attaquant) {
             ennemi.attaque(grimpeur);
         }
-        System.out.println("Fin du ascension\n");
         
         combat(ennemi, index, grimpeur.getPosition());
         
