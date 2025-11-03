@@ -18,6 +18,11 @@ Il automatise la plupart des interactions non-inter-joueurs et se suffit presque
 3. Quitter le jeu :  
    Lors du choix d’action du tour, entrez `q` deux fois pour quitter proprement.
 
+4. Vérifier la version :
+    ```bash
+   ./lancer.sh -v
+   ```
+
 ⚠️ Quand vous chargez une save existante sans la poursuivre, elle sera écrasée.
 
 ---
@@ -73,14 +78,15 @@ Le dossier `Table/` contient un des tableurs de gestion des statistiques.
 
 ### 🔍 Commandes spéciales disponibles lors du choix d’action de tour :
 
-| Commande | Effet                                    |
-|----------|------------------------------------------|
-| `del`    | Supprime le familier d’un joueur         |
-| `add`    | Ajoute un familier (obéissance minimale) |
-| `re`     | Revient au joueur précédent              |
-| `sui`    | Tue le joueur actif                      |
-| `addit`  | Ajout un objet particulier               |
-| `delit`  | Retire un objet particulier              |
+| Commande | Effet                                                   |
+|----------|---------------------------------------------------------|
+| `del`    | Supprime le familier d’un joueur                        |
+| `q`      | Quitte proprement la partie en sauvegardant les données |
+| `add`    | Ajoute un familier (obéissance minimale)                |
+| `re`     | Revient au joueur précédent                             |
+| `sui`    | Tue le joueur actif                                     |
+| `addit`  | Ajout un objet particulier                              |
+| `delit`  | Retire un objet particulier                             |
 
 ⚠️ Chaque commande doit être confirmée en la réécrivant une seconde fois.
 
