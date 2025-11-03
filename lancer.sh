@@ -39,7 +39,7 @@ elif [ "$1" == "--test2" ]; then
     cd ..
     printf "0\ntest\nO\n3\nJ1\nO\nno\nJ2\nO\nau\nJ3\nO\ngu\nq\nq\n" | java -cp "bin${SEP}lib/*" main.Main
 elif [ "$1" == "--test3" ]; then
-    printf "0\nO\ns\nc\nre\nre\nm\n4\nq\nq\n" | java -cp "bin${SEP}lib/*" main.Main
+    printf "0\nO\ns\nc\nre\nre\nm\n6\nn\nq\nq\n" | java -cp "bin${SEP}lib/*" main.Main
 elif [ "$1" == "--test4" ]; then
     printf "0\nn\nO\ntest n2\nO\n1\nMoi\nO\nra\nc\nE\n2\nN\nq\nq\n" | java -cp "bin${SEP}lib/*" main.Main
 else
