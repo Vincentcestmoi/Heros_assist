@@ -28,7 +28,7 @@ public class Main {
     static public Joueur[] joueurs;
     
     public static class Version {
-        public static final String CURRENT = "0.1-beta";
+        public static final String CURRENT = "0.2-beta";
     }
     
     public static void main(String[] args) throws IOException {
