@@ -115,6 +115,15 @@ public class Monstre {
      * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
      */
     public void boostAtk(int value, boolean fondamental) {
+        if(est_pantin()){
+            System.out.printf("Attaque diminuée de %d", value);
+            if(fondamental){
+                System.out.print(" de manière définitive");
+            }
+            System.out.println(".");
+            return;
+        }
+        
         this.attaque += value;
         if (this.attaque < 0) {
             this.attaque = 0;
@@ -133,6 +142,15 @@ public class Monstre {
      * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
      */
     public void boostArmure(int value, boolean fondamental) {
+        if(est_pantin()){
+            System.out.printf("Armure diminuée de %d", value);
+            if(fondamental){
+                System.out.print(" de manière définitive");
+            }
+            System.out.println(".");
+            return;
+        }
+        
         this.armure += value;
         if (this.armure < 0) {
             this.armure = 0;
@@ -151,6 +169,15 @@ public class Monstre {
      * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
      */
     public void boostVie(int value, boolean fondamental) {
+        if(est_pantin()){
+            System.out.printf("Résistance diminuée de %d", value);
+            if(fondamental){
+                System.out.print(" de manière définitive");
+            }
+            System.out.println(".");
+            return;
+        }
+        
         this.vie_max += value;
         if (this.vie_max <= 0) {
             this.vie_max = 1;
@@ -940,17 +967,19 @@ public class Monstre {
     }
     
     /**
-     * Renvoie si le monstre est mort
+     * Vérifie si le monstre est mort et gère les potentiels effets
      * @return si le monstre est mort
      */
     public boolean est_mort() {
+        if(est_pantin()){
+            return false;
+        }
         if (competence == Competence.REVENANT) {
             System.out.println("Une sombre brûme s'abat sur vous, vous perdez (tous) 1 point d'attaque pour la durée "
                     + "du combat.");
             System.out.println(this.nom + " se relève !");
             this.vie = rand.nextInt(this.vie_max - 5) + 5;
             this.competence = Competence.AUCUNE;
-            return false;
         }
         return vie <= 0;
     }
