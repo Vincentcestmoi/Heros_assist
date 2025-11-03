@@ -18,7 +18,7 @@ public class Main {
     static public int nbj = 0;
     
     public static class Version {
-        public static final String CURRENT = "0.1-alpha";
+        public static final String CURRENT = "0.2-alpha";
     }
 
     public static void main(String[] args) throws IOException {
