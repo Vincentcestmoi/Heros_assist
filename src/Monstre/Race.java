@@ -139,8 +139,8 @@ public class Race {
             Competence.HATE_DEMETER};
     static Race karpoi = new Race("karpoi", 3, 9, 0, 0, 1, 1, karp_comp, 10);
     static Competence[] basi_comp = {Competence.REGARD_APPEURANT, Competence.REGARD_MORTEL,
-            Competence.REGARD_PETRIFIANT, Competence.REGARD_TERRIFIANT};
-    static Race basilic = new Race("basilic", 4, 10, 0, 1, 1, 2, basi_comp, 3);
+            Competence.REGARD_PETRIFIANT, Competence.REGARD_TERRIFIANT, Competence.POISON2};
+    static Race basilic = new Race("basilic", 4, 10, 0, 1, 1, 3, basi_comp, 3);
     static Competence[] serp_comp = {Competence.RAPIDE, Competence.AUCUNE, Competence.POISON};
     static Race serpent = new Race("serpent", 2, 6, 0, 0, 1, 1, serp_comp, 10);
     static Competence[] serpg_comp = {Competence.RAPIDE, Competence.POISON, Competence.ARMURE_NATURELLE,
@@ -154,7 +154,7 @@ public class Race {
     static Competence[] corn_comp = {Competence.VOL, Competence.VOL_OFF, Competence.VOLAGE, Competence.RAPIDE};
     static Race corneille = new Race("corneille", 2, 8, 0, 0, 1, 1, corn_comp, 10);
     static Competence[] oursa_comp = {Competence.FRAGILE, Competence.BLESSE, Competence.FAIBLE};
-    static Race ours_agonisant = new Race("ours agonisant", 5, 13, 1, 1, 1, 2, oursa_comp, 3);
+    static Race ours_agonisant = new Race("ours agonisant", 5, 15, 1, 1, 1, 2, oursa_comp, 3);
     static Race lycaon = new Race("Lycaon", 5, 17, 1, 5, 5, 1, nomme_comp, 3);
     static Race mormo = new Race("Mormo", 7, 14, 0, 5, 5, 1, nomme_comp, 3);
     
@@ -203,7 +203,7 @@ public class Race {
     static Competence[] pega_comp = {Competence.VOL, Competence.VOL_OFF, Competence.VOLAGE, Competence.RAPIDE,
             Competence.VITALITE_NATURELLE, Competence.ARMURE_NATURELLE};
     static Race pegase = new Race("pégase", 6, 26, 1, 1, 2, 2, pega_comp, 10);
-    static Competence[] gorg_comp = {Competence.POISON2, Competence.REGARD_PETRIFIANT, Competence.REGARD_MORTEL,
+    static Competence[] gorg_comp = {Competence.POISON2, Competence.REGARD_MORTEL, Competence.REGARD_TERRIFIANT,
             Competence.POISON_CECITE};
     static Race gorgone = new Race("gorgone", 6, 21, 1, 1, 2, 1, gorg_comp, 5);
     static Competence[] fana_comp = {Competence.FOLIE_MEURTRIERE, Competence.VIOLENT, Competence.EXPLOSION,

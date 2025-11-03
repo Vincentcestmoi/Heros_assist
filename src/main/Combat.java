@@ -622,14 +622,14 @@ public class Combat {
             }
             case REGARD_APPEURANT -> {
                 System.out.println(nom + " croise le regard de " + ennemi.getNom());
-                if (Input.D4() < 4) {
-                    System.out.println(nom + " est appeuré(e) et perd 1 points d'attaque pour la durée du combat");
+                if (Input.D6() + Main.joueurs[pr_l].bonus_analyse() < 5) {
+                    System.out.println(nom + " est instinctivement apeuré(e), marqué(e) à vie par cette peur, iel perd définitivement 2 points d'attaque.");
                 }
             }
             case REGARD_TERRIFIANT -> {
                 System.out.println(nom + " croise le regard de " + ennemi.getNom());
-                if (Input.D6() <= 5) {
-                    System.out.println(nom + " est terrifié(e) et perd 3 points d'attaque pour la durée du combat");
+                if (Input.D4() + Main.joueurs[pr_l].bonus_analyse() < 4) {
+                    System.out.println(nom + " est terrifié(e) et perd 5 points d'attaque pour la durée du combat");
                 }
             }
             case FAIBLE -> ennemi.boostAtk(-3, true);

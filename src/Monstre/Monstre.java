@@ -335,8 +335,8 @@ public class Monstre {
             }
             case REGARD_MORTEL -> {
                 System.out.println(this.nom + " regarde " + joueur.getFrontNom() + " droit dans les yeux.");
-                if (Input.D6() <= 4) {
-                    System.out.println(joueur.getFrontNom() + " sent son âme se faire assaillir et perd " + (this.attaque + 2) + " points de vie.");
+                if (Input.D6() + joueur.bonus_analyse() <= 4) {
+                    System.out.printf("%s sent son âme se faire assaillir et perd définitivement %d points de résistance.\n", joueur.getFrontNom(), this.attaque);
                     competence = Competence.AUCUNE;
                     encaissement = 0F;
                     part_soin = 0F;
@@ -346,9 +346,9 @@ public class Monstre {
             }
             case REGARD_PETRIFIANT -> {
                 System.out.println(this.nom + " regarde " + joueur.getFrontNom() + " droit dans les yeux.");
-                if (Input.D6() <= 4) {
-                    System.out.println(joueur.getFrontNom() + "se change partiellement en pierre.");
-                    System.out.println(joueur.getFrontNom() + " perd définitivement 4 points de résistance et gagne " + "définitivement 1 point de défense.");
+                if (Input.D6() + joueur.bonus_analyse() <= 4) {
+                    System.out.println(joueur.getFrontNom() + "se change partiellement en pierre !");
+                    System.out.printf("%s perd définitivement %d points de résistance et gagne définitivement %d points de défense.\n", joueur.getFrontNom(), this.attaque + 2, 1 +rand.nextInt(2));
                     competence = Competence.AUCUNE;
                     encaissement = 0F;
                     part_soin = 0F;
