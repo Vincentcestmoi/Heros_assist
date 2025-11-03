@@ -24,11 +24,6 @@ replay_pid*
 
 # Local choice
 Save*/*
-/table/*
-
+/table/*.ods
 .idea
-.ods
-*/ods
-*/.ods
-*.ods*
 /auxiliaire/informations_alchimiste_complète
