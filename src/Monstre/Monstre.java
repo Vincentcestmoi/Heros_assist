@@ -345,9 +345,9 @@ public class Monstre {
                 competence = Competence.AUCUNE;
             }
             case REGARD_PETRIFIANT -> {
-                System.out.println(this.nom + " regarde " + joueur.getFrontNom() + " droit dans les yeux.");
+                System.out.printf("%s regarde %s droit dans les yeux.\n", this.nom, joueur.getFrontNom());
                 if (Input.D6() + joueur.bonus_analyse() <= 4) {
-                    System.out.println(joueur.getFrontNom() + "se change partiellement en pierre !");
+                    System.out.printf("%s se change partiellement en pierre !\n", joueur.getFrontNom());
                     System.out.printf("%s perd définitivement %d points de résistance et gagne définitivement %d points de défense.\n", joueur.getFrontNom(), this.attaque + 2, 1 +rand.nextInt(2));
                     competence = Competence.AUCUNE;
                     encaissement = 0F;
