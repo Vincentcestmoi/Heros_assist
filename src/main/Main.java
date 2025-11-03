@@ -47,6 +47,18 @@ public class Main {
             init_game();
         }
         
+        // s'active automatiquement en cas d'arrêt
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            
+            System.out.println("\nSauvegarde des données joueurs.");
+            try {
+                SaveManager.sauvegarder(false);
+            } catch (Exception e) {
+                System.err.println("⚠️ Erreur lors de la sauvegarde : " + e.getMessage());
+            }
+            System.out.println("Fin du programme");
+        }));
+        
         boolean run = true;
         int i = nbj;
         while (run) {
@@ -102,11 +114,6 @@ public class Main {
             System.out.println();
             i++;
         }
-        
-        //arrêt
-        System.out.println("Sauvegarde des données joueurs.");
-        SaveManager.sauvegarder(false);
-        System.out.println("Fin du programme");
     }
     
     private static void ajouter_item(Joueur joueur) throws IOException {
