@@ -114,6 +114,9 @@ public class Combat {
      * @throws IOException toujours
      */
     public static boolean ascension(Monstre ennemi, Joueur grimpeur, boolean est_attaquant) throws IOException {
+        Position temp = grimpeur.getPosition();
+        grimpeur.set_grimpeur();
+        
         if (!est_attaquant) {
             Output.jouerSonAttaque();
             grimpeur.init_affrontement(true, grimpeur.getPosition());
@@ -151,6 +154,10 @@ public class Combat {
         }
         
         combat(ennemi, index, grimpeur.getPosition());
+        
+        if(grimpeur.getPosition().equals(Position.ASCENDANT)) {
+            grimpeur.setPosition(temp);
+        }
         
         System.out.println("Fin du combat\n");
         gestion_fin_combat(ennemi.est_nomme());

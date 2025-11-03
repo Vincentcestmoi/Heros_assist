@@ -933,10 +933,10 @@ public abstract class Joueur {
         for (Joueur j : Main.joueurs) {
             if (j.peut_joindre) {
                 j.init_affrontement(false, pos);
-            }
-            if (j.est_actif()) {
-                j.skip_joindre = true;
-                j.f_skip_joindre = true;
+                if (j.est_actif()) {
+                    j.skip_joindre = true;
+                    j.f_skip_joindre = true;
+                }
             }
         }
     }
@@ -1295,7 +1295,7 @@ public abstract class Joueur {
     }
     
     public void ascend() throws IOException {
-        Position pos = position;
+        Position pos = getPosition();
         String text;
         Monstre m;
         boolean attaquant;
@@ -1322,7 +1322,6 @@ public abstract class Joueur {
                 attaquant = false;
             }
             case 6 -> {
-                position = pos;
                 monter();
                 System.out.println(nom + " parvient sans encombre " + Main.texte_pos(position) + ".");
                 check_bonus_lieux();
@@ -1336,6 +1335,14 @@ public abstract class Joueur {
             System.out.printf("%s arrive %s.\n", this.nom, Main.texte_pos(position));
             check_bonus_lieux();
         }
+    }
+    
+    public void set_grimpeur(){
+        this.position = Position.ASCENDANT;
+    }
+    
+    public void setPosition(Position pos) {
+        this.position = pos;
     }
     
     /**
