@@ -16,9 +16,18 @@ public class Main {
     static public Metier[] metier;
     public static int[] f;
     static public int nbj = 0;
+    
+    public static class Version {
+        public static final String CURRENT = "0.1-alpha";
+    }
 
     public static void main(String[] args) throws IOException {
-
+        
+        if(args.length == 1 && (args[0].equals("--version") || args[0].equals("-v"))) {
+            System.out.println("=== Heros_assist v" + Version.CURRENT + " ===");
+            return;
+        }
+        
         input.load();
         if (nbj == 0) {
             init_game();

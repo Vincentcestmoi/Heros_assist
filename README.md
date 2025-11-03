@@ -17,6 +17,11 @@
 3. Quitter le jeu :  
 Lors du choix d’action du tour, entrez `q` deux fois pour quitter proprement.
 
+4. Pour vérifier votre version :
+```bash
+./lancer.sh --version
+```
+
 ⚠️ Une seule sauvegarde est disponible, si vous ne la chargez pas, elle sera écrasée.
 
 ---
@@ -53,12 +58,13 @@ Le dossier `Table/` contient un des tableurs de gestion des statistiques.
 
 ### 🔍 Commandes spéciales disponibles lors du choix d’action de tour :
 
-| Commande | Effet                                    |
-|----------|------------------------------------------|
-| `del`    | Supprime le familier d’un joueur         |
-| `add`    | Ajoute un familier (obéissance minimale) |
-| `re`     | Revient au joueur précédent              |
-| `sui`    | Tue le joueur actif                      |
+| Commande | Effet                                              |
+|----------|----------------------------------------------------|
+| `q`      | Ferme proprement le jeu (en créant une sauvegarde) |
+| `del`    | Supprime le familier d’un joueur                   |
+| `add`    | Ajoute un familier (obéissance minimale)           |
+| `re`     | Revient au joueur précédent                        |
+| `sui`    | Tue le joueur actif                                |
 
 ⚠️ Chaque commande doit être confirmée en la réécrivant une seconde fois.
 
@@ -67,7 +73,7 @@ Le dossier `Table/` contient un des tableurs de gestion des statistiques.
 
 | Commande | Effet                                                                                                                  |
 |----------|------------------------------------------------------------------------------------------------------------------------|
-| `q`      | Met fin abbruptement au combat                                                                                         |
+| `q`      | Met fin abruptement au combat                                                                                          |
 | `r`      | Reviens au joueur précédent, peut causer une <br/>double attaque de la part du monstre adversaire par erreur           |
 | `o`      | Signal un état particulier du joueur actif ou du joueur <br/>en première ligne (mort, assomé, berserk, ou hors combat) |
 

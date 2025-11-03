@@ -17,4 +17,4 @@ if [ ! -d "Save" ]; then
 fi
 
 # Lancement
-java -cp bin Main
+java -cp bin Main "$@"
