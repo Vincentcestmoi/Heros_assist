@@ -1285,7 +1285,7 @@ public abstract class Joueur {
             case MONTS -> Position.MER;
             case ASCENDANT -> {
                 System.out.println("ERROR : DONOT");
-                yield Position.PRAIRIE;
+                yield Position.DEFAULT;
             }
             default -> { //ENFERS, PRAIRIES, OLYMPE
                 System.out.println("Erreur : position " + position + " ne peut être descendue !");
@@ -1368,7 +1368,7 @@ public abstract class Joueur {
             }
             case ASCENDANT -> {
                 System.out.println("ERROR : DONOT");
-                yield Position.ENFERS;
+                yield Position.DEFAULT;
             }
         };
     }
