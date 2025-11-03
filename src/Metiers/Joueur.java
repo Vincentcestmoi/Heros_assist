@@ -1295,58 +1295,46 @@ public abstract class Joueur {
         };
     }
     
-    public void ascendre(int index) throws IOException {
+    public void ascend() throws IOException {
         Position pos = position;
-        position = Position.ASCENDANT;  //on isole le joueur
-        String text = nom;
-        int lead = -1;
+        String text;
         Monstre m;
-        int bonus = bonus_exploration();
-        int jet = Input.D4() + bonus;
-        if (jet > 4) {
-            jet = 4;
+        boolean attaquant;
+        int jet = Input.D6() + bonus_exploration();
+        if (jet >= 6) {
+            if(rand.nextBoolean()){
+                jet = 6;
+            } else {
+                jet = 3;
+            }
         } else if (jet < 1) {
             jet = 1;
         }
         switch (jet) {
-            case 1 -> {
-                text += " rencontre un monstre vers la fin de son voyage.";
-                m = Lieu.true_monstre(pos, true);
+            case 1, 3, 5 -> {
+                text = "Un monstre se trouve sur le chemin de %s, il ne semble pas encore l'avoir aperçu...".formatted(this.nom);
+                m = Lieu.true_monstre(pos, rand.nextBoolean());
+                attaquant = true;
             }
-            case 2 -> {
-                text += " est attaqué par un monstre à peine parti(e).";
-                lead = index;
-                m = Lieu.true_monstre(pos);
+            case 2, 4 -> {
+                m = Lieu.true_monstre(pos, rand.nextBoolean());
+                text = "%s est attaqué par un %s !".formatted(this.nom, m.getNom());
+                attaquant = false;
             }
-            case 3 -> {
-                text += " rencontre un monstre à peine après le début de son voyage.";
-                m = Lieu.true_monstre(pos);
-            }
-            case 4 -> {
+            case 6 -> {
                 position = pos;
                 monter();
-                System.out.println(text + " parvient sans encombre " + Main.texte_pos(position) + ".");
+                System.out.println(nom + " parvient sans encombre " + Main.texte_pos(position) + ".");
                 check_bonus_lieux();
                 return;
             }
-            default -> {
-                System.out.println("Erreur : résultat inattendu. Action annulée.");
-                position = pos;
-                return;
-            }
+            default -> throw new IllegalArgumentException("Argument inconnu.");
         }
         System.out.println(text);
-        Combat.affrontement(Position.ASCENDANT, lead, m);
-        if (position == Position.ENFERS) { //le joueur est mort.
-            return;
-        }
-        position = pos;
-        if (Input.yn(nom + " a-t-il vaincu le monstre ?")) {
+        if(Combat.ascension(m, this, attaquant)){
             monter();
-            System.out.println(nom + " arrive " + Main.texte_pos(position) + ".");
+            System.out.printf("%s arrive %s.\n", this.nom, Main.texte_pos(position));
             check_bonus_lieux();
-        } else {
-            System.out.println(nom + " est resté " + Main.texte_pos(position));
         }
     }
     

@@ -106,6 +106,59 @@ public class Combat {
     }
     
     /**
+     * Gère le combat d'ascension d'un joueur
+     * @param ennemi le monstre a affronter
+     * @param grimpeur le joueur qui tente de monter
+     * @param est_attaquant si le joueur a l'initiative
+     * @return si le joueur grimpe
+     * @throws IOException toujours
+     */
+    public static boolean ascension(Monstre ennemi, Joueur grimpeur, boolean est_attaquant) throws IOException {
+        if (!est_attaquant) {
+            Output.jouerSonAttaque();
+            grimpeur.init_affrontement(true, grimpeur.getPosition());
+        } else{
+            grimpeur.init_affrontement(false, grimpeur.getPosition());
+        }
+        
+        if (!grimpeur.est_actif()) {
+            System.out.println("Aucun joueur détecté, annulation de l'ascension.");
+            return false;
+        }
+        
+        grimpeur.faire_front(true);
+        
+        if (grimpeur.a_familier_front()) {
+            System.out.printf("Le familier de %s se retrouve en première ligne.\n", grimpeur.getNom());
+        } else {
+            System.out.printf("%s se retrouve en première ligne.\n", grimpeur.getNom());
+        }
+        
+        int index = 0;
+        for(int i = 0; i < Main.nbj; i++) {
+            if(Main.joueurs[i].est_actif()) {
+                index = i;
+                break;
+            }
+        }
+        
+        if (competence(ennemi, index)) { //le monstre fuit
+            return true;
+        }
+        
+        if (!est_attaquant) {
+            ennemi.attaque(grimpeur);
+        }
+        System.out.println("Fin du ascension\n");
+        
+        combat(ennemi, index, grimpeur.getPosition());
+        
+        System.out.println("Fin du combat\n");
+        gestion_fin_combat(ennemi.est_nomme());
+        return ennemi.est_vaincu();
+    }
+    
+    /**
      * Gère le combat en appliquant les actions
      * @param ennemi le monstre adverse
      * @param pr_l   index du participant de première ligne

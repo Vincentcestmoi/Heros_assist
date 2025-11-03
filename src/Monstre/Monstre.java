@@ -956,6 +956,14 @@ public class Monstre {
     }
     
     /**
+     * Renvoie si le monstre est vaincu, i.e. mort ou domestiqué
+     * @return true s'il est vaincu, false sinon
+     */
+    public boolean est_vaincu(){
+        return est_mort() || this.vie_max < 0;
+    }
+    
+    /**
      * Applique la compétence "encaisser" et ses résultats
      * Demande aux joueurs les informations nécessaires
      * @throws IOException jsp mais sans ça, ça ne marche pas
@@ -1161,6 +1169,9 @@ public class Monstre {
         }
         if (ratio - Input.D6() * 10 < 0) {
             System.out.println(this.nom + " vous accorde sa confiance.");
+            if(!est_pantin()) {
+                this.vie_max = -1; //valeur spéciale pour indiquer la défaite du monstre
+            }
             return true;
         }
         System.out.println(this.nom + " réagit agressivement.");

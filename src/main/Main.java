@@ -63,7 +63,7 @@ public class Main {
             switch (choix) {
                 // action classique
                 case EXPLORER -> expedition(i);
-                case MONTER -> joueur.ascendre(i);
+                case MONTER -> joueur.ascend();
                 case DESCENDRE -> {
                     System.out.println(joueur.getNom() + " retourne en des terres moins inhospitalières.");
                     joueur.descendre();
