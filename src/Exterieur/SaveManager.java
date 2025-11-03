@@ -29,7 +29,12 @@ public class SaveManager {
                 JsonObject info = reader.readObject();
                 String titre = info.getString("titre", "Sans titre");
                 int nb = info.getInt("nombre_joueurs", 0);
-                System.out.println(i + " — " + titre + " (" + nb + " joueur" + (nb > 1 ? "s" : "") + ")");
+                System.out.print(i + " — " + titre + " (" + nb + " joueur" + (nb > 1 ? "s" : "") + ")");
+                String version = info.getString("version", "inconnue");
+                if (!version.equals(Main.Version.CURRENT)) {
+                    System.err.print(" ⚠️ Sauvegarde créée sous version " + version + " (actuelle : " + Main.Version.CURRENT + ")");
+                }
+                System.out.println();
             } catch (IOException e) {
                 System.out.println(i + " (erreur de lecture)");
             }
@@ -94,6 +99,7 @@ public class SaveManager {
         // Création du fichier info.json
         JsonObject info = Json.createObjectBuilder()
                 .add("titre", titre)
+                .add("version", Main.Version.CURRENT)
                 .add("nombre_joueurs", nombreJoueurs)
                 .add("monstres_nommes", Json.createArrayBuilder())
                 .add("items_uniques", itemsBuilder.build())
@@ -166,6 +172,7 @@ public class SaveManager {
         
         // Mettre à jour le titre et le nombre de joueurs
         builder.add("titre", titre);
+        builder.add("version", Main.Version.CURRENT);
         builder.add("nombre_joueurs", Main.joueurs.length);
         
         // Writer pretty-print

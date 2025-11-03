@@ -27,10 +27,19 @@ public class Main {
     public static int Path = -1; //-1 = vide
     static public Joueur[] joueurs;
     
+    public static class Version {
+        public static final String CURRENT = "0.1-beta";
+    }
+    
     public static void main(String[] args) throws IOException {
         
         //pour les tests
         if (args.length == 1 && args[0].equals("--test")) {
+            return;
+        }
+        
+        if(args.length == 1 && (args[0].equals("--version") || args[0].equals("-v"))) {
+            System.out.println("=== Heros_assist v" + Version.CURRENT + " ===");
             return;
         }
         
