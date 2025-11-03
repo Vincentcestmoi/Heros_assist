@@ -72,7 +72,9 @@ public class Shaman extends Joueur {
     protected void presente_pouvoir() {
         System.out.println("Incantation : lance de mystérieuses incantations invoquant les forces de la nature et " + "les" + " esprits de ses ancêtres.");
         if (this.niveau >= 2) {
-            System.out.println("Lien : Projette son âme dans celle d'un monstre pour tenter de les lier de force. Un " + "monstre" + " en bonne santé aura une âme puissante, alors que l'âme d'un monstre blessé est plus" + " faible.");
+            System.out.println("Lien : Projette son âme dans celle d'un monstre pour tenter de les lier de force. Un "
+                    + "monstre" + " en bonne santé aura une âme puissante, alors que l'âme d'un monstre blessé est " +
+                    "plus" + " faible.");
         }
         if (this.niveau >= 3) {
             System.out.println("Paix intérieure : Regagne instantanément sa santé mentale et son calme.");
@@ -183,42 +185,42 @@ public class Shaman extends Joueur {
     private String niveau_sup() {
         int unit = this.niveau % 10;
         String text = "";
-        if(unit == 1) { // 11, 21, ...
+        if (unit == 1) { // 11, 21, ...
             this.attaque += 1;
             text += "Votre attaque a légèrement augmentée.\n";
         }
-        if(unit == 2){ //12, 22, 32, ...
+        if (unit == 2) { //12, 22, 32, ...
             this.armure += 1;
             text += "Votre armure a légèrement augmentée.\n";
         }
-        if(unit % 3 == 0){ // 13, 16, 19, 20, 23, 26, ...
+        if (unit % 3 == 0) { // 13, 16, 19, 20, 23, 26, ...
             this.vie += 1;
             text += "Votre résistance a légèrement augmentée.\n";
         }
-        if(unit == 4){ //14, 24, 34, ...
+        if (unit == 4) { //14, 24, 34, ...
             text += "Votre compréhension des éléments s'accroit légèrement.\n";
         }
-        if(unit == 5){ // 15, 25, 35, ...
+        if (unit == 5) { // 15, 25, 35, ...
             text += "Votre compréhension des nuages s'est améliorée.\n";
         }
-        if(unit == 6){ // 16, 26, 36, ...
+        if (unit == 6) { // 16, 26, 36, ...
             text += "Les esprits d'anciens guérisseurs rejoignent vos rangs.\n";
         }
-        if(unit == 7){ //17, 27, 37, ...
+        if (unit == 7) { //17, 27, 37, ...
             text += "Les esprits de puissants anciens guerriers rejoignent vos rangs.\n";
         }
-        if(unit == 8){ //18, 28, 38, ...
+        if (unit == 8) { //18, 28, 38, ...
             this.attaque += 1;
             text += "Votre attaque a légèrement augmentée.\n";
         }
-        if(unit == 9){ //19, 29, ...
+        if (unit == 9) { //19, 29, ...
             text += "Votre âme développe son indépendance.\n";
         }
-        if(unit == 0){ //20, 30, ...
+        if (unit == 0) { //20, 30, ...
             text += "De nouveaux esprits se joignent à vous !\n";
         }
         
-        if(this.niveau % 7 == 2){ //16, 23, 30, 37, ...
+        if (this.niveau % 7 == 2) { //16, 23, 30, 37, ...
             text += "Votre âme se renforce.\n";
         }
         
@@ -401,7 +403,7 @@ public class Shaman extends Joueur {
             jet += 3;
         }
         jet += bonus_sup10(16, 7);
-        if(jet <= 3){
+        if (jet <= 3) {
             jet += Input.D8();
         }
         
@@ -531,7 +533,7 @@ public class Shaman extends Joueur {
     private void colere_boost() throws IOException {
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(17, 10);
-        if(jet <= 11) {
+        if (jet <= 11) {
             jet += jet(new int[]{9}, new int[]{8, 6}, new int[]{4, 10, 10, 10});
         }
         if (jet <= 2) {
@@ -571,7 +573,7 @@ public class Shaman extends Joueur {
         int attaque;
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(17, 10);
-        if(jet <= 12) {
+        if (jet <= 12) {
             jet += jet(new int[]{9, 4}, new int[]{10, 8, 6}, new int[]{10, 10, 10});
         }
         //D6
@@ -620,7 +622,7 @@ public class Shaman extends Joueur {
     private void colere_berserk() throws IOException {
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(17, 10);
-        if(jet <= 9) {
+        if (jet <= 9) {
             jet += jet(new int[]{9, 4}, new int[]{8, 6, 4}, new int[]{10, 10});
         }
         // D4
@@ -700,7 +702,7 @@ public class Shaman extends Joueur {
         System.out.println("Des nuages apparaissent dans le ciel et une pluie légère commence à tomber.");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(15, 10);
-        if(jet <= 10) {
+        if (jet <= 10) {
             jet += jet(new int[]{8, 6}, new int[]{8, 6, 4}, new int[]{10, 10});
         }
         //D4
@@ -749,7 +751,7 @@ public class Shaman extends Joueur {
         System.out.println("De sombres nuages s'amoncèlent au dessus de vous");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(15, 10);
-        if(jet <= 9) {
+        if (jet <= 9) {
             jet += jet(new int[]{8, 6}, new int[]{8, 6, 4}, new int[]{10, 10});
         }
         // D4
@@ -816,7 +818,7 @@ public class Shaman extends Joueur {
         System.out.println("Un nuage apparait au dessus de vous et commence à se rapprocher du sol");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(15, 10);
-        if(jet <= 9) {
+        if (jet <= 9) {
             jet += jet(new int[]{8, 6}, new int[]{8, 6, 4}, new int[]{10, 10, 10});
         }
         //D4
@@ -880,7 +882,7 @@ public class Shaman extends Joueur {
         System.out.println("Un nuage menaçant apparait au dessus de vous et commence à se rapprocher du sol");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(15, 10);
-        if(jet <= 10) {
+        if (jet <= 10) {
             jet += jet(new int[]{8}, new int[]{8, 6}, new int[]{8, 10, 10});
         }
         // D6
@@ -966,7 +968,7 @@ public class Shaman extends Joueur {
         System.out.println("Le vent se lève...");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(14, 10);
-        if(jet <= 7) {
+        if (jet <= 7) {
             jet += jet(new int[]{}, new int[]{6}, new int[]{10, 10});
         }
         // D6
@@ -1047,7 +1049,7 @@ public class Shaman extends Joueur {
         System.out.println("La terre commence à trembler...");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(14, 10);
-        if(jet <= 7) {
+        if (jet <= 7) {
             jet += jet(new int[]{}, new int[]{6}, new int[]{10, 10});
         }
         // D6
@@ -1099,7 +1101,7 @@ public class Shaman extends Joueur {
         System.out.println("Vous entendez de légers crépitements...");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(14, 10);
-        if(jet <= 7) {
+        if (jet <= 7) {
             jet += jet(new int[]{}, new int[]{6}, new int[]{10, 10});
         }
         int dommage;
@@ -1138,7 +1140,7 @@ public class Shaman extends Joueur {
         System.out.println("Vous entendez un léger gargouillement...");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(14, 10);
-        if(jet <= 7) {
+        if (jet <= 7) {
             jet += jet(new int[]{}, new int[]{6}, new int[]{10, 10});
         }
         // D6
@@ -1223,7 +1225,7 @@ public class Shaman extends Joueur {
     private void benir_soin() throws IOException {
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(16, 10);
-        if(jet <= 9) {
+        if (jet <= 9) {
             jet += jet(new int[]{9}, new int[]{8, 6}, new int[]{10, 10, 10});
         }
         int soin = 0;
@@ -1247,7 +1249,7 @@ public class Shaman extends Joueur {
         } else {
             soin += 50;
         }
-        soin +=  bonus_sup10(20, 10);
+        soin += bonus_sup10(20, 10);
         soin += bonus_sup10(16, 10);
         System.out.printf("La cible est soignée de %d.\n", soin);
     }
@@ -1259,7 +1261,7 @@ public class Shaman extends Joueur {
     private void benir_vie() throws IOException {
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(16, 10);
-        if(jet <= 10) {
+        if (jet <= 10) {
             jet += jet(new int[]{9}, new int[]{8, 6}, new int[]{10, 10, 10});
         }
         int boost = 0;
@@ -1295,7 +1297,7 @@ public class Shaman extends Joueur {
     private void benir_force() throws IOException {
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(16, 10);
-        if(jet <= 9) {
+        if (jet <= 9) {
             jet += jet(new int[]{9}, new int[]{8, 6}, new int[]{10, 10});
         }
         int boost;
@@ -1325,7 +1327,7 @@ public class Shaman extends Joueur {
     private void benir_def() throws IOException {
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(16, 10);
-        if(jet <= 9) {
+        if (jet <= 9) {
             jet += jet(new int[]{}, new int[]{8}, new int[]{10, 10});
         }
         int def;
@@ -1354,7 +1356,7 @@ public class Shaman extends Joueur {
             palier_mort -= 1;
         }
         palier_mort -= bonus_sup10(19, 10);
-        if(palier_mort < 0){
+        if (palier_mort < 0) {
             return true;
         }
         return Input.D10() >= palier_mort; //20%~30% sans malus

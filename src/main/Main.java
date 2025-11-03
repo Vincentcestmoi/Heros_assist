@@ -38,7 +38,7 @@ public class Main {
             return;
         }
         
-        if(args.length == 1 && (args[0].equals("--version") || args[0].equals("-v"))) {
+        if (args.length == 1 && (args[0].equals("--version") || args[0].equals("-v"))) {
             System.out.println("=== Heros_assist v" + Version.CURRENT + " ===");
             return;
         }
@@ -112,14 +112,15 @@ public class Main {
     private static void ajouter_item(Joueur joueur) throws IOException {
         System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 pour quitter.");
         String temp = Input.read();
-        if(temp.charAt(0) != '#'){
+        if (temp.charAt(0) != '#') {
             System.out.println("Format invalide, l'identifiant doit commencer par #");
         }
-        if(temp.length() != 3){
+        if (temp.length() != 3) {
             System.out.println("Format invalide, l'identifiant doit être de la forme #xx");
         }
-        switch(temp){
-            case "#00" -> {}
+        switch (temp) {
+            case "#00" -> {
+            }
             case "#01" -> joueur.add_lame_infernale();
             case "#02" -> joueur.add_lame_vegetale();
             case "#03" -> joueur.add_trident();
@@ -173,16 +174,18 @@ public class Main {
     
     private static void retirer_item(Joueur joueur) throws IOException {
         //noinspection DuplicatedCode
-        System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 pour quitter, #99 pour retirer tous vos items spéciaux.");
+        System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 pour quitter, #99 pour retirer " +
+                "tous vos items spéciaux.");
         String temp = Input.read();
-        if(temp.charAt(0) != '#'){
+        if (temp.charAt(0) != '#') {
             System.out.println("Format invalide, l'identifiant doit commencer par #");
         }
-        if(temp.length() != 3){
+        if (temp.length() != 3) {
             System.out.println("Format invalide, l'identifiant doit être de la forme #xx");
         }
-        switch(temp){
-            case "#00" -> {}
+        switch (temp) {
+            case "#00" -> {
+            }
             case "#01" -> joueur.retire_lame_infernale();
             case "#02" -> joueur.retire_lame_vegetale();
             case "#03" -> joueur.retire_trident();

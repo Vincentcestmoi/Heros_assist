@@ -1,5 +1,6 @@
 package Metiers;
 
+import Auxiliaire.Texte;
 import Enum.Action;
 import Enum.Dieux;
 import Enum.Metier;
@@ -7,7 +8,6 @@ import Enum.Position;
 import Exterieur.Input;
 import Monstre.Monstre;
 import main.Main;
-import Auxiliaire.Texte;
 
 import java.io.IOException;
 
@@ -73,8 +73,9 @@ public class Archimage extends Joueur {
         if (this.niveau >= 3) {
             System.out.println("Double sort : Permet de lancer deux sorts avec l'action Sort.");
         }
-        if(this.niveau >= 4){
-            System.out.println("Maitre du mana : Permet de récupérer du mana quand vous n'en avz plus ou êtes inconscient.");
+        if (this.niveau >= 4) {
+            System.out.println("Maitre du mana : Permet de récupérer du mana quand vous n'en avz plus ou êtes " +
+                    "inconscient.");
         }
     }
     
@@ -85,20 +86,23 @@ public class Archimage extends Joueur {
         affiche_sorts();
         System.out.println("Méditation : Se repose pour récupérer du mana.");
         if (this.niveau >= 2) {
-            System.out.printf("Purge : sort curatif, pour %d mana, guérie des alterations d'états.\n", rune_arca ? purge_cout - 1 : purge_cout);
+            System.out.printf("Purge : sort curatif, pour %d mana, guérie des alterations d'états.\n", rune_arca ?
+                    purge_cout - 1 : purge_cout);
         }
     }
     
     private void affiche_sorts() {
-        System.out.printf("\tBoule de feu : sort de feu, pour %d mana ou plus, lance un sort offensif léger.\n", rune_arca ? 1 : 2);
-        System.out.printf("\tOnde de choc : sort sonore, pour %d mana, étourdit tous les participants à l'exception du " +
-                "lanceur.\n", rune_arca ? 2 : 3);
+        System.out.printf("\tBoule de feu : sort de feu, pour %d mana ou plus, lance un sort offensif léger.\n",
+                rune_arca ? 1 : 2);
+        System.out.printf("\tOnde de choc : sort sonore, pour %d mana, étourdit tous les participants à l'exception " +
+                "du " + "lanceur.\n", rune_arca ? 2 : 3);
         if (this.niveau >= 1) {
             System.out.printf("\tArmure de glace : sort de glace, pour %d mana ou plus, augmente la résistance d'une "
                     + "cible.\n", rune_arca ? 2 : 3);
         }
         if (this.niveau >= 5) {
-            System.out.printf("\tFoudre : sort de foudre, pour %d mana ou plus, lance un puissant sort offensif.\n", rune_arca ? 6 : 7);
+            System.out.printf("\tFoudre : sort de foudre, pour %d mana ou plus, lance un puissant sort offensif.\n",
+                    rune_arca ? 6 : 7);
         }
     }
     
@@ -199,51 +203,51 @@ public class Archimage extends Joueur {
     private String niveau_sup() {
         int unit = this.niveau % 10;
         String text = "";
-        if(unit == 1){ //11, 21, 31
+        if (unit == 1) { //11, 21, 31
             text += "Vos sorts de feu ont été légèrement améliorés.\n";
         }
-        if(unit == 2){ //12, 22, 32, ...
+        if (unit == 2) { //12, 22, 32, ...
             text += "Vos sorts de glace ont été légèrement améliorés.\n";
         }
-        if(unit % 3 == 0) { // 13, 16, 19, 20, 23, 26, ...
+        if (unit % 3 == 0) { // 13, 16, 19, 20, 23, 26, ...
             PP_max += 1;
             text += "Votre réserve de mana a légèrement augmentée.\n";
         }
-        if(unit == 4){ //14, 24, 34, ...
+        if (unit == 4) { //14, 24, 34, ...
             this.attaque += 1;
             text += "Votre attaque a légèrement augmentée.\n";
         }
-        if(unit % 5 == 0){ // 15, 20, 25, ...
+        if (unit % 5 == 0) { // 15, 20, 25, ...
             this.vie += 1;
             text += "Votre résistance a légèrement augmenté.\n";
         }
-        if(unit == 6){ // 16, 26, ...
+        if (unit == 6) { // 16, 26, ...
             PP_value += 1;
         }
-        if(unit == 7){ //17, 27, 37, ...
+        if (unit == 7) { //17, 27, 37, ...
             text += "Vos compétence en magie ont été légèrement renforcées.\n";
         }
-        if(unit == 8){ //18, 28, 38, ...
+        if (unit == 8) { //18, 28, 38, ...
             text += "Vos maitrise du mana s'est légèrement accrue.\n";
         }
-        if(unit == 0){ //20, 30, ...
+        if (unit == 0) { //20, 30, ...
             text += "Vos compétence en magie ont été légèrement renforcées.\n";
         }
         
-        if(niveau % 7 == 0){ //14, 21, 28, ...
+        if (niveau % 7 == 0) { //14, 21, 28, ...
             text += "Vos sorts de feu se sont légèrement renforcés.\n";
         }
-        if(niveau % 7 == 2){
-            if(niveau % 14 == 2) { //16, 30, 44, ...
+        if (niveau % 7 == 2) {
+            if (niveau % 14 == 2) { //16, 30, 44, ...
                 text += "Vos sort de glace se sont renforcés.\n";
             } else { // 23, 37, 51, ...
                 text += "Vos sort de glace se sont légèrement renforcés.\n";
             }
         }
-        if(niveau % 9 == 0){ //18, 27, 36, ...
+        if (niveau % 9 == 0) { //18, 27, 36, ...
             text += "Vos sorts de foudre se sont légèrement renforcés.\n";
         }
-        if(niveau % 8 == 0){ // 16, 24, 32, ...
+        if (niveau % 8 == 0) { // 16, 24, 32, ...
             text += "Vos sorts sonores se sont légèrement renforcés.\n";
         }
         
@@ -344,11 +348,11 @@ public class Archimage extends Joueur {
         }
         // maître du mana
         if (est_assomme()) {
-            if(this.niveau < 4){
+            if (this.niveau < 4) {
                 return;
             }
             int mana = 1;
-            if(this.niveau >= 8){
+            if (this.niveau >= 8) {
                 mana += 1;
             }
             mana += bonus_sup10(18, 10);
@@ -406,10 +410,10 @@ public class Archimage extends Joueur {
         }
     }
     
-    private int bonus_sort(){
+    private int bonus_sort() {
         int bonus = bonus_sup10(17, 10);
         bonus += bonus_sup10(20, 10);
-        if(bourdon){
+        if (bourdon) {
             bonus += 2;
         }
         return bonus;
@@ -458,7 +462,7 @@ public class Archimage extends Joueur {
         }
         jet += rand.nextInt(3) - 1;
         jet += bonus_sup10(18, 10);
-        if(jet <= 7){
+        if (jet <= 7) {
             jet += Input.D6();
         }
         
@@ -497,7 +501,7 @@ public class Archimage extends Joueur {
         // sur l'ennemi
         System.out.println(ennemi.getNom() + " est frappé par l'onde de choc.");
         int jet = bonus;
-        if(jet <= 4){
+        if (jet <= 4) {
             System.out.print(this.getNom() + " ");
             jet += Input.D6();
         }
@@ -531,7 +535,7 @@ public class Archimage extends Joueur {
                 jet += 1;
             }
         }
-        if(jet <= 13){
+        if (jet <= 13) {
             jet += Input.D4();
         }
         
@@ -599,7 +603,7 @@ public class Archimage extends Joueur {
                 jet += 1;
             }
         }
-        if(jet <= 18){
+        if (jet <= 18) {
             jet += Input.D8();
         }
         int res = bonus_sup10(16, 7);
@@ -632,7 +636,7 @@ public class Archimage extends Joueur {
             res += 12;
             arm += 2;
         }
-        if(arm == 0){
+        if (arm == 0) {
             System.out.printf("La cible gagne %d points de résistance.\n", res);
         } else {
             System.out.printf("La cible gagne %d points de résistance et %d point d'armure.\n", res, arm);
@@ -656,7 +660,7 @@ public class Archimage extends Joueur {
         if (this.niveau >= 10) {
             jet += 2;
         }
-        if(jet <= 23){
+        if (jet <= 23) {
             jet += Input.D12();
         }
         
@@ -737,8 +741,8 @@ public class Archimage extends Joueur {
             }
             return true;
             
-        //maitre du mana
-        } else if(this.niveau >= 4){
+            //maitre du mana
+        } else if (this.niveau >= 4) {
             int mana = 1;
             if (this.niveau >= 8) {
                 mana += 1;

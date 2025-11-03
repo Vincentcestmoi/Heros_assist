@@ -178,40 +178,40 @@ public class Ranger extends Joueur {
     private String niveau_sup() {
         int unit = this.niveau % 10;
         String text = "";
-        if(unit == 1) { // 11, 21, ...
+        if (unit == 1) { // 11, 21, ...
             this.attaque += 1;
             text += "Votre attaque a légèrement augmenté.\n";
         }
-        if(unit % 2 == 0){ //12, 14, 16, 18, 20, 22, ...
+        if (unit % 2 == 0) { //12, 14, 16, 18, 20, 22, ...
             text += "Vos compétences de tireur se sont légèrement améliorées.\n";
         }
-        if(unit == 3){ // 13, 23, 33, ...
+        if (unit == 3) { // 13, 23, 33, ...
             this.vie += 1;
             text += "Votre résistance a légèrement augmenté.\n";
         }
-        if(unit == 4){ //14, 24, 34, ...
+        if (unit == 4) { //14, 24, 34, ...
             this.attaque += 1;
             text += "Votre attaque a légèrement augmenté.\n";
         }
-        if(unit == 5){ // 15, 25, 35, ...
+        if (unit == 5) { // 15, 25, 35, ...
             PP_max += 1;
             text += "Votre réserve de mana s'est légèrement accrue.\n";
         }
-        if(unit == 6){ //16, 26, 36, ...
+        if (unit == 6) { //16, 26, 36, ...
             this.vie += 1;
             text += "Votre résistance a légèrement augmenté.\n";
         }
-        if(unit == 7){ //17, 27, 37, ...
+        if (unit == 7) { //17, 27, 37, ...
             text += "Votre précision s'est légèrement améliorée.\n";
         }
-        if(unit == 9){ //19, 29, ...
+        if (unit == 9) { //19, 29, ...
             text += "Votre précision a légèrement augmenté.\n";
         }
         
-        if(this.niveau % 7 == 0){ //14, 21, 28, ...
+        if (this.niveau % 7 == 0) { //14, 21, 28, ...
             text += "Vos compétence d'analyse se sont améliorées.\n";
         }
-        if(this.niveau % 9 == 0){ //18, 27, 36, ...
+        if (this.niveau % 9 == 0) { //18, 27, 36, ...
             text += "Vos capacité d'exploration se sont légèrement améliorées.\n";
         }
         
@@ -305,10 +305,11 @@ public class Ranger extends Joueur {
         bonus += rand.nextInt(bonus_sup10(18, 9) + 1);
         return bonus;
     }
+    
     @Override
-    public int bonus_analyse(){
+    public int bonus_analyse() {
         int bonus = super.bonus_analyse();
-        if(this.niveau >= 6){
+        if (this.niveau >= 6) {
             bonus += 1;
         }
         bonus += bonus_sup10(14, 7);
@@ -423,7 +424,7 @@ public class Ranger extends Joueur {
         }
         jet += bonus_sup10(17, 10);
         jet += bonus_sup10(19, 10);
-        if(jet <= 8){
+        if (jet <= 8) {
             jet += this.niveau >= 5 ? Input.D6() : Input.D4();
         }
         if (jet > 9) {

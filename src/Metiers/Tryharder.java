@@ -88,7 +88,7 @@ public class Tryharder extends Joueur {
             add_caracteristique("Talentueux");
             System.out.println("Nouvelle capacité débloquée !");
         }
-        if(this.niveau % 9 == 0){
+        if (this.niveau % 9 == 0) {
             this.armure += 1;
             System.out.println("Votre armure a légèrement augmentée.");
         }

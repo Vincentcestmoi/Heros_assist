@@ -56,8 +56,7 @@ public class Guerriere extends Joueur {
             this.attaque += 1;
         }
         this.armure += bonus_sup10(11, 10);
-        this.attaque += bonus_sup10(13, 10) + bonus_sup10(16, 10) +
-                bonus_sup10(19, 10) + bonus_sup10(20, 10) + bonus_sup10(17, 10);
+        this.attaque += bonus_sup10(13, 10) + bonus_sup10(16, 10) + bonus_sup10(19, 10) + bonus_sup10(20, 10) + bonus_sup10(17, 10);
         this.vie += bonus_sup10(18, 10) + bonus_sup10(14, 10);
         this.PP_max += bonus_sup10(19, 10);
     }
@@ -188,29 +187,29 @@ public class Guerriere extends Joueur {
     private String niveau_sup() {
         int unit = this.niveau % 10;
         String text = "";
-        if(unit == 1){ //11, 21, 31, ...
+        if (unit == 1) { //11, 21, 31, ...
             this.armure += 1;
             text += "Votre armure a légèrement augmenté.\n";
         }
-        if(unit % 2 == 0){ //12, 14, 16, 18, 20, 22, ...
+        if (unit % 2 == 0) { //12, 14, 16, 18, 20, 22, ...
             text += "Votre force d'attaque a légèrement augmenté.\n";
         }
-        if(unit % 3 == 0) { // 13, 16, 19, 20, ...
+        if (unit % 3 == 0) { // 13, 16, 19, 20, ...
             this.attaque += 1;
             text += "Votre attaque a légèrement augmenté.\n";
         }
-        if(unit % 4 == 0){ //14, 18, 24, 28, ...
+        if (unit % 4 == 0) { //14, 18, 24, 28, ...
             this.vie += 1;
             text += "Votre résistance a légèrement augmenté.\n";
         }
-        if(unit % 5 == 0){ // 15, 20, 25, ...
+        if (unit % 5 == 0) { // 15, 20, 25, ...
             text += "Votre précision s'est légèrement améliorée.\n";
         }
-        if(unit == 7){ //17, 27, 37, ...
+        if (unit == 7) { //17, 27, 37, ...
             this.attaque += 1;
             text += "Votre attaque a légèrement augmenté.\n";
         }
-        if(unit == 9 ){ // 19, 29, 39, ...
+        if (unit == 9) { // 19, 29, 39, ...
             this.PP_max += 1;
             text += "Votre aura s'est renforcée.\n";
         }
@@ -444,7 +443,7 @@ public class Guerriere extends Joueur {
                 berserk += 0.1f;
             }
         }
-        if(rune_haine){
+        if (rune_haine) {
             berserk += 0.1f + rand.nextInt(5) * 0.1f; //0.1~0.5
         }
     }

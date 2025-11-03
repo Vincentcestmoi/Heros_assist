@@ -441,23 +441,18 @@ public class Equipement {
                 this.effet = "Réagit à certain(s) dieu(x) (#09).";
             }
             case RUNE_RESIDU -> this.effet = "Peut être consumé à la place de 2 PP.";
-            case PARCH_FEU ->
-                    this.effet = "Contient un sort de feu mineur pouvant être lancé pour 2 mana (#10)";
+            case PARCH_FEU -> this.effet = "Contient un sort de feu mineur pouvant être lancé pour 2 mana (#10)";
             case PARCH_DODO -> this.effet = "Contient un sort de sommeil pouvant être lancé pour 2 mana (#11).";
             case PARCH_FORCE ->
-                    this.effet =
-                            "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement l'attaque de 1, se détruit après usage.";
-            case PARCH_LUMIERE ->
-                    this.effet =
-                            "Permet de lancer le sort Lumière pour 2 mana (#12).";
+                    this.effet = "Permet de lancer le sort Renforcement : pour 1PP, augmente définitivement l'attaque" +
+                            " de 1, se détruit après usage.";
+            case PARCH_LUMIERE -> this.effet = "Permet de lancer le sort Lumière pour 2 mana (#12).";
             case RUNE_CROISS -> this.effet = "Améliore certaines compétences... A condition de les posséder (#13).";
             case RUNE_PLUIE -> this.effet = "Améliore certaines compétences... A condition de les posséder (#14).";
-            case RUNE_HAINE ->
-                    this.effet = "Améliore certaines compétences... A condition de les posséder (#15).";
+            case RUNE_HAINE -> this.effet = "Améliore certaines compétences... A condition de les posséder (#15).";
             case RUNE_VIRALE -> this.effet = "Améliore certaines compétences... A condition de les posséder (#16).";
             case RUNE_ARDENTE -> this.effet = "Améliore certaines compétences... A condition de les posséder (#17).";
-            case RUNE_ARDENTE2 ->
-                    this.effet = "Améliore certaines compétences... A condition de les posséder (#18).";
+            case RUNE_ARDENTE2 -> this.effet = "Améliore certaines compétences... A condition de les posséder (#18).";
             case RUNE_DODO -> this.effet = "Améliore certaines compétences... A condition de les posséder (#19).";
             case RUNE_MORT -> this.effet = "Améliore certaines compétences... A condition de les posséder (#20).";
             case RUNE_ORAGE -> this.effet = "Améliore certaines compétences... A condition de les posséder (#21).";
@@ -465,9 +460,9 @@ public class Equipement {
             case SOIN -> this.effet = "Permet de soigner une cible (#23).";
             case PROTECTION -> this.effet = "??? (#24)";
             case RUNE_VENGEANCE ->
-                    this.effet = "Récupérez de l'énergie chaque fois qu'un familier ou joueur allié est tué par un monstre.";
-            case RUNE_INTERDITE ->
-                    this.effet = "Améliore certaines compétences... A condition de les posséder (#25).";
+                    this.effet = "Récupérez de l'énergie chaque fois qu'un familier ou joueur allié est tué par un " +
+                            "monstre.";
+            case RUNE_INTERDITE -> this.effet = "Améliore certaines compétences... A condition de les posséder (#25).";
             case BRACELET_ABSO ->
                     this.effet = "Vous pouvez absorber l'énergie de vos victimes (#26) (ne se cumule pas).";
             case LUNETTE -> this.effet = "Vous confère une vue spirituelle (#27).";
@@ -482,10 +477,8 @@ public class Equipement {
                 attaque += 2;
                 armure -= 2;
             }
-            case PARCH_VOLCAN ->
-                    this.effet = "Permet de lancer le sort Eruption volcanique pour 6 mana (#31).";
-            case PARCH_ABSO ->
-                    this.effet = "Vous pouvez absorber la force vitale de vos victimes (#32).";
+            case PARCH_VOLCAN -> this.effet = "Permet de lancer le sort Eruption volcanique pour 6 mana (#31).";
+            case PARCH_ABSO -> this.effet = "Vous pouvez absorber la force vitale de vos victimes (#32).";
             case PEGASE -> {
                 this.resistance += 3;
                 this.effet = "Vous permet de voyager plus efficacement (#33).";
@@ -525,26 +518,26 @@ public class Equipement {
                 this.effet = "Permet de soigner une cible (#37).";
             }
             case ALTRUISME ->
-                    this.effet =
-                            "Au début de chaque combat, répartissez 8 points temporaires de résistance entre vos"
-                                    + " alliés (familiers inclus). Vous ne pouvez les attribuer à vous même.";
+                    this.effet = "Au début de chaque combat, répartissez 8 points temporaires de résistance entre " +
+                            "vos" + " alliés (familiers inclus). Vous ne pouvez les attribuer à vous même.";
             case RUNE_ARCA -> this.effet = "Améliore certaines compétences... A condition de les posséder (#38).";
-            case ANTIDOTE -> this.effet = "Le consommer fournit une immunité définitive au poison et à la cécité (#39).";
-            case ANNIHILATION ->
-                    this.effet = "Consomme une rune pour lancer une sort puissant (#40).";
+            case ANTIDOTE ->
+                    this.effet = "Le consommer fournit une immunité définitive au poison et à la cécité (#39).";
+            case ANNIHILATION -> this.effet = "Consomme une rune pour lancer une sort puissant (#40).";
             case REZ ->
                     this.effet = "Un étrange tatouage qui s'est incrusté dans votre corps. Ne peut être échangé. (#41)";
-            case FUITE ->
-                    this.effet = "A tout moment, vous pouvez utiliser cet objet pour fuir un combat (#42).";
-            case GRENADE -> this.effet = "Peuvent être lancé pour infliger plus de dommages. Contient 8 grenades (#43).";
+            case FUITE -> this.effet = "A tout moment, vous pouvez utiliser cet objet pour fuir un combat (#42).";
+            case GRENADE ->
+                    this.effet = "Peuvent être lancé pour infliger plus de dommages. Contient 8 grenades (#43).";
             case MER_EXP -> this.effet = "En pleine mer, vous n'êtes jamais surprit par un monstre (#44).";
             case ITEM_IMMUN ->
-                    this.effet = "Chaque fois que vous devez perdez un équipement, conservez le. (ne fonctionne pas si" +
-                            " vous mourrez, vendez, échangez ou dépensez un équipement)";
+                    this.effet = "Chaque fois que vous devez perdez un équipement, conservez le. (ne fonctionne pas " +
+                            "si" + " vous mourrez, vendez, échangez ou dépensez un équipement)";
             case SAC_TEMP ->
                     this.effet = "Lorsque vous utilisez un objet à usage limité pour la dernière fois, vous " +
-                            "pouvez choisir de détruire cette sacoche à la place et récupérez tous les utilisations de votre objet." +
-                            "(s'il s'agit d'un objet à effet, vous devez à nouveau entrer son code)";
+                            "pouvez choisir de détruire cette sacoche à la place et récupérez tous les utilisations " +
+                            "de votre objet." + "(s'il s'agit d'un objet à effet, vous devez à nouveau entrer son " +
+                            "code)";
             case AUCUN -> {
             }
         }

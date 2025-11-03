@@ -115,9 +115,9 @@ public class Monstre {
      * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
      */
     public void boostAtk(int value, boolean fondamental) {
-        if(est_pantin()){
+        if (est_pantin()) {
             System.out.printf("Attaque diminuée de %d", value);
-            if(fondamental){
+            if (fondamental) {
                 System.out.print(" de manière définitive");
             }
             System.out.println(".");
@@ -142,9 +142,9 @@ public class Monstre {
      * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
      */
     public void boostArmure(int value, boolean fondamental) {
-        if(est_pantin()){
+        if (est_pantin()) {
             System.out.printf("Armure diminuée de %d", value);
-            if(fondamental){
+            if (fondamental) {
                 System.out.print(" de manière définitive");
             }
             System.out.println(".");
@@ -169,9 +169,9 @@ public class Monstre {
      * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
      */
     public void boostVie(int value, boolean fondamental) {
-        if(est_pantin()){
+        if (est_pantin()) {
             System.out.printf("Résistance diminuée de %d", value);
-            if(fondamental){
+            if (fondamental) {
                 System.out.print(" de manière définitive");
             }
             System.out.println(".");
@@ -336,7 +336,8 @@ public class Monstre {
             case REGARD_MORTEL -> {
                 System.out.println(this.nom + " regarde " + joueur.getFrontNom() + " droit dans les yeux.");
                 if (Input.D6() + joueur.bonus_analyse() <= 4) {
-                    System.out.printf("%s sent son âme se faire assaillir et perd définitivement %d points de résistance.\n", joueur.getFrontNom(), this.attaque);
+                    System.out.printf("%s sent son âme se faire assaillir et perd définitivement %d points de " +
+                            "résistance.\n", joueur.getFrontNom(), this.attaque);
                     competence = Competence.AUCUNE;
                     encaissement = 0F;
                     part_soin = 0F;
@@ -348,7 +349,8 @@ public class Monstre {
                 System.out.printf("%s regarde %s droit dans les yeux.\n", this.nom, joueur.getFrontNom());
                 if (Input.D6() + joueur.bonus_analyse() <= 4) {
                     System.out.printf("%s se change partiellement en pierre !\n", joueur.getFrontNom());
-                    System.out.printf("%s perd définitivement %d points de résistance et gagne définitivement %d points de défense.\n", joueur.getFrontNom(), this.attaque + 2, 1 +rand.nextInt(2));
+                    System.out.printf("%s perd définitivement %d points de résistance et gagne définitivement %d " +
+                            "points de défense.\n", joueur.getFrontNom(), this.attaque + 2, 1 + rand.nextInt(2));
                     competence = Competence.AUCUNE;
                     encaissement = 0F;
                     part_soin = 0F;
@@ -971,7 +973,7 @@ public class Monstre {
      * @return si le monstre est mort
      */
     public boolean est_mort() {
-        if(est_pantin()){
+        if (est_pantin()) {
             return false;
         }
         if (competence == Competence.REVENANT) {
@@ -988,7 +990,7 @@ public class Monstre {
      * Renvoie si le monstre est vaincu, i.e. mort ou domestiqué
      * @return true s'il est vaincu, false sinon
      */
-    public boolean est_vaincu(){
+    public boolean est_vaincu() {
         return est_mort() || this.vie_max < 0;
     }
     
@@ -1198,7 +1200,7 @@ public class Monstre {
         }
         if (ratio - Input.D6() * 10 < 0) {
             System.out.println(this.nom + " vous accorde sa confiance.");
-            if(!est_pantin()) {
+            if (!est_pantin()) {
                 this.vie_max = -1; //valeur spéciale pour indiquer la défaite du monstre
             }
             return true;

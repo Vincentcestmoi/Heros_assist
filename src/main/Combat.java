@@ -107,8 +107,8 @@ public class Combat {
     
     /**
      * Gère le combat d'ascension d'un joueur
-     * @param ennemi le monstre a affronter
-     * @param grimpeur le joueur qui tente de monter
+     * @param ennemi        le monstre a affronter
+     * @param grimpeur      le joueur qui tente de monter
      * @param est_attaquant si le joueur a l'initiative
      * @return si le joueur grimpe
      * @throws IOException toujours
@@ -117,7 +117,7 @@ public class Combat {
         if (!est_attaquant) {
             Output.jouerSonAttaque();
             grimpeur.init_affrontement(true, grimpeur.getPosition());
-        } else{
+        } else {
             grimpeur.init_affrontement(false, grimpeur.getPosition());
         }
         
@@ -135,8 +135,8 @@ public class Combat {
         }
         
         int index = 0;
-        for(int i = 0; i < Main.nbj; i++) {
-            if(Main.joueurs[i].est_actif()) {
+        for (int i = 0; i < Main.nbj; i++) {
+            if (Main.joueurs[i].est_actif()) {
                 index = i;
                 break;
             }
@@ -623,7 +623,8 @@ public class Combat {
             case REGARD_APPEURANT -> {
                 System.out.println(nom + " croise le regard de " + ennemi.getNom());
                 if (Input.D6() + Main.joueurs[pr_l].bonus_analyse() < 5) {
-                    System.out.println(nom + " est instinctivement apeuré(e), marqué(e) à vie par cette peur, iel perd définitivement 2 points d'attaque.");
+                    System.out.println(nom + " est instinctivement apeuré(e), marqué(e) à vie par cette peur, iel " +
+                            "perd définitivement 2 points d'attaque.");
                 }
             }
             case REGARD_TERRIFIANT -> {

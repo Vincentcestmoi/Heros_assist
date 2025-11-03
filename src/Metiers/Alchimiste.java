@@ -89,27 +89,27 @@ public class Alchimiste extends Joueur {
     private String niveau_sup() {
         int unit = this.niveau % 10;
         String text = "";
-        if(unit <= 2){ //11, 12, 20, 21, 22, 30, ...
+        if (unit <= 2) { //11, 12, 20, 21, 22, 30, ...
             text += "Vos compétences de fouilles ont légèrement augmenté.\n";
         }
-        if(unit % 3 == 0) { // 13, 16, 19, 20, ...
+        if (unit % 3 == 0) { // 13, 16, 19, 20, ...
             text += "Vos compétence de dissection ont été légèrement renforcé.\n";
         }
-        if(unit % 4 == 0){ //14, 18, 24, 28, ...
+        if (unit % 4 == 0) { //14, 18, 24, 28, ...
             text += "Vos compétences de fouilles ont légèrement augmenté.\n";
         }
-        if(unit % 5 == 0){ // 15, 20, 25, ...
+        if (unit % 5 == 0) { // 15, 20, 25, ...
             text += "Vos compétence de concoctions ont été légèrement améliorées..\n";
         }
-        if(unit == 7){ //17, 27, 37, ...
+        if (unit == 7) { //17, 27, 37, ...
             text += "Vos compétence de concoctions ont été légèrement améliorées..\n";
         }
-        if(unit == 9 || this.niveau % 4 == 0){ // 12, 16, 19, 20, 24, 28, 29, ...
+        if (unit == 9 || this.niveau % 4 == 0) { // 12, 16, 19, 20, 24, 28, 29, ...
             this.vie += 1;
             text += "Votre résistance a légèrement augmentée.\n";
         }
         
-        if(this.niveau % 9 == 3){ //12, 21, 30, 39, ...
+        if (this.niveau % 9 == 3) { //12, 21, 30, 39, ...
             this.armure += 1;
             text += "Votre armure a légèrement augmentée.\n";
         }
@@ -561,7 +561,7 @@ public class Alchimiste extends Joueur {
                 jet += 1;
             }
         }
-        if(dissec){
+        if (dissec) {
             jet += 2;
         }
         jet += bonus_sup10(11, 10);
@@ -569,14 +569,14 @@ public class Alchimiste extends Joueur {
         jet += bonus_sup10(20, 10);
         jet += bonus_sup10(14, 10);
         jet += bonus_sup10(18, 10);
-        if(jet <= 30){
+        if (jet <= 30) {
             jet += Input.D20();
         }
         if (jet <= 10 + rand.nextInt(10)) {
             System.out.println("Vous ne trouvez rien.");
         } else if (jet <= 18 + rand.nextInt(4)) {
             System.out.println("Vous trouvez 1 ingrédient.");
-        } else if(jet <= 30){
+        } else if (jet <= 30) {
             System.out.println("Vous récoltez 2 ingrédients.");
         } else {
             System.out.println("Vous récoltez 3 ingrédients.");
@@ -599,7 +599,7 @@ public class Alchimiste extends Joueur {
             }
         }
         //item
-        if(dissec){
+        if (dissec) {
             base += 1;
         }
         
@@ -624,7 +624,7 @@ public class Alchimiste extends Joueur {
         
         int jet = base, deterioration = base;
         
-        if(jet <= 25){
+        if (jet <= 25) {
             jet += Input.D6();
         }
         
@@ -637,10 +637,10 @@ public class Alchimiste extends Joueur {
         } else if (jet <= 10) {
             System.out.println("Vous récoltez 2 ingrédients.");
             deterioration -= 13 + rand.nextInt(11);
-        } else if(jet <= 16){
+        } else if (jet <= 16) {
             System.out.println("Vous récoltez 3 ingrédients.");
             deterioration -= 20 + rand.nextInt(25);
-        } else if(jet <= 25){
+        } else if (jet <= 25) {
             System.out.println("Vous extrayez 4 ingrédients.");
             deterioration -= 45 + rand.nextInt(37);
         } else {
@@ -819,9 +819,10 @@ public class Alchimiste extends Joueur {
     protected void concoc_alea() throws IOException {
         
         int[] popo_cost = {1, 1, 1, 9, 5, 8, 4, 9, 9, 6, 10};
-        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "boulette irritante (BSRK#1)", "capsule " +
-                "de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion instable (E#1)",
-                "potion de feu (E#2)", "de force (ATK#1)", "potion de vie (PV#2)", "potion énergétique (PP#1)"};
+        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "boulette irritante (BSRK#1)",
+                "capsule " + "de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion instable" +
+                " (E#1)", "potion de feu (E#2)", "de force (ATK#1)", "potion de vie (PV#2)", "potion énergétique " +
+                "(PP#1)"};
         
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (max 4): ");
         int ingre = Input.readInt();
@@ -868,12 +869,13 @@ public class Alchimiste extends Joueur {
     protected void concoc_serie() throws IOException {
         
         int[] popo_cost = {1, 1, 1, 9, 5, 8, 4, 9, 9, 6, 10, 11, 13, 11, 14, 14, 11, 14, 15, 15, 15};
-        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "boulette irritante (BSRK#1)", "capsule " +
-                "de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion instable (E#1)",
-                "potion de feu (E#2)", "potion de force (ATK#1)", "potion de vie " + "(PV#2)", "potion énergétique " +
-                "(PP#1)", "potion de santé (PV#3)", "potion d'énergie (PP#2)", "potion de vigeur (RES#1)", "potion de" +
-                " résistance (RES#2)", "potion de puissance (ATK#2)", "flasque nécrosé (P#4)", "potion nécrotique " +
-                "(P#5)", "potion explosive (E#4)", "potion divine (Div#A)", "potion de violence (BSRK#3)"};
+        String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "boulette irritante (BSRK#1)",
+                "capsule " + "de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion instable" +
+                " (E#1)", "potion de feu (E#2)", "potion de force (ATK#1)", "potion de vie " + "(PV#2)", "potion " +
+                "énergétique " + "(PP#1)", "potion de santé (PV#3)", "potion d'énergie (PP#2)", "potion de vigeur " +
+                "(RES#1)", "potion de" + " résistance (RES#2)", "potion de puissance (ATK#2)", "flasque nécrosé (P#4)"
+                , "potion nécrotique " + "(P#5)", "potion explosive (E#4)", "potion divine (Div#A)", "potion de " +
+                "violence (BSRK#3)"};
         
         
         System.out.println("Combien d'ingrédient allez-vous utiliser ? ");
@@ -1034,10 +1036,10 @@ public class Alchimiste extends Joueur {
         if (this.niveau >= 9) {
             bonus += 1;
         }
-        if(this.niveau >= 10){
+        if (this.niveau >= 10) {
             bonus += 1;
         }
-        if(concoct){
+        if (concoct) {
             bonus += 2;
         }
         bonus += bonus_sup10(15, 5);

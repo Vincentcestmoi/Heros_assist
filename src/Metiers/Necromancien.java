@@ -137,12 +137,10 @@ public class Necromancien extends Joueur {
             case 8 -> {
                 nb_item += 1;
                 nb_piece += 2;
-                yield "Vos compétence de thaumaturge ont été légèrement renforcées.\nVos compétence de resurrection " +
-                        "ont été renforcées.";
+                yield "Vos compétence de thaumaturge ont été légèrement renforcées.\nVos compétence de resurrection " + "ont été renforcées.";
             }
             case 9 ->
-                    "Vos compétences de zombification ont été légèrement augmentées.\nVos compétences d'appel des " +
-                            "morts ont été légèrement augmentées.";
+                    "Vos compétences de zombification ont été légèrement augmentées.\nVos compétences d'appel des " + "morts ont été légèrement augmentées.";
             case 10 -> {
                 pp_sacrifice += 1;
                 PP_max += 1;
@@ -168,43 +166,43 @@ public class Necromancien extends Joueur {
     private String niveau_sup() {
         int unit = this.niveau % 10;
         String text = "";
-        if(unit == 1) { // 11, 21, ...
+        if (unit == 1) { // 11, 21, ...
             this.attaque += 1;
             text += "Votre attaque a légèrement augmenté.\n";
         }
-        if(unit == 2){ //12, 22, 32, ...
+        if (unit == 2) { //12, 22, 32, ...
             text += "Vos compétences de soumission ont été légèrement augmentées.\n";
         }
-        if(unit % 3 == 0){ // 13, 16, 19, 23, ...
+        if (unit % 3 == 0) { // 13, 16, 19, 23, ...
             this.vie += 1;
             text += "Votre résistance a légèrement augmenté.\n";
         }
-        if(unit % 4 == 0){ //14, 18, 24, 28, ...
+        if (unit % 4 == 0) { //14, 18, 24, 28, ...
             pp_sacrifice += 1;
             text += "Vos sacrifices ont été légèrement renforcés.\n";
         }
-        if(unit % 5 == 0){ // 15, 20, 25, ...
+        if (unit % 5 == 0) { // 15, 20, 25, ...
             PP_max += 1;
             text += "Votre réserve de mana a légèrement augmentée.\n";
         }
-        if(unit == 7){ //17, 27, 37, ...
+        if (unit == 7) { //17, 27, 37, ...
             text += "Vos compétences de resurrection ont été améliorées.\n";
         }
-        if(unit == 9){ //19, 29, ...
+        if (unit == 9) { //19, 29, ...
             text += "Vos compétence de zombification ont été légèrement renforcées.\n";
         }
-        if(unit == 0){ //20, 30, ...
+        if (unit == 0) { //20, 30, ...
             text += "Vos compétence en appels des morts ont été légèrement renforcées.\n";
         }
         
-        if(this.niveau % 7 == 0){ //14, 21, 28, ...
+        if (this.niveau % 7 == 0) { //14, 21, 28, ...
             this.armure += 1;
             text += "Votre armure a légèrement augmentée.\n";
         }
-        if(this.niveau % 4 == 0){ // 12, 16, 20, 22, 26, ...
+        if (this.niveau % 4 == 0) { // 12, 16, 20, 22, 26, ...
             text += "Vos compétence en malédiction ont été légèrement augmentées.\n";
         }
-        if(this.niveau % 6 == 0){ //12, 18, 24, 30, ...
+        if (this.niveau % 6 == 0) { //12, 18, 24, 30, ...
             nb_item += 1;
             nb_piece += 2;
             text += "Vos compétence de thaumaturge ont été légèrement renforcées.\n";
@@ -223,16 +221,14 @@ public class Necromancien extends Joueur {
         System.out.println("Sacrifice : Tuer un allié (familier comprit) régénère " + pp_sacrifice + " mana.");
         System.out.println("Malédiction : Diminue définitivement la résistance d'une cible.");
         if (this.niveau >= 1) {
-            System.out.printf("Zombification : Pour %d mana, tente de ramener un monstre fraichement tué à la vie " +
-                    "sous la forme d'un fidèle serviteur. Peut endommager le cadavre.\n", rune_noire ? 3 : 2);
+            System.out.printf("Zombification : Pour %d mana, tente de ramener un monstre fraichement tué à la vie " + "sous la forme d'un fidèle serviteur. Peut endommager le cadavre.\n", rune_noire ? 3 : 2);
         }
         if (this.niveau >= 2) {
             System.out.println("Resurrection : Pour 2 mana, ramène un joueur à la vie.");
         }
         if (this.niveau >= 5) {
             System.out.printf("Appel des morts : Pour %d mana ou plus, ramène à la vie un monstre mort depuis " +
-                    "longtemps. La réussite du sort et la puissance de l'entité invoquée dépend de la quantité de " +
-                    "mana utilisée.\n", rune_noire ? 5 : 4);
+                    "longtemps. La réussite du sort et la puissance de l'entité invoquée dépend de la quantité de " + "mana utilisée.\n", rune_noire ? 5 : 4);
         }
     }
     
@@ -247,7 +243,7 @@ public class Necromancien extends Joueur {
     @Override
     public void mort_def() {
         super.mort_def();
-        if(rune_mortifere){
+        if (rune_mortifere) {
             Texte.thaumaturge(2 * nb_item, 2 * nb_piece);
         } else {
             Texte.thaumaturge(nb_item, nb_piece);
@@ -391,7 +387,7 @@ public class Necromancien extends Joueur {
         jet += rand.nextInt(3) - 1;
         
         //jet joueur
-        if (jet < 12){
+        if (jet < 12) {
             jet += Input.D8();
         }
         
@@ -403,9 +399,9 @@ public class Necromancien extends Joueur {
             System.out.println("Resurrection avec 4 (max) points de vie");
         } else if (jet <= 7) {
             System.out.println("Resurrection avec 8 (max) points de vie");
-        } else if(jet <= 12){
+        } else if (jet <= 12) {
             System.out.println("Resurrection avec 12 (max) points de vie");
-        } else{
+        } else {
             System.out.println("Resurrection avec 18 (max) points de vie");
         }
         return true;
@@ -429,7 +425,7 @@ public class Necromancien extends Joueur {
         }
         boost += bonus_sup10(12, 4);
         jet += bonus_sup10(12, 8);
-        if(jet < 12){
+        if (jet < 12) {
             jet += Input.D6();
         }
         jet = Math.min(jet, 13);
@@ -454,7 +450,7 @@ public class Necromancien extends Joueur {
                 System.out.println("Vous arracher à " + ennemi.getNom() + " des fragments de son âme !");
                 ennemi.boostVie(-(10 + boost), true);
             }
-            case 13 ->{
+            case 13 -> {
                 System.out.println("Vous déchirez en deux l'âme de " + ennemi.getNom() + " !");
                 ennemi.boostVie(-(ennemi.getVieMax()), true);
                 ennemi.boostVie(-(5 + boost), true);
@@ -476,14 +472,14 @@ public class Necromancien extends Joueur {
         System.out.println("Vous rappelez à la vie les cadavres de ces terres.");
         Texte.mana_sort(mini);
         int mana = Input.readInt();
-        if(mana < mini){
+        if (mana < mini) {
             System.out.println("Le sort échoue.");
             return;
         }
         
         int jet = mana;
         jet += rand.nextInt(3) - 1;
-        if(rune_noire){
+        if (rune_noire) {
             jet += 2;
         }
         if (this.niveau >= 9) {
@@ -493,7 +489,7 @@ public class Necromancien extends Joueur {
             jet += 1;
         }
         jet += bonus_sup10(20, 10);
-        if(jet < 15){
+        if (jet < 15) {
             jet += Input.D8();
         }
         
@@ -557,18 +553,18 @@ public class Necromancien extends Joueur {
                 jet += 1;
             }
         }
-        if(rune_noire){
+        if (rune_noire) {
             jet += 2;
         }
         jet += bonus_sup10(19, 10);
         
-        if(jet < 11){
+        if (jet < 11) {
             jet += Input.D8();
         }
         if (jet > 10 && niveau < 9) {
             jet = 10;
         }
-        if(jet > 11){
+        if (jet > 11) {
             jet = 11;
         }
         
@@ -632,7 +628,7 @@ public class Necromancien extends Joueur {
             jet += Input.D6();
         }
         jet = Math.min(jet, 6);
-
+        
         System.out.println("Vous soumettez votre familier à votre volonté.\n");
         this.ob_f += switch (jet + bonus_dresser()) {
             case 1 -> {

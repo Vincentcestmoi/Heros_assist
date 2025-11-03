@@ -316,16 +316,17 @@ public class Pre_Equipement {
     static Pre_Equipement rune_orage = new Pre_Equipement("Rune orageuse", AUTRE, I, Effet_equip.RUNE_ORAGE, true);
     static Pre_Equipement rune_mort = new Pre_Equipement("Rune mortifère", AUTRE, I, Effet_equip.RUNE_MORT, true);
     static Pre_Equipement rune_dodo = new Pre_Equipement("Rune endormie", AUTRE, I, Effet_equip.RUNE_DODO, true);
-    static Pre_Equipement rune_commerce = new Pre_Equipement("Rune de commerce", AUTRE, I, Effet_equip.RUNE_COMMERCE, true);
+    static Pre_Equipement rune_commerce = new Pre_Equipement("Rune de commerce", AUTRE, I, Effet_equip.RUNE_COMMERCE,
+            true);
     static Pre_Equipement popoI = new Pre_Equipement("Soupe magique", CONSO_MAIN, I, Effet_equip.SOUPE_MAGIQUE, true);
     
     static Pre_Equipement[] rang1 = {fleche_plusI, fleche_plusI2, fleche_plusI3, fleche_plusI4, fleche_plusI5,
             ceintureI, arcI, dagueI, epeeI, armureI, casqueI, bouclierI, healPPI, healI, sacI, armure_w, casque_w,
             bouclier_w, armure_a, casque_a, bouclier_a, main1_a, main1_a, main2_a, armure_r, casque_r, bouclier_r,
             main2_r, main1_ba, main1_ba, main2_ba, armure_ar, elem_main, elem_casque, elem_armure, elem_bouclier,
-            bracelet_r1, bracelet_r1, bracelet_ar1, bracelet_a1, bracelet_a1, bracelet_ra1, epee_fertile, parchemin_feu,
-            parch_force, rune_croiss, rune_feu, rune_feu, rune_pluie, rune_haine, rune_virale, rune_orage, rune_mort,
-            rune_dodo, rune_commerce, popoI};
+            bracelet_r1, bracelet_r1, bracelet_ar1, bracelet_a1, bracelet_a1, bracelet_ra1, epee_fertile,
+            parchemin_feu, parch_force, rune_croiss, rune_feu, rune_feu, rune_pluie, rune_haine, rune_virale,
+            rune_orage, rune_mort, rune_dodo, rune_commerce, popoI};
     
     static Pre_Equipement ceintureII = new Pre_Equipement("ceinture de fer", CEINTURE, II, AUCUN, false);
     static Pre_Equipement arcII = new Pre_Equipement("grand arc", ARC, II, AUCUN, false);
@@ -435,10 +436,9 @@ public class Pre_Equipement {
     
     
     static Pre_Equipement[] rang3 = {fleche_plusIII, fleche_plusIII2, fleche_plusIII3, ceintureIII, arcIII, dagueIII,
-            epeeIII, armureIII, casqueIII, bouclierIII, sacIII, bracelet_ar3, bracelet_r3, bracelet_ra3,
-            popo_max, popoIII, healIII, healPPIII, casque_III_ar, bouclierIII_ar, armureIII_r,
-            casque_III_r, bouclierIII_r, main1III_ba, main1III_ba, main2III_ba, main2III_ga, lame_mont, armureIII_ar,
-            main1III_a, bracelet_max};
+            epeeIII, armureIII, casqueIII, bouclierIII, sacIII, bracelet_ar3, bracelet_r3, bracelet_ra3, popo_max,
+            popoIII, healIII, healPPIII, casque_III_ar, bouclierIII_ar, armureIII_r, casque_III_r, bouclierIII_r,
+            main1III_ba, main1III_ba, main2III_ba, main2III_ga, lame_mont, armureIII_ar, main1III_a, bracelet_max};
     
     static Pre_Equipement nectar = new Pre_Equipement("nectar", AUTRE, IV, Effet_equip.NECTAR, false);
     static Pre_Equipement ambroisie = new Pre_Equipement("ambroisie", AUTRE, IV, Effet_equip.AMBROISIE, false);
