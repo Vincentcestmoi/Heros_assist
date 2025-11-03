@@ -229,7 +229,7 @@ public abstract class Joueur {
     
     //************************************************SAUVEGARDE******************************************************//
     
-    public void sauvegarder(String chemin) throws IOException {
+    public void sauvegarder(String chemin, boolean discret) throws IOException {
         JsonObject joueurJson = Json.createObjectBuilder().add("nom", this.nom).add("metier",
                 this.getMetier().name()).add("ob_f", this.ob_f).add("position", this.position.name()).add("xp",
                 this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_structure()).build();
@@ -240,6 +240,10 @@ public abstract class Joueur {
         
         try (Writer fileWriter = new FileWriter(chemin); JsonWriter writer = writerFactory.createWriter(fileWriter)) {
             writer.writeObject(joueurJson);
+        }
+        
+        if(!discret){
+            System.out.printf("Joueur mis à jour : %s\n", this.nom);
         }
     }
     

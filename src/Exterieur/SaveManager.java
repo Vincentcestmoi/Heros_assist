@@ -140,7 +140,7 @@ public class SaveManager {
         
         // Sauvegarde des joueurs
         for (int i = 0; i < Main.joueurs.length; i++) {
-            Main.joueurs[i].sauvegarder(dossier + "/Joueur" + i + ".json");
+            Main.joueurs[i].sauvegarder(dossier + "/Joueur" + i + ".json", discret);
         }
         
         // Reconstruction de info.json
