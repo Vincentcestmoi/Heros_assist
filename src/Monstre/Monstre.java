@@ -33,7 +33,7 @@ public class Monstre {
     protected float part_soin;      // quand l'adversaire utilise "premier soin" en première ligne.
     protected int etat;         //l'état du corps du monstre
     
-    // stats de base à concerver
+    // stats de base à conserver
     protected int vie_base;
     protected int attaque_base;
     protected int armure_base;
