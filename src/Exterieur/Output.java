@@ -183,7 +183,8 @@ public class Output {
     }
     
     public static void jouerSonMarche() {
-        jouerSon("Audio/marche.wav");
+        System.out.println("Son momentanément indisponible.");
+        //jouerSon("Audio/marche.wav");
     }
     
     /**
