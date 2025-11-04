@@ -292,7 +292,7 @@ public class Shaman extends Joueur {
     public String text_extra(Action action) {
         String text = super.text_extra(action);
         if (est_berserk() && this.niveau >= 3) {
-            text += "(pa)ix intérieure";
+            text += "/(pa)ix intérieure";
         }
         return text;
     }
