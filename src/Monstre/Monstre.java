@@ -723,6 +723,7 @@ public class Monstre {
      */
     public boolean check_mort(Position pos) throws IOException {
         if (est_mort()) {
+            Output.jouerSonMonstreMort();
             switch (competence) {
                 case ILLU_AURAI, ILLU_CYCLOPE, ILLU_DULLA, ILLU_GOLEM, ILLU_ROCHE, ILLU_SIRENE, ILLU_TRITON,
                      ILLU_VENTI -> {
@@ -732,7 +733,6 @@ public class Monstre {
                 }
                 case DUO -> {
                     System.out.println("Un des " + this.nom + " est mort(e).");
-                    Output.jouerSonMonstreMort();
                     this.competence = Competence.DUO_PASSED;
                     this.vie = this.vie_base;
                     return true;
@@ -740,10 +740,9 @@ public class Monstre {
                 default -> System.out.println(this.nom + " est mort(e).");
             }
             drop();
-            etat += vie; //on retire les dégats en trop
+            etat += vie; //on retire les dégas en trop
             Joueur.monstre_mort(this);
             
-            Output.jouerSonMonstreMort();
             if (etat <= 0 || pos == Position.ENFERS || pos == Position.OLYMPE || pos == Position.ASCENDANT) {
                 return false;
             }
