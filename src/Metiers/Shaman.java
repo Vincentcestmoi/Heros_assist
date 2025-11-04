@@ -825,14 +825,14 @@ public class Shaman extends Joueur {
         if (jet <= 1) {
             System.out.println("Une légère brûme vous entoure.");
             System.out.println("Chaque joueur et familier perds temporairement 1 point d'attaque.");
-            ennemi.boostVie(-1, false);
+            ennemi.boostAtk(-1, false);
         } else if (jet <= 3) {
             System.out.println("C'est... joli ?");
-            ennemi.boostVie(-1, false);
+            ennemi.boostAtk(-1, false);
         } else if (jet == 4) {
             System.out.println("La brûme se lève.");
             System.out.println("Chaque joueur et familier perds temporairement 2 points d'attaque.");
-            ennemi.boostVie(-3, false);
+            ennemi.boostAtk(-3, false);
         } //D6
         else if (jet == 5) {
             System.out.println("La brûme commence à vous encercler.");
