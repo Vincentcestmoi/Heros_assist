@@ -2451,7 +2451,7 @@ public abstract class Joueur {
             int i;
             do {
                 i = rand.nextInt(Main.nbj + 1);
-            } while (i < Main.nbj || !Main.joueurs[i].est_actif());
+            } while (i < Main.nbj && !Main.joueurs[i].est_actif());
             if (i == Main.nbj) {
                 return base * berserk * 0.5f; //50% bonus en moins dû à la folie
             }
