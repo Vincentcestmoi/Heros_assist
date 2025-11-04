@@ -1050,7 +1050,7 @@ public class Alchimiste extends Joueur {
     @Override
     protected void monstre_mort_perso(Monstre ennemi) throws IOException {
         if (ennemi.corps_utilisable() && est_actif() && est_vivant()) {
-            if (Input.yn("Voulez vous disséquer le cadavre ?")) {
+            if (Input.yn("%s, veut-iel disséquer le cadavre ?".formatted(this.nom))) {
                 ennemi.alterEtat(dissection(ennemi.getEtat()));
             }
         }

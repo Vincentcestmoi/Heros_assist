@@ -671,7 +671,7 @@ public class Necromancien extends Joueur {
     @Override
     protected void monstre_mort_perso(Monstre ennemi) throws IOException {
         if (ennemi.corps_utilisable() && est_actif() && est_vivant() && this.niveau >= 1) {
-            if (Exterieur.Input.yn("Voulez vous tenter de ressusciter " + ennemi.getNom() + " en tant que familier " + "pour 2PP ?")) {
+            if (Exterieur.Input.yn("%s veut-il tenter de ressusciter %s en tant que familier pour 2PP ?".formatted(this.nom, ennemi.getNom()))) {
                 ennemi.alterEtat(zombifier(ennemi));
             }
         }
