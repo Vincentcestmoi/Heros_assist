@@ -1162,8 +1162,9 @@ public abstract class Joueur {
     public void rendre_mort() {
         if (bracelet_protect) {
             bracelet_protect = false;
+            Texte.bracelet_protect(this);
+            return;
         }
-        Texte.bracelet_protect(this);
         Output.JouerSonMort();
         vivant = false;
         reveil = 0;
