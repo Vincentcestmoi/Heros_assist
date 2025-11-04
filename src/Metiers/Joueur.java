@@ -1186,7 +1186,7 @@ public abstract class Joueur {
         ob_f = 0;
         position = Position.ENFERS;
         retirer_tout(false);
-        if (this.parent == Dieux.HADES || getMetier() != Metier.NECROMANCIEN) {
+        if (this.parent == Dieux.HADES && getMetier() != Metier.NECROMANCIEN) {
             int PO = rune_mortifere ? 13 : 6;
             int PIT = rune_mortifere ? 6 : 3;
             Texte.thaumaturge(PIT, PO);
