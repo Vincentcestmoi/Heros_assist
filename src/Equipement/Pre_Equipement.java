@@ -45,7 +45,7 @@ public class Pre_Equipement {
      * @param promo le type de promotion, significatif uniquement si le rang est PROMOTION
      */
     public static void safe_delete(String nom, Rang rang, Promo_Type promo) {
-        safe_delete(nom, rang, promo, false);
+        safe_delete(nom, rang, promo, true);
     }
     
     /**
