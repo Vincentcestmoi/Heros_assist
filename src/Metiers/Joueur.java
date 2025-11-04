@@ -872,8 +872,18 @@ public abstract class Joueur {
     }
     
     public static void monstre_mort(Monstre ennemi) throws IOException {
+        // bijection aléatoire
+        int[] t = new int[Main.nbj];
+        Arrays.fill(t, -1);
+        for (int i = 0; i < Main.nbj; ) {
+            int temp = rand.nextInt(Main.nbj);
+            if (t[temp] == -1) {
+                t[temp] = i;
+                i++;
+            }
+        }
         for (int i = 0; i < Main.nbj; i++) {
-            Main.joueurs[i].monstre_mort_perso(ennemi);
+            Main.joueurs[t[i]].monstre_mort_perso(ennemi);
             if (!ennemi.corps_utilisable()) {
                 System.out.println("Le cadavre du monstre n'est plus utilisable.");
                 return;
