@@ -449,10 +449,10 @@ public class Shaman extends Joueur {
                 \t2: ↥☁
                 """;
         if (this.niveau >= 5) {
-            text += "\n\t3: ¤✧";
+            text += "\t3: ¤✧\n";
         }
         if (this.niveau >= 8) {
-            text += "\n\t4: ∆Ψ";
+            text += "\t4: ∆Ψ\n";
         }
         return text;
     }
@@ -506,7 +506,7 @@ public class Shaman extends Joueur {
                 \t1: ≠‼∴α
                 \t2: ≠‼ψχ""");
         if (this.niveau >= 3) {
-            System.out.println("\\t3: ≠‼∅δ");
+            System.out.println("\t3: ≠‼∅δ");
         }
         switch (Input.readInt()) {
             case 1 -> colere_boost();
