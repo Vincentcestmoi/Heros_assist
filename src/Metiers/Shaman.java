@@ -533,6 +533,9 @@ public class Shaman extends Joueur {
     private void colere_boost() throws IOException {
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(17, 10);
+        if(rune_haine){
+            jet += 1;
+        }
         if (jet <= 11) {
             jet += jet(new int[]{9}, new int[]{8, 6}, new int[]{4, 10, 10, 10});
         }
@@ -573,6 +576,9 @@ public class Shaman extends Joueur {
         int attaque;
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(17, 10);
+        if(rune_haine){
+            jet += 1;
+        }
         if (jet <= 12) {
             jet += jet(new int[]{9, 4}, new int[]{10, 8, 6}, new int[]{10, 10, 10});
         }
@@ -622,6 +628,9 @@ public class Shaman extends Joueur {
     private void colere_berserk() throws IOException {
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(17, 10);
+        if(rune_haine){
+            jet += 1;
+        }
         if (jet <= 9) {
             jet += jet(new int[]{9, 4}, new int[]{8, 6, 4}, new int[]{10, 10});
         }
@@ -683,12 +692,12 @@ public class Shaman extends Joueur {
                 if (this.niveau >= 6) {
                     nuage_foudre(ennemi);
                 } else {
-                    System.out.println("Input unknow");
+                    System.out.println("Input unknown");
                     nuage(ennemi);
                 }
             }
             default -> {
-                System.out.println("Input unknow");
+                System.out.println("Input unknown");
                 nuage(ennemi);
             }
         }
@@ -702,6 +711,9 @@ public class Shaman extends Joueur {
         System.out.println("Des nuages apparaissent dans le ciel et une pluie légère commence à tomber.");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(15, 10);
+        if(rune_pluie){
+            jet += 1;
+        }
         if (jet <= 10) {
             jet += jet(new int[]{8, 6}, new int[]{8, 6, 4}, new int[]{10, 10});
         }
@@ -751,12 +763,15 @@ public class Shaman extends Joueur {
         System.out.println("De sombres nuages s'amoncèlent au dessus de vous");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(15, 10);
+        if(rune_pluie){
+            jet += 1;
+        }
         if (jet <= 9) {
             jet += jet(new int[]{8, 6}, new int[]{8, 6, 4}, new int[]{10, 10});
         }
         // D4
         if (jet <= 1) {
-            System.out.println("Une fine grèle vous frappe.");
+            System.out.println("Une fine grêle vous frappe.");
             System.out.println("Chaque joueur et familier subit 1 point de dommage.");
             ennemi.dommage(1);
         } else if (jet <= 3) {
@@ -769,16 +784,16 @@ public class Shaman extends Joueur {
             ennemi.dommage(4);
         } //D6
         else if (jet == 5) {
-            System.out.println("La grèle s'abat sur vous.");
+            System.out.println("La grêle s'abat sur vous.");
             System.out.println("Chaque joueur et familier subit 4 points de dommage.");
             ennemi.dommage(7 + rand.nextInt(3)); //7~9
         } else if (jet == 6) {
-            System.out.println("La grèle s'abat sur vous.");
+            System.out.println("La grêle s'abat sur vous.");
             System.out.printf("Chaque joueur et familier subit %d points de dommage.\n", 4 + rand.nextInt(2)); //4~5
             ennemi.dommage(9 + rand.nextInt(3)); //9~11
         } //D8
         else if (jet == 7) {
-            System.out.println("Une violente tempête se lève et la grèle vous frappe.");
+            System.out.println("Une violente tempête se lève et la grêle vous frappe.");
             System.out.printf("Chaque joueur et familier subit %d points de dommage.\n", 6 + rand.nextInt(3)); //6~8
             ennemi.dommage(13 + rand.nextInt(4)); //13~16
             if (rand.nextBoolean()) {
@@ -818,6 +833,9 @@ public class Shaman extends Joueur {
         System.out.println("Un nuage apparait au dessus de vous et commence à se rapprocher du sol");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(15, 10);
+        if(rune_pluie){
+            jet += 1;
+        }
         if (jet <= 9) {
             jet += jet(new int[]{8, 6}, new int[]{8, 6, 4}, new int[]{10, 10, 10});
         }
@@ -882,6 +900,12 @@ public class Shaman extends Joueur {
         System.out.println("Un nuage menaçant apparait au dessus de vous et commence à se rapprocher du sol");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(15, 10);
+        if(rune_orage){
+            jet += 1;
+        }
+        if(rune_pluie){
+            jet += 1;
+        }
         if (jet <= 10) {
             jet += jet(new int[]{8}, new int[]{8, 6}, new int[]{8, 10, 10});
         }

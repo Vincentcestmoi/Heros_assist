@@ -660,11 +660,17 @@ public class Archimage extends Joueur {
         if (this.niveau >= 10) {
             jet += 2;
         }
+        if(rune_orage){
+            jet += 1;
+        }
         if (jet <= 23) {
             jet += Input.D12();
         }
         
         int dmg = bonus_sup10(16, 8);
+        if(rune_orage){
+            jet += 1;
+        }
         if (jet <= mini || mana < mini) {
             System.out.println("Le sort ne fonctionne pas.");
             return;

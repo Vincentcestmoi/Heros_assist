@@ -83,12 +83,12 @@ public abstract class Joueur {
     private boolean parch_lumiere;
     private boolean a_aveugle;
     private boolean rune_croissance;
-    private boolean rune_pluie;
+    protected boolean rune_pluie;
     protected boolean rune_haine;
     private boolean rune_virale;
     private boolean rune_dodo;
     protected boolean rune_mortifere;
-    private boolean rune_orage;
+    protected boolean rune_orage;
     private boolean rune_commerce;
     private int rune_ardente;
     private int rune_ardente2;
@@ -2854,7 +2854,7 @@ public abstract class Joueur {
     }
     
     public void add_rune_pluie() {
-        if (this.parent == Dieux.POSEIDON) {
+        if (this.parent == Dieux.POSEIDON || (getMetier() == Metier.SHAMAN && this.niveau >= 1)) {
             Texte.reaction_equipement();
         }
         this.rune_pluie = true;
@@ -2909,7 +2909,7 @@ public abstract class Joueur {
     }
     
     public void add_rune_orage() {
-        if (this.parent == Dieux.ZEUS) {
+        if (this.parent == Dieux.ZEUS || (getMetier() == Metier.ARCHIMAGE && this.niveau > 5) || (getMetier() == Metier.SHAMAN && this.niveau > 6)) {
             Texte.reaction_equipement();
         }
         this.rune_orage = true;
