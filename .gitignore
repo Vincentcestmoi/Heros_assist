@@ -27,3 +27,7 @@ Save*/*
 /table/*.ods
 .idea
 /auxiliaire/informations_alchimiste_complète
+
+#temporaire
+/Heros.jar 
+/META-INF/MANIFEST.MF
