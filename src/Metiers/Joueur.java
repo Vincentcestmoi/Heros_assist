@@ -1,6 +1,7 @@
 package Metiers;
 
 import Auxiliaire.Texte;
+import Auxiliaire.Utilitaire.LoopGuard;
 import Enum.*;
 import Equipement.Equipement;
 import Exterieur.Input;
@@ -474,8 +475,10 @@ public abstract class Joueur {
      */
     protected int bonus_sup10(int min, int palier) {
         int bonus = 0;
+        LoopGuard garde = new LoopGuard();
         int temp = this.niveau;
         while (temp >= min) {
+            garde.check();
             bonus += 1;
             temp -= palier;
         }
@@ -874,17 +877,14 @@ public abstract class Joueur {
     public static void monstre_mort(Monstre ennemi) throws IOException {
         // bijection aléatoire
         int[] t = new int[Main.nbj];
-        int fusible = 0;
+        LoopGuard garde = new LoopGuard();
         Arrays.fill(t, -1);
         for (int i = 0; i < Main.nbj; ) {
+            garde.check();
             int temp = rand.nextInt(Main.nbj);
             if (t[temp] == -1) {
                 t[temp] = i;
                 i++;
-            }
-            fusible++;
-            if(fusible > 10_000){
-                throw new RuntimeException("Erreur , boucle infinie suspectée.");
             }
         }
         for (int i = 0; i < Main.nbj; i++) {

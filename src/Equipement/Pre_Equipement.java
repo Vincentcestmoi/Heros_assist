@@ -1,5 +1,6 @@
 package Equipement;
 
+import Auxiliaire.Utilitaire;
 import Enum.Base;
 import Enum.Effet_equip;
 import Enum.Promo_Type;
@@ -111,15 +112,13 @@ public class Pre_Equipement {
     }
     
     private static Pre_Equipement drop(Pre_Equipement[] l){
-        int t, fusible = 0;
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
+        int t;
         Pre_Equipement equip;
         do {
             t = rand.nextInt(l.length);
             equip = l[t];
-            fusible++;
-            if(fusible > 10_000){
-                throw new RuntimeException("Erreur , boucle infinie suspectée.");
-            }
+            garde.check();
         } while (equip == null);
         equip.safe_delete();
         return equip;
