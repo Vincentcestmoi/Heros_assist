@@ -1028,7 +1028,7 @@ public abstract class Joueur {
                 System.out.println(getNom() + " résiste à la mort.");
             } else {
                 mort_def();
-                actif = false; //pour pas trigueur la prochaine condition
+                actif = false; //pour pas trigger la prochaine condition
             }
         }
         if (est_actif()) {

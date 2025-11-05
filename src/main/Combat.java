@@ -193,7 +193,10 @@ public class Combat {
         while (run) {
             
             //chaque joueur
-            for (int j = 0; j < Main.nbj && run; j++) {
+            for (int j = 0; j < Main.nbj; j++) {
+                if(!run){
+                    return;
+                }
                 skip = false;
                 i = t[j];
                 joueur = Main.joueurs[i];
@@ -834,7 +837,7 @@ public class Combat {
     
     /**
      * Traite les joueurs après la fin du combat
-     * @param ennemi_nomme si l'ennemi etait un monstre nommé (bonus d'xp)
+     * @param ennemi_nomme si l'ennemi était un monstre nommé (bonus d'xp)
      * @throws IOException toujours
      */
     static private void gestion_fin_combat(boolean ennemi_nomme) throws IOException {
