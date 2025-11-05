@@ -1898,8 +1898,8 @@ public abstract class Joueur {
     
     private void annihilation(Monstre ennemi, int bonus_popo) throws IOException {
         Texte.annihilation();
-        int atk = Input.atk();
-        int tir = Input.tir();
+        int atk = Input.atk() + bonus_atk();
+        int tir = Input.tir() + bonus_tir();
         if (tir > atk) {
             atk = tir;
         }
