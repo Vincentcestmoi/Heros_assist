@@ -13,6 +13,7 @@ import Metiers.Joueur;
 import Monstre.Lieu;
 import Monstre.Monstre;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
@@ -49,15 +50,35 @@ public class Main {
         }
         
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            String message = "\n[HOOK] Sauvegarde des données joueurs.\n";
+            String fin = "[HOOK] Fin du programme.\n";
             
-            System.out.println("\nSauvegarde des données joueurs.");
             try {
+                // Console
+                System.out.print(message);
+                System.out.flush();
+                
                 SaveManager.sauvegarder(false);
+                
+                System.out.print(fin);
+                System.out.flush();
+                
+                // Log fichier
+                try (FileWriter fw = new FileWriter("shutdown.log", true)) {
+                    fw.write(message);
+                    fw.write("Sauvegarde effectuée à " + java.time.LocalDateTime.now() + "\n");
+                    fw.write(fin);
+                }
+                
             } catch (Exception e) {
                 System.err.println("⚠️ Erreur lors de la sauvegarde : " + e.getMessage());
+                System.err.flush();
+                try (FileWriter fw = new FileWriter("shutdown.log", true)) {
+                    fw.write("[HOOK] Erreur lors de la sauvegarde : " + e.getMessage() + "\n");
+                } catch (Exception ignored) {}
             }
-            System.out.println("Fin du programme");
         }));
+        
         
         boolean run = true;
         int i = nbj;

@@ -261,7 +261,12 @@ public class Output {
     
     public static void viderSauvegarde(int index) throws IOException {
         File dossier = new File("Save" + index);
-        if (!dossier.exists()) throw new IOException("Dossier introuvable.");
+        
+        if (!dossier.exists()) {
+            if (!dossier.mkdirs()) {
+                throw new IOException("Impossible de créer le dossier : " + dossier.getAbsolutePath());
+            }
+        }
         
         for (File f : Objects.requireNonNull(dossier.listFiles())) {
             if (!f.delete()) {

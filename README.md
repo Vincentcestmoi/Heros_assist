@@ -13,14 +13,14 @@ Il automatise la plupart des interactions non-inter-joueurs et se suffit presque
    ```
 2. **Exécution** du jeu :
     ```bash
-   ./lancer.sh
+   ./heros.sh
    ```
 3. Quitter le jeu :  
    Lors du choix d’action du tour, entrez `q` deux fois pour quitter proprement.
 
 4. Vérifier la version :
     ```bash
-   ./lancer.sh -v
+   ./heros.sh --version
    ```
 
 ⚠️ Quand vous chargez une save existante sans la poursuivre, elle sera écrasée.
