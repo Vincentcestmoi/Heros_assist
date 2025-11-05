@@ -24,19 +24,19 @@ jobs:
       run: tree
 
     - name: 🔧 Make scripts executable
-      run: chmod +x compiler.sh lancer.sh
+      run: chmod +x compiler.sh heros.sh
 
     - name: 🛠️ Compile Java sources
       run: ./compiler.sh
 
     - name: 🚀 Run main program (no play)
-      run: ./lancer.sh --test
+      run: ./heros.sh --test
 
     - name: 🧪 Test session basic flow
-      run: timeout 10s ./lancer.sh --test2
+      run: timeout 10s ./heros.sh --test2
 
     - name: 🧪 Test session with load
-      run: timeout 10s ./lancer.sh --test3
+      run: timeout 10s ./heros.sh --test3
 
     - name: 🧪 Test session clean save
-      run: timeout 10s ./lancer.sh --test4
+      run: timeout 10s ./heros.sh --test4

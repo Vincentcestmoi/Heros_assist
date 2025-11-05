@@ -1,2 +1,2 @@
 ./compiler.sh
-./lancer.sh
+./heros.sh
