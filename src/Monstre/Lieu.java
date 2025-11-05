@@ -1,5 +1,6 @@
 package Monstre;
 
+import Auxiliaire.Utilitaire;
 import Enum.Position;
 
 import java.util.Random;
@@ -108,11 +109,7 @@ public class Lieu {
      * @return un monstre
      */
     public static Monstre true_enfers() {
-        Race race;
-        do {
-            race = Race.enfers[random.nextInt(Race.enfers.length)];
-        } while (race.spawn_pas());
-        return new Monstre(race);
+        return get_monstre(Race.enfers);
     }
     
     /**
@@ -120,11 +117,7 @@ public class Lieu {
      * @return un monstre
      */
     public static Monstre true_prairie() {
-        Race race;
-        do {
-            race = Race.prairie[random.nextInt(Race.prairie.length)];
-        } while (race.spawn_pas());
-        return new Monstre(race);
+        return get_monstre(Race.prairie);
     }
     
     /**
@@ -132,11 +125,7 @@ public class Lieu {
      * @return un monstre
      */
     public static Monstre true_vigne() {
-        Race race;
-        do {
-            race = Race.vigne[random.nextInt(Race.vigne.length)];
-        } while (race.spawn_pas());
-        return new Monstre(race);
+        return get_monstre(Race.vigne);
     }
     
     /**
@@ -144,11 +133,7 @@ public class Lieu {
      * @return un monstre
      */
     public static Monstre true_temple() {
-        Race race;
-        do {
-            race = Race.temple[random.nextInt(Race.temple.length)];
-        } while (race.spawn_pas());
-        return new Monstre(race);
+        return get_monstre(Race.temple);
     }
     
     /**
@@ -156,11 +141,7 @@ public class Lieu {
      * @return un monstre
      */
     public static Monstre true_mer() {
-        Race race;
-        do {
-            race = Race.mer[random.nextInt(Race.mer.length)];
-        } while (race.spawn_pas());
-        return new Monstre(race);
+        return get_monstre(Race.mer);
     }
     
     /**
@@ -168,11 +149,7 @@ public class Lieu {
      * @return un monstre
      */
     public static Monstre true_mont() {
-        Race race;
-        do {
-            race = Race.mont[random.nextInt(Race.mont.length)];
-        } while (race.spawn_pas());
-        return new Monstre(race);
+        return get_monstre(Race.mont);
     }
     
     /**
@@ -180,11 +157,29 @@ public class Lieu {
      * @return un monstre
      */
     public static Monstre olympe() {
-        Race race;
-        do {
-            race = Race.olympe[random.nextInt(Race.olympe.length)];
-        } while (race.spawn_pas());
-        return new Monstre(race);
+        return get_monstre(Race.olympe);
+    }
+    
+    /**
+     * Renvoie un monstre au hasard parmi ceux demandés
+     * @param list la liste des monstres potentiels
+     * @return un monstre parmi la liste
+     */
+    public static Monstre get_monstre(Race[] list){
+        int total = 0;
+        for(Race r : list){
+            total += r.get_proba();
+        }
+        int t = random.nextInt(total);
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
+        for (Race race : list) {
+            t -= race.get_proba();
+            if (t <= 0) {
+                return new Monstre(race);
+            }
+            garde.check();
+        }
+        throw new IllegalStateException("Dépassement de la donnée");
     }
     
     public static Monstre get_dummy() {
