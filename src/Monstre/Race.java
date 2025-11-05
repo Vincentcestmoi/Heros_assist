@@ -94,15 +94,10 @@ public class Race {
     }
     
     /**
-     * Indique si un monstre de la race donnée n'apparait pas
-     * @return false si le monstre apparait, true s'il n'apparait pas
+     * Renvoie la probabilité d'apparition d'un monstre
      */
-    public boolean spawn_pas() {
-        Random rand = new Random();
-        if (this.proba == 0) {
-            return true;
-        }
-        return rand.nextInt(10) >= proba; //10*proba%
+    int get_proba() {
+        return proba;
     }
     
     // data en dur

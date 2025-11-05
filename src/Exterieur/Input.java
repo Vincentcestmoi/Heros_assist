@@ -1,5 +1,6 @@
 package Exterieur;
 
+import Auxiliaire.Utilitaire;
 import Enum.*;
 import Equipement.Pre_Equipement;
 import Metiers.Joueur;
@@ -25,7 +26,9 @@ public class Input {
         
         SaveManager.afficherSauvegardes();
         int reponse;
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         do {
+            garde.check();
             System.out.print("Votre choix : ");
             reponse = readInt();
         } while (reponse < 0 || reponse >= SaveManager.SAVE_DIRS.length);
@@ -128,7 +131,9 @@ public class Input {
     public static String read() throws IOException {
         StringBuilder readed = new StringBuilder();
         int temp = System.in.read();
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         while (temp != 10) {
+            garde.check();
             readed.append((char) temp);
             temp = System.in.read();
         }
@@ -143,7 +148,9 @@ public class Input {
      */
     public static int readInt() throws IOException {
         int number;
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         while (true) {
+            garde.check();
             number = 0;
             int temp = System.in.read();
             
@@ -153,6 +160,7 @@ public class Input {
             
             boolean valid = true;
             while (temp != '\n' && temp != -1) {
+                garde.check();
                 int digit = temp - '0';
                 if (digit < 0 || digit > 9) {
                     valid = false;
@@ -285,7 +293,9 @@ public class Input {
      * @return s'il a répondu oui
      */
     public static boolean yn(String question) throws IOException {
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         while (true) {
+            garde.check();
             System.out.print(question + " O/n ");
             String reponse = read().toLowerCase();
             if (reponse.equals("o") || reponse.isEmpty()) {
@@ -533,7 +543,9 @@ public class Input {
     public static boolean ask_heal(int premier_ligne) throws IOException {
         int i = 0;
         Joueur joueur;
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         while (true) {
+            garde.check();
             joueur = Main.joueurs[i];
             if (joueur.est_actif() && joueur.est_vivant()) {
                 if (yn("Voulez vous soigner " + joueur.getNom() + " ?")) {
@@ -552,7 +564,9 @@ public class Input {
     public static Choix tour(int index) throws IOException {
         Joueur joueur = Main.joueurs[index];
         Position position = joueur.getPosition();
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         while (true) {
+            garde.check();
             String text = "Que voulez-vous faire : (E)xplorer";
             boolean peut_descendre =
                     position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;

@@ -1,5 +1,6 @@
 package Monstre;
 
+import Auxiliaire.Utilitaire;
 import Enum.Competence;
 import Enum.Position;
 import Equipement.Equipement;
@@ -249,7 +250,9 @@ public class Monstre {
     private void subit_dommage(int quantite, boolean silence) {
         if (est_pantin()) {
             System.out.print("Vous avez infligé " + quantite + " dommages");
+            Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
             while (quantite > 25) {
+                garde.check();
                 System.out.print("!");
                 quantite -= 10;
             }

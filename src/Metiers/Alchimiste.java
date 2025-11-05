@@ -1,5 +1,6 @@
 package Metiers;
 
+import Auxiliaire.Utilitaire;
 import Enum.*;
 import Exterieur.Input;
 import Monstre.Monstre;
@@ -883,7 +884,9 @@ public class Alchimiste extends Joueur {
         int concoc = Input.D6() + ingre + rand.nextInt(3) - 1 + bonus_concoc();
         
         
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         while (concoc > 0) {
+            garde.check();
             
             //tirage aléatoire
             int[] t = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};

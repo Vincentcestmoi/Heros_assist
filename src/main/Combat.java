@@ -1,5 +1,6 @@
 package main;
 
+import Auxiliaire.Utilitaire;
 import Enum.Action;
 import Enum.Action_extra;
 import Enum.Dieux;
@@ -99,7 +100,9 @@ public class Combat {
         
         // z'avez plus le choix
         int i;
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         do {
+            garde.check();
             i = rand.nextInt(Main.nbj);
         } while (!Main.joueurs[i].faire_front(true));
         return i;
@@ -190,7 +193,10 @@ public class Combat {
         Action_extra act_ex;
         Joueur joueur;
         boolean skip;
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         while (run) {
+            
+            garde.check();
             
             //chaque joueur
             for (int j = 0; j < Main.nbj; j++) {
@@ -231,6 +237,7 @@ public class Combat {
                     if (act == Action.JOINDRE) {
                         Joueur.joindre(pos);
                     }
+                    garde.check();
                 } while (act == Action.JOINDRE && joueur.peut_jouer());
                 if (!joueur.peut_jouer()) {
                     act = Action.AUCUNE;
@@ -352,6 +359,7 @@ public class Combat {
                     } else {
                         do {
                             k = rand.nextInt(Main.nbj);
+                            garde.check();
                         } while (!Main.joueurs[k].est_actif() || !Main.joueurs[k].est_vivant());
                         pr_l = k;
                         Main.joueurs[k].faire_front(true);
@@ -450,9 +458,11 @@ public class Combat {
         }
         
         int reponse;
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         do {
             System.out.println(text);
             reponse = Input.readInt();
+            garde.check();
         } while (reponse < 1 || reponse > 4);
         String nom = "";
         switch (reponse) {

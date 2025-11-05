@@ -1,5 +1,6 @@
 package main;
 
+import Auxiliaire.Utilitaire;
 import Enum.Choix;
 import Enum.Dieux;
 import Enum.Metier;
@@ -60,7 +61,9 @@ public class Main {
         
         boolean run = true;
         int i = nbj;
+        Utilitaire.LoopGuard MainGarde = new Utilitaire.LoopGuard(1_000_000);
         while (run) {
+            MainGarde.check();
             if (i == nbj) {
                 SaveManager.sauvegarder(true); // sauvegarde auto
                 i = 0;
@@ -577,6 +580,7 @@ public class Main {
     private static void init_game() throws IOException {
         //titre
         String titre;
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         do {
             System.out.print("Entrez le nom de la sauvegarde :");
             titre = Input.read();
@@ -587,6 +591,7 @@ public class Main {
             if (titre.isEmpty() || titre.equals("\n")) {
                 titre = ":";
             }
+            garde.check();
         } while (titre.equals(":") || !Input.yn("Confirmez vous le titre : " + titre + "?"));
         
         //nbj
@@ -595,6 +600,7 @@ public class Main {
         while (Main.nbj <= 0 || Main.nbj > Main.nbj_max) {
             System.out.println("Impossible, le nombre de joueur doit être comprit entre 1 et " + Main.nbj_max + ".");
             Main.nbj = Input.readInt();
+            garde.check();
         }
         
         joueurs = new Joueur[Main.nbj];
@@ -620,6 +626,7 @@ public class Main {
             String[] job = {"mage (no)ir", "archi(ma)ge", "(al)chimiste", "(gu)errière", "(ra)nger", "(sh)aman",
                     "(au)cun"};
             while (run) {
+                garde.check();
                 run = false;
                 System.out.println(nom + ", choisissez votre profession : ");
                 for (String s : job) {

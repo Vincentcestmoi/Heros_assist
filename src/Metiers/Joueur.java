@@ -459,7 +459,9 @@ public abstract class Joueur {
      */
     private void setNiveau(int experience) {
         int niveau = 0;
+        LoopGuard garde = new LoopGuard();
         while (experience >= 5 * (niveau + 1)) {
+            garde.check();
             niveau++;
             experience -= niveau * 5;
         }
@@ -1268,8 +1270,10 @@ public abstract class Joueur {
             //folie
             if (Input.D6() + ob_f * 0.5f < 2 + f_berserk) {
                 int l;
+                LoopGuard garde = new LoopGuard();
                 do {
                     l = rand.nextInt(8);
+                    garde.check();
                 } while (!Main.joueurs[l].est_actif());
                 int temp = Input.atk();
                 temp += Main.corriger(temp * (f_berserk / 2));
@@ -2465,7 +2469,9 @@ public abstract class Joueur {
         System.out.println("Vous êtes pris(e) de folie meurtrière et distinguez mal vos alliés de vos ennemis.");
         if (folie_berserk()) {
             int i;
+            LoopGuard garde = new LoopGuard();
             do {
+                garde.check();
                 i = rand.nextInt(Main.nbj + 1);
             } while (i < Main.nbj && !Main.joueurs[i].est_actif());
             if (i == Main.nbj) {

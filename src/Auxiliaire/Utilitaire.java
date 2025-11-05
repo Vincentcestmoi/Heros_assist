@@ -2,6 +2,7 @@ package Auxiliaire;
 
 public class Utilitaire {
     
+    /** Une classe destinée à servir de fusible dans une boucle, renvoyant une erreur si trop d'itération ont lieu*/
     public static class LoopGuard {
         private final int maxIterations;
         private int counter = 0;
@@ -22,7 +23,7 @@ public class Utilitaire {
         }
         
         /**
-         * S'assure que le nombre d'itérations éffectué ne dépasse pas un certain seuil
+         * S'assure que le nombre d'itérations effectué ne dépasse pas un certain seuil
          */
         public void check() {
             counter++;
