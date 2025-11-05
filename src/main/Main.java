@@ -47,7 +47,6 @@ public class Main {
             init_game();
         }
         
-        // s'active automatiquement en cas d'arrêt
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             
             System.out.println("\nSauvegarde des données joueurs.");

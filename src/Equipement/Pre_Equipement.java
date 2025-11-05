@@ -110,19 +110,27 @@ public class Pre_Equipement {
         }
     }
     
+    private static Pre_Equipement drop(Pre_Equipement[] l){
+        int t, fusible = 0;
+        Pre_Equipement equip;
+        do {
+            t = rand.nextInt(l.length);
+            equip = l[t];
+            fusible++;
+            if(fusible > 10_000){
+                throw new RuntimeException("Erreur , boucle infinie suspectée.");
+            }
+        } while (equip == null);
+        equip.safe_delete();
+        return equip;
+    }
+    
     /**
      * Extrait et renvoie un équipement rang 0
      */
     public static Pre_Equipement drop_0() {
         System.out.println("Vous récupérez un équipement rang 0 :");
-        int t;
-        Pre_Equipement equip;
-        do {
-            t = rand.nextInt(rang0.length);
-            equip = rang0[t];
-        } while (equip == null);
-        equip.safe_delete();
-        return equip;
+        return drop(rang0);
     }
     
     /**
@@ -130,14 +138,7 @@ public class Pre_Equipement {
      */
     public static Pre_Equipement drop_1() {
         System.out.println("Vous récupérez un équipement rang I :");
-        int t;
-        Pre_Equipement equip;
-        do {
-            t = rand.nextInt(rang1.length);
-            equip = rang1[t];
-        } while (equip == null);
-        equip.safe_delete();
-        return equip;
+        return drop(rang1);
     }
     
     /**
@@ -145,14 +146,7 @@ public class Pre_Equipement {
      */
     public static Pre_Equipement drop_2() {
         System.out.println("Vous récupérez un équipement rang II :");
-        int t;
-        Pre_Equipement equip;
-        do {
-            t = rand.nextInt(rang2.length);
-            equip = rang2[t];
-        } while (equip == null);
-        equip.safe_delete();
-        return equip;
+        return drop(rang2);
     }
     
     /**
@@ -160,14 +154,7 @@ public class Pre_Equipement {
      */
     public static Pre_Equipement drop_3() {
         System.out.println("Vous récupérez un équipement rang III :");
-        int t;
-        Pre_Equipement equip;
-        do {
-            t = rand.nextInt(rang3.length);
-            equip = rang3[t];
-        } while (equip == null);
-        equip.safe_delete();
-        return equip;
+        return drop(rang3);
     }
     
     /**
@@ -175,14 +162,7 @@ public class Pre_Equipement {
      */
     public static Pre_Equipement drop_4() {
         System.out.println("Vous récupérez un équipement rang IV :");
-        int t;
-        Pre_Equipement equip;
-        do {
-            t = rand.nextInt(rang4.length);
-            equip = rang4[t];
-        } while (equip == null);
-        equip.safe_delete();
-        return equip;
+        return drop(rang4);
     }
     
     /**
@@ -197,19 +177,9 @@ public class Pre_Equipement {
             case CREATURE -> list = prom_list_animal;
             case AMELIORATION -> list = prom_list_boost;
             case ARTEFACT -> list = prom_list_arte;
-            default -> {
-                System.out.println("Erreur : Equipement non reconnu.");
-                return new Pre_Equipement("Erreur", AUTRE, PROMOTION, AUCUN, false);
-            }
+            default -> throw new IllegalArgumentException("Type de promotion inconnu %s".formatted(type));
         }
-        int t;
-        Pre_Equipement equip;
-        do {
-            t = rand.nextInt(list.length);
-            equip = list[t];
-        } while (equip == null);
-        equip.safe_delete();
-        return equip;
+        return drop(list);
     }
     
     static Base AUTRE = Base.AUTRE;

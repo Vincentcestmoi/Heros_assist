@@ -10,6 +10,7 @@ import main.Combat;
 import main.Main;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Random;
@@ -526,7 +527,7 @@ public class Monstre {
                 case 3 -> Equipement.drop_3();
                 case 4 -> Equipement.drop_4();
                 case 5 -> Equipement.drop_promo();
-                default -> System.out.println("Vous n'avez pas la moindre idée de ce que vous venez de trouver.");
+                default -> throw new InvalidParameterException("niveau de promotion invalide : %d.".formatted(temp));
             }
         }
         System.out.println();

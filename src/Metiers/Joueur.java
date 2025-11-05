@@ -874,12 +874,17 @@ public abstract class Joueur {
     public static void monstre_mort(Monstre ennemi) throws IOException {
         // bijection aléatoire
         int[] t = new int[Main.nbj];
+        int fusible = 0;
         Arrays.fill(t, -1);
         for (int i = 0; i < Main.nbj; ) {
             int temp = rand.nextInt(Main.nbj);
             if (t[temp] == -1) {
                 t[temp] = i;
                 i++;
+            }
+            fusible++;
+            if(fusible > 10_000){
+                throw new RuntimeException("Erreur , boucle infinie suspectée.");
             }
         }
         for (int i = 0; i < Main.nbj; i++) {
