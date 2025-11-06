@@ -640,10 +640,7 @@ public class Input {
                     }
                 }
                 case "add" -> {
-                    System.out.println("Confirmez l'addition");
-                    if (read().equals("add")) {
-                        return Choix.FAMILIER_PLUS;
-                    }
+                    return Choix.FAMILIER_PLUS;
                 }
                 case "del" -> {
                     System.out.println("Confirmez décès");
@@ -652,10 +649,7 @@ public class Input {
                     }
                 }
                 case "re" -> {
-                    System.out.println("Confirmez");
-                    if (read().equals("re")) {
-                        return Choix.RETOUR;
-                    }
+                    return Choix.RETOUR;
                 }
                 case "sui" -> {
                     System.out.println("Confirmez");
