@@ -147,7 +147,7 @@ public class Alchimiste extends Joueur {
     
     @Override
     public String text_tour() {
-        String text = "/(co)ncocter des potions;";
+        String text = "/(co)ncocter des potions";
         if (this.niveau >= 2) {
             text += "/(fo)uiller";
         }
