@@ -127,14 +127,17 @@ public class Monstre {
         }
         
         this.attaque += value;
-        if (this.attaque < 0) {
-            this.attaque = 0;
-        }
         if (fondamental) {
             this.attaque_base += value;
             if (this.attaque_base < 0) {
                 this.attaque_base = 0;
             }
+        }
+        
+        if (this.attaque < 1 && this.attaque_base > 0) {
+            this.attaque = 1;
+        } else if(this.attaque < 0){
+            this.attaque = 0;
         }
     }
     
