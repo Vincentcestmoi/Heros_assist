@@ -972,9 +972,9 @@ public abstract class Joueur {
         if (!est_actif()) {
             return false;
         }
-        if (force || Input.yn(nom + " veut-il passer en première ligne ?")) {
+        if (force || Input.yn(nom + " veut-iel passer en première ligne ?")) {
             front = true;
-            if (a_familier_actif() && Input.yn(nom + " envoit-il/elle son familier devant lui ?")) {
+            if (a_familier_actif() && Input.yn(nom + " envoit-iel son familier devant lui ?")) {
                 f_front = true;
             }
             return true;

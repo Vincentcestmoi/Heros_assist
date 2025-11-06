@@ -517,15 +517,15 @@ public class Combat {
         }
         
         // berserk
-        else if ((reponse == 1 || reponse == 3) && !joueur.est_berserk() && Input.yn(nom + " devient-il/elle berserk "
+        else if ((reponse == 1 || reponse == 3) && !joueur.est_berserk() && Input.yn(nom + " devient-iel berserk "
                 + "?")) {
             joueur.berserk(0.1f + 0.1f * rand.nextInt(3));
-        } else if ((reponse == 2 || reponse == 4) && !joueur.f_est_berserk() && Input.yn(nom + " devient-il berserk " + "?")) {
+        } else if ((reponse == 2 || reponse == 4) && !joueur.f_est_berserk() && Input.yn(nom + " devient-iel berserk " + "?")) {
             joueur.f_berserk(0.1f + 0.1f * rand.nextInt(3));
         }
         
         // off
-        else if (Input.yn(nom + " est-il/elle hors du combat ?")) {
+        else if (Input.yn(nom + " est-iel hors du combat ?")) {
             if (reponse == 2 || reponse == 4) {
                 joueur.f_inactiver();
             } else {
