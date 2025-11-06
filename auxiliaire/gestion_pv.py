@@ -62,7 +62,7 @@ text_douleur_moyenne = [
     "Votre souffle est court, chaque mouvement devient pénible."
 ]
 
-text_douleur_faible = [
+text_standard = [
     "Vous supportez encore plutôt bien la douleur.",
     "L'impact n'a rien d'inquiétant, mais n'est pas non plus négligeable.",
     "La blessure est superficielle, mais vous saignez.",
@@ -71,7 +71,7 @@ text_douleur_faible = [
     "Un bleu au plus, rien qui ne vous arrête."
 ]
 
-text_standard = [
+text_douleur_faible = [
     "Ce n'est rien d'insurmontable.",
     "Vous pourriez encaisser bien plus que ça.",
     "Tranquille !",
@@ -153,21 +153,21 @@ while True:
             if pv <= 0:
                 print(RED + choice(text_mort) + RESET)
                 pv = 0
-            elif pv <= (pv_m * 0.08):
+            elif pv <= pv_m * 0.07:
                 print(RED + choice(text_presque_mort) + RESET)
-            elif pv <= (pv_m * 0.16):
+            elif pv <= pv_m * 0.14:
                 print(RED + choice(text_proche_mort) + RESET)
-            elif degas > pv_m * 0.75:
+            elif pv <= pv_m * 0.25:
                 print(YELLOW + choice(text_douleur_intense) + RESET)
-            elif degas > pv_m * 0.6:
+            elif pv <= pv_m * 0.4:
                 print(YELLOW + choice(text_douleur_forte) + RESET)
-            elif degas > pv_m * 0.45:
+            elif pv <= pv_m * 0.6:
                 print(choice(text_douleur_moyenne))
-            elif degas > pv_m * 0.25:
-                print(choice(text_douleur_faible))
-            elif degas <= pv_m * 0.1:
-                print(GREEN + choice(text_min) + RESET)
-            else:
+            elif pv <= pv_m * 0.8:
                 print(choice(text_standard))
+            elif pv <= pv_m * 0.9:
+                print(GREEN + choice(text_douleur_faible) + RESET)
+            else:
+                print(GREEN + choice(text_min) + RESET)
 
             print()
