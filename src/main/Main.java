@@ -30,7 +30,11 @@ public class Main {
     static public Joueur[] joueurs;
     
     public static class Version {
-        public static final String CURRENT = "0.3-beta";
+        //public static final String CURRENT_MAIN = "beta";
+        public static final int CURRENT_MID = 0;
+        public static final int CURRENT_FIX = 3;
+        //public static final String CURRENT = "V%s.%d.%d".formatted(CURRENT_MAIN, CURRENT_MID, CURRENT_FIX);
+        public static final String CURRENT = "%d.%d-beta".formatted(CURRENT_MID, CURRENT_FIX);
     }
     
     public static void main(String[] args) throws IOException {
@@ -41,7 +45,7 @@ public class Main {
         }
         
         if (args.length == 1 && (args[0].equals("--version") || args[0].equals("-v"))) {
-            System.out.println("=== Heros_assist v" + Version.CURRENT + " ===");
+            System.out.println("=== Heros_assist " + Version.CURRENT + " ===");
             return;
         }
         
@@ -50,8 +54,8 @@ public class Main {
         }
         
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            String message = "\n[HOOK] Sauvegarde des données joueurs.\n";
-            String fin = "[HOOK] Fin du programme.\n";
+            String message = "\nSauvegarde des données joueurs.\n";
+            String fin = "Fin du programme.\n";
             
             try {
                 // Console
@@ -74,7 +78,7 @@ public class Main {
                 System.err.println("⚠️ Erreur lors de la sauvegarde : " + e.getMessage());
                 System.err.flush();
                 try (FileWriter fw = new FileWriter("shutdown.log", true)) {
-                    fw.write("[HOOK] Erreur lors de la sauvegarde : " + e.getMessage() + "\n");
+                    fw.write("Erreur lors de la sauvegarde : " + e.getMessage() + "\n");
                 } catch (Exception ignored) {
                 }
             }
@@ -82,61 +86,56 @@ public class Main {
         
         
         boolean run = true;
-        int i = nbj;
-        Utilitaire.LoopGuard MainGarde = new Utilitaire.LoopGuard(1_000_000);
+        Utilitaire.LoopGuard MainGarde = new Utilitaire.LoopGuard(1_000_000, 5 * 60 * 1000); //save toutes les 5 minutes
         while (run) {
-            MainGarde.check();
-            if (i == nbj) {
-                SaveManager.sauvegarder(true); // sauvegarde auto
-                i = 0;
-            }
             
             //tour de jeu
-            Joueur joueur = joueurs[i];
-            System.out.println(joueur.getNom() + " c'est votre tour, vous êtes " + texte_pos(joueur.getPosition()) +
-                    ".");
-            Choix choix = Input.tour(i);
-            switch (choix) {
-                // action classique
-                case EXPLORER -> expedition(i);
-                case MONTER -> joueur.ascend();
-                case DESCENDRE -> {
-                    System.out.println(joueur.getNom() + " retourne en des terres moins inhospitalières.");
-                    joueur.descendre();
-                    joueur.check_bonus_lieux();
+            for (int i = 0; i < nbj; i++) {
+                MainGarde.checkMain();
+                Joueur joueur = joueurs[i];
+                System.out.println(joueur.getNom() + " c'est votre tour, vous êtes " + texte_pos(joueur.getPosition()) + ".");
+                Choix choix = Input.tour(i);
+                switch (choix) {
+                    // action classique
+                    case EXPLORER -> expedition(i);
+                    case MONTER -> joueur.ascend();
+                    case DESCENDRE -> {
+                        System.out.println(joueur.getNom() + " retourne en des terres moins inhospitalières.");
+                        joueur.descendre();
+                        joueur.check_bonus_lieux();
+                    }
+                    case MARCHE -> joueur.aller_au_marche();
+                    case DUMMY -> frapper_pantin(i);
+                    case DRESSER -> joueur.dresser();
+                    case ATTENDRE -> System.out.println(joueur.getNom() + " passe son tour.");
+                    case STAT -> {
+                        joueur.presente_detail();
+                        i--;
+                    }
+                    
+                    // action caché
+                    case SUICIDE -> joueur.mort_def();
+                    case QUITTER -> run = false;
+                    case FAMILIER_PLUS -> {
+                        joueur.ajouter_familier();
+                        i -= 1; //n'utilise pas le tour
+                    }
+                    case FAMILIER_MOINS -> {
+                        joueur.perdre_familier();
+                        i -= 1;
+                    }
+                    case ITEM_PLUS -> {
+                        ajouter_item(choisir_joueur());
+                        i -= 1;
+                    }
+                    case ITEM_MOINS -> {
+                        retirer_item(choisir_joueur());
+                        i -= 1;
+                    }
+                    case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
                 }
-                case MARCHE -> joueur.aller_au_marche();
-                case DUMMY -> frapper_pantin(i);
-                case DRESSER -> joueur.dresser();
-                case ATTENDRE -> System.out.println(joueur.getNom() + " passe son tour.");
-                case STAT -> {
-                    joueur.presente_detail();
-                    i--;
-                }
-                
-                // action caché
-                case SUICIDE -> joueur.mort_def();
-                case QUITTER -> run = false;
-                case FAMILIER_PLUS -> {
-                    joueur.ajouter_familier();
-                    i -= 1; //n'utilise pas le tour
-                }
-                case FAMILIER_MOINS -> {
-                    joueur.perdre_familier();
-                    i -= 1;
-                }
-                case ITEM_PLUS -> {
-                    ajouter_item(choisir_joueur());
-                    i -= 1;
-                }
-                case ITEM_MOINS -> {
-                    retirer_item(choisir_joueur());
-                    i -= 1;
-                }
-                case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
+                System.out.println();
             }
-            System.out.println();
-            i++;
         }
     }
     

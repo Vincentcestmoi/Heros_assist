@@ -7,6 +7,7 @@ import Enum.Dieux;
 import Enum.Position;
 import Exterieur.Input;
 import Exterieur.Output;
+import Exterieur.SaveManager;
 import Metiers.Joueur;
 import Monstre.Monstre;
 import Monstre.Race;
@@ -773,10 +774,11 @@ public class Combat {
      * @param ennemi le monstre ennemi
      * @implNote ne couvre que les monstres nommés
      */
-    static void gestion_nomme(Monstre ennemi) {
+    static void gestion_nomme(Monstre ennemi) throws IOException {
         if (ennemi.est_nomme()) {
             Output.dismiss_race(ennemi.getNom());
             Race.delete_monstre(ennemi.getNom());
+            SaveManager.sauvegarder(true);
         }
     }
     

@@ -6,6 +6,7 @@ import Enum.*;
 import Equipement.Equipement;
 import Exterieur.Input;
 import Exterieur.Output;
+import Exterieur.SaveManager;
 import Monstre.Lieu;
 import Monstre.Monstre;
 import main.Combat;
@@ -794,7 +795,7 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
      * dernier coup,
      * ressusciter un allié,
      */
-    public void gagneXp() {
+    public void gagneXp() throws IOException {
         this.xp += 1;
         if (this.xp >= (this.niveau + 1) * 5) {
             this.niveau += 1;
@@ -802,13 +803,14 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
             System.out.println(nom + " a gagné un niveau !");
             Output.JouerSonLvlUp();
             super_lvl_up();
+            SaveManager.sauvegarder(true);
         }
     }
     
     /**
      * Traite le fait qu'un joueur a porté le dernier coup sur un monstre
      */
-    public void dernier_coup() {
+    public void dernier_coup() throws IOException {
         gagneXp();
         if (absorption) {
             Texte.absorber(this.nom, 1 + rand.nextInt(2));
