@@ -127,7 +127,6 @@ public abstract class Joueur {
         this.competences = "";
         this.armure = 0;
         setNiveau(xp);
-        super_actualiser_niveau();
         SetEffetParent();
         retirer_tout(true);
     }
@@ -204,7 +203,7 @@ public abstract class Joueur {
      * @return le joueur
      */
     public static Joueur CreerJoueur(String nom, Position position, Metier metier, int ob_f, Dieux parent, int xp) {
-        return switch (metier) {
+        Joueur j = switch (metier) {
             case NECROMANCIEN -> new Necromancien(nom, position, ob_f, parent, xp);
             case ARCHIMAGE -> new Archimage(nom, position, ob_f, parent, xp);
             case ALCHIMISTE -> new Alchimiste(nom, position, ob_f, parent, xp);
@@ -213,6 +212,8 @@ public abstract class Joueur {
             case SHAMAN -> new Shaman(nom, position, ob_f, parent, xp);
             case TRYHARDER -> new Tryharder(nom, position, ob_f, parent, xp);
         };
+        j.super_actualiser_niveau();
+        return j;
     }
     
     /**
