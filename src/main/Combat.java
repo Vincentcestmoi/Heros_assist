@@ -325,8 +325,16 @@ public class Combat {
                 if (dps_popo > 0) {
                     ennemi.dommage(dps_popo);
                 }
-                System.out.println();
+                
+                if (run) {
+                    if (verifie_mort(ennemi, pos)) {
+                        stop_run();
+                        joueur.dernier_coup();
+                    }
+                }
+                
                 if (joueur.a_familier_actif() && run && !skip) {
+                    System.out.println();
                     act_f = familier_act(joueur, Input.action(joueur, true));
                     switch (act_f) {
                         case FUIR -> joueur.f_fuir();
