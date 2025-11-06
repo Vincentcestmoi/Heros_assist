@@ -426,6 +426,7 @@ public class Equipement {
             }
             case ARMURE_GLACE -> {
                 this.armure += 1;
+                this.resistance += 2;
                 this.effet = "Vous devez payer 2PP pour enfiler cette armure";
             }
             case BOUCLIER_TERRE -> {
