@@ -1033,41 +1033,50 @@ public class Monstre {
                 System.out.println("Le résultat n'a pas été comprit, attaque classique appliquée.");
                 modif = 1;
         }
-        int attaque = Input.atk();
-        if (attaque > 0 && modif > 0) {
+        if (modif > 0) {
+            int attaque = Input.atk();
+            if(attaque <= 0){
+                return;
+            }
             attaque = Main.corriger(attaque * modif);
             dommage(attaque);
         }
     }
     
     public void f_encaisser() throws IOException {
-        int attaque = Input.atk();
+        float modif;
         switch (Input.D4()) {
             case 1:
+                modif = 0;
                 encaissement = 0.3F;
                 System.out.println("Votre familier se prépare à encaisser en oubliant d'attaquer !");
                 break;
             case 2:
-                attaque = Main.corriger(attaque * 0.1f);
+                modif = 0.1f;
                 encaissement = 0.3F;
                 System.out.println("Votre familier se prépare à encaisser.");
-                dommage(attaque);
                 break;
             case 3:
-                attaque = Main.corriger(attaque * 0.2f);
+                modif = 0.2f;
                 encaissement = 0.5F;
                 System.out.println("Votre familier se prépare à encaisser.");
-                dommage(attaque);
                 break;
             case 4, 5:
-                attaque = Main.corriger(attaque * 0.4f);
-                dommage(attaque);
+                modif = 0.4f;
                 encaissement = 0.7F;
                 System.out.println("Votre familier se prépare solidement à encaisser.");
                 break;
             default:
                 System.out.println("Le résultat n'a pas été comprit, attaque classique appliquée.");
-                dommage(attaque);
+                modif = 1f;
+        }
+        if(modif > 0) {
+            int attaque = Input.atk();
+            if(attaque <= 0){
+                return;
+            }
+            attaque = Main.corriger(attaque * modif);
+            dommage(attaque);
         }
     }
     
