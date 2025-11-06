@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.EnumSet;
+import java.util.Scanner;
 import java.util.Set;
 
 public class Input {
@@ -123,59 +124,30 @@ public class Input {
     
     //visuel (terminal)
     
+    
+    private static final Scanner sc = new Scanner(System.in);
+    
     /**
      * Lit le texte en terminal
      * @return le texte lu
-     * @throws IOException toujours
      */
-    public static String read() throws IOException {
-        StringBuilder readed = new StringBuilder();
-        int temp = System.in.read();
-        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
-        while (temp != 10) {
-            garde.check();
-            readed.append((char) temp);
-            temp = System.in.read();
-        }
-        System.out.println();
-        return readed.toString();
+    public static String read() {
+        return sc.nextLine();
     }
     
     /**
      * Lit une valeur en terminal et la renvoie (doit être en chiffre uniquement)
      * @return la valeur
-     * @throws IOException toujours
      */
-    public static int readInt() throws IOException {
-        int number;
-        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
+    public static int readInt() {
+        Scanner sc = new Scanner(System.in);
         while (true) {
-            garde.check();
-            number = 0;
-            int temp = System.in.read();
-            
-            if (temp == '\n') {
-                continue;
+            String line = sc.nextLine().trim();
+            try {
+                return Integer.parseInt(line);
+            } catch (NumberFormatException e) {
+                System.out.println("Erreur détectée : saisie non numérique. Veuillez réécrire votre nombre.");
             }
-            
-            boolean valid = true;
-            while (temp != '\n' && temp != -1) {
-                garde.check();
-                int digit = temp - '0';
-                if (digit < 0 || digit > 9) {
-                    valid = false;
-                } else {
-                    number = number * 10 + digit;
-                }
-                temp = System.in.read();
-            }
-            
-            if (valid) {
-                System.out.println();
-                return number;
-            }
-            
-            System.out.println("\nErreur détectée : saisie non numérique. Veuillez réécrire votre nombre.");
         }
     }
     
@@ -220,9 +192,8 @@ public class Input {
      * Demande au joueur le résultat d'un jet 8 et le renvoie
      * majoration par 8, minoration par 1.
      * @return le chiffre donné par le joueur
-     * @throws IOException en cas de problème ?
      */
-    public static int D8() throws IOException {
+    public static int D8() {
         System.out.print("D8 : ");
         Output.jouerSonDe();
         int temp = readInt();
@@ -238,9 +209,8 @@ public class Input {
      * Demande au joueur le résultat d'un jet 10 et le renvoie
      * majoration par 10, minoration par 1.
      * @return le chiffre donné par le joueur
-     * @throws IOException en cas de problème ?
      */
-    public static int D10() throws IOException {
+    public static int D10() {
         System.out.print("D10 : ");
         Output.jouerSonDe();
         int temp = readInt();
@@ -256,9 +226,8 @@ public class Input {
      * Demande au joueur le résultat d'un jet 12 et le renvoie
      * majoration par 12, minoration par 1.
      * @return le chiffre donné par le joueur
-     * @throws IOException en cas de problème ?
      */
-    public static int D12() throws IOException {
+    public static int D12() {
         System.out.print("D12 : ");
         Output.jouerSonDe();
         int temp = readInt();
@@ -274,9 +243,8 @@ public class Input {
      * Demande au joueur le résultat d'un jet 20 et le renvoie
      * majoration par 20, minoration par 1.
      * @return le chiffre donné par le joueur
-     * @throws IOException en cas de problème ?
      */
-    public static int D20() throws IOException {
+    public static int D20() {
         System.out.print("D20 : ");
         Output.jouerSonDe();
         int temp = readInt();
@@ -292,7 +260,7 @@ public class Input {
      * Pose une question au joueur
      * @return s'il a répondu oui
      */
-    public static boolean yn(String question) throws IOException {
+    public static boolean yn(String question) {
         Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         while (true) {
             garde.check();
@@ -311,9 +279,8 @@ public class Input {
     /**
      * Demande au joueur son attaque
      * @return le nombre donné par le joueur
-     * @throws IOException en cas de problème ?
      */
-    public static int atk() throws IOException {
+    public static int atk() {
         System.out.print("entrez votre attaque actuelle : ");
         return readInt();
     }
@@ -321,9 +288,8 @@ public class Input {
     /**
      * Demande au joueur son attaque
      * @return le nombre donné par le joueur
-     * @throws IOException en cas de problème ?
      */
-    public static int tir() throws IOException {
+    public static int tir() {
         System.out.print("entrez votre puissance de tir actuelle : ");
         return readInt();
     }
@@ -341,9 +307,8 @@ public class Input {
     /**
      * Demande au joueur son armure
      * @return le nombre donné par le joueur
-     * @throws IOException en cas de problème ?
      */
-    public static int def() throws IOException {
+    public static int def() {
         System.out.print("entrez votre armure actuelle : ");
         return readInt();
     }
@@ -351,9 +316,8 @@ public class Input {
     /**
      * Demande au joueur la force de son attaque magique
      * @return le nombre donné par le joueur
-     * @throws IOException en cas de problème ?
      */
-    public static int magie() throws IOException {
+    public static int magie() {
         System.out.print("entrez votre puissance d'attaque magique : ");
         return readInt();
     }
@@ -362,7 +326,7 @@ public class Input {
      * Laisse le joueur choisir sa promotion
      * @return un indice sur le type de promotion que le joueur veut
      */
-    public static Promo_Type promo() throws IOException {
+    public static Promo_Type promo() {
         String texte = "Choisissez votre type de récompense : ";
         if (Pre_Equipement.nb_monture > 0) {
             texte += "(c)réature ";
@@ -510,7 +474,7 @@ public class Input {
         };
     }
     
-    public static Action_extra extra(Joueur joueur, Action action) throws IOException {
+    public static Action_extra extra(Joueur joueur, Action action) {
         Set<Action> actionsSansExtra = EnumSet.of(Action.AUCUNE, Action.END, Action.CONCOCTION, Action.DOMESTIQUER,
                 Action.DEXTERITE, Action.LIEN, Action.MEDITATION, Action.FUIR, Action.OFF, Action.TP);
         if (actionsSansExtra.contains(action)) {
@@ -540,7 +504,7 @@ public class Input {
      * @param premier_ligne l'indice du participant de première ligne
      * @return si la cible est en première ligne
      */
-    public static boolean ask_heal(int premier_ligne) throws IOException {
+    public static boolean ask_heal(int premier_ligne) {
         int i = 0;
         Joueur joueur;
         Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();

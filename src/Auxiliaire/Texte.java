@@ -63,8 +63,8 @@ public class Texte {
     }
     
     public static void absorber2(String nom, int vie, int atk, int def, int pp) {
-        System.out.printf("%s absorbe l'énergie vitale de son adversaire et gagne définitivement %d points de " +
-                "résistance," + " %d points d'attaque et %d point d'armure, ainsi que %dPP.\n", nom, vie, atk, def, pp);
+        System.out.printf("%s absorbe l'énergie vitale de son adversaire et gagne définitivement %d points de " + "r" +
+                "ésistance," + " %d points d'attaque et %d point d'armure, ainsi que %dPP.\n", nom, vie, atk, def, pp);
     }
     
     public static void pie(int quantite, String nom) {
@@ -84,8 +84,8 @@ public class Texte {
     }
     
     public static void annihilation() {
-        System.out.println("Votre rune d'annihilation consomme une de vos rune (si ce n'est pas le cas, elle " +
-                "s'auto-détruit).");
+        System.out.println("Votre rune d'annihilation consomme une de vos rune (si ce n'est pas le cas, elle " + "s" +
+                "'auto-détruit).");
         System.out.println("Un faisceau iridescent percute l'ennemi de plein fouet.");
     }
     
@@ -94,8 +94,7 @@ public class Texte {
     }
     
     public static void resurection_tatouage() {
-        System.out.println("Votre tatouage s'éfface, ainsi que les affres de la mort. Vous vous réveillez en pleine " +
-                "forme.");
+        System.out.println("Votre tatouage s'éfface, ainsi que les affres de la mort. Vous vous réveillez en pleine " + "forme.");
     }
     
     public static void jete_grenade(int nb) {

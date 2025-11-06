@@ -75,7 +75,8 @@ public class Main {
                 System.err.flush();
                 try (FileWriter fw = new FileWriter("shutdown.log", true)) {
                     fw.write("[HOOK] Erreur lors de la sauvegarde : " + e.getMessage() + "\n");
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
         }));
         
@@ -139,22 +140,22 @@ public class Main {
         }
     }
     
-    private static Joueur choisir_joueur() throws IOException {
+    private static Joueur choisir_joueur() {
         System.out.println("Indiquez le joueur a affecter.");
-        for(int i = 0; i < nbj; i++) {
+        for (int i = 0; i < nbj; i++) {
             System.out.printf("\n%d : %s", i, Main.joueurs[i].getNom());
         }
         int j;
         do {
             j = Input.readInt();
-            if(j < 0 || j >= nbj) {
+            if (j < 0 || j >= nbj) {
                 System.out.println("Entrée invalide.");
             }
-        } while(j >= nbj || j < 0);
+        } while (j >= nbj || j < 0);
         return Main.joueurs[j];
     }
     
-    private static void ajouter_item(Joueur joueur) throws IOException {
+    private static void ajouter_item(Joueur joueur) {
         System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 ou q pour quitter.");
         String temp = Input.read();
         if (temp.charAt(0) != '#') {
@@ -217,10 +218,10 @@ public class Main {
         }
     }
     
-    private static void retirer_item(Joueur joueur) throws IOException {
+    private static void retirer_item(Joueur joueur) {
         //noinspection DuplicatedCode
-        System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 ou q pour quitter, #99 pour retirer " +
-                "tous vos items spéciaux.");
+        System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 ou q pour quitter, #99 pour " +
+                "retirer " + "tous vos items spéciaux.");
         String temp = Input.read();
         if (temp.charAt(0) != '#') {
             System.out.println("Format invalide, l'identifiant doit commencer par #");

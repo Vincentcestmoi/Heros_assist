@@ -94,8 +94,7 @@ public class Archimage extends Joueur {
     private void affiche_sorts() {
         System.out.printf("\tBoule de feu : sort de feu, pour %d mana ou plus, lance un sort offensif léger.\n",
                 rune_arca ? 1 : 2);
-        System.out.printf("\tOnde de choc : sort sonore, pour %d mana, étourdit tous les participants à l'exception " +
-                "du " + "lanceur.\n", rune_arca ? 2 : 3);
+        System.out.printf("\tOnde de choc : sort sonore, pour %d mana, étourdit tous les participants à l'exception " + "du " + "lanceur.\n", rune_arca ? 2 : 3);
         if (this.niveau >= 1) {
             System.out.printf("\tArmure de glace : sort de glace, pour %d mana ou plus, augmente la résistance d'une "
                     + "cible.\n", rune_arca ? 2 : 3);
@@ -585,9 +584,8 @@ public class Archimage extends Joueur {
     
     /**
      * Indique l'efficacité de la compétence "armure de glace"
-     * @throws IOException toujours
      */
-    public void armure_de_glace() throws IOException {
+    public void armure_de_glace() {
         int mini = rune_arca ? 2 : 3;
         System.out.println("Vous vous préparez à créer une armure de glace.");
         Texte.mana_sort(mini);
@@ -646,9 +644,8 @@ public class Archimage extends Joueur {
     /**
      * Calcule et applique les dommages de la compétence "foudre"
      * @param ennemi la cible du sort
-     * @throws IOException toujours
      */
-    public void foudre(Monstre ennemi) throws IOException {
+    public void foudre(Monstre ennemi) {
         int mini = rune_arca ? 6 : 7;
         System.out.println("Vous vous préparez à lancer un puissant éclair.");
         Texte.mana_sort(mini);
@@ -660,7 +657,7 @@ public class Archimage extends Joueur {
         if (this.niveau >= 10) {
             jet += 2;
         }
-        if(rune_orage){
+        if (rune_orage) {
             jet += 1;
         }
         if (jet <= 23) {
@@ -668,7 +665,7 @@ public class Archimage extends Joueur {
         }
         
         int dmg = bonus_sup10(16, 8);
-        if(rune_orage){
+        if (rune_orage) {
             jet += 1;
         }
         if (jet <= mini || mana < mini) {

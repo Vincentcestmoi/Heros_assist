@@ -481,7 +481,7 @@ public class Guerriere extends Joueur {
     }
     
     @Override
-    public boolean auto_ressusciter(int malus) throws IOException {
+    public boolean auto_ressusciter(int malus) {
         if (this.niveau < 3) {
             return false;
         }

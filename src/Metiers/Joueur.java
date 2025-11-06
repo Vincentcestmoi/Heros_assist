@@ -234,7 +234,7 @@ public abstract class Joueur {
     public void sauvegarder(String chemin, boolean discret) throws IOException {
         JsonObject joueurJson = Json.createObjectBuilder().add("nom", this.nom).add("metier",
                 this.getMetier().name()).add("ob_f", this.ob_f).add("position", this.position.name()).add("xp",
-                this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_structure()).build();
+this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_structure()).build();
         
         Map<String, Object> config = new HashMap<>();
         config.put(JsonGenerator.PRETTY_PRINTING, true);
@@ -244,7 +244,7 @@ public abstract class Joueur {
             writer.writeObject(joueurJson);
         }
         
-        if(!discret){
+        if (!discret) {
             System.out.printf("Joueur mis à jour : %s\n", this.nom);
         }
     }
@@ -381,8 +381,7 @@ public abstract class Joueur {
         String temp = switch (parent) {
             case ARES -> {
                 if (getMetier() != Metier.GUERRIERE) {
-                    yield "Berserk : pour 1PP, imprègne de folie meurtrière l'esprit du lanceur avant qu'il " + "ne " +
-                     "frappe, augmentant sa puissance au prix de sa santé mentale.";
+                    yield "Berserk : pour 1PP, imprègne de folie meurtrière l'esprit du lanceur avant qu'il " + "ne " + "frappe, augmentant sa puissance au prix de sa santé mentale.";
                 }
                 yield "";
             }
@@ -420,7 +419,7 @@ public abstract class Joueur {
         }
         if (parch_dodo && getMetier() != Metier.ARCHIMAGE) {
             text += "Parchemin de sommeil : Permet de lancer un sort de sommeil pour %d mana.\n".formatted(rune_dodo
-            ? 1 : 2);
+                    ? 1 : 2);
         }
         if (parch_lumiere && getMetier() != Metier.ARCHIMAGE) {
             text += "Parchemin de lumière : permet de lancer un sort aveuglant pour 2 mana.\n";
@@ -439,7 +438,7 @@ public abstract class Joueur {
         }
         if (rune_annihilation) {
             text += "Rune d'annihilation : consume une rune pour lancer un sort surpuissant. (Peut se consommer " +
-             "lui-même).\n";
+            "lui-même).\n";
         }
         if (fuite) {
             text += "Téléporteur courte porté : Permet de fuir d'un combat, peut se détruire à l'usage.\n";
@@ -474,7 +473,7 @@ public abstract class Joueur {
      * Renvoie un bonus x via la formule y = ax + b (y étant le niveau).
      * @param min    le niveau minimum pour obtenir le bonus (b).
      * @param palier le nombre de niveaux séparant chaque obtention de bonus (a).
-     * @return le bonus (x) (positif, arrondit à l'inférieur)
+     * @return le bonus (x) (positif, arrondit à l'inférieur).
      */
     protected int bonus_sup10(int min, int palier) {
         int bonus = 0;
@@ -967,9 +966,8 @@ public abstract class Joueur {
      * Demande au joueur d'aller en première ligne et gère les résultats
      * @param force si le joueur DOIT passer en première ligne
      * @return si le joueur passe en première ligne
-     * @throws IOException toujours
      */
-    public boolean faire_front(boolean force) throws IOException {
+    public boolean faire_front(boolean force) {
         if (!est_actif()) {
             return false;
         }
@@ -1362,7 +1360,7 @@ public abstract class Joueur {
         }
     }
     
-    public void set_grimpeur(){
+    public void set_grimpeur() {
         this.position = Position.ASCENDANT;
     }
     
@@ -1455,9 +1453,8 @@ public abstract class Joueur {
     
     /**
      * Traite l'ajout d'un nouveau familier
-     * @throws IOException toujours
      */
-    public void ajouter_familier() throws IOException {
+    public void ajouter_familier() {
         ajouter_familier(1);
     }
     
@@ -1465,9 +1462,8 @@ public abstract class Joueur {
      * Traite l'ajout d'un nouveau familier
      * @param obeissance l'obéissance du nouveau familier
      * @return si le familier a été réellement ajouté
-     * @throws IOException toujours
      */
-    public boolean ajouter_familier(int obeissance) throws IOException {
+    public boolean ajouter_familier(int obeissance) {
         if (a_familier() && !Input.yn(nom + " possède déjà un familier, le remplacer ? ")) {
             System.out.println("Ancien familier conservé.\n");
             return false;
@@ -1753,7 +1749,7 @@ public abstract class Joueur {
      */
     public boolean action_consomme_popo(Action action) {
         Set<Action> actionsConsommant = EnumSet.of(Action.SORT_FEU, Action.SORT_VOLCAN, Action.SORT_DODO,
-                Action.FOUDRE, Action.INONDATION, Action.ANNIHILATION);
+         Action.FOUDRE, Action.INONDATION, Action.ANNIHILATION);
         return actionsConsommant.contains(action);
     }
     
@@ -1897,13 +1893,12 @@ public abstract class Joueur {
      * Traite le sort Eruption volcanique
      * @param ennemi     la cible du sort
      * @param bonus_popo des dommages additionel à appliquer
-     * @throws IOException toujours
      */
-    private void sort_volcan(Monstre ennemi, int bonus_popo) throws IOException {
+    private void sort_volcan(Monstre ennemi, int bonus_popo) {
         ennemi.dommage_magique(48 + rand.nextInt(17) + bonus_popo);
     }
     
-    private void annihilation(Monstre ennemi, int bonus_popo) throws IOException {
+    private void annihilation(Monstre ennemi, int bonus_popo) {
         Texte.annihilation();
         int atk = Input.atk() + bonus_atk();
         int tir = Input.tir() + bonus_tir();
@@ -2044,9 +2039,8 @@ public abstract class Joueur {
     /**
      * Calcule et traite les dommage au corps à corps
      * @return le négatif du bonus de dommage
-     * @throws IOException toujours
      */
-    protected int popo_cd() throws IOException {
+    protected int popo_cd() {
         System.out.println("""
                 Entrez la potion que vous utilisez :
                 1 : potion douteuse     (P#1)
@@ -2173,7 +2167,7 @@ public abstract class Joueur {
         return 12;
     }
     
-    private int explo_bombe() throws IOException {
+    private int explo_bombe() {
         int temp = Input.D8();
         if (temp <= 1) {
             System.out.println("La bombe détonne violemment en plein vol.");
@@ -2240,12 +2234,11 @@ public abstract class Joueur {
         skip = false;
         f_skip = false;
         if (a_poison1()) {
-            System.out.println(nom + " souffre d'empoisonnement et subit " + (rand.nextInt(3) + 1) + " dommage(s) " +
- "directe(s).");
+            System.out.println(nom + " souffre d'empoisonnement et subit " + (rand.nextInt(3) + 1) + " dommage(s) " + "directe(s).");
         }
         if (a_poison2()) {
             System.out.println(nom + " souffre d'empoisonnement et subit " + (rand.nextInt(4) + 3) + " dommages " +
-"directes.");
+ "directes.");
         }
         if (f_a_poison1()) {
             System.out.println("Le familier de " + nom + " souffre d'empoisonnement et subit " + (rand.nextInt(3) + 1) + " dommage(s) directe(s).");
@@ -2328,9 +2321,8 @@ public abstract class Joueur {
      * Tente de ressusciter tout seul
      * @param malus un malus à appliquer à la tentative
      * @return true si la resurrection est un succès, false sinon
-     * @throws IOException toujours
      */
-    public boolean auto_ressusciter(int malus) throws IOException {
+    public boolean auto_ressusciter(int malus) {
         return false;
     }
     
@@ -2442,7 +2434,7 @@ public abstract class Joueur {
     /**
      * Lance le sort Inondation : inflige des dommages magiques et affecte
      */
-    protected void inondation(Monstre ennemi, int dps_bonus) throws IOException {
+    protected void inondation(Monstre ennemi, int dps_bonus) {
         System.out.println("Une vague d'eau percute " + ennemi.getNom() + " de plein fouet.");
         ennemi.dommage_magique((rune_pluie ? 10 : 15) + dps_bonus);
         ennemi.affecte();
@@ -2451,7 +2443,7 @@ public abstract class Joueur {
     /**
      * Lance le sort Foudre : inflige des dommages magiques et affecte
      */
-    protected void foudre_zeus(Monstre ennemi, int dps_bonus) throws IOException {
+    protected void foudre_zeus(Monstre ennemi, int dps_bonus) {
         System.out.println("Un éclair s'abat sur " + ennemi.getNom() + ".");
         ennemi.dommage_magique(dps_bonus + (rune_orage ? 15 : 20));
         ennemi.affecte();
@@ -2487,7 +2479,7 @@ public abstract class Joueur {
                 cible = "le familier de " + cible;
             }
             System.out.println("Pris(e) de folie, " + nom + " attaque " + cible + " et lui inflige " + temp + " " +
-            "dommages !");
+ "dommages !");
             berserk_boost(true);
             return berserk_atk_alliee;
         }

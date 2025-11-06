@@ -165,9 +165,9 @@ public class Lieu {
      * @param list la liste des monstres potentiels
      * @return un monstre parmi la liste
      */
-    public static Monstre get_monstre(Race[] list){
+    public static Monstre get_monstre(Race[] list) {
         int total = 0;
-        for(Race r : list){
+        for (Race r : list) {
             total += r.get_proba();
         }
         int t = random.nextInt(total);

@@ -40,9 +40,6 @@ public class Combat {
             Main.joueurs[i].init_affrontement(i == joueur_force, position);
             if (Main.joueurs[i].est_actif()) {
                 nb_part++;
-                if (Main.joueurs[i].a_familier_actif()) {
-                    nb_part++;
-                }
             }
         }
         
@@ -85,9 +82,8 @@ public class Combat {
      * Renvoie l'index du joueur qui sera en première ligne
      * @param nbp le nombre de participants
      * @return l'index du joueur en première ligne
-     * @throws IOException toujours
      */
-    private static int getPrL(int nbp) throws IOException {
+    private static int getPrL(int nbp) {
         
         // demander gentimment
         if (nbp > 1) {
@@ -158,7 +154,7 @@ public class Combat {
         
         combat(ennemi, index, grimpeur.getPosition());
         
-        if(grimpeur.getPosition().equals(Position.ASCENDANT)) {
+        if (grimpeur.getPosition().equals(Position.ASCENDANT)) {
             grimpeur.setPosition(temp);
         }
         
@@ -200,7 +196,7 @@ public class Combat {
             
             //chaque joueur
             for (int j = 0; j < Main.nbj; j++) {
-                if(!run){
+                if (!run) {
                     return;
                 }
                 skip = false;
@@ -431,11 +427,11 @@ public class Combat {
         System.out.println("Vous donnez un ordre à votre familier.");
         int temp = joueur.get_ob_f() - 3 + rand.nextInt(2); //valeur d'obéissance à l'action
         
-        if(temp > 4){
+        if (temp > 4) {
             return action;
-        } else if(temp > 2 && action == Action.ATTAQUER){
+        } else if (temp > 2 && action == Action.ATTAQUER) {
             return Action.ATTAQUER;
-        } else{
+        } else {
             temp += Input.D6();
         }
         
@@ -534,10 +530,11 @@ public class Combat {
         }
         
         // berserk
-        else if ((reponse == 1 || reponse == 3) && !joueur.est_berserk() && Input.yn(nom + " devient-iel berserk "
-                + "?")) {
+        else if ((reponse == 1 || reponse == 3) && !joueur.est_berserk() && Input.yn(nom + " devient-iel berserk " +
+                "?")) {
             joueur.berserk(0.1f + 0.1f * rand.nextInt(3));
-        } else if ((reponse == 2 || reponse == 4) && !joueur.f_est_berserk() && Input.yn(nom + " devient-iel berserk " + "?")) {
+        } else if ((reponse == 2 || reponse == 4) && !joueur.f_est_berserk() && Input.yn(nom + " devient-iel berserk "
+                + "?")) {
             joueur.f_berserk(0.1f + 0.1f * rand.nextInt(3));
         }
         
@@ -660,8 +657,7 @@ public class Combat {
             case REGARD_APPEURANT -> {
                 System.out.println(nom + " croise le regard de " + ennemi.getNom());
                 if (Input.D6() + Main.joueurs[pr_l].bonus_analyse() < 5) {
-                    System.out.println(nom + " est instinctivement apeuré(e), marqué(e) à vie par cette peur, iel " +
-                            "perd définitivement 2 points d'attaque.");
+                    System.out.println(nom + " est instinctivement apeuré(e), marqué(e) à vie par cette peur, iel " + "perd définitivement 2 points d'attaque.");
                 }
             }
             case REGARD_TERRIFIANT -> {
@@ -788,9 +784,8 @@ public class Combat {
      * Analyse le monstre ennemi et écrit ses stats aux joueurs
      * @param joueur le joueur réalisant l'analyste
      * @param ennemi le monstre analysé
-     * @throws IOException ce bon vieux throws
      */
-    static private void analyser(Joueur joueur, Monstre ennemi) throws IOException {
+    static private void analyser(Joueur joueur, Monstre ennemi) {
         System.out.println("Vous analysez le monstre en face de vous.");
         int jet = Input.D8() + rand.nextInt(2);
         jet += joueur.bonus_analyse();
@@ -864,7 +859,7 @@ public class Combat {
     
     /**
      * Traite les joueurs après la fin du combat
-     * @param ennemi_nomme si l'ennemi était un monstre nommé (bonus d'xp)
+     * @param ennemi_nomme si l'ennemi était un monstre nommé (bonus d'xp).
      * @throws IOException toujours
      */
     static private void gestion_fin_combat(boolean ennemi_nomme) throws IOException {

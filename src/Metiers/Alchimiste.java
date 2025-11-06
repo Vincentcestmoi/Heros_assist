@@ -495,7 +495,7 @@ public class Alchimiste extends Joueur {
         return 0;
     }
     
-    private void elixir() throws IOException {
+    private void elixir() {
         System.out.println("La cible est guérie de " + switch (Input.D20()) {
             case 4, 5, 6 -> "5 et gagne temporairement 6";
             case 7, 8 -> "6 et gagne temporairement 8";
@@ -553,7 +553,7 @@ public class Alchimiste extends Joueur {
     /**
      * Indique le résultat de la compétence "fouille"
      */
-    public void fouille() throws IOException {
+    public void fouille() {
         System.out.println("Vous chercher autour de vous tout ce qui pourrait être utile pour vos potions.");
         int jet = 0;
         int[] paliers = {3, 6, 8, 10, 10};
@@ -665,9 +665,8 @@ public class Alchimiste extends Joueur {
     /**
      * Laisse l'alchimiste choisir la potion qu'il veut créer
      * @return le type de potion
-     * @throws IOException toujours
      */
-    public Concoction concoction() throws IOException {
+    public Concoction concoction() {
         //palier : base → force, soin, toxique, 3 → resistance, berserk 4 → énergie, aléatoire 6 → instable, en série
         // 8 →
         // divin, 10 → elixir
@@ -777,9 +776,8 @@ public class Alchimiste extends Joueur {
     
     /**
      * Réalise une potion de résistance
-     * @throws IOException toujours
      */
-    protected void concoc_resi() throws IOException {
+    protected void concoc_resi() {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 5): ");
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1 + bonus_concoc();
@@ -796,9 +794,8 @@ public class Alchimiste extends Joueur {
     
     /**
      * Réalise une drogue de guerre
-     * @throws IOException toujours
      */
-    protected void concoc_berserk() throws IOException {
+    protected void concoc_berserk() {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 3): ");
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1 + bonus_concoc();
@@ -821,9 +818,9 @@ public class Alchimiste extends Joueur {
         
         int[] popo_cost = {1, 1, 1, 9, 5, 8, 4, 9, 9, 6, 10};
         String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "boulette irritante (BSRK#1)",
-                "capsule " + "de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion instable" +
-                " (E#1)", "potion de feu (E#2)", "de force (ATK#1)", "potion de vie (PV#2)", "potion énergétique " +
-                "(PP#1)"};
+                "capsule " + "de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion " +
+                "instable" + " (E#1)", "potion de feu (E#2)", "de force (ATK#1)", "potion de vie (PV#2)", "potion " +
+                "énergétique " + "(PP#1)"};
         
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (max 4): ");
         int ingre = Input.readInt();
@@ -848,9 +845,8 @@ public class Alchimiste extends Joueur {
     
     /**
      * Tente de réaliser une potion divine
-     * @throws IOException toujours
      */
-    protected void concoc_divine() throws IOException {
+    protected void concoc_divine() {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 7): ");
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1 + bonus_concoc();
@@ -871,12 +867,12 @@ public class Alchimiste extends Joueur {
         
         int[] popo_cost = {1, 1, 1, 9, 5, 8, 4, 9, 9, 6, 10, 11, 13, 11, 14, 14, 11, 14, 15, 15, 15};
         String[] popo = {"potion douteuse (P#1)", "potion insipide (PV#1)", "boulette irritante (BSRK#1)",
-                "capsule " + "de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion instable" +
-                " (E#1)", "potion de feu (E#2)", "potion de force (ATK#1)", "potion de vie " + "(PV#2)", "potion " +
-                "énergétique " + "(PP#1)", "potion de santé (PV#3)", "potion d'énergie (PP#2)", "potion de vigeur " +
-                "(RES#1)", "potion de" + " résistance (RES#2)", "potion de puissance (ATK#2)", "flasque nécrosé (P#4)"
-                , "potion nécrotique " + "(P#5)", "potion explosive (E#4)", "potion divine (Div#A)", "potion de " +
-                "violence (BSRK#3)"};
+                "capsule " + "de colère (BSRK#2)", "potion toxique (P#2)", "potion de poison (P#3)", "potion " +
+                "instable" + " (E#1)", "potion de feu (E#2)", "potion de force (ATK#1)", "potion de vie " + "(PV#2)",
+                "potion " + "énergétique " + "(PP#1)", "potion de santé (PV#3)", "potion d'énergie (PP#2)", "potion " +
+                "de vigeur " + "(RES#1)", "potion de" + " résistance (RES#2)", "potion de puissance (ATK#2)",
+                "flasque nécrosé (P#4)", "potion nécrotique " + "(P#5)", "potion explosive (E#4)", "potion divine " +
+                "(Div#A)", "potion de " + "violence (BSRK#3)"};
         
         
         System.out.println("Combien d'ingrédient allez-vous utiliser ? ");
@@ -911,9 +907,8 @@ public class Alchimiste extends Joueur {
     
     /**
      * Réalise une potion d'énergie
-     * @throws IOException toujours
      */
-    protected void concoc_energie() throws IOException {
+    protected void concoc_energie() {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 5): ");
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1 + bonus_concoc();
@@ -932,9 +927,8 @@ public class Alchimiste extends Joueur {
     
     /**
      * Réalise une potion de force
-     * @throws IOException toujours
      */
-    protected void concoc_force() throws IOException {
+    protected void concoc_force() {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 4): ");
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1 + bonus_concoc();
@@ -951,9 +945,8 @@ public class Alchimiste extends Joueur {
     
     /**
      * Réalise une potion explosive
-     * @throws IOException toujours
      */
-    protected void concoc_bombe() throws IOException {
+    protected void concoc_bombe() {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 2): ");
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1 + bonus_concoc();
@@ -972,9 +965,8 @@ public class Alchimiste extends Joueur {
     
     /**
      * Réalise une potion de soin
-     * @throws IOException toujours
      */
-    protected void concoc_soin() throws IOException {
+    protected void concoc_soin() {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 3): ");
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1 + bonus_concoc();
@@ -993,9 +985,8 @@ public class Alchimiste extends Joueur {
     
     /**
      * Réalise une potion de toxique
-     * @throws IOException toujours
      */
-    protected void concoc_toxique() throws IOException {
+    protected void concoc_toxique() {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 2): ");
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1 + bonus_concoc();
@@ -1014,9 +1005,8 @@ public class Alchimiste extends Joueur {
     
     /**
      * Tente de réaliser un élixir
-     * @throws IOException toujours
      */
-    protected void concoc_miracle() throws IOException {
+    protected void concoc_miracle() {
         System.out.println("Combien d'ingrédient allez-vous utiliser ? (min 10): ");
         int ingre = Input.readInt();
         int jet = Input.D10() + ingre + rand.nextInt(3) - 1 + bonus_concoc();

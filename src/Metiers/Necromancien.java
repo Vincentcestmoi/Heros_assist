@@ -336,7 +336,7 @@ public class Necromancien extends Joueur {
     }
     
     @Override
-    public boolean ajouter_familier(int obeissance) throws IOException {
+    public boolean ajouter_familier(int obeissance) {
         if (a_familier()) {
             if (Input.yn(nom + " possède déjà un familier, voulez vous ...'remplacer' l'ancien ? ")) {
                 System.out.println("Vous recupérez " + pp_sacrifice + "PP grâce au sacrifice de votre ancien " +
@@ -362,7 +362,7 @@ public class Necromancien extends Joueur {
     }
     
     @Override
-    public boolean ressusciter(int malus) throws IOException {
+    public boolean ressusciter(int malus) {
         //niveau min de la compétence
         if (this.niveau < 2) {
             return false;
@@ -465,9 +465,8 @@ public class Necromancien extends Joueur {
     
     /**
      * Indique le résultat de la compétence "appel des morts"
-     * @throws IOException toujours
      */
-    private void necromancie() throws IOException {
+    private void necromancie() {
         int mini = rune_noire ? 5 : 4;
         System.out.println("Vous rappelez à la vie les cadavres de ces terres.");
         Texte.mana_sort(mini);
@@ -543,9 +542,8 @@ public class Necromancien extends Joueur {
      * Tente de ressusciter un ennemi par nécromancie, et l'ajoute en tant que familier le cas échéant
      * @param ennemi le monstre à ressusciter
      * @return la variation de l'état du familier
-     * @throws IOException toujours
      */
-    private int zombifier(Monstre ennemi) throws IOException {
+    private int zombifier(Monstre ennemi) {
         int jet = (ennemi.getEtat() / 10) - 1;
         int[] paliers = {6, 9, 10};
         for (int palier : paliers) {
@@ -669,7 +667,7 @@ public class Necromancien extends Joueur {
     }
     
     @Override
-    protected void monstre_mort_perso(Monstre ennemi) throws IOException {
+    protected void monstre_mort_perso(Monstre ennemi) {
         if (ennemi.corps_utilisable() && est_actif() && est_vivant() && this.niveau >= 1) {
             if (Exterieur.Input.yn("%s veut-il tenter de ressusciter %s en tant que familier pour 2PP ?".formatted(this.nom, ennemi.getNom()))) {
                 ennemi.alterEtat(zombifier(ennemi));

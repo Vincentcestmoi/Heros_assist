@@ -136,7 +136,7 @@ public class Monstre {
         
         if (this.attaque < 1 && this.attaque_base > 0) {
             this.attaque = 1;
-        } else if(this.attaque < 0){
+        } else if (this.attaque < 0) {
             this.attaque = 0;
         }
     }
@@ -343,8 +343,8 @@ public class Monstre {
             case REGARD_MORTEL -> {
                 System.out.println(this.nom + " regarde " + joueur.getFrontNom() + " droit dans les yeux.");
                 if (Input.D6() + joueur.bonus_analyse() <= 4) {
-                    System.out.printf("%s sent son âme se faire assaillir et perd définitivement %d points de " +
-                            "résistance.\n", joueur.getFrontNom(), this.attaque);
+                    System.out.printf("%s sent son âme se faire assaillir et perd définitivement %d points de " + "r" +
+                            "ésistance.\n", joueur.getFrontNom(), this.attaque);
                     competence = Competence.AUCUNE;
                     encaissement = 0F;
                     part_soin = 0F;
@@ -398,9 +398,8 @@ public class Monstre {
     
     /**
      * Applique la compétence du monstre après son attaque
-     * @throws IOException comme ça, ça marche
      */
-    private void applique_competence_post(Joueur joueur) throws IOException {
+    private void applique_competence_post(Joueur joueur) {
         switch (competence) {
             case EXPLOSION -> {
                 this.attaque -= 6;
@@ -497,7 +496,7 @@ public class Monstre {
     /**
      * Renvoie la quantité et qualité des équipements obtenus à la mort du monstre
      */
-    private void drop() throws IOException {
+    private void drop() {
         System.out.println("Vous fouillez le corp de " + this.nom);
         if (this.drop_quantite <= 0 || competence == Competence.ARNAQUE) {
             System.out.println("Vous ne trouvez aucun équipement sur son cadavre");
@@ -545,7 +544,7 @@ public class Monstre {
      * @implNote Considère l'armure et la compétence du monstre
      * gère le cas de mort du monstre
      */
-    public void tir(int quantite) throws IOException {
+    public void tir(int quantite) {
         if (quantite <= 0) {
             return;
         }
@@ -563,7 +562,7 @@ public class Monstre {
      * @implNote Considère l'armure et la compétence du monstre
      * gère le cas de mort du monstre
      */
-    public void tir(int quantite, float mult) throws IOException {
+    public void tir(int quantite, float mult) {
         if (quantite <= 0) {
             return;
         }
@@ -575,7 +574,7 @@ public class Monstre {
      * @param degas les dommages infligés par l'attaque
      * @return les dégas subits par le monstre
      */
-    private int applique_competence_tir(int degas) throws IOException {
+    private int applique_competence_tir(int degas) {
         
         switch (competence) {
             case FRAGILE -> degas += 1;
@@ -657,7 +656,7 @@ public class Monstre {
      * @implNote Considère l'armure et la compétence du monstre
      * gère le cas de mort du monstre
      */
-    public void dommage_magique(int quantite) throws IOException {
+    public void dommage_magique(int quantite) {
         if (quantite <= 0) {
             return;
         }
@@ -670,7 +669,7 @@ public class Monstre {
      * @param degas les dommages infligés par l'attaque
      * @return les dégas subits par le monstre
      */
-    private int applique_competence_magie(int degas) throws IOException {
+    private int applique_competence_magie(int degas) {
         switch (competence) {
             case FRAGILE -> degas += 1;
             case ESPRIT -> {
@@ -768,7 +767,7 @@ public class Monstre {
      * @implNote Considère l'armure et la compétence du monstre
      * gère le cas de mort du monstre
      */
-    public void dommage(int quantite) throws IOException {
+    public void dommage(int quantite) {
         if (quantite <= 0) {
             return;
         }
@@ -787,9 +786,8 @@ public class Monstre {
      * @param quantite la puissance d'attaque
      * @param mult     par combien on multiplie les dommages d'entrée
      *                 gère le cas de mort du monstre
-     * @throws IOException toujours
      */
-    public void dommage(int quantite, float mult) throws IOException {
+    public void dommage(int quantite, float mult) {
         dommage(Main.corriger(quantite * mult));
     }
     
@@ -798,7 +796,7 @@ public class Monstre {
      * @param degas les dommages infligés par l'attaque
      * @return les degas subits par le monstre
      */
-    private int applique_competence_dommage(int degas) throws IOException {
+    private int applique_competence_dommage(int degas) {
         switch (competence) {
             case FRAGILE -> degas += 1;
             case VOL -> {
@@ -1035,7 +1033,7 @@ public class Monstre {
         }
         if (modif > 0) {
             int attaque = Input.atk();
-            if(attaque <= 0){
+            if (attaque <= 0) {
                 return;
             }
             attaque = Main.corriger(attaque * modif);
@@ -1070,9 +1068,9 @@ public class Monstre {
                 System.out.println("Le résultat n'a pas été comprit, attaque classique appliquée.");
                 modif = 1f;
         }
-        if(modif > 0) {
+        if (modif > 0) {
             int attaque = Input.atk();
-            if(attaque <= 0){
+            if (attaque <= 0) {
                 return;
             }
             attaque = Main.corriger(attaque * modif);

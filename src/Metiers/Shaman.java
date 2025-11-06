@@ -73,8 +73,7 @@ public class Shaman extends Joueur {
         System.out.println("Incantation : lance de mystérieuses incantations invoquant les forces de la nature et " + "les" + " esprits de ses ancêtres.");
         if (this.niveau >= 2) {
             System.out.println("Lien : Projette son âme dans celle d'un monstre pour tenter de les lier de force. Un "
-                    + "monstre" + " en bonne santé aura une âme puissante, alors que l'âme d'un monstre blessé est " +
-                    "plus" + " faible.");
+                    + "monstre" + " en bonne santé aura une âme puissante, alors que l'âme d'un monstre blessé est " + "plus" + " faible.");
         }
         if (this.niveau >= 3) {
             System.out.println("Paix intérieure : Regagne instantanément sa santé mentale et son calme.");
@@ -370,9 +369,8 @@ public class Shaman extends Joueur {
     /**
      * Applique la compétence "lien" du shaman
      * @param ennemi le Monstre à lier
-     * @throws IOException toujours
      */
-    private void lien(Monstre ennemi) throws IOException {
+    private void lien(Monstre ennemi) {
         if (ennemi.getCompetence() == Competence.CHRONOS) {
             System.out.println("Les esprits de vos ancêtres vous arrêtes avant que vous ne fassiez quelques choses " + "de" + " stupides.");
             return;
@@ -533,7 +531,7 @@ public class Shaman extends Joueur {
     private void colere_boost() throws IOException {
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(17, 10);
-        if(rune_haine){
+        if (rune_haine) {
             jet += 1;
         }
         if (jet <= 11) {
@@ -576,7 +574,7 @@ public class Shaman extends Joueur {
         int attaque;
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(17, 10);
-        if(rune_haine){
+        if (rune_haine) {
             jet += 1;
         }
         if (jet <= 12) {
@@ -628,7 +626,7 @@ public class Shaman extends Joueur {
     private void colere_berserk() throws IOException {
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(17, 10);
-        if(rune_haine){
+        if (rune_haine) {
             jet += 1;
         }
         if (jet <= 9) {
@@ -711,7 +709,7 @@ public class Shaman extends Joueur {
         System.out.println("Des nuages apparaissent dans le ciel et une pluie légère commence à tomber.");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(15, 10);
-        if(rune_pluie){
+        if (rune_pluie) {
             jet += 1;
         }
         if (jet <= 10) {
@@ -763,7 +761,7 @@ public class Shaman extends Joueur {
         System.out.println("De sombres nuages s'amoncèlent au dessus de vous");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(15, 10);
-        if(rune_pluie){
+        if (rune_pluie) {
             jet += 1;
         }
         if (jet <= 9) {
@@ -833,7 +831,7 @@ public class Shaman extends Joueur {
         System.out.println("Un nuage apparait au dessus de vous et commence à se rapprocher du sol");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(15, 10);
-        if(rune_pluie){
+        if (rune_pluie) {
             jet += 1;
         }
         if (jet <= 9) {
@@ -900,10 +898,10 @@ public class Shaman extends Joueur {
         System.out.println("Un nuage menaçant apparait au dessus de vous et commence à se rapprocher du sol");
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(15, 10);
-        if(rune_orage){
+        if (rune_orage) {
             jet += 1;
         }
-        if(rune_pluie){
+        if (rune_pluie) {
             jet += 1;
         }
         if (jet <= 10) {
@@ -1371,7 +1369,7 @@ public class Shaman extends Joueur {
     }
     
     @Override
-    public boolean auto_ressusciter(int malus) throws IOException {
+    public boolean auto_ressusciter(int malus) {
         if (this.niveau < 5) {
             return false;
         }

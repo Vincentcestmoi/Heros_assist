@@ -2,7 +2,9 @@ package Auxiliaire;
 
 public class Utilitaire {
     
-    /** Une classe destinée à servir de fusible dans une boucle, renvoyant une erreur si trop d'itération ont lieu*/
+    /**
+     * Une classe destinée à servir de fusible dans une boucle, renvoyant une erreur si trop d'itération ont lieu
+     */
     public static class LoopGuard {
         private final int maxIterations;
         private int counter = 0;
@@ -28,14 +30,17 @@ public class Utilitaire {
         public void check() {
             counter++;
             if (counter > maxIterations) {
-                throw new MaxLoopExceededException("Boucle infinie suspectée : plus de " + maxIterations + " itérations.");
+                throw new MaxLoopExceededException("Boucle infinie suspectée : plus de " + maxIterations + " " +
+                        "itérations.");
             }
         }
     }
     
     
     public static class MaxLoopExceededException extends RuntimeException {
-        /** Pour throw quand une boucle dépasse un certain nombre d'itérations*/
+        /**
+         * Pour throw quand une boucle dépasse un certain nombre d'itérations
+         */
         public MaxLoopExceededException(String message) {
             super(message);
         }
