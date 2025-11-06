@@ -1418,6 +1418,7 @@ public abstract class Joueur {
                     System.out.println("Votre familier désapprouve fortement vos méthodes d'entrainement.\n");
                     yield -1;
                 }
+                System.out.println("Vous familier n'a pas l'air très attentif...\n");
                 yield 0;
             }
             case 2, 3 -> {
@@ -1433,6 +1434,7 @@ public abstract class Joueur {
                     System.out.println("Votre familier semble particulièrement apprécier votre entrainement !\n");
                     yield 2;
                 }
+                System.out.println("Votre familier vous respecte un peu plus.\n");
                 yield 1;
             }
             default -> {
