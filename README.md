@@ -88,7 +88,7 @@ Le dossier `Table/` contient un des tableurs de gestion des statistiques.
 | `addit`  | Ajout un objet particulier                              |
 | `delit`  | Retire un objet particulier                             |
 
-⚠️ Chaque commande doit être confirmée en la réécrivant une seconde fois.
+⚠️ Certaines commandes doivent être confirmées, il suffit de les écrire une seconde fois.
 
 ### 🔍 Commandes spéciales disponibles lors du choix d’action de combat :
 
@@ -98,5 +98,5 @@ Le dossier `Table/` contient un des tableurs de gestion des statistiques.
 | `q`      | Met fin abruptement au combat                                                                                           |
 | `o`      | Signal un état particulier du joueur actif ou du joueur <br/>en première ligne (mort, assommé, berserk, ou hors combat) |
 
-⚠️ Chaque commande vous demandera une confirmation, appuyez simplement sur entrée.
+⚠️ Certaines commandes doivent être confirmées, il suffit de les écrire une seconde fois.
 
