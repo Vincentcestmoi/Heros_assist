@@ -98,5 +98,3 @@ Le dossier `Table/` contient un des tableurs de gestion des statistiques.
 | `q`      | Met fin abruptement au combat                                                                                           |
 | `o`      | Signal un état particulier du joueur actif ou du joueur <br/>en première ligne (mort, assommé, berserk, ou hors combat) |
 
-⚠️ Certaines commandes doivent être confirmées, il suffit de les écrire une seconde fois.
-
