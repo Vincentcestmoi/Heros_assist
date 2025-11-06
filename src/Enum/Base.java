@@ -14,5 +14,6 @@ public enum Base {
     CONSO_MAIN,
     RUNE,
     CREATURE,
+    MATERIAUX,
     AUTRE,
 }

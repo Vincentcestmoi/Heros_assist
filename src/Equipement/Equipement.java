@@ -584,25 +584,23 @@ public class Equipement {
     }
     
     private String getString() {
-        String type;
-        switch (base) {
-            case CEINTURE -> type = "ceinture";
-            case MAIN_1 -> type = "une main";
-            case MAIN_2 -> type = "deux main";
-            case BOUCLIER -> type = "bouclier";
-            case ARC -> type = "arc";
-            case ARMURE -> type = "armure";
-            case CASQUE -> type = "casque";
-            case BRACELET -> type = "bracelet";
-            case CONSO_EX -> type = "consommable bonus";
-            case CONSO_MAIN -> type = "consommable";
-            case SAC -> type = "sac";
-            case RUNE -> type = "rune";
-            case CREATURE -> type = "monture";
-            case AUTRE -> type = "divers";
-            default -> type = "Erreur : type non reconnu.";
-        }
-        return type;
+        return switch (base) {
+            case CEINTURE -> "ceinture";
+            case MAIN_1 -> "une main";
+            case MAIN_2 -> "deux main";
+            case BOUCLIER -> "bouclier";
+            case ARC -> "arc";
+            case ARMURE -> "armure";
+            case CASQUE -> "casque";
+            case BRACELET -> "bracelet";
+            case CONSO_EX -> "consommable bonus";
+            case CONSO_MAIN -> "consommable";
+            case SAC -> "sac";
+            case RUNE -> "rune";
+            case CREATURE -> "monture";
+            case AUTRE -> "divers";
+            case MATERIAUX ->  "Matériaux";
+        };
     }
     
     static public void drop_0() {
@@ -646,8 +644,8 @@ public class Equipement {
     static Equipement bouclier_0 = new Equipement("planche en bois", Rang.O, Base.BOUCLIER, 0, 2, 0, 8);
     static Equipement armure_0 = new Equipement("vieille armure", Rang.O, Base.ARMURE, 0, 1, 0, 3);
     static Equipement casque_0 = new Equipement("seau", Rang.O, Base.CASQUE, 0, 1, 0, 3);
-    static Equipement ingredients_0 = new Equipement("ingrédient", Rang.O, Base.AUTRE, 0, 0, 0, 3);
-    static Equipement ingredients2_0 = new Equipement("2 ingrédients", Rang.O, Base.AUTRE, 0, 0, 0, 7);
+    static Equipement ingredients_0 = new Equipement("ingrédient", Rang.O, Base.MATERIAUX, 0, 0, 0, 3);
+    static Equipement ingredients2_0 = new Equipement("2 ingrédients", Rang.O, Base.MATERIAUX, 0, 0, 0, 7);
     
     static Equipement[] marche0 = {arc_0, main1_0, main2_0, armure_0, bouclier_0, casque_0, ingredients_0,
             ingredients2_0};
@@ -658,8 +656,8 @@ public class Equipement {
     static Equipement main2_I = new Equipement("grande épée", Rang.I, Base.MAIN_2, 5, 0, 0, 9);
     static Equipement armure_I = new Equipement("armure", Rang.I, Base.ARMURE, 0, 2, 0, 5);
     static Equipement casque_I = new Equipement("mauvais casque", Rang.I, Base.CASQUE, 0, 2, 0, 5);
-    static Equipement ingredients_I = new Equipement("ingrédient", Rang.O, Base.AUTRE, 0, 0, 0, 4);
-    static Equipement ingredients2_I = new Equipement("2 ingrédients", Rang.O, Base.AUTRE, 0, 0, 0, 8);
+    static Equipement ingredients_I = new Equipement("ingrédient", Rang.O, Base.MATERIAUX, 0, 0, 0, 4);
+    static Equipement ingredients2_I = new Equipement("2 ingrédients", Rang.O, Base.MATERIAUX, 0, 0, 0, 8);
     
     static Equipement[] marcheI = {arc_I, main1_I, main2_I, armure_I, bouclier_I, casque_I, ingredients_I,
             ingredients2_I, loterie};
