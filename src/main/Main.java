@@ -125,11 +125,11 @@ public class Main {
                     i -= 1;
                 }
                 case ITEM_PLUS -> {
-                    ajouter_item(joueur);
+                    ajouter_item(choisir_joueur());
                     i -= 1;
                 }
                 case ITEM_MOINS -> {
-                    retirer_item(joueur);
+                    retirer_item(choisir_joueur());
                     i -= 1;
                 }
                 case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
@@ -139,8 +139,23 @@ public class Main {
         }
     }
     
+    private static Joueur choisir_joueur() throws IOException {
+        System.out.println("Indiquez le joueur a affecter.");
+        for(int i = 0; i < nbj; i++) {
+            System.out.printf("\n%d : %s", i, Main.joueurs[i].getNom());
+        }
+        int j;
+        do {
+            j = Input.readInt();
+            if(j < 0 || j >= nbj) {
+                System.out.println("Entrée invalide.");
+            }
+        } while(j >= nbj || j < 0);
+        return Main.joueurs[j];
+    }
+    
     private static void ajouter_item(Joueur joueur) throws IOException {
-        System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 pour quitter.");
+        System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 ou q pour quitter.");
         String temp = Input.read();
         if (temp.charAt(0) != '#') {
             System.out.println("Format invalide, l'identifiant doit commencer par #");
@@ -149,7 +164,7 @@ public class Main {
             System.out.println("Format invalide, l'identifiant doit être de la forme #xx");
         }
         switch (temp) {
-            case "#00" -> {
+            case "#00", "q" -> {
             }
             case "#01" -> joueur.add_lame_infernale();
             case "#02" -> joueur.add_lame_vegetale();
@@ -204,7 +219,7 @@ public class Main {
     
     private static void retirer_item(Joueur joueur) throws IOException {
         //noinspection DuplicatedCode
-        System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 pour quitter, #99 pour retirer " +
+        System.out.println("Indiquez le numéro de l'item (format #xx). Écrivez #00 ou q pour quitter, #99 pour retirer " +
                 "tous vos items spéciaux.");
         String temp = Input.read();
         if (temp.charAt(0) != '#') {
@@ -214,7 +229,7 @@ public class Main {
             System.out.println("Format invalide, l'identifiant doit être de la forme #xx");
         }
         switch (temp) {
-            case "#00" -> {
+            case "#00", "q" -> {
             }
             case "#01" -> joueur.retire_lame_infernale();
             case "#02" -> joueur.retire_lame_vegetale();
