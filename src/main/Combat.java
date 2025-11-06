@@ -429,7 +429,16 @@ public class Combat {
             return action;
         }
         System.out.println("Vous donnez un ordre à votre familier.");
-        int temp = joueur.get_ob_f() + Input.D6() - 3 + rand.nextInt(2); //valeur d'obéissance à l'action
+        int temp = joueur.get_ob_f() - 3 + rand.nextInt(2); //valeur d'obéissance à l'action
+        
+        if(temp > 4){
+            return action;
+        } else if(temp > 2 && action == Action.ATTAQUER){
+            return Action.ATTAQUER;
+        } else{
+            temp += Input.D6();
+        }
+        
         if (temp <= 1) {
             System.out.println("Le familier de " + joueur.getNom() + " fuit le combat.");
             joueur.f_inactiver();
