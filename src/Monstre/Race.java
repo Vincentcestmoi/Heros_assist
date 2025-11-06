@@ -110,11 +110,11 @@ public class Race {
     static Competence[] cvs_comp = {Competence.VOL, Competence.VAMPIRISME, Competence.VOLAGE, Competence.VOL_OFF};
     static Race ch_s_v = new Race("chauve-souris vampire", 2, 4, 0, 0, 0, 2, cvs_comp, 5);
     static Competence[] damn_comp = {Competence.AUCUNE, Competence.DAMNATION_RES, Competence.DAMNATION_ATK};
-    static Race damne = new Race("Damné", 1, 4, 0, 0, 0, 1, damn_comp, 10);
+    static Race damne = new Race("damné", 1, 4, 0, 0, 0, 1, damn_comp, 10);
     static Competence[] guerske_comp = {Competence.AUCUNE, Competence.FRAGILE, Competence.DAMN_ARES};
     static Race guer_ske = new Race("guerrier squelette", 1, 5, 0, 0, 0, 1, guerske_comp, 10);
     static Competence[] guermau_comp = {Competence.FEAR_POSEIDON, Competence.FEAR_DEMETER, Competence.FEAR_DYONISOS};
-    static Race guer_maudit = new Race("Guerrier maudit", 2, 4, 0, 0, 0, 1, guermau_comp, 9);
+    static Race guer_maudit = new Race("guerrier maudit", 2, 4, 0, 0, 0, 1, guermau_comp, 9);
     static Competence[] fant_comp = {Competence.ESPRIT, Competence.SPELL_IMMUNE};
     static Race fantome = new Race("fantôme", 3, 3, 0, 0, 0, 2, fant_comp, 3);
     static Competence[] zomb_comp = {Competence.AUCUNE, Competence.POURRI, Competence.CIBLE_CASQUE,
@@ -285,5 +285,5 @@ public class Race {
     public static Race[] olympe = {titan, chronos};
     
     static Competence[] pant_comp = {Competence.DUMMY};
-    static Race pantin = new Race("Mannequin d'entrainement", 0, 1, 0, 0, 0, 0, pant_comp, 10);
+    static Race pantin = new Race("mannequin d'entrainement", 0, 1, 0, 0, 0, 0, pant_comp, 10);
 }
