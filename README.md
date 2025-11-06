@@ -88,7 +88,7 @@ Le dossier `Table/` contient un des tableurs de gestion des statistiques.
 | `addit`  | Ajout un objet particulier                              |
 | `delit`  | Retire un objet particulier                             |
 
-⚠️ Certaines commandes doivent être confirmées, il suffit de les écrire une seconde fois.
+Certaines commandes doivent être confirmées, il suffit de les écrire une seconde fois.
 
 ### 🔍 Commandes spéciales disponibles lors du choix d’action de combat :
 
@@ -98,3 +98,10 @@ Le dossier `Table/` contient un des tableurs de gestion des statistiques.
 | `q`      | Met fin abruptement au combat                                                                                           |
 | `o`      | Signal un état particulier du joueur actif ou du joueur <br/>en première ligne (mort, assommé, berserk, ou hors combat) |
 
+### 💾 Sauvegarde automatique (Autosave)
+
+Le jeu enregistre automatiquement vos données tout au long de la partie, ainsi qu’au moment de l’arrêt du programme.  
+En cas d’interruption externe (fermeture forcée, crash, etc.), il tentera également de sauvegarder toutes les informations avant de s’éteindre.
+
+⚠️ **Attention** : les fichiers de sauvegarde sont écrasés en continu.  
+Si vous souhaitez conserver une version précise de votre progression, pensez à copier manuellement le fichier de sauvegarde depuis le dossier `Save/` vers un emplacement sûr.
