@@ -284,7 +284,7 @@ public class Pre_Equipement {
     static Pre_Equipement rune_virale = new Pre_Equipement("Rune virale", AUTRE, I, Effet_equip.RUNE_VIRALE, true);
     static Pre_Equipement rune_orage = new Pre_Equipement("Rune orageuse", AUTRE, I, Effet_equip.RUNE_ORAGE, true);
     static Pre_Equipement rune_mort = new Pre_Equipement("Rune mortifère", AUTRE, I, Effet_equip.RUNE_MORT, true);
-    static Pre_Equipement rune_dodo = new Pre_Equipement("Rune endormie", AUTRE, I, Effet_equip.RUNE_DODO, true);
+    static Pre_Equipement rune_dodo = new Pre_Equipement("Rune somnifère", AUTRE, I, Effet_equip.RUNE_DODO, true);
     static Pre_Equipement rune_commerce = new Pre_Equipement("Rune de commerce", AUTRE, I, Effet_equip.RUNE_COMMERCE,
             true);
     static Pre_Equipement popoI = new Pre_Equipement("Soupe magique", CONSO_MAIN, I, Effet_equip.SOUPE_MAGIQUE, true);
