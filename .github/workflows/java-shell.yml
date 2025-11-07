@@ -33,10 +33,10 @@ jobs:
       run: ./heros.sh --test
 
     - name: 🧪 Test session basic flow
-      run: timeout 10s ./heros.sh --test2
+      run: timeout 10s ./heros.sh --test test2
 
     - name: 🧪 Test session with load
-      run: timeout 10s ./heros.sh --test3
+      run: timeout 10s ./heros.sh --test test3
 
     - name: 🧪 Test session clean save
-      run: timeout 10s ./heros.sh --test4
+      run: timeout 10s ./heros.sh --test test4
