@@ -24,6 +24,7 @@ public abstract class Joueur {
     protected int ob_f;
     private final Dieux parent;
     private int xp;
+    protected int xp_palier = 5;
     protected int niveau;
     
     // stat
@@ -461,7 +462,7 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
     private void setNiveau(int experience) {
         int niveau = 0;
         LoopGuard garde = new LoopGuard();
-        while (experience >= 5 * (niveau + 1)) {
+        while (experience >= this.xp_palier * (niveau + 1)) {
             garde.check();
             niveau++;
             experience -= niveau * 5;
@@ -498,7 +499,7 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
             xp_totale = 0;
         }
         for (int nv = this.niveau; nv > 0; nv--) {
-            xp_totale += 5 * nv;
+            xp_totale += xp_palier * nv;
         }
         return xp_totale;
     }
@@ -790,16 +791,16 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
     //************************************************METHODE INDEPENDENTE********************************************//
     
     /**
-     * Donne de l'expérience au joueur de 1.
+     * Augmente l'expérience du joueur de 1 et gère les lvl up.
      * @implNote Ce qui augmente l'xp : avoir affronté un monstre (victoire ou fuite) (*2 si nommé), porter le
      * dernier coup,
      * ressusciter un allié,
      */
     public void gagneXp() throws IOException {
         this.xp += 1;
-        if (this.xp >= (this.niveau + 1) * 5) {
+        if (this.xp >= (this.niveau + 1) * this.xp_palier) {
             this.niveau += 1;
-            this.xp -= this.niveau * 5;
+            this.xp -= this.niveau * this.xp_palier;
             System.out.println(nom + " a gagné un niveau !");
             Output.JouerSonLvlUp();
             super_lvl_up();

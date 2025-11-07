@@ -4,6 +4,8 @@ import Enum.Dieux;
 import Enum.Metier;
 import Enum.Position;
 
+import java.io.IOException;
+
 public class Tryharder extends Joueur {
     Metier metier = Metier.TRYHARDER;
     
@@ -15,6 +17,7 @@ public class Tryharder extends Joueur {
         PP_value = 2;
         PP_max = 2;
         add_caracteristique("Déterminé");
+        this.xp_palier -= 1; //progresse plus vite
     }
     
     @Override
@@ -47,25 +50,14 @@ public class Tryharder extends Joueur {
     }
     
     @Override
-    //le tryhardeur progresse 20% plus vite (palier par 4 au lieu de 5).
-    public void gagneXp() {
-        gagneXpLocal();
+    public void gagneXp() throws IOException {
         if (this.niveau >= 5 && rand.nextInt(10) == 0) { // +10%
             gagneXpLocal();
         }
         if (this.niveau >= 8 && rand.nextInt(15) <= 1) { // +13%
             gagneXpLocal();
         }
-        if (getXplocal() >= (this.niveau + 1) * 4) {
-            int dif = getXplocal() - this.niveau * 4;
-            this.niveau += 1;
-            resetXpLocal();
-            for (int i = 0; i < dif; i++) {
-                gagneXpLocal();
-            }
-            System.out.println(nom + " a gagné un niveau !");
-            super_lvl_up();
-        }
+        super.gagneXp();
     }
     
     @Override
