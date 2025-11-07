@@ -140,8 +140,9 @@ public class Input {
      * @return la valeur
      */
     public static int readInt() {
-        Scanner sc = new Scanner(System.in);
+        Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         while (true) {
+            garde.check();
             String line = sc.nextLine().trim();
             try {
                 return Integer.parseInt(line);
@@ -150,6 +151,7 @@ public class Input {
             }
         }
     }
+    
     
     
     /**
