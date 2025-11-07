@@ -90,7 +90,7 @@ public class Main {
         while (run) {
             
             //tour de jeu
-            for (int i = 0; i < nbj; i++) {
+            for (int i = 0; i < nbj && run; i++) {
                 MainGarde.checkMain();
                 Joueur joueur = joueurs[i];
                 System.out.println(joueur.getNom() + " c'est votre tour, vous êtes " + texte_pos(joueur.getPosition()) + ".");
