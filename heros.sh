@@ -25,16 +25,29 @@ echo "ℹ️ Lancement avec $JAR"
 
 # Lancement
 if [ $# -eq 0 ]; then
-    java -jar "$JAR"
+  java -jar "$JAR"
+
 elif [ "$1" == "--test" ]; then
-    java -jar "$JAR" --test
-elif [ "$1" == "--test2" ]; then
-    rm -f Save0/info.json
-    printf "0\ntest\nO\n3\nJ1\nO\nno\nJ2\nO\nau\nJ3\nO\ngu\nq\nq\n" | java -jar "$JAR"
-elif [ "$1" == "--test3" ]; then
-    printf "0\nO\ns\nc\nre\nre\nm\n6\nn\nq\nq\n" | java -jar "$JAR"
-elif [ "$1" == "--test4" ]; then
-    printf "0\nn\nO\ntest n2\nO\n1\nMoi\nO\nra\nc\nE\n2\nN\nq\nq\n" | java -jar "$JAR"
+    if [ $# -eq 1 ]; then
+        # juste ./heros.sh --test
+        java -jar "$JAR" --test
+    else
+        TESTFILE="tests/$2.in"
+        if [ ! -f "$TESTFILE" ]; then
+            echo "⚠️ Fichier de test introuvable : $TESTFILE"
+            exit 1
+        fi
+
+        # cas particulier : test2
+        if [ "$2" == "test2" ]; then
+            rm -f Save0/info.json
+        fi
+
+        java -jar "$JAR" < "$TESTFILE"
+    fi
+
 else
     java -jar "$JAR" "$@"
 fi
+
+
