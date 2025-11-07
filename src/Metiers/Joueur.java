@@ -793,8 +793,7 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
     /**
      * Augmente l'expérience du joueur de 1 et gère les lvl up.
      * @implNote Ce qui augmente l'xp : avoir affronté un monstre (victoire ou fuite) (*2 si nommé), porter le
-     * dernier coup,
-     * ressusciter un allié,
+     * dernier coup, ressusciter un allié,
      */
     public void gagneXp() throws IOException {
         this.xp += 1;
@@ -822,24 +821,14 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
     }
     
     /**
-     * Méthode permettant aux classes filles d'ajouter de l'expérience
+     * Méthode permettant à la classe fille Tryhardeur d'ajouter de l'expérience
+     * @throws UnsupportedOperationException Si une classe autre que Tryhardeur essaie d'utiliser cette méthode
      */
     protected void gagneXpLocal() {
+        if (!(this instanceof Tryharder)) {
+            throw new UnsupportedOperationException("Accès au niveau d'expérience interdit, droit exclusif des classe Joueur et Tryhardeur.");
+        }
         this.xp += 1;
-    }
-    
-    /**
-     * Méthode permettant aux classes filles d'analyser la quantité d'expérience
-     */
-    protected int getXplocal() {
-        return this.xp;
-    }
-    
-    /**
-     * Méthode permettant de remettre à 0 l'expérience d'un joueur
-     */
-    protected void resetXpLocal() {
-        this.xp = 0;
     }
     
     /**
