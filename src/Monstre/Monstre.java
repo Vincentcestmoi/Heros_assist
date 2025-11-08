@@ -845,6 +845,10 @@ public class Monstre {
      * Renvoie la quantité et qualité des équipements obtenus à la mort du monstre
      */
     private void drop() {
+        if(rand.nextInt(5) == 0){ //20%
+            System.out.println("Vous trouvez quelque chose par terre...");
+            Equipement.drop_materiau();
+        }
         System.out.println("Vous fouillez le corp " + text_de());
         if (this.drop_quantite <= 0 || getCompetence() == Competence.ARNAQUE) {
             System.out.println("Vous ne trouvez aucun équipement sur son cadavre");
@@ -1121,8 +1125,8 @@ public class Monstre {
             if (getEtat() <= 0 || pos == Position.ENFERS || pos == Position.OLYMPE || pos == Position.ASCENDANT) {
                 return false;
             }
-            int value = (1 + (getEtat() - 1) / 10);
-            System.out.println("Vous pouvez vendre le cadavre " + text_de() + " pour " + value + " PO.");
+            int value = (1 + (getEtat() - 1) / 5);
+            System.out.printf("Le cadavre a une qualité de %d.\n", value);
             Output.jouerSonOr(value);
             return false;
         }

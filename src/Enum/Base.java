@@ -15,5 +15,6 @@ public enum Base {
     RUNE,
     CREATURE,
     MATERIAUX,
+    INGREDIENT,
     AUTRE,
 }

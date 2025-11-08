@@ -11,8 +11,8 @@ public class Guerriere extends Joueur {
     Metier metier = Metier.GUERRIERE;
     private boolean lame_break;
     
-    public Guerriere(String nom, Position position, int ob_f, Dieux parent, int xp) {
-        super(nom, position, ob_f, parent, xp);
+    public Guerriere(String nom, Position position, int ob_f, Dieux parent, int xp, Grade grade) {
+        super(nom, position, ob_f, parent, xp, grade);
         vie = 6;
         attaque = 2;
         PP = "aura";

@@ -108,7 +108,9 @@ public class SaveManager {
             Joueur joueur = Main.joueurs[i];
             JsonObject joueurVide = Json.createObjectBuilder().add("nom", joueur.getNom()).add("metier",
                     joueur.getMetier().name()).add("ob_f", joueur.get_ob_f()).add("position",
-                    joueur.getPosition().name()).add("xp", joueur.getXp()).add("parent", joueur.getParent().name()).add("effets", Json.createArrayBuilder()).build();
+                    joueur.getPosition().name()).add("grade", joueur.getGrade().name()).add("xp",
+                    joueur.getXp()).add("parent", joueur.getParent().name()).add("effets",
+                    Json.createArrayBuilder()).build();
             
             try (Writer fileWriter = new FileWriter(dossier + "/Joueur" + i + ".json"); JsonWriter writer =
                     writerFactory.createWriter(fileWriter)) {

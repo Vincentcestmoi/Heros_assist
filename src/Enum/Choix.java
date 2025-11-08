@@ -5,8 +5,6 @@ public enum Choix {
     MONTER,
     DESCENDRE,
     DRESSER,
-    MARCHE,
-    DUMMY,
     ATTENDRE,
     STAT,
     QUITTER,

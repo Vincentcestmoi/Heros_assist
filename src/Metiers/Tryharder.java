@@ -1,6 +1,7 @@
 package Metiers;
 
 import Enum.Dieux;
+import Enum.Grade;
 import Enum.Metier;
 import Enum.Position;
 
@@ -9,8 +10,8 @@ import java.io.IOException;
 public class Tryharder extends Joueur {
     Metier metier = Metier.TRYHARDER;
     
-    public Tryharder(String nom, Position position, int ob_f, Dieux parent, int xp) {
-        super(nom, position, ob_f, parent, xp);
+    public Tryharder(String nom, Position position, int ob_f, Dieux parent, int xp, Grade grade) {
+        super(nom, position, ob_f, parent, xp, grade);
         vie = 3;
         attaque = 1;
         PP = "mana";

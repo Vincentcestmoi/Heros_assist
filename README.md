@@ -36,13 +36,15 @@ L’usage d’un classeur Excel ou d’un tableau est fortement recommandé. (vo
 
 Tout équipement à l'exception des armes à 1 et 2 mains est considéré comme un objet.  
 Certains items ont un effet spécial calculé par le jeu, indiqué par un code (ex : #31), pensez à noter ce code !  
-Le terme "PP" désigne du mana ou de l'aura.
+Le terme "PP" désigne du mana ou de l'aura.  
+⚠️ Ne pas confondre les codes d'équipement (#xx) et les codes des matériaux (x)
 
 #### Quantité :
 - Casques, boucliers, (tout équipement sauf contre-indication) : 1 par joueur
 - Mains : 2 maximum (sauf Archimage : 1 seule)
 - Bracelets : 4 maximum
 - Consommables, bonus, divers, amélioration d'arc : illimités
+- ingrédient, matériaux : aucun, sauf indications contraires
 
 ### ⚔️ Règles d’attaque
 - **Arc** et **mains** sont deux valeurs distinctes

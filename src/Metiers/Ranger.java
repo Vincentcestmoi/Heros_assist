@@ -1,9 +1,6 @@
 package Metiers;
 
-import Enum.Action;
-import Enum.Dieux;
-import Enum.Metier;
-import Enum.Position;
+import Enum.*;
 import Exterieur.Input;
 import Monstre.Monstre;
 import main.Main;
@@ -13,8 +10,8 @@ import java.io.IOException;
 public class Ranger extends Joueur {
     Metier metier = Metier.RANGER;
     
-    public Ranger(String nom, Position position, int ob_f, Dieux parent, int xp) {
-        super(nom, position, ob_f, parent, xp);
+    public Ranger(String nom, Position position, int ob_f, Dieux parent, int xp, Grade grade) {
+        super(nom, position, ob_f, parent, xp, grade);
         vie = 4;
         attaque = 1;
         PP = "mana";

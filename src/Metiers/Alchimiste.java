@@ -10,8 +10,8 @@ import java.io.IOException;
 public class Alchimiste extends Joueur {
     Metier metier = Metier.ALCHIMISTE;
     
-    public Alchimiste(String nom, Position position, int ob_f, Dieux parent, int xp) {
-        super(nom, position, ob_f, parent, xp);
+    public Alchimiste(String nom, Position position, int ob_f, Dieux parent, int xp, Grade grade) {
+        super(nom, position, ob_f, parent, xp, grade);
         vie = 4;
         attaque = 1;
         PP = "ingredient";

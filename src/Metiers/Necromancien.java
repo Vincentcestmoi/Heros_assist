@@ -1,10 +1,7 @@
 package Metiers;
 
 import Auxiliaire.Texte;
-import Enum.Action;
-import Enum.Dieux;
-import Enum.Metier;
-import Enum.Position;
+import Enum.*;
 import Exterieur.Input;
 import Monstre.Lieu;
 import Monstre.Monstre;
@@ -18,8 +15,8 @@ public class Necromancien extends Joueur {
     private int nb_item;
     private int pp_sacrifice;
     
-    public Necromancien(String nom, Position position, int ob_f, Dieux parent, int xp) {
-        super(nom, position, ob_f, parent, xp);
+    public Necromancien(String nom, Position position, int ob_f, Dieux parent, int xp, Grade grade) {
+        super(nom, position, ob_f, parent, xp, grade);
         vie = 4;
         attaque = 1;
         PP = "mana";
@@ -493,7 +490,7 @@ public class Necromancien extends Joueur {
         }
         
         String monstre_nom;
-        Monstre m = Lieu.true_monstre(getPosition());
+        Monstre m = Lieu.true_monstre(getPosition(), false);
         int ob;
         if (jet <= 6) {
             monstre_nom = "carcasse putréfié";

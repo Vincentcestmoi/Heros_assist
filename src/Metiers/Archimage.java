@@ -1,10 +1,7 @@
 package Metiers;
 
 import Auxiliaire.Texte;
-import Enum.Action;
-import Enum.Dieux;
-import Enum.Metier;
-import Enum.Position;
+import Enum.*;
 import Exterieur.Input;
 import Monstre.Monstre;
 import main.Main;
@@ -15,8 +12,8 @@ public class Archimage extends Joueur {
     Metier metier = Metier.ARCHIMAGE;
     int purge_cout;
     
-    public Archimage(String nom, Position position, int ob_f, Dieux parent, int xp) {
-        super(nom, position, ob_f, parent, xp);
+    public Archimage(String nom, Position position, int ob_f, Dieux parent, int xp, Grade grade) {
+        super(nom, position, ob_f, parent, xp, grade);
         vie = 4;
         attaque = 0;
         PP = "mana";

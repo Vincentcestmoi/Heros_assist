@@ -1,0 +1,19 @@
+package Enum;
+
+public enum Choix_Agareh {
+    INSCRIRE,
+    VENDRE_ITEM,
+    VENDRE_CADAVRE,
+    PARTIR,
+    PROMOTION,
+    MARCHE,
+    FORGE,
+    MAGASIN_ARC,
+    ARMURERIE,
+    ECURIE,
+    TANNEUR,
+    BIJOUTERIE,
+    MARCHAND_BOUCLIER,
+    TRANSPORT,
+    MANNEQUIN,
+}

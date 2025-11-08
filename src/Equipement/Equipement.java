@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import static Enum.Effet_equip.MAT_COMMUN;
+
 
 public class Equipement {
     public final String nom;
@@ -23,6 +25,9 @@ public class Equipement {
     
     static Random rand = new Random();
     
+    /**
+     * Drop des monstres
+     */
     Equipement(Pre_Equipement pre) {
         this.nom = pre.nom;
         this.rang = pre.rang;
@@ -46,6 +51,9 @@ public class Equipement {
         this.prix = 0;
     }
     
+    /**
+     * Equipement du marché
+     */
     Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix) {
         this.nom = nom;
         this.attaque = attaque;
@@ -57,6 +65,9 @@ public class Equipement {
         this.effet = null;
     }
     
+    /**
+     * Equipement du marché
+     */
     Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix, String effet) {
         this.nom = nom;
         this.attaque = attaque;
@@ -66,6 +77,20 @@ public class Equipement {
         this.base = base;
         this.prix = prix;
         this.effet = effet;
+    }
+    
+    /**
+     * Matériaux
+     */
+    Equipement(String nom, Rang rang, Effet_equip effet) {
+        this.nom = nom;
+        this.attaque = 0;
+        this.resistance = 0;
+        this.armure = 0;
+        this.rang = rang;
+        this.base = Base.MATERIAUX;
+        this.prix = 0;
+        applique_effet(effet);
     }
     
     /**
@@ -316,7 +341,7 @@ public class Equipement {
      * Applique les effets spéciaux à l'équipement
      */
     private void applique_effet(Effet_equip effet) {
-        this.effet = null;
+        this.effet = applique_effet_mat();
         switch (effet) {
             case ARCA -> this.effet = switch (rang) {
                 case O, I -> "Augmente de 1 l'attaque des arcs.";
@@ -539,9 +564,33 @@ public class Equipement {
             case SAC_TEMP ->
                     this.effet = "Lorsque vous utilisez un objet à usage limité pour la dernière fois, vous " +
                             "pouvez choisir de détruire cette sacoche à la place et récupérez tous les utilisations " + "de votre objet." + "(s'il s'agit d'un objet à effet, vous devez à nouveau entrer son " + "code)";
+            case MAT_COMMUN -> this.effet += " (code : 0)";
+            case MAT_FORT -> this.effet += " Sa nature particulière augmente la force de son porteur. (code : 1)";
+            case MAT_PUISSANT -> this.effet += " Il est dit qu'il accumule les énergie naturelle pour la restituer à son porteur. (code : 2)";
+            case MAT_SOLIDE -> this.effet += " Il est plus solide que la moyenne. (code : 3)";
+            case MAT_RESISTANT -> this.effet += " Particulièrement solide, il est utilisé dans les plus grandes armures. (code : 4)";
+            case MAT_AMORTISSANT -> this.effet += " Rare et précieux, façonné sur l'équipement adéquat, il permet d'amortir les coups. (code : 5)";
+            case MAT_SOUPLE -> this.effet += " Solide et flexible, c'est l'atout idéal pour une arme ou un bouclier. (code : 6)";
+            case MAT_TRANCHANT -> this.effet += " Tranchant, il risque cependant de gêner son porteur, de crainte de s'entailler ! (code : 7)";
+            case MAT_TRES_SOLIDE -> this.effet += " Extrêmement solide, c'est le matériaux parfait pour améliorer une armure. (code : 8)";
+            case MAT_FRAGILE -> this.effet += " Fragile et tranchant, il est parfais pour une arme et très mauvais pour une armure (code : 9)";
+            case MAT_TROP_SOUPLE -> this.effet += " Fin et souple, il permet d'amortir les coups, mais affaiblie la structure de l'équipement (code : 10)";
             case AUCUN -> {
             }
         }
+    }
+    
+    private String applique_effet_mat(){
+        if (this.base == Base.MATERIAUX){
+            return switch (this.rang){
+                case O -> "Un matériau de niveau 0, sa qualité est piètre.";
+                case I -> "Un matériau de niveau 1, utile.";
+                case II -> "Un matériau de niveau 2, solide et puissant.";
+                case III -> "Un matériau de niveau 3, aussi puissant que difficile à travailler.";
+                case PROMOTION, IV -> "Un matériau qui n'est pas sensé exister, donc z'avez qu'à dire que c'est un joker.";
+            };
+        }
+        return null;
     }
     
     private void presente() {
@@ -601,6 +650,7 @@ public class Equipement {
             case CREATURE -> "monture";
             case AUTRE -> "divers";
             case MATERIAUX -> "Matériaux";
+            case INGREDIENT -> "Ingrédient";
         };
     }
     
@@ -633,7 +683,115 @@ public class Equipement {
         Equipement equipement = new Equipement(Pre_Equipement.drop_promo());
         equipement.presente();
     }
-    //Equipement.Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix,
+    
+    //Equipement(String nom, Rang rang, Effet_equip effet)
+    static Equipement equi0 = new Equipement("cuir rapiécé", Rang.O, MAT_COMMUN);
+    static Equipement equiI = new Equipement("cuir tanné", Rang.I, MAT_COMMUN);
+    static Equipement equiII = new Equipement("peau de monstre", Rang.II, MAT_COMMUN);
+    static Equipement equiIII = new Equipement("fibre renforcée", Rang.III, MAT_COMMUN);
+    
+    static Equipement equiIF = new Equipement("pierre naturelle", Rang.I, Effet_equip.MAT_FORT);
+    static Equipement equiIIF = new Equipement("croc de lycan", Rang.II, Effet_equip.MAT_FORT);
+    static Equipement equiIIIF = new Equipement("diamant enchantée", Rang.III, Effet_equip.MAT_FORT);
+    
+    static Equipement equiIIF2 = new Equipement("pierre de pouvoir", Rang.II, Effet_equip.MAT_PUISSANT);
+    static Equipement equiIIIF2 = new Equipement("perle d'accumulation", Rang.III, Effet_equip.MAT_PUISSANT);
+    
+    static Equipement equiIS = new Equipement("écorce d'arbre", Rang.I, Effet_equip.MAT_SOLIDE);
+    static Equipement equiIIS = new Equipement("minerai de fer", Rang.II, Effet_equip.MAT_SOLIDE);
+    static Equipement equiIIIS = new Equipement("acier", Rang.III, Effet_equip.MAT_SOLIDE);
+    
+    static Equipement equiIIS2 = new Equipement("écailles de monstre", Rang.II, Effet_equip.MAT_RESISTANT);
+    static Equipement equiIIIS2 = new Equipement("titane", Rang.III, Effet_equip.MAT_RESISTANT);
+    
+    static Equipement equiIIA = new Equipement("goudron magique", Rang.II, Effet_equip.MAT_AMORTISSANT);
+    static Equipement equiIIIA = new Equipement("polymère d'acier", Rang.III, Effet_equip.MAT_AMORTISSANT);
+    
+    static Equipement equiIS3 = new Equipement("serres d'aigles", Rang.I, Effet_equip.MAT_SOUPLE);
+    static Equipement equiIIS3 = new Equipement("griffes de loup", Rang.II, Effet_equip.MAT_SOUPLE);
+    
+    static Equipement equiIT = new Equipement("coquillage", Rang.I, Effet_equip.MAT_TRANCHANT);
+    static Equipement equiIIT = new Equipement("dents de tigre", Rang.II, Effet_equip.MAT_TRANCHANT);
+    static Equipement equiIIIT = new Equipement("roche mystérieuse", Rang.III, Effet_equip.MAT_TRANCHANT);
+    
+    static Equipement equiIIS4 = new Equipement("fragment de nickel", Rang.II, Effet_equip.MAT_TRES_SOLIDE);
+    static Equipement equiIIIS4 = new Equipement("orichalque", Rang.III, Effet_equip.MAT_TRES_SOLIDE);
+    
+    static Equipement equiIIF3 = new Equipement("roche volcanique", Rang.II, Effet_equip.MAT_FRAGILE);
+    static Equipement equiIIIF3 = new Equipement("obsidienne", Rang.III, Effet_equip.MAT_FRAGILE);
+    
+    static Equipement equiIIS5 = new Equipement("bronze céleste", Rang.II, Effet_equip.MAT_TROP_SOUPLE);
+    static Equipement equiIIIS5 = new Equipement("or impérial", Rang.III, Effet_equip.MAT_TROP_SOUPLE);
+    
+    static Equipement[] materiaux = {equi0, equiI, equiII, equiIII, equiIF, equiIIF, equiIIIF, equiIIF2, equiIIIF2,
+            equiIS, equiIIS, equiIIIS, equiIIS2, equiIIIS2, equiIIA, equiIIIA, equiIS3, equiIIS3, equiIT, equiIIT, equiIIIT,
+            equiIIS4, equiIIIS4, equiIIF3, equiIIIF3, equiIIS5, equiIIIS5};
+    
+    /**
+     * Droop un matériau
+     */
+    static public void drop_materiau() {
+        int total = 0;
+        for (Equipement mater : materiaux) {
+            total += mater.proba();
+        }
+        System.out.println(total);
+        int t = rand.nextInt(total);
+        for (Equipement mater : materiaux) {
+            t -= mater.proba();
+            if (t <= 0) {
+                mater.presente();
+                System.out.println(mater.proba());
+                return;
+            }
+        }
+    }
+    
+    /**
+     * Renvoie le poids de probabilité de tirage de l'équipement
+     * @return une valeur s'il s'agit d'un matériau, 0 sinon
+     */
+    private int proba() {
+        if (base != Base.MATERIAUX) {
+            return 0;
+        }
+        int value = switch (rang) {
+            case O -> 40;
+            case I -> 20;
+            case II -> 10;
+            case III -> 5;
+            case IV, PROMOTION -> 1;
+        };
+        if (effet.contains("0")) {
+            value += 10;
+        } else if (effet.contains("1")) {
+            value -= 2;
+        }else if (effet.contains("2")) {
+            value -= 4;
+        } else if (effet.contains("3")) {
+            value -= 1;
+        } else if (effet.contains("4")){
+            value -= 2;
+        } else if (effet.contains("5")){
+            value -= 3;
+        } else if (effet.contains("6")) {
+            value -= 3;
+        } else if (effet.contains("7")) {
+            value -= 2;
+        } else if (effet.contains("8")){
+            value -= 4;
+        } else if (effet.contains("9")){
+            value -= 2;
+        } else if (effet.contains("10")){
+            value -= 2;
+        }
+        if(value <= 0){
+            return 1;
+        }
+        return value;
+    }
+    
+    //Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix,
     // String effet)
     
     static Equipement loterie = new Equipement("ticket de loterie", Rang.O, Base.AUTRE, 0, 0, 0, 5,
@@ -645,8 +803,8 @@ public class Equipement {
     static Equipement bouclier_0 = new Equipement("planche en bois", Rang.O, Base.BOUCLIER, 0, 2, 0, 8);
     static Equipement armure_0 = new Equipement("vieille armure", Rang.O, Base.ARMURE, 0, 1, 0, 3);
     static Equipement casque_0 = new Equipement("seau", Rang.O, Base.CASQUE, 0, 1, 0, 3);
-    static Equipement ingredients_0 = new Equipement("ingrédient", Rang.O, Base.MATERIAUX, 0, 0, 0, 3);
-    static Equipement ingredients2_0 = new Equipement("2 ingrédients", Rang.O, Base.MATERIAUX, 0, 0, 0, 7);
+    static Equipement ingredients_0 = new Equipement("1 ingrédient", Rang.O, Base.INGREDIENT, 0, 0, 0, 3);
+    static Equipement ingredients2_0 = new Equipement("2 ingrédients", Rang.O, Base.INGREDIENT, 0, 0, 0, 7);
     
     static Equipement[] marche0 = {arc_0, main1_0, main2_0, armure_0, bouclier_0, casque_0, ingredients_0,
             ingredients2_0};
@@ -657,8 +815,8 @@ public class Equipement {
     static Equipement main2_I = new Equipement("grande épée", Rang.I, Base.MAIN_2, 5, 0, 0, 10);
     static Equipement armure_I = new Equipement("armure", Rang.I, Base.ARMURE, 0, 2, 0, 6);
     static Equipement casque_I = new Equipement("mauvais casque", Rang.I, Base.CASQUE, 0, 2, 0, 6);
-    static Equipement ingredients_I = new Equipement("ingrédient", Rang.O, Base.MATERIAUX, 0, 0, 0, 5);
-    static Equipement ingredients2_I = new Equipement("2 ingrédients", Rang.O, Base.MATERIAUX, 0, 0, 0, 9);
+    static Equipement ingredients_I = new Equipement("1 ingrédient", Rang.O, Base.INGREDIENT, 0, 0, 0, 5);
+    static Equipement ingredients2_I = new Equipement("2 ingrédients", Rang.O, Base.INGREDIENT, 0, 0, 0, 9);
     
     static Equipement[] marcheI = {arc_I, main1_I, main2_I, armure_I, bouclier_I, casque_I, ingredients_I,
             ingredients2_I, loterie};

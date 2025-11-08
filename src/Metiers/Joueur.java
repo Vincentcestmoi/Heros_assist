@@ -27,6 +27,7 @@ public abstract class Joueur {
     private int xp;
     protected int xp_palier = 5;
     protected int niveau;
+    protected Grade grade; //AGAREH
     
     // stat
     protected int vie;
@@ -121,7 +122,7 @@ public abstract class Joueur {
     private int grenade;
     private boolean bateau;
     
-    Joueur(String nom, Position position, int ob_f, Dieux parent, int xp) {
+    Joueur(String nom, Position position, int ob_f, Dieux parent, int xp, Grade grade) {
         this.nom = nom;
         this.position = position;
         this.ob_f = ob_f;
@@ -129,6 +130,7 @@ public abstract class Joueur {
         this.caracteristique = "";
         this.competences = "";
         this.armure = 0;
+        this.grade = grade;
         setNiveau(xp);
         SetEffetParent();
         retirer_tout(true);
@@ -176,8 +178,9 @@ public abstract class Joueur {
             int xp = safeGetInt(json, "xp");
             Position position = safeGetEnum(json, "position", Position.class, Position.DEFAULT);
             Dieux parent = safeGetEnum(json, "parent", Dieux.class, Main.get_parent());
+            Grade grade = safeGetEnum(json, "grade", Grade.class, Grade.DEFAULT);
             
-            Joueur joueur = CreerJoueur(nom, position, metier, ob_f, parent, xp);
+            Joueur joueur = CreerJoueur(nom, position, metier, ob_f, parent, xp, grade);
             
             // Effets
             if (json.containsKey("effets")) {
@@ -205,15 +208,15 @@ public abstract class Joueur {
      * @param xp       le total d'experience accumulée par le joueur à créer
      * @return le joueur
      */
-    public static Joueur CreerJoueur(String nom, Position position, Metier metier, int ob_f, Dieux parent, int xp) {
+    public static Joueur CreerJoueur(String nom, Position position, Metier metier, int ob_f, Dieux parent, int xp, Grade grade) {
         Joueur j = switch (metier) {
-            case NECROMANCIEN -> new Necromancien(nom, position, ob_f, parent, xp);
-            case ARCHIMAGE -> new Archimage(nom, position, ob_f, parent, xp);
-            case ALCHIMISTE -> new Alchimiste(nom, position, ob_f, parent, xp);
-            case GUERRIERE -> new Guerriere(nom, position, ob_f, parent, xp);
-            case RANGER -> new Ranger(nom, position, ob_f, parent, xp);
-            case SHAMAN -> new Shaman(nom, position, ob_f, parent, xp);
-            case TRYHARDER -> new Tryharder(nom, position, ob_f, parent, xp);
+            case NECROMANCIEN -> new Necromancien(nom, position, ob_f, parent, xp, grade);
+            case ARCHIMAGE -> new Archimage(nom, position, ob_f, parent, xp, grade);
+            case ALCHIMISTE -> new Alchimiste(nom, position, ob_f, parent, xp, grade);
+            case GUERRIERE -> new Guerriere(nom, position, ob_f, parent, xp, grade);
+            case RANGER -> new Ranger(nom, position, ob_f, parent, xp, grade);
+            case SHAMAN -> new Shaman(nom, position, ob_f, parent, xp, grade);
+            case TRYHARDER -> new Tryharder(nom, position, ob_f, parent, xp, grade);
         };
         j.super_actualiser_niveau();
         return j;
@@ -236,7 +239,7 @@ public abstract class Joueur {
     
     public void sauvegarder(String chemin, boolean discret) throws IOException {
         JsonObject joueurJson = Json.createObjectBuilder().add("nom", this.nom).add("metier",
-                this.getMetier().name()).add("ob_f", this.ob_f).add("position", this.position.name()).add("xp",
+                this.getMetier().name()).add("ob_f", this.ob_f).add("position", this.position.name()).add("grade", this.grade.name()).add("xp",
 this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_structure()).build();
         
         Map<String, Object> config = new HashMap<>();
@@ -293,7 +296,11 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
      * Présente la condition et position du joueur
      */
     public void presente() {
-        System.out.print(this.nom + ", descendant de " + nomDieux() + ", est " + nomMetier() + " (niveau " + this.niveau + ")" + " et se trouve " + Main.texte_pos(getPosition()));
+        System.out.print(getNom());
+        if(getGrade() != Grade.AUCUN){
+            System.out.printf(", héro de rang %s", getGrade().name().toLowerCase());
+        }
+        System.out.print(", descendant de " + nomDieux() + ", est " + nomMetier() + " (niveau " + this.niveau + ")" + " et se trouve " + Main.texte_pos(getPosition()));
         if (a_familier()) {
             System.out.print(" avec son familier");
         }
@@ -527,6 +534,14 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
     
     public int get_ob_f() {
         return ob_f;
+    }
+    
+    public Grade getGrade() {
+        return grade;
+    }
+    
+    public void upgradeGrade(){
+        this.grade = Grade.values()[getGrade().ordinal() + 1];
     }
     
     public boolean est_actif() {
@@ -1361,30 +1376,29 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
     }
     
     protected void monter() {
-        position = switch (position) {
-            case ENFERS -> Position.PRAIRIE;
-            case PRAIRIE -> Position.VIGNES;
-            case VIGNES -> Position.TEMPLE;
-            case TEMPLE -> Position.MER;
-            case MER -> Position.MONTS;
-            case MONTS -> Position.OLYMPE;
+        this.position = switch (getPosition()) {
             case OLYMPE -> {
-                System.out.println("Erreur : position " + position + " ne peut être augmentée !");
-                yield position;
+                System.out.println("Erreur : position " + getPosition().name() + " ne peut être augmentée !");
+                yield getPosition();
             }
             case ASCENDANT -> {
                 System.out.println("ERROR : DONOT");
                 yield Position.DEFAULT;
             }
+            default -> Position.values()[getPosition().ordinal() + 1];
         };
     }
     
     public void dresser() throws IOException {
+        dresser(0);
+    }
+    
+    public void dresser(int bonus) throws IOException {
         if (!a_familier()) {
             System.out.println("Erreur : aucun familier détecté.");
             return;
         }
-        ob_f += entrainer();
+        ob_f += entrainer(bonus);
         if (!a_familier()) {
             System.out.println("Votre familier vous a fuit de manière définitive.");
         } else if (familier_loyalmax()) {
@@ -1393,8 +1407,17 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
         corrige_ob();
     }
     
-    protected int entrainer() throws IOException {
-        return switch (Input.D6() + bonus_dresser()) {
+    protected int entrainer(int bonus) throws IOException {
+        int jet = bonus + bonus_dresser();
+        if(jet < 5){
+            jet += Input.D6();
+            if (jet > 6){
+                jet = 6;
+            }
+        } else {
+            jet = 6;
+        }
+        return switch (jet) {
             case 1 -> {
                 if (Input.D4() <= 2) {
                     System.out.println("Votre familier désapprouve fortement vos méthodes d'entrainement.\n");
@@ -1465,10 +1488,9 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
         ob_f = 0;
     }
     
-    public void aller_au_marche() {
-        int reduc = 0;
+    public void aller_au_marche(int reduc) {
         if (getParent() == Dieux.DIONYSOS) {
-            reduc = 2;
+            reduc += 2;
             if (rune_commerce) {
                 reduc += 3;
             }

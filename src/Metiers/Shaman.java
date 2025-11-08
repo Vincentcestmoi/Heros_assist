@@ -15,8 +15,8 @@ public class Shaman extends Joueur {
     Metier metier = Metier.SHAMAN;
     private int possession_atk;
     
-    public Shaman(String nom, Position position, int ob_f, Dieux parent, int xp) {
-        super(nom, position, ob_f, parent, xp);
+    public Shaman(String nom, Position position, int ob_f, Dieux parent, int xp, Grade grade) {
+        super(nom, position, ob_f, parent, xp, grade);
         vie = 3;
         attaque = 1;
         PP = "mana";

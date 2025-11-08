@@ -5,6 +5,7 @@ import Enum.*;
 import Equipement.Pre_Equipement;
 import Metiers.Joueur;
 import Monstre.Race;
+import main.Agareh;
 import main.Main;
 
 import javax.json.*;
@@ -537,7 +538,6 @@ public class Input {
             boolean peut_descendre =
                     position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
             boolean peut_monter = position != Position.OLYMPE;
-            boolean market = position != Position.OLYMPE && position != Position.ENFERS;
             boolean peut_entrainer = joueur.a_familier() && !joueur.familier_loyalmax();
             text += joueur.text_tour();
             if (peut_descendre) {
@@ -545,9 +545,6 @@ public class Input {
             }
             if (peut_monter) {
                 text += "/(m)onter";
-            }
-            if (market) {
-                text += "/(a)ller au marché/(f)rapper un pantin";
             }
             if (peut_entrainer) {
                 text += "/(en)trainer son familier";
@@ -570,18 +567,6 @@ public class Input {
                 case "m", "monter" -> {
                     if (peut_monter) {
                         return Choix.MONTER;
-                    }
-                    System.out.println("Input unknown");
-                }
-                case "a", "aller au marche", "aller au marché", "aller", "marche", "marché" -> {
-                    if (market) {
-                        return Choix.MARCHE;
-                    }
-                    System.out.println("Input unknown");
-                }
-                case "frapper un pantin", "frapper", "f" -> {
-                    if (market) {
-                        return Choix.DUMMY;
                     }
                     System.out.println("Input unknown");
                 }
@@ -638,5 +623,76 @@ public class Input {
                 }
             }
         }
+    }
+    
+    public static Choix_Agareh agareh(Agareh agareh, Joueur joueur) {
+        String text = "Que voulez vous-vous faire : ";
+        if(joueur.getGrade() == Grade.AUCUN) {
+            text += "\n\ts'(i)nscrire";
+        } else {
+            if(Agareh.peut_promouvoir(joueur)){
+                text += "\n\tDemander une (pr)omotion de rang";
+            }
+            text += "\n\t(v)endre des équipements\n\tvendre un (c)adavre\n\taller au (m)arché\n\t(f)rapper un mannequin";
+            text += agareh.text_artisans();
+        }
+        text += "\n\tDemander un (t)ransport\n\t(P)artir ?";
+        System.out.println(text);
+        String readed = read();
+        switch (readed.toLowerCase()) {
+            case "i", "inscrire", "s'inscrire",
+                 "pr", "promotion", "demander une promotion de rang", "promotion de rang" -> {
+                return Choix_Agareh.PROMOTION;
+            }
+            case "v", "vendre des équipements", "vendre des équipement","vendre des equipements", "vendre des equipement" -> {
+                return Choix_Agareh.VENDRE_ITEM;
+            }
+            case "c", "vendre un cadavre" -> {
+                return Choix_Agareh.VENDRE_CADAVRE;
+            }
+            case "m", "marche", "marché", "aller au marche", "aller au marché" -> {
+                return Choix_Agareh.MARCHE;
+            }
+            case "f", "frapper", "mannequin", "frapper un mannequin" -> {
+                return Choix_Agareh.MANNEQUIN;
+            }
+            case "t", "transport" -> {
+                return Choix_Agareh.TRANSPORT;
+            }
+            case "p", "", "\n", "partir" -> {
+                return Choix_Agareh.PARTIR;
+            }
+            
+            case "fo", "forge", "aller à la forge", "aller a la forge" -> {
+                return Choix_Agareh.FORGE;
+            }
+            
+            case "aller voir le marchant d'arc", "marchant d'arc", "arc" -> {
+                return Choix_Agareh.MAGASIN_ARC;
+            }
+            
+            case "aller à l'armurerie", "aller a l'armurerie", "armurerie" -> {
+                return Choix_Agareh.ARMURERIE;
+            }
+            
+            case "bo", "aller voir le marchand de bouclier", "marchand de bouclier", "marchand bouclier", "bouclier" -> {
+                return Choix_Agareh.MARCHAND_BOUCLIER;
+            }
+            
+            case "ta", "aller voir le tanneur", "tanneur" -> {
+                return Choix_Agareh.TANNEUR;
+            }
+            
+            case "bi", "aller à la bijouterie", "aller a la bijouterie", "bijouterie/" -> {
+                return Choix_Agareh.BIJOUTERIE;
+            }
+            
+            case "ec", "éc", "aller à l'écurie", "aller a l'écurie", "aller à l'ecurie", "aller a l'ecurie", "écurie", "ecurie" -> {
+                return Choix_Agareh.ECURIE;
+            }
+            
+            default -> System.out.println("Input unknown");
+        }
+        return agareh(agareh, joueur);
     }
 }

@@ -1,10 +1,7 @@
 package main;
 
 import Auxiliaire.Utilitaire;
-import Enum.Choix;
-import Enum.Dieux;
-import Enum.Metier;
-import Enum.Position;
+import Enum.*;
 import Equipement.Equipement;
 import Exterieur.Input;
 import Exterieur.Output;
@@ -32,8 +29,8 @@ public class Main {
     
     public static class Version {
         //public static final String CURRENT_MAIN = "beta";
-        public static final int CURRENT_MID = 0;
-        public static final int CURRENT_FIX = 3;
+        public static final int CURRENT_MID = 1;
+        public static final int CURRENT_FIX = 0;
         //public static final String CURRENT = "V%s.%d.%d".formatted(CURRENT_MAIN, CURRENT_MID, CURRENT_FIX);
         public static final String CURRENT = "%d.%d-beta".formatted(CURRENT_MID, CURRENT_FIX);
     }
@@ -106,8 +103,6 @@ public class Main {
                         joueur.descendre();
                         joueur.check_bonus_lieux();
                     }
-                    case MARCHE -> joueur.aller_au_marche();
-                    case DUMMY -> frapper_pantin(i);
                     case DRESSER -> joueur.dresser();
                     case ATTENDRE -> System.out.println(joueur.getNom() + " passe son tour.");
                     case STAT -> {
@@ -137,7 +132,13 @@ public class Main {
                         retirer_item(choisir_joueur());
                         rejouer();
                     }
-                    case RETOUR -> retour();
+                    case RETOUR -> {
+                        retour();
+                        continue; //évite l'Agareh
+                    }
+                }
+                if(run) {
+                    Agareh.visiter(joueur);
                 }
                 System.out.println();
             }
@@ -304,13 +305,6 @@ public class Main {
                 retirer_item(joueur);
             }
         }
-    }
-    
-    private static void frapper_pantin(int i) throws IOException {
-        Monstre pantin = Lieu.get_dummy();
-        System.out.println("Cela vous coutera 2PO par participants.");
-        System.out.println("Vous vous trouvez dans une simulation. La mort n'est pas définitive, et vous" + " poss" + "édez des quantités illimités de mana, d'aura et d'ingrédients. Vous pouvez utiliser sans limites" + " tout objet que vous avez sur vous ou que vous fabriquerez sur place, mais rien d'autre.");
-        Combat.affrontement(joueurs[i].getPosition(), -1, pantin);
     }
     
     /**
@@ -707,7 +701,7 @@ public class Main {
                 }
             }
             
-            joueurs[i] = Joueur.CreerJoueur(nom, Position.DEFAULT, metier, 0, get_parent(), 0);
+            joueurs[i] = Joueur.CreerJoueur(nom, Position.DEFAULT, metier, 0, get_parent(), 0, Grade.DEFAULT);
             joueurs[i].presente_detail();
             System.out.println();
         }

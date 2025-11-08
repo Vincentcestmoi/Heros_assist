@@ -108,4 +108,8 @@ public class Texte {
     public static void esquive_vol(String nom){
         System.out.printf("L'attaque n'atteint pas %s.\n%s se pose à terre.\n", nom, nom);
     }
+    
+    public static void entrer_agareh(){
+        System.out.println("Vous arriver à la succursale locale de l'AGAREH (Agence de la Gestion de l'Administration, de la Régulation et des Echanges des Héros)");
+    }
 }

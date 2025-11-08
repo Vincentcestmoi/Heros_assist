@@ -11,7 +11,6 @@ import Metiers.Joueur;
 import Monstre.Monstre;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Random;
 
 public class Combat {
@@ -124,6 +123,7 @@ public class Combat {
         
         if (!grimpeur.est_actif()) {
             System.out.println("Aucun joueur détecté, annulation de l'ascension.");
+            grimpeur.setPosition(temp);
             return false;
         }
         
@@ -144,6 +144,7 @@ public class Combat {
         }
         
         if (competence(ennemi, index)) { //le monstre fuit
+            grimpeur.setPosition(temp);
             return true;
         }
         
@@ -170,20 +171,10 @@ public class Combat {
      */
     private static void combat(Monstre ennemi, int pr_l, Position pos) throws IOException {
         
-        // on prépare une bijection aléatoire pour l'ordre de jeu
-        int[] t = new int[Main.nbj];
-        Arrays.fill(t, -1);
-        for (int i = 0; i < Main.nbj; ) {
-            int temp = rand.nextInt(Main.nbj);
-            if (t[temp] == -1) {
-                t[temp] = i;
-                i++;
-            }
-        }
-        
         combat_start(ennemi, pos);
         
         int i;
+        int[] t = Utilitaire.bijection(Main.nbj);
         Action act, act_f;
         Action_extra act_ex;
         Joueur joueur;

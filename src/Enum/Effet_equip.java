@@ -96,4 +96,17 @@ public enum Effet_equip {
     MER_EXP,
     ITEM_IMMUN,
     SAC_TEMP,
+    
+    //Matériau
+    MAT_COMMUN,
+    MAT_FORT,
+    MAT_PUISSANT,
+    MAT_SOLIDE,
+    MAT_RESISTANT,
+    MAT_AMORTISSANT,
+    MAT_SOUPLE,
+    MAT_TRANCHANT,
+    MAT_TRES_SOLIDE,
+    MAT_FRAGILE,
+    MAT_TROP_SOUPLE
 }
