@@ -2445,7 +2445,7 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
     /**
      * Nombre spécifique indiquant qu'un joueur berserk a tiré/attaqué un allié
      **/
-    static float berserk_atk_alliee = -256;
+    static float berserk_atk_alliee = -128;
     
     /**
      * Gère les effets de la folie du berserk lors d'attaque

@@ -486,23 +486,32 @@ public class Ranger extends Joueur {
      * @implNote attaque avec des valeurs quelque peu modifiées
      */
     private void assaut(Monstre ennemi, int bonus_popo) throws IOException {
-        int base = Input.atk();
-        float bonus = calcule_bonus_atk_assaut(base, bonus_popo);
-        if (bonus != berserk_atk_alliee) {
-            System.out.println(nom + " charge brutalement " + ennemi.nomme(false));
-            ennemi.dommage(base + Main.corriger(bonus, 2));
+        int puissance = puissance_assaut(bonus_popo);
+        if (puissance != 0) {
+            System.out.println(getNom() + " charge brutalement " + ennemi.nomme(false));
+            ennemi.dommage(puissance);
             ennemi.attaque(this);
         }
     }
     
-    private float calcule_bonus_atk_assaut(int base, int bonus_popo) throws IOException {
-        float bonus = calcule_bonus_atk(base, bonus_popo);
-        if (bonus == berserk_atk_alliee) {
-            return bonus;
+    private int puissance_assaut(int bonus_popo) throws IOException {
+        int base = Input.atk();
+        base += bonus_atk();
+        if(base == 0){
+            return 0;
         }
         
+        float bonus = berserk_atk(base);
+        if (bonus == berserk_atk_alliee) {
+            return 0;
+        }
+        
+        bonus += critique_atk(base);
+        bonus += attaque_bonus;
+        bonus = Main.corriger(bonus, 0);
+        
         int jet = Input.D8() + rand.nextInt(3) - 1;
-        bonus += 0.1f * jet * base;
-        return bonus;
+        bonus += 0.1f * jet * base; //0 à 90%
+        return base + Main.corriger(bonus, 2) + bonus_popo;
     }
 }
