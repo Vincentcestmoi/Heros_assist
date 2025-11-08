@@ -84,13 +84,14 @@ public class Main {
             }
         }));
         
-        
+        int[] t = Utilitaire.bijection(nbj);
         boolean run = true;
         Utilitaire.LoopGuard MainGarde = new Utilitaire.LoopGuard(1_000_000, 5 * 60 * 1000); //save toutes les 5 minutes
         while (run) {
             
             //tour de jeu
-            for (int i = 0; i < nbj && run; i++) {
+            for (int j = 0; j < nbj && run; j++) {
+                int i = t[j];
                 MainGarde.checkMain();
                 Joueur joueur = joueurs[i];
                 System.out.println(joueur.getNom() + " c'est votre tour, vous êtes " + texte_pos(joueur.getPosition()) + ".");

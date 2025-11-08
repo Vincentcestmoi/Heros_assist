@@ -3,6 +3,8 @@ package Auxiliaire;
 import Exterieur.SaveManager;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Random;
 
 public class Utilitaire {
     
@@ -70,6 +72,28 @@ public class Utilitaire {
         public MaxLoopExceededException(String message) {
             super(message);
         }
+    }
+    
+    
+    /**
+     * Renvoie une bijection
+     * @param taille le nombre d'éléments dans la bijection (taille = n)
+     * @return un élément de Sn
+     */
+    public static int[] bijection(int taille){
+        Random r = new Random();
+        int[] t = new int[taille];
+        Arrays.fill(t, -1);
+        LoopGuard garde = new LoopGuard();
+        for (int i = 0; i < taille; ) {
+            garde.check();
+            int temp = r.nextInt(taille);
+            if (t[temp] == -1) {
+                t[temp] = i;
+                i++;
+            }
+        }
+        return t;
     }
     
 }

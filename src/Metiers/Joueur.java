@@ -1,6 +1,7 @@
 package Metiers;
 
 import Auxiliaire.Texte;
+import Auxiliaire.Utilitaire;
 import Auxiliaire.Utilitaire.LoopGuard;
 import Enum.*;
 import Equipement.Equipement;
@@ -869,18 +870,7 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
     }
     
     public static void monstre_mort(Monstre ennemi) throws IOException {
-        // bijection aléatoire
-        int[] t = new int[Main.nbj];
-        LoopGuard garde = new LoopGuard();
-        Arrays.fill(t, -1);
-        for (int i = 0; i < Main.nbj; ) {
-            garde.check();
-            int temp = rand.nextInt(Main.nbj);
-            if (t[temp] == -1) {
-                t[temp] = i;
-                i++;
-            }
-        }
+        int[] t = Utilitaire.bijection(Main.nbj);
         for (int i = 0; i < Main.nbj; i++) {
             Main.joueurs[t[i]].monstre_mort_perso(ennemi);
             if (!ennemi.corps_utilisable()) {
