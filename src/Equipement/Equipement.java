@@ -636,7 +636,7 @@ public class Equipement {
     //Equipement.Equipement(String nom, Rang rang, Base base, int attaque, int resistance, int armure, int prix,
     // String effet)
     
-    static Equipement loterie = new Equipement("ticket de loterie", Rang.O, Base.AUTRE, 0, 0, 0, 3,
+    static Equipement loterie = new Equipement("ticket de loterie", Rang.O, Base.AUTRE, 0, 0, 0, 5,
             "Lancez un dé " + "à" + " 6 face, si vous faite 6, gagnez 15PO. Jetez ce ticket.");
     
     static Equipement main1_0 = new Equipement("branche solide", Rang.O, Base.MAIN_1, 1, 0, 0, 5);
@@ -651,34 +651,34 @@ public class Equipement {
     static Equipement[] marche0 = {arc_0, main1_0, main2_0, armure_0, bouclier_0, casque_0, ingredients_0,
             ingredients2_0};
     
-    static Equipement arc_I = new Equipement("arc", Rang.I, Base.ARC, 1, 0, 0, 4);
-    static Equipement bouclier_I = new Equipement("petit bouclier", Rang.I, Base.BOUCLIER, 1, 2, 0, 7);
-    static Equipement main1_I = new Equipement("couteau", Rang.I, Base.MAIN_1, 2, 0, 0, 6);
-    static Equipement main2_I = new Equipement("grande épée", Rang.I, Base.MAIN_2, 5, 0, 0, 9);
-    static Equipement armure_I = new Equipement("armure", Rang.I, Base.ARMURE, 0, 2, 0, 5);
-    static Equipement casque_I = new Equipement("mauvais casque", Rang.I, Base.CASQUE, 0, 2, 0, 5);
-    static Equipement ingredients_I = new Equipement("ingrédient", Rang.O, Base.MATERIAUX, 0, 0, 0, 4);
-    static Equipement ingredients2_I = new Equipement("2 ingrédients", Rang.O, Base.MATERIAUX, 0, 0, 0, 8);
+    static Equipement arc_I = new Equipement("arc", Rang.I, Base.ARC, 1, 0, 0, 5);
+    static Equipement bouclier_I = new Equipement("petit bouclier", Rang.I, Base.BOUCLIER, 1, 2, 0, 8);
+    static Equipement main1_I = new Equipement("couteau", Rang.I, Base.MAIN_1, 2, 0, 0, 7);
+    static Equipement main2_I = new Equipement("grande épée", Rang.I, Base.MAIN_2, 5, 0, 0, 10);
+    static Equipement armure_I = new Equipement("armure", Rang.I, Base.ARMURE, 0, 2, 0, 6);
+    static Equipement casque_I = new Equipement("mauvais casque", Rang.I, Base.CASQUE, 0, 2, 0, 6);
+    static Equipement ingredients_I = new Equipement("ingrédient", Rang.O, Base.MATERIAUX, 0, 0, 0, 5);
+    static Equipement ingredients2_I = new Equipement("2 ingrédients", Rang.O, Base.MATERIAUX, 0, 0, 0, 9);
     
     static Equipement[] marcheI = {arc_I, main1_I, main2_I, armure_I, bouclier_I, casque_I, ingredients_I,
             ingredients2_I, loterie};
     
-    static Equipement arc_II = new Equipement("grand arc", Rang.II, Base.ARC, 3, 0, 0, 5);
-    static Equipement bouclier_II = new Equipement("bouclier", Rang.II, Base.BOUCLIER, 2, 3, 0, 9);
-    static Equipement main1_II = new Equipement("hachette", Rang.II, Base.MAIN_1, 4, 0, 0, 8);
-    static Equipement main2_II = new Equipement("grande hache", Rang.II, Base.MAIN_2, 9, 0, 0, 12);
-    static Equipement armure_II = new Equipement("bonne armure", Rang.II, Base.ARMURE, 0, 6, 1, 11);
-    static Equipement casque_II = new Equipement("casque", Rang.II, Base.CASQUE, 0, 3, 0, 6);
+    static Equipement arc_II = new Equipement("grand arc", Rang.II, Base.ARC, 3, 0, 0, 7);
+    static Equipement bouclier_II = new Equipement("bouclier", Rang.II, Base.BOUCLIER, 2, 3, 0, 11);
+    static Equipement main1_II = new Equipement("hachette", Rang.II, Base.MAIN_1, 4, 0, 0, 10);
+    static Equipement main2_II = new Equipement("grande hache", Rang.II, Base.MAIN_2, 9, 0, 0, 14);
+    static Equipement armure_II = new Equipement("bonne armure", Rang.II, Base.ARMURE, 0, 6, 1, 13);
+    static Equipement casque_II = new Equipement("casque", Rang.II, Base.CASQUE, 0, 3, 0, 8);
     
     static Equipement[] marcheII = {arc_II, main1_II, main2_II, armure_II, bouclier_II, casque_II, ingredients_0,
             ingredients2_0, loterie};
     
-    static Equipement arc_III = new Equipement("arc à poulie", Rang.III, Base.ARC, 5, 0, 0, 7);
-    static Equipement bouclier_III = new Equipement("bon bouclier", Rang.III, Base.BOUCLIER, 4, 5, 0, 13);
-    static Equipement main1_III = new Equipement("bon glaive", Rang.III, Base.MAIN_1, 6, 0, 0, 12);
-    static Equipement main2_III = new Equipement("grosse épée", Rang.III, Base.MAIN_2, 13, 0, 0, 16);
-    static Equipement armure_III = new Equipement("excellente armure", Rang.III, Base.ARMURE, 0, 11, 2, 21);
-    static Equipement casque_III = new Equipement("bon casque", Rang.III, Base.CASQUE, 0, 5, 1, 18);
+    static Equipement arc_III = new Equipement("arc à poulie", Rang.III, Base.ARC, 5, 0, 0, 11);
+    static Equipement bouclier_III = new Equipement("bon bouclier", Rang.III, Base.BOUCLIER, 4, 5, 0, 17);
+    static Equipement main1_III = new Equipement("bon glaive", Rang.III, Base.MAIN_1, 6, 0, 0, 16);
+    static Equipement main2_III = new Equipement("grosse épée", Rang.III, Base.MAIN_2, 13, 0, 0, 20);
+    static Equipement armure_III = new Equipement("excellente armure", Rang.III, Base.ARMURE, 0, 11, 2, 25);
+    static Equipement casque_III = new Equipement("bon casque", Rang.III, Base.CASQUE, 0, 5, 1, 22);
     
     static Equipement[] marcheIII = {arc_III, main1_III, main2_III, armure_III, bouclier_III, casque_III};
     
@@ -715,7 +715,7 @@ public class Equipement {
      * @param reduc réduction appliquée à l'affichage
      */
     public static void marche_prairie(int reduc) {
-        System.out.println("Vous êtes dans le marché des prairies et trois objets vous sont proposés :");
+        System.out.println("Vous êtes conduit vers un marché de village où trois objets vous sont proposés :");
         Equipement[] list = new Equipement[marche0.length + marcheI.length];
         System.arraycopy(marche0, 0, list, 0, marche0.length);
         System.arraycopy(marcheI, 0, list, marche0.length, marcheI.length);
@@ -727,7 +727,7 @@ public class Equipement {
      * @param reduc réduction appliquée à l'affichage
      */
     public static void marche_vigne(int reduc) {
-        System.out.println("Vous êtes dans le marché des vignes et trois objets vous sont proposés :");
+        System.out.println("Vous êtes conduit dans un marché sous halles et trois objets vous sont proposés :");
         marche_global(reduc, marcheI, 3);
     }
     
@@ -737,7 +737,7 @@ public class Equipement {
      */
     public static void marche_temple(int reduc) {
         int nbo = rand.nextInt(3) + 2; //2~4
-        System.out.println("Vous trouvez un marchant dans le temple, qui vous propose " + nbo + " objets :");
+        System.out.println("On vous conduit à un marchant dans le temple, qui vous propose " + nbo + " objets :");
         Equipement[] list = new Equipement[marcheI.length + marcheII.length];
         System.arraycopy(marcheI, 0, list, 0, marcheI.length);
         System.arraycopy(marcheII, 0, list, marcheI.length, marcheII.length);
@@ -749,7 +749,7 @@ public class Equipement {
      * @param reduc réduction appliquée à l'affichage
      */
     public static void marche_mer(int reduc) {
-        System.out.println("Vous croisez un navire marchand qui vous propose deux objets :");
+        System.out.println("On vous amène à un navire marchand qui vous propose deux objets :");
         Equipement[] list = new Equipement[marcheII.length + marcheIII.length];
         System.arraycopy(marcheII, 0, list, 0, marcheII.length);
         System.arraycopy(marcheIII, 0, list, marcheII.length, marcheIII.length);
@@ -761,7 +761,7 @@ public class Equipement {
      * @param reduc réduction appliquée à l'affichage
      */
     public static void marche_monts(int reduc) {
-        System.out.println("Vous croisez un pèlerin qui vous propose de vous vendre un objet :");
+        System.out.println("Vous êtes conduit jusqu'à un pèlerin qui vous propose de vous vendre un objet :");
         marche_global(reduc, marcheIII, 1);
     }
 }
