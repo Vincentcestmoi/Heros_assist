@@ -217,6 +217,7 @@ public abstract class Joueur {
             case RANGER -> new Ranger(nom, position, ob_f, parent, xp, grade);
             case SHAMAN -> new Shaman(nom, position, ob_f, parent, xp, grade);
             case TRYHARDER -> new Tryharder(nom, position, ob_f, parent, xp, grade);
+            case ARTISAN -> new Artisan(nom, position, ob_f, parent, xp, grade);
         };
         j.super_actualiser_niveau();
         return j;

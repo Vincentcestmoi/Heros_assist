@@ -8,4 +8,5 @@ public enum Metier {
     RANGER,
     SHAMAN,
     TRYHARDER,
+    ARTISAN,
 }
