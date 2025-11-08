@@ -112,7 +112,7 @@ public class Input {
             
             for (JsonValue val : monstres) {
                 String nom = ((JsonString) val).getString();
-                Race.delete_monstre(nom, false);
+                Race.delete_monstre(nom, true);
             }
         } catch (IOException e) {
             System.err.println("Erreur lors de la lecture des monstres nommés : " + e.getMessage());

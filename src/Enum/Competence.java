@@ -34,9 +34,6 @@ public enum Competence {
     ARMURE_GLACE2,      //done
     ARMURE_FOUDRE,  //done
     GEL,        //done
-    PRUDENT,    //done
-    MEFIANT,    //done
-    SUSPICIEUX,  //done
     MORSURE_SAUVAGE,    //done
     MORSURE_MALADIVE,   //done
     MORSURE_EREINTANTE, //done
@@ -98,7 +95,6 @@ public enum Competence {
     GOLEM_FER,      //done
     GOLEM_ACIER,    //done
     GOLEM_MITHRIL,  //done
-    CHRONOS,    //done
     ILLU_VENTI,
     ILLU_SIRENE,
     ILLU_CYCLOPE,
@@ -108,4 +104,27 @@ public enum Competence {
     ILLU_TRITON,
     ILLU_GOLEM,
     DUMMY,
+    //nommé
+    CERBERE,    //bonus attaque à chaque frappe (subit/infligé), peut assommer
+    LYCAON,     //régénération, devient loup à 50% PV (boost pv et atk)
+    LYCAON2,    //régénération, devient lycanthrope à 10% PV (boost pv, atk et def)
+    LYCAON3,    //régénération
+    MORMO,      //fait peur
+    EMPOUSA,    //vampirisme, brûme, transformation (sacrifie des stats pour récupérer des pv)
+    LADON,      //tous les poisons
+    PYTHON,     //réduit les dégas subits
+    ECHIDNA,    //poison, assomme
+    CHARYBDE,   //AOE, résistance à l'assommage
+    SCYLLA6,    //multi attaque, boost attaque et vie quand perd une tête
+    SCYLLA5,    //de moins en moins de tête, mais même effet
+    SCYLLA4,
+    SCYLLA3,
+    SCYLLA2,
+    SCYLLA,     //AOE, boosté (car final)
+    TYPHON1,    //AOE, chargement volcan
+    TYPHON2,
+    TYPHON3,    //AOE plus puissance
+    CAUCASE,        //Compétence de vol et rapidité, régénération
+    CAUCASE_OFF,    //Après avoir esquivé (au sol)
+    CHRONOS,    //défense bonus, immunité magique, frappe qui retire les items
 }

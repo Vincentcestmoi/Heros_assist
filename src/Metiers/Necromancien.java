@@ -431,33 +431,33 @@ public class Necromancien extends Joueur {
         jet = Math.min(jet, 13);
         switch (jet) {
             case 2 -> {
-                System.out.println("Vous maudissez faiblement " + ennemi.getNom() + ".");
+                System.out.println("Vous maudissez faiblement " + ennemi.nomme(false) + ".");
                 ennemi.boostVie(-(1 + boost), true);
             }
             case 3, 4 -> {
-                System.out.println("Vous maudissez " + ennemi.getNom() + ".");
+                System.out.println("Vous maudissez " + ennemi.nomme(false) + ".");
                 ennemi.boostVie(-(2 + boost), true);
             }
             case 5 -> {
-                System.out.println("Vous maudissez agressivement " + ennemi.getNom() + ".");
+                System.out.println("Vous maudissez agressivement " + ennemi.nomme(false) + ".");
                 ennemi.boostVie(-(3 + boost), true);
             }
             case 6, 7, 8 -> {
-                System.out.println("Vous maudissez puissamment " + ennemi.getNom() + ".");
+                System.out.println("Vous maudissez puissamment " + ennemi.nomme(false) + ".");
                 ennemi.boostVie(-(5 + boost), true);
             }
             case 9, 10, 11, 12 -> {
-                System.out.println("Vous arracher à " + ennemi.getNom() + " des fragments de son âme !");
+                System.out.println("Vous arracher " + ennemi.text_a() + " des fragments de son âme !");
                 ennemi.boostVie(-(10 + boost), true);
             }
             case 13 -> {
-                System.out.println("Vous déchirez en deux l'âme de " + ennemi.getNom() + " !");
-                ennemi.boostVie(-(ennemi.getVieMax()), true);
+                System.out.println("Vous déchirez en deux l'âme " + ennemi.text_de() + " !");
+                ennemi.boostVie(-(ennemi.getVieMax() / 2), true);
                 ennemi.boostVie(-(5 + boost), true);
                 ennemi.dommage_direct(1, false);
             }
             default -> {
-                System.out.println("vous n'arrivez pas à maudire " + ennemi.getNom() + ".");
+                System.out.println("vous n'arrivez pas à maudire " + ennemi.nomme(false) + ".");
                 a_maudit = false;
             }
         }
@@ -569,33 +569,33 @@ public class Necromancien extends Joueur {
         int retour;
         switch (jet) {
             case 3 -> { //-8
-                System.out.println(ennemi.getNom() + " a été... rappellé");
+                System.out.println(ennemi.nomme(false) + " a été... rappellé");
                 ennemi.boostAtk(-6, true);
                 ennemi.boostVie(-8, true);
                 ennemi.boostArmure(-3, true);
                 retour = -rand.nextInt(6) - 7;
             }
             case 4, 5 -> { //-5
-                System.out.println(ennemi.getNom() + " a été partiellement ressuscité");
+                System.out.println(ennemi.nomme(false) + " a été partiellement ressuscité");
                 ennemi.boostAtk(-3, true);
                 ennemi.boostVie(-5, true);
                 ennemi.boostArmure(-2, true);
                 retour = -rand.nextInt(6) - 4;
             }
             case 6, 7 -> { // -2
-                System.out.println(ennemi.getNom() + " a été ressuscité");
+                System.out.println(ennemi.nomme(false) + " a été ressuscité");
                 ennemi.boostAtk(-1, true);
                 ennemi.boostVie(-2, true);
                 retour = -rand.nextInt(6) - 1;
             }
             case 8, 9, 10 -> { //+2
-                System.out.println(ennemi.getNom() + " a été parfaitement ressuscité");
+                System.out.println(ennemi.nomme(false) + " a été parfaitement ressuscité");
                 ennemi.boostAtk(1, true);
                 ennemi.boostVie(2, true);
                 retour = 1;
             }
             case 11 -> { //+5
-                System.out.println(ennemi.getNom() + " a été invoqué, plus fort que de son vivant.");
+                System.out.println(ennemi.nomme(false) + " a été invoqué, plus fort que de son vivant.");
                 ennemi.boostAtk(3, true);
                 ennemi.boostVie(5, true);
                 ennemi.boostArmure(1, true);
@@ -669,7 +669,7 @@ public class Necromancien extends Joueur {
     @Override
     protected void monstre_mort_perso(Monstre ennemi) {
         if (ennemi.corps_utilisable() && est_actif() && est_vivant() && this.niveau >= 1) {
-            if (Exterieur.Input.yn("%s veut-il tenter de ressusciter %s en tant que familier pour 2PP ?".formatted(this.nom, ennemi.getNom()))) {
+            if (Exterieur.Input.yn("%s veut-il tenter de ressusciter %s en tant que familier pour 2PP ?".formatted(this.nom, ennemi.nomme(false)))) {
                 ennemi.alterEtat(zombifier(ennemi));
             }
         }

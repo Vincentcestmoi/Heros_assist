@@ -390,7 +390,7 @@ public class Shaman extends Joueur {
         if (ennemi.est_nomme()) {
             ratio += 4 + rand.nextInt(3); //4~6
         }
-        System.out.println(getNom() + " tente de lier son âme à " + ennemi.getNom());
+        System.out.println(getNom() + " tente de lier son âme " + ennemi.text_a());
         
         int jet = -ratio;
         jet += rand.nextInt(3) - 1;
@@ -406,7 +406,7 @@ public class Shaman extends Joueur {
         }
         
         if (jet <= -5) {
-            System.out.println("L'âme de " + getNom() + " est violemment rejetée par celle de " + ennemi.getNom() +
+            System.out.println("L'âme de " + getNom() + " est violemment rejetée par celle " + ennemi.text_de() +
                     " !");
             if (ennemi.est_pantin()) {
                 System.out.println("Protocole de sécurité engagée, tentative de préservation de l'âme en cours.");
@@ -415,15 +415,15 @@ public class Shaman extends Joueur {
                 rendre_mort();
             }
         } else if (jet <= -1) {
-            System.out.println("l'âme de " + getNom() + " est blessé par celle de " + ennemi.getNom());
+            System.out.println("l'âme de " + getNom() + " est blessé par celle " + ennemi.text_de());
             System.out.println(getNom() + " subit " + (-jet) + " dommages directes.");
         } else if (jet == 0) {
-            System.out.println(getNom() + " n'est pas parvenu à se lier à " + ennemi.getNom());
+            System.out.println(getNom() + " n'est pas parvenu à se lier " + ennemi.text_a());
         } else if (jet <= 3) {
-            System.out.println(getNom() + " n'est pas parvenu à se lier à " + ennemi.getNom() + " et à blessé son âme");
+            System.out.println(getNom() + " n'est pas parvenu à se lier " + ennemi.text_a() + " et à blessé son âme");
             ennemi.dommage_direct(jet);
         } else {
-            System.out.println("Les âmes de " + ennemi.getNom() + " et de " + getNom() + " entre en communion !");
+            System.out.println("Les âmes " + ennemi.text_de() + " et de " + getNom() + " entre en communion !");
             if (ennemi.est_pantin()) {
                 System.out.printf("Fin de la simulation, le monstre aurait un niveau d'affection de %d/7\n", min(7,
                         rand.nextInt(jet) + 3));
@@ -570,7 +570,7 @@ public class Shaman extends Joueur {
      * @throws IOException toujours
      */
     private void colere_attaque(Monstre ennemi) throws IOException {
-        System.out.println("Les esprits de vos ancêtres déchainent leur colère sur " + ennemi.getNom());
+        System.out.println("Les esprits de vos ancêtres déchainent leur colère sur " + ennemi.nomme(false));
         int attaque;
         int jet = bonus_sup10(20, 10);
         jet += bonus_sup10(17, 10);

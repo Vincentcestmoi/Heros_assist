@@ -498,7 +498,7 @@ public class Archimage extends Joueur {
         }
         
         // sur l'ennemi
-        System.out.println(ennemi.getNom() + " est frappé par l'onde de choc.");
+        System.out.println(ennemi.nomme(false) + " est frappé par l'onde de choc.");
         int jet = bonus;
         if (jet <= 4) {
             System.out.print(this.getNom() + " ");
@@ -509,7 +509,7 @@ public class Archimage extends Joueur {
             case 2 -> ennemi.do_etourdi();
             case 3, 4 -> ennemi.affecte();
             case 5 -> ennemi.do_assomme();
-            default -> System.out.println(ennemi.getNom() + " n'a pas l'air très affecté...");
+            default -> System.out.println(ennemi.nomme(false) + " n'a pas l'air très affecté...");
         }
     }
     
@@ -545,37 +545,37 @@ public class Archimage extends Joueur {
             System.out.println("Le sort ne fonctionne pas.");
             return;
         } else if (jet <= 4) {
-            System.out.println("Vous lancez une pitoyable boule de feu sur " + ennemi.getNom() + ".");
+            System.out.println("Vous lancez une pitoyable boule de feu sur " + ennemi.nomme(false) + ".");
             dmg += 3;
         } else if (jet <= 6) {
-            System.out.println("Vous lancez une boule de feu sur " + ennemi.getNom() + ".");
+            System.out.println("Vous lancez une boule de feu sur " + ennemi.nomme(false) + ".");
             dmg += 6;
         } else if (jet <= 9) {
-            System.out.println("Vous lancez une impressionnante boule de feu sur " + ennemi.getNom() + ".");
+            System.out.println("Vous lancez une impressionnante boule de feu sur " + ennemi.nomme(false) + ".");
             dmg += 8;
         } else if (jet == 10) {
-            System.out.println("Un brasier s'abat sur " + ennemi.getNom() + " !");
+            System.out.println("Un brasier s'abat sur " + ennemi.nomme(false) + " !");
             dmg += 11;
         } else if (jet == 11) {
-            System.out.println("Un brasier s'abat sur " + ennemi.getNom() + " !");
+            System.out.println("Un brasier s'abat sur " + ennemi.nomme(false) + " !");
             dmg += 13;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
         } else if (jet == 12) {
-            System.out.println("Une tornade de flamme s'abat violemment sur " + ennemi.getNom() + " !");
+            System.out.println("Une tornade de flamme s'abat violemment sur " + ennemi.nomme(false) + " !");
             dmg += 15;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
         } else if (jet == 13) {
-            System.out.println("Une torrent de flamme percute " + ennemi.getNom() + " brutalement !");
+            System.out.println("Une torrent de flamme percute " + ennemi.nomme(false) + " brutalement !");
             dmg += 16;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
         } else {
-            System.out.println("Les flammes de l'enfers brûlent intensément " + ennemi.getNom() + ".");
+            System.out.println("Les flammes de l'enfers brûlent intensément " + ennemi.nomme(false) + ".");
             dmg += 18;
             ennemi.affecte();
         }
@@ -672,38 +672,38 @@ public class Archimage extends Joueur {
             System.out.println("Le sort ne fonctionne pas.");
             return;
         } else if (jet <= 10) {
-            System.out.println("Un arc électrique vient frapper " + ennemi.getNom() + ".");
+            System.out.println("Un arc électrique vient frapper " + ennemi.nomme(false) + ".");
             dmg += 12;
         } else if (jet <= 12) {
-            System.out.println("Un arc électrique vient frapper " + ennemi.getNom() + ".");
+            System.out.println("Un arc électrique vient frapper " + ennemi.nomme(false) + ".");
             dmg += 13;
         } else if (jet <= 14) {
-            System.out.println("Un éclair s'abat sur " + ennemi.getNom() + ".");
+            System.out.println("Un éclair s'abat sur " + ennemi.nomme(false) + ".");
             dmg += 16;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
         } else if (jet <= 16) {
-            System.out.println("Un puissant éclair s'abat sur " + ennemi.getNom() + ".");
+            System.out.println("Un puissant éclair s'abat sur " + ennemi.nomme(false) + ".");
             dmg += 18;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
             }
         } else if (jet <= 18) {
-            System.out.println("Un puissant éclair s'abat sur " + ennemi.getNom() + ".");
+            System.out.println("Un puissant éclair s'abat sur " + ennemi.nomme(false) + ".");
             dmg += 20;
             ennemi.affecte();
         } else if (jet == 19) {
-            System.out.println("Un gigantesque éclair frappe  " + ennemi.getNom() + " de plein fouet !");
+            System.out.println("Un gigantesque éclair frappe  " + ennemi.nomme(false) + " de plein fouet !");
             dmg += 22;
             ennemi.affecte();
         } else if (jet == 20) {
-            System.out.println("Un gigantesque éclair frappe  " + ennemi.getNom() + " de plein fouet !");
+            System.out.println("Un gigantesque éclair frappe  " + ennemi.nomme(false) + " de plein fouet !");
             dmg += 24;
             ennemi.affecte();
         } else if (jet <= 22) {
-            System.out.println("L'espace d'un instant, les cieux s'illuminent et une miriade d'éclairs vient " +
-                    "percuter" + " " + ennemi.getNom() + " avec grand fracas.");
+            System.out.println("L'espace d'un instant, les cieux s'illuminent et une myriade d'éclairs vient " +
+                    "percuter " + ennemi.nomme(false) + " avec grand fracas.");
             dmg += 25;
             if (rand.nextBoolean()) {
                 ennemi.affecte();
@@ -711,13 +711,13 @@ public class Archimage extends Joueur {
                 ennemi.do_assomme();
             }
         } else if (jet == 23) {
-            System.out.println("L'espace d'un instant, les cieux s'illuminent et une miriade d'éclairs vient " +
-                    "percuter" + " " + ennemi.getNom() + " avec grand fracas.");
+            System.out.println("L'espace d'un instant, les cieux s'illuminent et une myriade d'éclairs vient " +
+                    "percuter " + ennemi.nomme(false) + " avec grand fracas.");
             dmg += 27;
             ennemi.do_assomme();
         } else {
             System.out.println("Un déchainement de pure énergie fend l'espace entre le ciel et la terre, " +
-                    "transperçant" + " " + ennemi.getNom() + " sur son passage.");
+                    "transperçant " + ennemi.nomme(false) + " sur son passage.");
             dmg += 30;
             ennemi.do_assomme();
         }

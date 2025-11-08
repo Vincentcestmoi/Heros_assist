@@ -1046,7 +1046,7 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
             return;
         }
         System.out.println(getNom() + " est inconscient(e).");
-        if (Input.D6() + reveil >= 6) {
+        if (reveil >= 5 || Input.D6() + reveil >= 6) {
             System.out.println(nom + " se réveille.\n");
             conscient = true;
             reveil = 0;
@@ -1065,7 +1065,7 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
             return;
         }
         System.out.println("Le familier de " + getNom() + " est inconscient(e).");
-        if (Input.D6() + f_reveil >= 5) {
+        if (f_reveil >= 4 || Input.D6() + f_reveil >= 5) {
             System.out.println("Le familier de " + nom + " se réveille.\n");
             f_conscient = true;
             f_reveil = 0;
@@ -1078,59 +1078,60 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
     /**
      * Calcule et applique les effets d'une attaque à distance
      * @param ennemi     le monstre ennemi
-     * @param bonus_popo les dommages additionnels des popo (ici uniquement les instables)
+     * @param bonus_popo les dommages additionnels des potions (ici uniquement les instables)
      * @throws IOException toujours
      */
     public void tirer(Monstre ennemi, int bonus_popo) throws IOException {
+        ennemi.tir(puissante_tir() + bonus_popo);
+    }
+    
+    /**
+     * Calcule et applique les effets d'une attaque classique sur un monstre
+     * @param ennemi le monstre ennemi
+     * @param bonus_popo les dommages additionnels causés par les potions
+     * @throws IOException toujours
+     */
+    public void attaquer(Monstre ennemi, int bonus_popo) throws IOException {
+        ennemi.dommage(puissance_attaque() + bonus_popo);
+    }
+    
+    /**
+     * Calcule la puissance d'attaque normale du joueur
+     * @return la force classique
+     */
+    public int puissance_attaque() throws IOException {
+        int base = Input.atk();
+        base += bonus_atk();
+        float bonus = 0;
+        if (est_berserk()) {
+            bonus = berserk_atk(base);
+            if (bonus == berserk_atk_alliee) {
+                return 0;
+            }
+        }
+        bonus += critique_atk(base);
+        bonus += attaque_bonus;
+        return base + Main.corriger(bonus, 0);
+    }
+    
+    /**
+     * Calcule la puissance de tir du joueur
+     * @return la force de tir
+     */
+    public int puissante_tir() throws IOException {
         int base = Input.tir();
         base += bonus_tir();
         float bonus = 0;
         if (est_berserk()) {
             bonus = berserk_atk(base);
             if (bonus == berserk_atk_alliee) {
-                return;
+                return 0;
             }
         }
         bonus += critique_tir(base);
         bonus += tir_bonus;
         bonus += bonus_infection;
-        bonus += bonus_popo;
-        ennemi.tir(base + Main.corriger(bonus, 0));
-    }
-    
-    /**
-     * Calcule et applique les effets d'une attaque classique sur un monstre
-     * @param ennemi le monstre ennemi
-     * @throws IOException toujours
-     */
-    public void attaquer(Monstre ennemi, int bonus_popo) throws IOException {
-        int base = Input.atk();
-        base += bonus_atk();
-        float bonus = calcule_bonus_atk(base, bonus_popo);
-        if (bonus != berserk_atk_alliee) {
-            ennemi.dommage(base + Main.corriger(bonus, 0));
-        }
-    }
-    
-    /**
-     * Calcule les dommages bonus d'une attaque classique
-     * @param base       les dommages de base de l'attaque
-     * @param bonus_popo les dommages des consommables
-     * @return la valeur des dommages bonus (arrondit).
-     * @throws IOException toujours
-     */
-    protected float calcule_bonus_atk(int base, int bonus_popo) throws IOException {
-        float bonus = 0;
-        if (est_berserk()) {
-            bonus = berserk_atk(base);
-            if (bonus == berserk_atk_alliee) {
-                return berserk_atk_alliee;
-            }
-        }
-        bonus += critique_atk(base);
-        bonus += attaque_bonus;
-        bonus += bonus_popo;
-        return bonus;
+        return base + Main.corriger(bonus, 0);
     }
     
     /**
@@ -1333,7 +1334,7 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
             }
             case 2, 4 -> {
                 m = Lieu.true_monstre(pos, rand.nextBoolean());
-                text = "%s est attaqué par un %s !".formatted(this.nom, m.getNom());
+                text = "%s est attaqué par %s !".formatted(this.nom, m.nomme(true));
                 attaquant = false;
             }
             case 6 -> {
@@ -2427,7 +2428,7 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
      * Lance le sort Inondation : inflige des dommages magiques et affecte
      */
     protected void inondation(Monstre ennemi, int dps_bonus) {
-        System.out.println("Une vague d'eau percute " + ennemi.getNom() + " de plein fouet.");
+        System.out.println("Une vague d'eau percute " + ennemi.nomme(false) + " de plein fouet.");
         ennemi.dommage_magique((rune_pluie ? 10 : 15) + dps_bonus);
         ennemi.affecte();
     }
@@ -2436,7 +2437,7 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
      * Lance le sort Foudre : inflige des dommages magiques et affecte
      */
     protected void foudre_zeus(Monstre ennemi, int dps_bonus) {
-        System.out.println("Un éclair s'abat sur " + ennemi.getNom() + ".");
+        System.out.println("Un éclair s'abat sur " + ennemi.nomme(false) + ".");
         ennemi.dommage_magique(dps_bonus + (rune_orage ? 15 : 20));
         ennemi.affecte();
     }

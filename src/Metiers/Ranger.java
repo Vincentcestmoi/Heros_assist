@@ -433,21 +433,21 @@ public class Ranger extends Joueur {
         switch (jet) {
             case 2, 3 -> ennemi.tir(tir, 1.1F);
             case 4, 5 -> {
-                System.out.println("Votre flèche file droit sur " + ennemi.getNom() + " et lui porte un coup " +
+                System.out.println("Votre flèche file droit sur " + ennemi.nomme(false) + " et lui porte un coup " +
                         "puissant" + ".");
                 ennemi.tir(tir, 2F);
             }
             case 6, 7 -> {
-                System.out.println("Votre flèche atteint " + ennemi.getNom() + " en plein crâne.");
+                System.out.println("Votre flèche atteint " + ennemi.nomme(false) + " en plein crâne.");
                 ennemi.tir(tir, 2.4F);
             }
             case 8 -> {
-                System.out.println("Votre flèche transperce " + ennemi.getNom() + ", lui perforant des organes " +
+                System.out.println("Votre flèche transperce " + ennemi.nomme(false) + ", lui perforant des organes " +
                         "vitaux" + ".");
                 ennemi.tir(tir, 2.8F);
             }
             case 9 -> {
-                System.out.println("Votre flèche transperce " + ennemi.getNom() + ", lui perforant des organes " +
+                System.out.println("Votre flèche transperce " + ennemi.nomme(false) + ", lui perforant des organes " +
                         "vitaux" + ".");
                 ennemi.tir(tir, 4.1F);
             }
@@ -471,7 +471,7 @@ public class Ranger extends Joueur {
             jet += 2;
         }
         if (jet > 0) {
-            System.out.println("Vous vous faufilez derrière " + ennemi.getNom() + " sans qu'il ne vous remarque.");
+            System.out.println("Vous vous faufilez derrière " + ennemi.nomme(false) + " sans qu'il ne vous remarque.");
             ennemi.dommage(Main.corriger(Input.atk() * 1.3f + 6.5f + bonus_popo));
         } else {
             System.out.println("Vous jugez plus prudent de ne pas engagez pour l'instant...");
@@ -489,7 +489,7 @@ public class Ranger extends Joueur {
         int base = Input.atk();
         float bonus = calcule_bonus_atk_assaut(base, bonus_popo);
         if (bonus != berserk_atk_alliee) {
-            System.out.println(nom + " charge brutalement " + ennemi.getNom());
+            System.out.println(nom + " charge brutalement " + ennemi.nomme(false));
             ennemi.dommage(base + Main.corriger(bonus, 2));
             ennemi.attaque(this);
         }

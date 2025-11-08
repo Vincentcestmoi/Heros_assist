@@ -7,10 +7,8 @@ import Enum.Dieux;
 import Enum.Position;
 import Exterieur.Input;
 import Exterieur.Output;
-import Exterieur.SaveManager;
 import Metiers.Joueur;
 import Monstre.Monstre;
-import Monstre.Race;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -273,13 +271,13 @@ public class Combat {
                         dps_popo = 0;
                     }
                     case MAGIE -> {
-                        System.out.println("Vous utilisez votre magie sur " + ennemi.getNom());
+                        System.out.println("Vous utilisez votre magie sur " + ennemi.nomme(false));
                         ennemi.dommage_magique(Input.magie() + dps_popo);
                         dps_popo = 0;
                     }
                     case FUIR -> joueur.fuir(ennemi);
-                    case ASSOMER -> ennemi.assommer(joueur.getBerserk());
-                    case ENCAISSER -> ennemi.encaisser();
+                    case ASSOMER -> ennemi.assommer(joueur);
+                    case ENCAISSER -> ennemi.encaisser(joueur);
                     case SOIGNER -> {
                         boolean temp = i == pr_l || Input.ask_heal(pr_l);
                         ennemi.soigner(temp);
@@ -566,7 +564,7 @@ public class Combat {
             case DAMN_ARES -> {
                 for (int i = 0; i < Main.nbj; i++) {
                     if (Main.joueurs[i].getParent() == Dieux.ARES) {
-                        System.out.println(ennemi.getNom() + " vous maudit.");
+                        System.out.println(ennemi.nomme(false) + " vous maudit.");
                         System.out.println("Tout descendant d'Arès perd 2 points d'attaque pour la durée du combat.");
                         break;
                     }
@@ -581,8 +579,8 @@ public class Combat {
             case FEAR_POSEIDON -> fear(ennemi, Dieux.POSEIDON);
             case FEAR_DYONISOS -> fear(ennemi, Dieux.DIONYSOS);
             case CIBLE_CASQUE -> {
-                if (Input.yn(nom + " porte-il/elle un casque ?") && Input.D6() <= 4) {
-                    System.out.println(ennemi.getNom() + " fait tomber votre casque pour le combat.");
+                if (Input.yn(nom + " porte-iel un casque ?") && Input.D6() <= 4) {
+                    System.out.println(ennemi.nomme(false) + " fait tomber votre casque pour le combat.");
                 }
             }
             case ARMURE_GLACE -> ennemi.boostArmure(1, false);
@@ -598,83 +596,26 @@ public class Combat {
             case FORCE_NATURELLE -> ennemi.boostAtk(2, true);
             case FORCE_NATURELLE2 -> ennemi.boostAtk(4, true);
             case FORCE_NATURELLE3 -> ennemi.boostAtk(6, true);
-            case PRUDENT -> { //n'attaque pas s'il se fait OS
-                int tolerance = ennemi.getVieMax() + ennemi.getArmure();
-                for (int i = 0; i < Main.nbj; i++) {
-                    if (Main.joueurs[i].est_actif()) {
-                        System.out.print(Main.joueurs[i].getNom() + " ");
-                        tolerance -= Input.atk();
-                        if (Main.joueurs[i].a_familier_actif()) {
-                            System.out.print("Familier de " + Main.joueurs[i].getNom() + " ");
-                            tolerance -= Input.atk();
-                        }
-                        if (tolerance <= 0) {
-                            System.out.println(ennemi.getNom() + " fuit en vous voyant avancer.");
-                            return true;
-                        }
-                    }
-                }
-            }
-            case SUSPICIEUX -> { //n'attaque que s'il peut tuer tout le monde en 2 coups
-                int tolerance = ennemi.getAtk() * 2;
-                for (int i = 0; i < Main.nbj; i++) {
-                    if (Main.joueurs[i].est_actif()) {
-                        System.out.print(Main.joueurs[i].getNom() + " ");
-                        tolerance -= 2 * Input.def();
-                        tolerance -= Input.vie();
-                        if (Main.joueurs[i].a_familier_actif()) {
-                            System.out.print("Familier de " + Main.joueurs[i].getNom() + " ");
-                            tolerance -= 2 * Input.def();
-                            tolerance -= Input.vie();
-                        }
-                        if (tolerance < 0) {
-                            System.out.println(ennemi.getNom() + " fuit en vous voyant avancer.");
-                            return true;
-                        }
-                    }
-                }
-            }
-            case MEFIANT -> { // fuit s'il n'a pas de meilleures stats
-                int tolerance = ennemi.getVieMax() + ennemi.getArmure() * 3 + ennemi.getAtk();
-                for (int i = 0; i < Main.nbj; i++) {
-                    if (Main.joueurs[i].est_actif()) {
-                        System.out.print(Main.joueurs[i].getNom() + " ");
-                        tolerance -= 3 * Input.def();
-                        tolerance -= Input.vie();
-                        tolerance -= Input.atk();
-                        if (Main.joueurs[i].a_familier_actif()) {
-                            System.out.print("Familier de " + Main.joueurs[i].getNom() + " ");
-                            tolerance -= 3 * Input.def();
-                            tolerance -= Input.vie();
-                            tolerance -= Input.atk();
-                        }
-                        if (tolerance < 0) {
-                            System.out.println(ennemi.getNom() + " fuit en vous voyant avancer.");
-                            return true;
-                        }
-                    }
-                }
-            }
             case REGARD_APPEURANT -> {
-                System.out.println(nom + " croise le regard de " + ennemi.getNom());
+                System.out.println(nom + " croise le regard " + ennemi.text_de());
                 if (Input.D6() + Main.joueurs[pr_l].bonus_analyse() < 5) {
                     System.out.println(nom + " est instinctivement apeuré(e), marqué(e) à vie par cette peur, iel " + "perd définitivement 2 points d'attaque.");
                 }
             }
             case REGARD_TERRIFIANT -> {
-                System.out.println(nom + " croise le regard de " + ennemi.getNom());
+                System.out.println(nom + " croise le regard " + ennemi.text_de());
                 if (Input.D4() + Main.joueurs[pr_l].bonus_analyse() < 4) {
                     System.out.println(nom + " est terrifié(e) et perd 5 points d'attaque pour la durée du combat");
                 }
             }
             case FAIBLE -> ennemi.boostAtk(-3, true);
             case BENEDICTION -> {
-                System.out.println(ennemi.getNom() + " béni " + nom + " qui gagne définitivement 1 point de " + "r" + "ésistance.");
-                System.out.println(ennemi.getNom() + " a disparu...");
+                System.out.println(ennemi.nomme(false) + " béni " + nom + " qui gagne définitivement 1 point de résistance.");
+                System.out.println(ennemi.nomme(false) + " a disparu...");
                 return true;
             }
             case EQUIPE -> {
-                System.out.println(ennemi.getNom() + " est lourdement équipé.");
+                System.out.println(ennemi.nomme(false) + " est lourdement équipé.");
                 ennemi.boostAtk(rand.nextInt(3), false);
                 ennemi.boostVie(rand.nextInt(5), false);
                 ennemi.boostArmure(rand.nextInt(2), false);
@@ -685,7 +626,7 @@ public class Combat {
                 ennemi.boostVie(Main.corriger((ennemi.getVieMax() * 0.2f) + 2), true);
                 ennemi.boostArmure(-1, true);
             }
-            case BRUME -> System.out.println(ennemi.getNom() + "crée un rideau de brûme.");
+            case BRUME, EMPOUSA -> System.out.println(ennemi.nomme(false) + "crée un rideau de brûme.");
             case GOLEM_PIERRE -> {
                 ennemi.golemNom(" de pierre");
                 ennemi.boostAtk(rand.nextInt(3) + 1, true);
@@ -729,7 +670,7 @@ public class Combat {
     private static void hate(Monstre ennemi, Dieux dieu) {
         for (int i = 0; i < Main.nbj; i++) {
             if (Main.joueurs[i].getParent() == dieu) {
-                System.out.println(ennemi.getNom() + " vous regarde avec haine.");
+                System.out.println(ennemi.nomme(false) + " vous regarde avec haine.");
                 ennemi.boostAtk(1 + rand.nextInt(2), false);
                 return;
             }
@@ -744,7 +685,7 @@ public class Combat {
     private static void fear(Monstre ennemi, Dieux dieu) {
         for (int i = 0; i < Main.nbj; i++) {
             if (Main.joueurs[i].getParent() == dieu) {
-                System.out.println(ennemi.getNom() + " vous crains.");
+                System.out.println(ennemi.nomme(false) + " vous crains.");
                 ennemi.boostAtk(-1 - rand.nextInt(2), false);
             }
         }
@@ -759,27 +700,23 @@ public class Combat {
     static void competence_avance(Monstre ennemi, Joueur joueur) throws IOException {
         switch (ennemi.getCompetence()) {
             case ASSAUT -> {
-                System.out.println(ennemi.getNom() + " se jete sur " + joueur.getNom() + " avant que vous ne vous en "
+                System.out.println(ennemi.nomme(false) + " se jete sur " + joueur.getNom() + " avant que vous ne vous en "
                         + "rendiez compte");
                 ennemi.attaque(joueur);
             }
             case CHANT_SIRENE ->
-                    System.out.println("Le chant de " + ennemi.getNom() + " perturbe " + joueur.getNom() + " qui " +
-                            "perd" + " 1 point d'attaque pour la durée du combat.");
+                    System.out.println("Le chant de " + ennemi.nomme(false) + " perturbe " + joueur.getNom() + " qui " +
+                            "perd 1 point d'attaque pour la durée du combat.");
         }
     }
     
     /**
-     * Suprimme le monstre de sa zone après sa mort s'il est nommé
+     * Supprime le monstre de sa zone après sa mort s'il est nommé
      * @param ennemi le monstre ennemi
      * @implNote ne couvre que les monstres nommés
      */
     static void gestion_nomme(Monstre ennemi) throws IOException {
-        if (ennemi.est_nomme()) {
-            Output.dismiss_race(ennemi.getNom());
-            Race.delete_monstre(ennemi.getNom());
-            SaveManager.sauvegarder(true);
-        }
+        ennemi.gere_nomme();
     }
     
     /**
@@ -791,72 +728,7 @@ public class Combat {
         System.out.println("Vous analysez le monstre en face de vous.");
         int jet = Input.D8() + rand.nextInt(2);
         jet += joueur.bonus_analyse();
-        int pv, pvm, arm, atk;
-        switch (ennemi.getCompetence()) {
-            case ILLU_AURAI -> {
-                pvm = Race.aurai_malefique.get_vie();
-                pv = pvm - (ennemi.getVieMax() - ennemi.getVie());
-                arm = Race.aurai_malefique.get_armure();
-                atk = Race.aurai_malefique.get_attaque();
-            }
-            case ILLU_CYCLOPE -> {
-                pvm = Race.cyclope.get_vie();
-                pv = pvm - (ennemi.getVieMax() - ennemi.getVie());
-                arm = Race.cyclope.get_armure();
-                atk = Race.cyclope.get_attaque();
-            }
-            case ILLU_DULLA -> {
-                pvm = Race.dullahan.get_vie();
-                pv = pvm - (ennemi.getVieMax() - ennemi.getVie());
-                arm = Race.dullahan.get_armure();
-                atk = Race.dullahan.get_attaque();
-            }
-            case ILLU_GOLEM -> {
-                pvm = Race.golem.get_vie();
-                pv = pvm - (ennemi.getVieMax() - ennemi.getVie());
-                arm = Race.golem.get_armure();
-                atk = Race.golem.get_attaque();
-            }
-            case ILLU_ROCHE -> {
-                pvm = Race.roche_maudite.get_vie();
-                pv = pvm - (ennemi.getVieMax() - ennemi.getVie());
-                arm = Race.roche_maudite.get_armure();
-                atk = Race.roche_maudite.get_attaque();
-            }
-            case ILLU_SIRENE -> {
-                pvm = Race.sirene.get_vie();
-                pv = pvm - (ennemi.getVieMax() - ennemi.getVie());
-                arm = Race.sirene.get_armure();
-                atk = Race.sirene.get_attaque();
-            }
-            case ILLU_TRITON -> {
-                pvm = Race.triton.get_vie();
-                pv = pvm - (ennemi.getVieMax() - ennemi.getVie());
-                arm = Race.triton.get_armure();
-                atk = Race.triton.get_attaque();
-            }
-            case ILLU_VENTI -> {
-                pvm = Race.venti.get_vie();
-                pv = pvm - (ennemi.getVieMax() - ennemi.getVie());
-                arm = Race.venti.get_armure();
-                atk = Race.venti.get_attaque();
-            }
-            default -> {
-                pvm = ennemi.getVieMax();
-                pv = ennemi.getVie();
-                arm = ennemi.getArmure();
-                atk = ennemi.getAtk();
-            }
-        }
-        System.out.println(ennemi.getNom() + " :");
-        if (ennemi.est_pantin()) {
-            System.out.println("vie : " + (jet >= 5 ? "∞" : "???") + "/" + (jet >= 2 ? "∞" : "???"));
-        } else {
-            System.out.println("vie : " + (jet >= 5 ? pv : "???") + "/" + (jet >= 2 ? pvm : "???"));
-        }
-        System.out.println("attaque : " + (jet >= 3 ? atk : "???"));
-        System.out.println("armure : " + (jet >= 7 ? arm : "???"));
-        System.out.println();
+        ennemi.presente_analyse(jet);
     }
     
     /**

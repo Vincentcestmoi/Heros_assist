@@ -42,7 +42,7 @@ public class Texte {
     }
     
     public static void aveugler(Monstre ennemi) {
-        System.out.printf("Vous aveuglez %s\n", ennemi.getNom());
+        System.out.printf("Vous aveuglez %s\n", ennemi.nomme(false));
     }
     
     public static void parchemin_archimage() {
@@ -103,5 +103,9 @@ public class Texte {
     
     public static void recupere_mana(String nom, int quantite) {
         System.out.printf("%s récupère %d points de mana.", nom, quantite);
+    }
+    
+    public static void esquive_vol(String nom){
+        System.out.printf("L'attaque n'atteint pas %s.\n%s se pose à terre.\n", nom, nom);
     }
 }

@@ -1,18 +1,20 @@
 package Monstre;
 
+import Auxiliaire.Texte;
 import Auxiliaire.Utilitaire;
 import Enum.Competence;
+import Enum.Genre;
 import Enum.Position;
 import Equipement.Equipement;
 import Exterieur.Input;
 import Exterieur.Output;
+import Exterieur.SaveManager;
 import Metiers.Joueur;
 import main.Combat;
 import main.Main;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
-import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Random;
 
@@ -34,14 +36,20 @@ public class Monstre {
     protected float encaissement;   // quand l'adversaire utilise "encaisser"
     protected float part_soin;      // quand l'adversaire utilise "premier soin" en première ligne.
     protected int etat;         //l'état du corps du monstre
+    protected Genre genre;
+    protected final boolean est_nomme;
     
     // stats de base à conserver
     protected int vie_base;
     protected int attaque_base;
     protected int armure_base;
     
+    static Random rand = new Random();
+    
     Monstre(Race race) {
         this.nom = race.get_nom();
+        this.est_nomme = race.est_nomme();
+        this.genre = race.get_genre();
         this.attaque = race.get_attaque();
         this.vie = race.get_vie();
         this.vie_max = this.vie;
@@ -53,38 +61,94 @@ public class Monstre {
         
         this.etourdi = false;
         this.assomme = false;
-        this.encaissement = 0F;
-        this.part_soin = 0F;
+        this.encaissement = 0f;
+        this.part_soin = 0f;
         
         this.vie_base = this.vie_max;
         this.attaque_base = this.attaque;
         this.armure_base = this.armure;
         
         this.etat = 18 + rand.nextInt(11);
-        if (est_nomme()) {
-            etat += 7;
+        if (est_nomme) {
+            this.etat += 7;
         }
         if (Objects.equals(this.nom, "illusioniste")) {
             illu_check();
         }
     }
     
-    static Random rand = new Random();
-    
-    public boolean corps_utilisable() {
-        return etat > 0;
+    public int getEtat() {
+        return this.etat;
     }
     
-    public int getEtat() {
-        return etat;
+    public boolean corps_utilisable() {
+        return getEtat() > 0;
     }
     
     public void alterEtat(int valeur) {
-        etat += valeur;
+        this.etat += valeur;
     }
     
     public String getNom() {
-        return nom;
+        return this.nom;
+    }
+    
+    /**
+     * Indique si le nom du monstre cause une élision
+     * @return si le nom commence par a, e, i, o, u, y ou h.
+     */
+    boolean elision(){
+        return getNom().matches("^[aeiouyhAEIOUYH].*");
+    }
+    
+    /**
+     * Présente le monstre avec la liaison "de" correctement mis en forme
+     * @return la forme correcte de "de le monstre"
+     */
+    public String text_de(){
+        if(est_male() && !elision()){
+            return "du " + getNom();
+        }
+        return "de " + nomme(false);
+    }
+    
+    /**
+     * Présente le monstre avec la liaison "à" correctement mis en forme
+     * @return la forme correcte de "à le monstre"
+     */
+    public String text_a(){
+        if(est_male() && !elision()){
+            return "au " + getNom();
+        }
+        return "à " + nomme(false);
+    }
+    
+    /**
+     * Donne le nom du monstre avec un suffixe
+     * @param indefinie s'il faut utiliser un suffixe défini ou indéfinie
+     * @return le groupe nominal du monstre
+     */
+    public String nomme(boolean indefinie){
+        String presentation = "";
+        if(genre == Genre.FEMININ){
+            if(indefinie){
+                presentation += "une ";
+            } else if(elision()) {
+                presentation += "l'";
+            } else {
+                presentation += "la ";
+            }
+        } else if(genre == Genre.MASCULIN){
+            if(indefinie){
+                presentation += "un ";
+            } else if(elision()) {
+                presentation += "l'";
+            } else{
+                presentation += "le ";
+            }
+        } //les nommés n'ont pas de déterminant, car c'est un nom propre
+        presentation += getNom();
+        return presentation;
     }
     
     public void rename(String nom) {
@@ -92,29 +156,122 @@ public class Monstre {
     }
     
     public Competence getCompetence() {
-        return competence;
+        return this.competence;
     }
     
     public int getVieMax() {
-        return vie_max;
+        return this.vie_max;
     }
     
     public int getVie() {
-        return vie;
+        return this.vie;
     }
     
     public int getAtk() {
-        return attaque;
+        return this.attaque;
     }
     
     public int getArmure() {
-        return armure;
+        return this.armure;
+    }
+    
+    public boolean est_male(){
+        return this.genre == Genre.MASCULIN;
+    }
+    
+    /**
+     * Retire au monstre sa compétence
+     */
+    private void supprime_competence(){
+        this.competence = Competence.AUCUNE;
+    }
+    
+    /**
+     * Gère la rotation des compétences aquajet
+     */
+    private void cycle_aquajet(){
+        switch(getCompetence()){
+            case AQUAJET3 -> this.competence = Competence.AQUAJET2;
+            case AQUAJET2 -> this.competence = Competence.AQUAJET1;
+            case AQUAJET1 -> this.competence = Competence.AQUAJET;
+            case AQUAJET -> this.competence = Competence.AQUAJET3;
+        }
+    }
+    
+    /**
+     * Gère la rotation de la compétence de Typhon
+     */
+    private void cycle_typhon(){
+        switch(getCompetence()){
+            case TYPHON1 -> this.competence = Competence.TYPHON2;
+            case TYPHON2 -> this.competence = Competence.TYPHON3;
+            case TYPHON3 -> this.competence = Competence.TYPHON1;
+        }
+    }
+    
+    /**
+     * Gère les changements des compétences de type vol, volage et caucase
+     */
+    private void cycle_vol(){
+        switch(getCompetence()){
+            case VOL -> this.competence = Competence.VOL_OFF;
+            case VOLAGE -> supprime_competence();
+            case VOL_OFF -> this.competence = Competence.VOL_OFF2;
+            case VOL_OFF2 -> {
+                this.competence = Competence.VOL;
+                System.out.println(nomme(false) + " s'envole !");
+            }
+            case CAUCASE -> this.competence = Competence.CAUCASE_OFF;
+            case CAUCASE_OFF -> {
+                this.competence = Competence.CAUCASE;
+                System.out.println(nomme(false) + " s'envole !");
+            }
+        }
+    }
+    
+    /**
+     * Traite la perte d'une des têtes de Scylla
+     */
+    private void scylla_decapitation(){
+        String text = "Vous avez coupé une des têtes " + text_de();
+        soigne(1000);
+        boostAtk(2, true);
+        boostVie(1, true);
+        switch (getCompetence()){
+            case SCYLLA6 -> this.competence = Competence.SCYLLA5;
+            case SCYLLA5 -> this.competence = Competence.SCYLLA4;
+            case SCYLLA4 -> this.competence = Competence.SCYLLA3;
+            case SCYLLA3 -> this.competence = Competence.SCYLLA2;
+            case SCYLLA2 -> {
+                this.competence = Competence.SCYLLA;
+                text = "Il ne reste plus qu'une tête " + text_a() + " !";
+                boostVie(12, true);
+            }
+        }
+        System.out.println(text);
+    }
+    
+    
+    /**
+     * Regarde si le monstre est nommé
+     * @return true s'il est nommé, false sinon
+     */
+    public boolean est_nomme() {
+        return this.est_nomme;
+    }
+    
+    /**
+     * Regarde si le monstre est un pantin d'entrainement
+     * @return True s'il s'agit d'un pantin d'entrainement, false sinon
+     */
+    public boolean est_pantin() {
+        return this.competence == Competence.DUMMY;
     }
     
     /**
      * Augmente/Modifie l'attaque
      * @param value       la modification à appliquer
-     * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
+     * @param fondamental si la modification est intrinsèque à l'unité ou juste temporaire/de surface
      */
     public void boostAtk(int value, boolean fondamental) {
         if (est_pantin()) {
@@ -134,9 +291,9 @@ public class Monstre {
             }
         }
         
-        if (this.attaque < 1 && this.attaque_base > 0) {
+        if (getAtk() < 1 && this.attaque_base > 0) {
             this.attaque = 1;
-        } else if (this.attaque < 0) {
+        } else if (getAtk() < 0) {
             this.attaque = 0;
         }
     }
@@ -144,7 +301,7 @@ public class Monstre {
     /**
      * Augmente/Modifie l'armure
      * @param value       la modification à appliquer
-     * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
+     * @param fondamental si la modification est intrinsèque à l'unité ou juste temporaire/de surface
      */
     public void boostArmure(int value, boolean fondamental) {
         if (est_pantin()) {
@@ -157,7 +314,7 @@ public class Monstre {
         }
         
         this.armure += value;
-        if (this.armure < 0) {
+        if (getArmure() < 0) {
             this.armure = 0;
         }
         if (fondamental) {
@@ -171,7 +328,7 @@ public class Monstre {
     /**
      * Augmente/Modifie la résistance
      * @param value       la modification à appliquer
-     * @param fondamental si la modification est intrasèque à l'unité ou juste temporaire/de surface
+     * @param fondamental si la modification est intrinsèque à l'unité ou juste temporaire/de surface
      */
     public void boostVie(int value, boolean fondamental) {
         if (est_pantin()) {
@@ -184,7 +341,7 @@ public class Monstre {
         }
         
         this.vie_max += value;
-        if (this.vie_max <= 0) {
+        if (getVieMax() <= 0) {
             this.vie_max = 1;
         }
         this.vie += value;
@@ -229,20 +386,64 @@ public class Monstre {
     }
     
     /**
+     * Soigne le monstre. Ne peut dépasser sa vie max ou lui retirer des pv.
+     * @param value la quantité a soigné, ignorée si négative
+     */
+    public void soigne(int value){
+        if(value <= 0){
+            return;
+        }
+        this.vie += value;
+        if(getVie() > getVieMax()){
+            this.vie = getVieMax();
+        }
+    }
+    
+    /**
      * Maquille l'illusionniste en lui donnant le nom de l'illusion
      */
     private void illu_check() {
-        this.nom = switch (this.competence) {
-            case ILLU_AURAI -> "aurai maléfique";
+        this.nom = switch (getCompetence()) {
+            case ILLU_AURAI -> {
+                this.genre = Genre.FEMININ;
+                yield "aurai maléfique";
+            }
             case ILLU_CYCLOPE -> "cyclope";
             case ILLU_DULLA -> "dullahan";
             case ILLU_GOLEM -> "golem";
-            case ILLU_ROCHE -> "roche maudite";
-            case ILLU_SIRENE -> "sirène";
+            case ILLU_ROCHE -> {
+                this.genre = Genre.FEMININ;
+                yield "roche maudite";
+            }
+            case ILLU_SIRENE -> {
+                this.genre = Genre.FEMININ;
+                yield "sirène";
+            }
             case ILLU_TRITON -> "triton";
             case ILLU_VENTI -> "venti";
-            default -> this.nom;
+            default -> getNom();
         };
+    }
+    
+    /**
+     * Remet à zéro le multiplicateur de dégas dû au soin de l'ennemi
+     */
+    private void reset_part_soin(){
+        this.part_soin = 0f;
+    }
+    
+    /**
+     * Ajoute de la valeur au multiplicateur de dommage d^au soin de l'ennemi
+     */
+    private void add_part_soin(float value){
+        this.part_soin += value;
+    }
+    
+    /**
+     * Remet à zéro l'encaissement de l'ennemi
+     */
+    public void reset_encaisser() {
+        this.encaissement = 0f;
     }
     
     /**
@@ -262,35 +463,113 @@ public class Monstre {
             System.out.println();
             return;
         }
-        this.vie -= quantite;
-        if (vie <= 0) {
+        if(quantite <= 0){
             return;
         }
-        String text = "";
-        if (vie <= vie_max * 0.2) {
-            text += nom + " a l'air sur le point de s'effondrer.";
-            etat -= 1;
-        } else if (quantite >= vie_max * 0.65) {
-            text += nom + " souffre sévèrement sous l'impact.";
-            etat -= 2 + rand.nextInt(3);
-        } else if (quantite >= vie_max * 0.5) {
-            text += nom + " a prit un sacré coup .";
-            etat -= 2 + rand.nextInt(2);
-        } else if (quantite >= vie_max * 0.35) {
-            text += nom + " semble en mauvaise posture.";
-            etat -= 2;
-        } else if (quantite <= vie_max * 0.1) {
-            text += nom + " ne réagit même pas à l'assaut.";
-            etat -= rand.nextInt(2) * rand.nextInt(2);
-        } else if (quantite <= vie_max * 0.2) {
-            text += nom + " ne semble pas souffir de l'impact.";
-            etat -= rand.nextInt(2);
+        
+        this.vie -= quantite;
+        if (getVie() <= 0) {
+            return;
+        }
+        
+        int alteration;
+        float ratio = (float) quantite / (float) getVieMax();
+        if(ratio > 0.9f){
+            alteration = 2 + rand.nextInt(3);
+        } else if (ratio > 0.8f) {
+            alteration = 2 + rand.nextInt(2);
+        } else if (ratio > 0.6f) {
+            alteration = 2;
+        } else if (ratio > 0.2f) {
+            alteration = 1;
+        } else if (ratio > 0.1f) {
+            alteration = rand.nextInt(2);
         } else {
-            etat -= 1;
+            alteration = rand.nextInt(2) * rand.nextInt(2);
+        }
+        alterEtat(-alteration);
+        
+        String text;
+        if (getVie() <= getVieMax() * 0.15) {
+            text = nomme(false) + " a l'air sur le point de s'effondrer.";
+        } else if (getVie() <= getVieMax() * 0.25) {
+            text = nomme(false) + " souffre sévèrement sous l'impact.";
+        } else if (getVie() <= getVieMax() * 0.35) {
+            text = nomme(false) + " a prit un sacré coup .";
+        } else if (getVie() <= getVieMax() * 0.45) {
+            text = nomme(false) + " semble en mauvaise posture.";
+        } else if (getVie() <= getVieMax() * 0.8){
+            text = nomme(false) + " est toujours d'aplomb.";
+        } else if (getVie() <= getVieMax() * 0.9) {
+            text = nomme(false) + " ne semble pas souffrir de l'impact.";
+        } else {
+            text = nomme(false) + " ne réagit même pas à l'assaut.";
         }
         if (!silence) {
             System.out.println(text);
         }
+        applique_competence_post_dommage();
+    }
+    
+    /**
+     * Applique les compétence qui s'active dès que le monstre subit des dommages
+     */
+    private void applique_competence_post_dommage(){
+        switch (getCompetence()) {
+            case CERBERE -> boostAtk(1, false);
+            case LYCAON -> {
+                if (getVie() < 10) {
+                    System.out.println(nomme(false) + " se transforme en loup !");
+                    this.competence = Competence.LYCAON2;
+                    boostAtk(2, true);
+                    boostVie(2, true);
+                }
+            }
+            case LYCAON2 -> {
+                if(getVie() < 7){
+                    System.out.println(nomme(false) + " se transforme en un hybride mi-homme mi-loup !");
+                    this.competence = Competence.LYCAON3;
+                    boostAtk(2, true);
+                    boostVie(2, true);
+                    boostArmure(1, true);
+                }
+            }
+            case EMPOUSA -> {
+                Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
+                String text = "";
+                if(getVie() <= 0){
+                    text = nomme(false) + " se transforme !\n";
+                }
+                while(est_mort() && getVieMax() > 0){
+                    garde.check();
+                    if(getArmure() * 6 > getVieMax() && getArmure() * 6 > (getAtk() - 1) * 2){
+                        empousa_def();
+                    } else if ((getAtk() - 1) * 2 > getVieMax()){
+                        empousa_atk();
+                    } else {
+                        empousa_vie();
+                    }
+                }
+                if(!est_mort()) {
+                    System.out.print(text);
+                }
+            }
+        }
+    }
+    
+    private void empousa_def(){
+        boostArmure(-1, true);
+        soigne(6);
+    }
+    
+    private void empousa_atk(){
+        boostAtk(-1, true);
+        soigne(2);
+    }
+    
+    private void empousa_vie(){
+        boostVie(-1, true);
+        soigne(1);
     }
     
     /**
@@ -299,21 +578,21 @@ public class Monstre {
      * @implNote Calcul les effet de "encaisser", "étourdit" et "assommé"
      */
     public void attaque(Joueur joueur) throws IOException {
-        if (encaissement > 0.95f) {
-            encaissement = 0.95f;
+        if (this.encaissement > 0.95f) {
+            this.encaissement = 0.95f;
         }
-        float modificateur = 1 - encaissement + part_soin;
-        if (assomme) {
+        float modificateur = 1 - this.encaissement + this.part_soin;
+        if (this.assomme) {
             undo_assomme();
-        } else if (etourdi) {
-            if (applique_competence_pre(joueur) && this.attaque > 0) {
-                System.out.println(this.nom + " est étourdit et inflige " + Main.corriger(this.attaque * 0.5F * modificateur) + " dommages à " + joueur.getFrontNom() + ".");
+        } else if (this.etourdi) {
+            if (applique_competence_pre(joueur, modificateur) && getAtk() > 0) {
+                System.out.println(nomme(false) + " est étourdit et inflige " + Main.corriger(getAtk() * 0.5F * modificateur) + " dommages à " + joueur.getFrontNom() + ".");
                 applique_competence_post(joueur);
             }
             undo_etourdi();
         } else {
-            if (applique_competence_pre(joueur) && this.attaque > 0) {
-                System.out.println(this.nom + " inflige " + Main.corriger(this.attaque * modificateur) + " dommages " + "à" + " " + joueur.getFrontNom() + ".");
+            if (applique_competence_pre(joueur, modificateur) && getAtk() > 0) {
+                System.out.println(nomme(false) + " inflige " + Main.corriger(getAtk() * modificateur) + " dommages " + "à" + " " + joueur.getFrontNom() + ".");
                 applique_competence_post(joueur);
             }
         }
@@ -326,136 +605,204 @@ public class Monstre {
      * @return si l'attaque a bien lieu après application de la compétence
      * @throws IOException comme ça, ça marche
      */
-    private boolean applique_competence_pre(Joueur joueur) throws IOException {
-        switch (competence) {
+    private boolean applique_competence_pre(Joueur joueur, float modificateur) throws IOException {
+        switch (getCompetence()) {
             case EXPLOSION -> {
-                this.attaque += 6;
-                System.out.println(this.nom + " s'apprête à causer une explosion !");
+                boostAtk(6, false);
+                System.out.println(nomme(false) + " s'apprête à causer une explosion !");
             }
             case GEL -> {
                 if (Input.yn("Portez vous (pl) une armure ?")) {
-                    System.out.println(this.nom + " détruit votre armure");
-                    competence = Competence.AUCUNE;
+                    System.out.println(nomme(false) + " détruit votre armure");
+                    supprime_competence();
                 } else {
-                    attaque += 3;
+                    boostAtk(3, false);
                 }
             }
             case REGARD_MORTEL -> {
-                System.out.println(this.nom + " regarde " + joueur.getFrontNom() + " droit dans les yeux.");
+                System.out.println(nomme(false) + " regarde " + joueur.getFrontNom() + " droit dans les yeux.");
                 if (Input.D6() + joueur.bonus_analyse() <= 4) {
                     System.out.printf("%s sent son âme se faire assaillir et perd définitivement %d points de " + "r" +
-                            "ésistance.\n", joueur.getFrontNom(), this.attaque);
-                    competence = Competence.AUCUNE;
-                    encaissement = 0F;
-                    part_soin = 0F;
+                            "ésistance.\n", joueur.getFrontNom(), getAtk());
+                    supprime_competence();
                     return false;
                 }
-                competence = Competence.AUCUNE;
+                supprime_competence();
             }
             case REGARD_PETRIFIANT -> {
-                System.out.printf("%s regarde %s droit dans les yeux.\n", this.nom, joueur.getFrontNom());
+                System.out.printf("%s regarde %s droit dans les yeux.\n",nomme(false) , joueur.getFrontNom());
                 if (Input.D6() + joueur.bonus_analyse() <= 4) {
                     System.out.printf("%s se change partiellement en pierre !\n", joueur.getFrontNom());
                     System.out.printf("%s perd définitivement %d points de résistance et gagne définitivement %d " +
-                            "points de défense.\n", joueur.getFrontNom(), this.attaque + 2, 1 + rand.nextInt(2));
-                    competence = Competence.AUCUNE;
-                    encaissement = 0F;
-                    part_soin = 0F;
+                            "points de défense.\n", joueur.getFrontNom(), getAtk() + 2, 1 + rand.nextInt(2));
+                    supprime_competence();
                     return false;
                 }
-                competence = Competence.AUCUNE;
+                supprime_competence();
             }
             case CHARGE -> {
-                System.out.println(this.nom + " charge !");
-                this.attaque += 3;
+                System.out.println(nomme(false) + " charge !");
+                boostAtk(3, false);
             }
             case VIOLENT -> {
                 if (rand.nextBoolean()) {
-                    System.out.println(this.nom + " attaque violemment " + joueur.getFrontNom() + " et lui inflige " + Main.corriger(attaque * 1.5F) + " dommages.");
+                    System.out.println(nomme(false) + " attaque violemment " + joueur.getFrontNom() + " et lui inflige " + Main.corriger(getAtk() * 1.5F * modificateur) + " dommages.");
                     return false;
                 }
             }
             case ASSASSINAT -> {
-                System.out.println(this.nom + " se glisse discrètement derrière " + joueur.getFrontNom() + " sans " + "que" + " personne ne l'aperçoive.");
-                this.attaque *= 2;
-                this.encaissement = 0F;
+                System.out.println(nomme(false) + " se glisse discrètement derrière " + joueur.getFrontNom() + " sans " + "que" + " personne ne l'aperçoive.");
+                boostAtk(getAtk(), false);
+                reset_encaisser();
             }
             case KAMICASE -> {
-                System.out.println(this.nom + " explose !!!");
-                this.attaque *= 3;
+                System.out.println(nomme(false) + " explose !!!");
+                boostAtk(getAtk() * 2, false);
             }
-            case AQUAJET -> this.attaque += 18;
+            case AQUAJET -> boostAtk(18, false);
             case VOLEUR_CASQUE -> {
                 if (Input.yn(joueur.getFrontNom() + " porte-iel un casque ?") && Input.D6() <= 4) {
-                    System.out.println(this.nom + " vole votre casque et part avec.");
+                    System.out.println(nomme(false) + " vole votre casque et part avec.");
                     Combat.stop_run();
                     return false;
                 }
             }
+            case SCYLLA6 -> {
+                scyllattaque(6, modificateur, joueur.getFrontNom());
+                return false;
+            }
+            case SCYLLA5 -> {
+                scyllattaque(5, modificateur, joueur.getFrontNom());
+                return false;
+            }
+            case SCYLLA4 -> {
+                scyllattaque(4, modificateur, joueur.getFrontNom());
+                return false;
+            }
+            case SCYLLA3 -> {
+                scyllattaque(3, modificateur, joueur.getFrontNom());
+                return false;
+            }
+            case SCYLLA2 -> {
+                scyllattaque(2, modificateur, joueur.getFrontNom());
+                return false;
+            }
+            case TYPHON1, TYPHON2 -> System.out.println(nomme(false) + " crée des vents violent qui infligent " + Main.corriger(getAtk() * 0.4f) + " dommages à tous les participants.");
+            case TYPHON3 -> System.out.println(nomme(false) + " provoque une éruption volcanique qui inflige " + Main.corriger(getAtk() * 1.2f) + " dommages à tous les participants.");
         }
         return true;
+    }
+    
+    /**
+     * Fait attaquer chacune des têtes de scylla
+     * @param nb_tete le nombre de têtes de Scylla qui attaque
+     * @param modificateur le modificateur de dégas
+     */
+    private void scyllattaque(int nb_tete, float modificateur, String cible) {
+        System.out.printf("Les %d têtes de Scylla vous attaquent !\n", nb_tete);
+        for (int i = 0; i < nb_tete; i++) {
+            System.out.println(nomme(false) + " inflige " + Main.corriger(getAtk() * modificateur) + " dommages à " + cible + ".");
+        }
     }
     
     /**
      * Applique la compétence du monstre après son attaque
      */
     private void applique_competence_post(Joueur joueur) {
-        switch (competence) {
+        switch (getCompetence()) {
             case EXPLOSION -> {
-                this.attaque -= 6;
-                competence = Competence.AUCUNE;
+                boostAtk(-6, false);
+                supprime_competence();
             }
             case VAMPIRISME -> {
-                if (Input.yn("L'attaque a-t-elle touchée ?") && this.vie < this.vie_max) {
-                    this.vie += 1;
+                if (Input.yn("L'attaque a-t-elle touchée ?")) {
+                    soigne(1);
                 }
             }
             case VAMPIRISME4 -> {
                 if (Input.yn("L'attaque a-t-elle touchée ?")) {
-                    this.vie += 4;
-                    if (this.vie > this.vie_max) {
-                        this.vie = this.vie_max;
-                    }
+                    soigne(4);
                 }
             }
             case POISON_CECITE -> joueur.prend_cecite();
-            case GEL -> competence = Competence.AUCUNE;
+            case GEL -> supprime_competence();
             case MORSURE_MALADIVE -> {
                 System.out.println("La morsure provoque une grave infection qui fait définitivement perdre 1 point " + "de" + " résistance à " + joueur.getFrontNom() + ".");
-                competence = Competence.AUCUNE;
+                supprime_competence();
             }
             case MORSURE_SAUVAGE -> {
                 System.out.println("La morsure infecte " + joueur.getFrontNom() + " avec un parasite qui lui draine " + "1" + " PP.");
-                competence = Competence.AUCUNE;
+                supprime_competence();
             }
             case MORSURE_EREINTANTE -> {
                 System.out.println("La morsure provoque chez " + joueur.getFrontNom() + " une grave réaction et lui " + "fait perdre 1 point d'attaque définitivement.");
-                competence = Competence.AUCUNE;
+                supprime_competence();
             }
             case POISON -> joueur.prend_poison1();
             case POISON2 -> joueur.prend_poison2();
             case CHARGE -> {
-                this.attaque -= 3;
-                competence = Competence.AUCUNE;
+                boostAtk(-3, false);
+                supprime_competence();
             }
             case ASSASSINAT -> {
-                this.attaque /= 2;
-                this.competence = Competence.AUCUNE;
+                boostAtk(getAtk() / 2, false);
+                supprime_competence();
             }
-            case AQUAJET3 -> this.competence = Competence.AQUAJET2;
-            case AQUAJET2 -> this.competence = Competence.AQUAJET1;
+            case AQUAJET3, AQUAJET2 -> cycle_aquajet();
             case AQUAJET1 -> {
-                this.competence = Competence.AQUAJET;
-                System.out.println(this.nom + " prépare quelque chose...");
+                cycle_aquajet();
+                System.out.println(nomme(false) + " prépare quelque chose...");
             }
             case AQUAJET -> {
-                this.competence = Competence.AQUAJET3;
-                this.attaque -= 18;
+                cycle_aquajet();
+                boostAtk(-18, false);
             }
             case FRAPPE_SPECTRALE ->
                     System.out.println("L'attaque traverse partiellement l'armure de " + joueur.getFrontNom() + " et "
                             + "ignore " + rand.nextInt(4) + " point(s) de défense.");
             case KAMICASE -> this.vie = 0;
+            
+            //nommé
+            case CERBERE -> {
+                boostAtk(1, false);
+                int assomme = rand.nextInt(5) - 2;
+                if(assomme > 0){
+                    System.out.println(nomme(false) + " vous frappe si fort que vous perdez connaissance.");
+                    if(joueur.a_familier_front()){
+                        joueur.f_assomme(4 - assomme);
+                    } else {
+                        joueur.assomme(4 - assomme);
+                    }
+                }
+            }
+            case MORMO -> {
+                System.out.println(nomme(false) + " vous terrifie !");
+                System.out.println(joueur.getFrontNom() + " perd temporairement 1 point d'attaque.");
+            }
+            case EMPOUSA -> {
+                if (Input.yn("L'attaque a-t-elle touchée ?")) {
+                    soigne(3);
+                }
+            }
+            case LADON -> {
+                joueur.prend_poison1();
+                joueur.prend_poison2();
+                joueur.prend_cecite();
+            }
+            case ECHIDNA -> {
+                joueur.prend_poison2();
+                int assomme = rand.nextInt(4) - 2;
+                if(assomme > 0){
+                    System.out.println(nomme(false) + " vous frappe si fort que vous perdez connaissance.");
+                    if(joueur.a_familier_front()){
+                        joueur.f_assomme(3 - assomme);
+                    } else {
+                        joueur.assomme(3 - assomme);
+                    }
+                }
+            }
+            case CHARYBDE, SCYLLA -> System.out.println(nomme(false) + " provoque une vague infligeant " + Main.corriger(getAtk() * 0.5f) + " dommages supplémentaire à tous les participants.");
+            case TYPHON1, TYPHON2, TYPHON3 -> cycle_typhon();
             case CHRONOS -> {
                 if (Input.yn("L'attaque a-t-elle touchée ?")) {
                     System.out.println(joueur.getFrontNom() + " perd définitivement 1 équipement de son choix.");
@@ -465,31 +812,32 @@ public class Monstre {
     }
     
     /**
-     * Gère les compétences intervenant après l'attaque
+     * Gère les compétences intervenant à la fin du tour (indépendant du fait que l'attaque ait eu lieu)
      */
     private void fin_combat(Joueur joueur) throws IOException {
         reset_encaisser();
-        this.part_soin = 0F;
-        switch (competence) {
+        reset_part_soin();
+        reset_encaisser();
+        switch (getCompetence()) {
             case POURRI -> {
-                System.out.println(this.nom + " tombe en morceau.");
+                System.out.println(nomme(false) + " tombe en morceau.");
                 subit_dommage(1, true);
             }
-            case PHOTOSYNTHESE -> vie = vie == vie_max ? vie + 1 : vie;
+            case PHOTOSYNTHESE -> soigne(1);
             case BLESSE -> {
-                System.out.println(this.nom + " saigne abondamment.");
+                System.out.println(nomme(false) + " saigne abondamment.");
                 subit_dommage(3, true);
             }
             case DUO -> {
-                competence = Competence.AUCUNE; // pour éviter une boucle
+                supprime_competence(); // pour éviter une boucle
                 attaque(joueur);
-                competence = Competence.DUO;
+                this.competence = Competence.DUO;
             }
-            case VOL_OFF -> competence = Competence.VOL_OFF2;
-            case VOL_OFF2 -> {
-                competence = Competence.VOL;
-                System.out.println(this.nom + " s'envole !");
-            }
+            case VOL_OFF, VOL_OFF2 -> cycle_vol();
+            case LYCAON -> soigne(2);
+            case LYCAON2 -> soigne(3);
+            case LYCAON3 -> soigne(4);
+            case CAUCASE, CAUCASE_OFF -> soigne(5);
         }
     }
     
@@ -497,29 +845,29 @@ public class Monstre {
      * Renvoie la quantité et qualité des équipements obtenus à la mort du monstre
      */
     private void drop() {
-        System.out.println("Vous fouillez le corp de " + this.nom);
-        if (this.drop_quantite <= 0 || competence == Competence.ARNAQUE) {
+        System.out.println("Vous fouillez le corp " + text_de());
+        if (this.drop_quantite <= 0 || getCompetence() == Competence.ARNAQUE) {
             System.out.println("Vous ne trouvez aucun équipement sur son cadavre");
             return;
         }
-        switch (this.competence) {
+        switch (getCompetence()) {
             case SACRE -> {
-                System.out.println("Vous avez tué un(e) " + this.nom + ", aimé(e) des dieux, honte sur vous !");
+                System.out.println("Vous avez tué " + nomme(true) + ", aimé(e) des dieux, honte sur vous !");
                 System.out.println("Vous (tous ceux présent) perdez définitivement 1 point de résistance.");
                 return;
             }
-            case PERLE -> System.out.println("Vous avez trouvé une perle (5PO) dans le corps de " + this.nom + " !");
+            case PERLE -> System.out.println("Vous avez trouvé une perle (5PO) dans le corps " + text_de() + " !");
             case DETESTE -> {
-                System.out.println("Vous avez tué un(e) " + this.nom + ", haïe des dieux, gloire à vous !");
+                System.out.println("Vous avez tué " + nomme(true) + ", haïe des dieux, gloire à vous !");
                 System.out.println("Vous (tous ceux présent) gagnez définitivement 1 point de résistance.");
             }
             case FOLIE_MEURTRIERE -> {
-                System.out.println("\nLe corp de " + this.nom + " s'agite !");
-                System.out.println(this.nom + " vous (pl) inflige" + this.attaque + " dommages.\n");
+                System.out.println("\nLe corp " + text_de() + " s'agite !");
+                System.out.println(nomme(false) + " vous (pl) inflige" + getAtk() + " dommages.\n");
             }
             case DUO_PASSED -> {
-                competence = Competence.AUCUNE;
-                System.out.println("Vous vous dirigez vers le deuxième " + nom);
+                supprime_competence();
+                System.out.println("Vous vous dirigez vers le deuxième " + getNom());
                 drop();
             }
         }
@@ -548,11 +896,11 @@ public class Monstre {
         if (quantite <= 0) {
             return;
         }
-        int degat = applique_competence_tir(max(quantite - this.armure, 1));
-        if (degat > 0) {
+        int degas = applique_competence_tir(max(quantite - getArmure(), 1));
+        if (degas > 0) {
             Output.JouerSonTir();
         }
-        subit_dommage(degat, false);
+        subit_dommage(degas, false);
     }
     
     /**
@@ -575,57 +923,64 @@ public class Monstre {
      * @return les dégas subits par le monstre
      */
     private int applique_competence_tir(int degas) {
-        
-        switch (competence) {
+        switch (getCompetence()) {
             case FRAGILE -> degas += 1;
             case ESPRIT -> {
-                System.out.println("Votre projectile passe au travers de " + nom + " sans l'affecter.");
-                competence = Competence.AUCUNE;
+                System.out.println("Votre projectile passe au travers " + text_de() + " sans l'affecter.");
+                supprime_competence();
                 degas = 0;
             }
-            case RAPIDE -> {
-                System.out.println(nom + " esquive partiellement votre projectile.");
+            case RAPIDE, CAUCASE, CAUCASE_OFF -> {
+                System.out.println(nomme(false) + " esquive partiellement votre projectile.");
                 degas = Main.corriger(degas * 0.5f);
             }
             case FLAMME_DEFENSE -> {
-                System.out.println("Votre projectile brûle en s'approchant de " + nom + ".");
-                competence = Competence.AUCUNE;
+                System.out.println("Votre projectile brûle en s'approchant " + text_de() + ".");
+                supprime_competence();
                 degas = 0;
             }
             case ESQUIVE -> {
                 if (rand.nextInt(10) == 0) {
-                    System.out.println(nom + " esquive votre projectile.");
+                    System.out.println(nomme(false) + " esquive votre projectile.");
                     degas = 0;
                 }
             }
             case FURTIF -> {
-                System.out.println("Vous ne parvenez pas à repérer où se trouve " + nom + ".");
-                competence = Competence.AUCUNE;
+                System.out.println("Vous ne parvenez pas à repérer où se trouve " + nomme(false) + ".");
+                supprime_competence();
                 degas = 0;
             }
             case PEAU_DURE, GOLEM_PIERRE, CHRONOS -> {
-                System.out.println("La peau dure de " + nom + " amortie une partie de l'impact");
+                System.out.println("La peau dure " + text_de() + " amortie une partie de l'impact");
                 degas = Main.corriger(degas * 0.85f);
             }
             case CHANT_SIRENE -> {
-                System.out.println("Le chant de " + nom + " perturbe le tir.");
-                if (Input.D8() <= 2) {
-                    degas = degas > 4 ? degas - 4 : 0;
+                System.out.println("Le chant " + text_de() + " perturbe le tir.");
+                if (Input.D8() <= 3) {
+                    degas = degas - 4;
                 }
             }
             case PEAU_DACIER, GOLEM_ACIER, GOLEM_FER -> {
-                System.out.println("La peau extrêmement dure de " + this.nom + " absorbe l'essentiel de l'impact.");
+                System.out.println("La peau extrêmement dure " + text_de() + " absorbe l'essentiel de l'impact.");
                 degas = Main.corriger(degas * 0.05f);
             }
             case INTANGIBLE -> {
-                System.out.println("Votre projectile passe au travers de " + nom + " sans l'affecter.");
+                System.out.println("Votre projectile passe au travers " + text_de() + " sans l'affecter.");
                 degas = 0;
             }
             case GOLEM_MITHRIL -> {
-                System.out.println("La peau particulièrement solide de " + this.nom + " réduit l'impact.");
+                System.out.println("La peau particulièrement solide " + text_de() + " réduit l'impact.");
                 degas = Main.corriger(degas * 0.75F);
             }
-            case BRUME -> degas = max(degas - 2, 0);
+            case BRUME, EMPOUSA -> degas = max(degas - 2, 0);
+            case PYTHON -> {
+                System.out.println(nomme(false) + " avait anticipé votre projectile et l'esquive partiellement.");
+                if(rand.nextBoolean()){
+                    degas = Main.corriger(degas * 0.33F);
+                } else {
+                    degas = Main.corriger(degas * 0.66F);
+                }
+            }
         }
         return degas;
     }
@@ -670,54 +1025,67 @@ public class Monstre {
      * @return les dégas subits par le monstre
      */
     private int applique_competence_magie(int degas) {
-        switch (competence) {
+        switch (getCompetence()) {
             case FRAGILE -> degas += 1;
             case ESPRIT -> {
-                System.out.println("Votre magie passe au travers de " + nom + " sans l'affecter.");
-                competence = Competence.AUCUNE;
+                System.out.println("Votre magie passe au travers " + text_de() + " sans l'affecter.");
+                supprime_competence();
                 degas = 0;
             }
             case SPELL_IMMUNE, CHRONOS -> {
-                System.out.println("Votre magie n'a aucun effet sur " + nom + ".");
+                System.out.println("Votre magie n'a aucun effet sur " + nomme(false) + ".");
                 degas = 0;
             }
             case PARTIELLE_SPELL_IMMUNIE -> {
-                System.out.println("Votre magie semble sans effet sur " + nom + ".");
-                competence = Competence.AUCUNE;
+                System.out.println("Votre magie semble sans effet sur " + nomme(false) + ".");
+                supprime_competence();
                 degas = 0;
             }
             case FURTIF -> {
-                System.out.println("Vous ne parvenez plus à identifier où se trouve " + nom + " et renoncez à " +
+                System.out.println("Vous ne parvenez plus à identifier où se trouve " + nomme(false) + " et renoncez à " +
                         "utiliser votre magie.");
-                competence = Competence.AUCUNE;
+                supprime_competence();
                 degas = 0;
             }
             case PEAU_MAGIQUE -> {
-                System.out.println("La peau de " + nom + " diminue l'impact du sort.");
+                System.out.println("La peau " + text_de() + " diminue l'impact du sort.");
                 degas = Main.corriger(degas * 0.5f);
             }
             case CUIR_MAGIQUE -> {
-                System.out.println("Le cuir de " + nom + " absorbe l'essentiel de l'impact du sort.");
+                System.out.println("Le cuir " + text_de() + " absorbe l'essentiel de l'impact du sort.");
                 degas = Main.corriger(degas * 0.1f);
             }
             case CHANT_SIRENE -> {
-                System.out.println("Le chant de " + nom + " perturbe le lancement du sort.");
+                System.out.println("Le chant " + text_de() + " perturbe le lancement du sort.");
                 if (Input.D8() <= 3) {
                     degas = degas > 4 ? degas - 4 : 0;
                 }
             }
             case PEAU_DACIER -> {
-                System.out.println("La peau extrêmement dure de " + this.nom + " absorbe une partie de l'impact du " + "sort.");
+                System.out.println("La peau extrêmement dure " + text_de() + " absorbe une partie de l'impact du sort.");
                 degas = Main.corriger(degas * 0.5f);
             }
             case GOLEM_PIERRE, GOLEM_FER, GOLEM_ACIER -> {
-                System.out.println("La constitution particulière de " + this.nom + " diminue légèrement l'impact du " + "sort.");
+                System.out.println("La constitution particulière " + text_de() + " diminue légèrement l'impact du sort.");
                 degas = Main.corriger(degas * 0.9F);
             }
             case GOLEM_MITHRIL -> {
-                System.out.println("La matériaux particulier composant " + this.nom + " réduise immensément l'impact "
+                System.out.println("La matériaux particuliers composant " + nomme(false) + " réduisent immensément l'impact "
                         + "du sort.");
                 degas = Main.corriger(degas * 0.05f);
+            }
+            case CAUCASE, CAUCASE_OFF -> {
+                System.out.println(nomme(false) + " esquive très partiellement votre sort.");
+                degas = Main.corriger(degas * 0.8f);
+                
+            }
+            case PYTHON -> {
+                System.out.println(nomme(false) + " avait anticipé votre sort et l'esquive partiellement.");
+                if(rand.nextBoolean()){
+                    degas = Main.corriger(degas * 0.33F);
+                } else {
+                    degas = Main.corriger(degas * 0.66F);
+                }
             }
         }
         return degas;
@@ -730,30 +1098,31 @@ public class Monstre {
     public boolean check_mort(Position pos) throws IOException {
         if (est_mort()) {
             Output.jouerSonMonstreMort();
-            switch (competence) {
+            switch (getCompetence()) {
                 case ILLU_AURAI, ILLU_CYCLOPE, ILLU_DULLA, ILLU_GOLEM, ILLU_ROCHE, ILLU_SIRENE, ILLU_TRITON,
                      ILLU_VENTI -> {
-                    System.out.println(this.nom + " se dissipe ! Tout celà n'était qu'une illusion !");
+                    System.out.println(nomme(false) + " se dissipe ! Tout celà n'était qu'une illusion !");
                     this.nom = "illusioniste";
-                    this.competence = Competence.AUCUNE;
+                    supprime_competence();
+                    this.genre = Genre.MASCULIN;
                 }
                 case DUO -> {
-                    System.out.println("Un des " + this.nom + " est mort(e).");
+                    System.out.println("Un des " + getNom() + " est mort(e).");
                     this.competence = Competence.DUO_PASSED;
-                    this.vie = this.vie_base;
+                    soigne(1000);
                     return true;
                 }
-                default -> System.out.println(this.nom + " est mort(e).");
+                default -> System.out.println(nomme(false) + " est mort(e).");
             }
             drop();
-            etat += vie; //on retire les dégas en trop
+            alterEtat(getVie()); //on retire les dégas en trop
             Joueur.monstre_mort(this);
             
-            if (etat <= 0 || pos == Position.ENFERS || pos == Position.OLYMPE || pos == Position.ASCENDANT) {
+            if (getEtat() <= 0 || pos == Position.ENFERS || pos == Position.OLYMPE || pos == Position.ASCENDANT) {
                 return false;
             }
-            int value = (1 + (etat - 1) / 10);
-            System.out.println("Vous pouvez vendre le cadavre de " + nom + " pour " + value + " PO.");
+            int value = (1 + (getEtat() - 1) / 10);
+            System.out.println("Vous pouvez vendre le cadavre " + text_de() + " pour " + value + " PO.");
             Output.jouerSonOr(value);
             return false;
         }
@@ -762,22 +1131,21 @@ public class Monstre {
     
     
     /**
-     * Inflige des dommages au monstre
+     * Inflige des dommages via attaque classique au monstre
      * @param quantite la puissance d'attaque
-     * @implNote Considère l'armure et la compétence du monstre
-     * gère le cas de mort du monstre
      */
     public void dommage(int quantite) {
         if (quantite <= 0) {
             return;
         }
-        int degas = applique_competence_dommage(max(quantite - this.armure, 1));
-        if (degas > 0) {
-            Output.JouerSonDommage();
+        int degas = applique_competence_dommage(max(quantite - getArmure(), 1));
+        if (degas <= 0) {
+            return;
         }
+        Output.JouerSonDommage();
         subit_dommage(degas, false);
         if (!est_mort()) {
-            applique_competence_post_dommage();
+            applique_competence_post_dommage_classique();
         }
     }
     
@@ -788,6 +1156,9 @@ public class Monstre {
      *                 gère le cas de mort du monstre
      */
     public void dommage(int quantite, float mult) {
+        if(quantite <= 0 || mult <= 0) {
+            return;
+        }
         dommage(Main.corriger(quantite * mult));
     }
     
@@ -797,56 +1168,57 @@ public class Monstre {
      * @return les degas subits par le monstre
      */
     private int applique_competence_dommage(int degas) {
-        switch (competence) {
+        switch (getCompetence()) {
             case FRAGILE -> degas += 1;
-            case VOL -> {
-                System.out.println("L'attaque n'atteint pas " + this.nom + ".");
-                competence = Competence.VOL_OFF;
-                System.out.println(this.nom + " se pose à terre.");
-                degas = 0;
-            }
-            case VOLAGE -> {
-                System.out.println("L'attaque n'atteint pas " + this.nom + ".");
-                competence = Competence.AUCUNE;
-                System.out.println(this.nom + " se pose à terre.");
+            case VOL, VOLAGE, CAUCASE -> {
+                Texte.esquive_vol(nomme(false));
+                cycle_vol();
                 degas = 0;
             }
             case ESPRIT -> {
-                System.out.println("Votre attaque traverse " + nom + " sans l'affecter.");
-                competence = Competence.AUCUNE;
+                System.out.println("Votre attaque traverse " + nomme(false) + " sans l'affecter.");
+                supprime_competence();
                 degas = 0;
             }
             case ESQUIVE -> {
                 if (rand.nextInt(15) == 0) {
-                    System.out.println(nom + " esquive votre attaque.");
+                    System.out.println(nomme(false) + " esquive votre attaque.");
                     degas = 0;
                 }
             }
             case FURTIF -> {
-                System.out.println("Vous ne parvenez plus à identifier où se trouve " + nom + ".");
-                competence = Competence.AUCUNE;
+                System.out.println("Vous ne parvenez plus à identifier où se trouve " + nomme(false) + ".");
+                supprime_competence();
                 degas = 0;
             }
             case PEAU_DURE, GOLEM_PIERRE, GOLEM_FER, CHRONOS -> {
-                System.out.println("La peau dure de " + this.nom + " amortie une partie de l'assaut");
+                System.out.println("La peau dure " + text_de() + " amortie une partie de l'assaut");
                 degas = Main.corriger((float) degas * 0.9F);
             }
             case CHANT_SIRENE -> {
-                System.out.println("Le chant de " + nom + " perturbe l'attaque'.");
+                System.out.println("Le chant " + text_de() + " perturbe l'attaque'.");
                 if (Input.D8() <= 1) {
                     degas = degas > 4 ? degas - 4 : 0;
                 }
             }
             case PEAU_DACIER, GOLEM_ACIER -> {
-                System.out.println("La peau extrêmement dure de " + this.nom + " absorbe l'essentiel de l'assaut.");
+                System.out.println("La peau extrêmement dure " + text_de() + " absorbe l'essentiel de l'assaut.");
                 degas = Main.corriger(degas * 0.1f);
             }
             case GOLEM_MITHRIL -> {
-                System.out.println("La peau particulièrement solide de " + this.nom + " absorbe une grande partie de "
+                System.out.println("La peau particulièrement solide " + text_de() + " absorbe une grande partie de "
                         + "l'assaut.");
                 degas = Main.corriger(degas * 0.5f);
             }
-            case BRUME -> degas -= 1;
+            case BRUME, EMPOUSA -> degas -= 1;
+            case PYTHON -> {
+                System.out.println(nomme(false) + " avait prophétisé votre assaut et l'esquive partiellement.");
+                if(rand.nextBoolean()){
+                    degas = Main.corriger(degas * 0.40F);
+                } else {
+                    degas = Main.corriger(degas * 0.60F);
+                }
+            }
         }
         return degas;
     }
@@ -854,19 +1226,26 @@ public class Monstre {
     /**
      * Applique la compétence après avoir subi des dommages classiques
      */
-    private void applique_competence_post_dommage() {
-        switch (competence) {
-            case ARMURE_GLACE -> System.out.println("L'armure de glace de " + this.nom + " vous inflige 1 dommage.");
-            case ARMURE_GLACE2 -> System.out.println("L'armure de glace de " + this.nom + " vous inflige 3 dommages.");
-            case ARMURE_FEU -> System.out.println("Les flammes de " + nom + " vous inflige 1 dommage.");
-            case ARMURE_FOUDRE -> System.out.println("La foudre entourant " + nom + " vous inflige 3 dommages.");
+    private void applique_competence_post_dommage_classique() {
+        switch (getCompetence()) {
+            case ARMURE_GLACE -> System.out.println("L'armure de glace " + text_de() + " vous inflige 1 dommage.");
+            case ARMURE_GLACE2 -> System.out.println("L'armure de glace " + text_de() + " vous inflige 3 dommages.");
+            case ARMURE_FEU -> System.out.println("Les flammes " + text_de() + " vous inflige 1 dommage.");
+            case ARMURE_FOUDRE ->
+                    System.out.println("La foudre entourant " + nomme(false) + " vous inflige 3 dommages.");
             case ILLU_AURAI, ILLU_CYCLOPE, ILLU_DULLA, ILLU_GOLEM, ILLU_ROCHE, ILLU_SIRENE, ILLU_TRITON, ILLU_VENTI -> {
-                if (this.vie <= 4) {
+                if (getVie() <= 4) {
                     this.nom = "illusioniste";
-                    System.out.println(this.nom + " se révèle ! Tout celà n'était qu'une illusion !");
-                    this.competence = Competence.AUCUNE;
+                    this.genre = Genre.MASCULIN;
+                    System.out.println(nomme(false) + " se révèle ! Tout celà n'était qu'une illusion !");
+                    supprime_competence();
                 }
             }
+            case MORMO -> {
+                System.out.println("Frapper " + nomme(false) + " provoque en vous une grande terreur !");
+                System.out.println("Vous perdez temporairement 1 point d'attaque.");
+            }
+            case CAUCASE_OFF -> cycle_vol();
         }
     }
     
@@ -889,24 +1268,25 @@ public class Monstre {
         if (est_mort()) {
             return;
         }
-        switch (competence) {
+        if(est_nomme() && !this.etourdi){
+            System.out.println(nomme(false) + " lutte pour ne pas perdre connaissance.");
+            do_etourdi();
+            return;
+        }
+        switch (getCompetence()) {
             case GOLEM_ACIER, GOLEM_MITHRIL -> {
-                System.out.println(nom + " n'a pas de conscience, et ne peut pas être assommé(e).");
+                System.out.println(nomme(false) + " n'a pas de conscience, et ne peut pas être assommé.");
                 return;
             }
             case GOLEM_PIERRE, GOLEM_FER -> {
-                System.out.println(nom + " n'a pas de conscience, et ne peut pas être assommé(e).");
-                System.out.println(nom + " cependant, est déséquilibré(e).");
+                System.out.println(nomme(false) + " n'a pas de conscience, et ne peut pas être assommé.");
+                System.out.println(nomme(false) + " cependant, est déséquilibré.");
                 do_etourdi();
-                return;
-            }
-            case CHRONOS -> {
-                System.out.println(nom + " n'a pas l'air prêt de perdre connaissance.");
                 return;
             }
         }
         this.assomme = true;
-        System.out.println(this.nom + " est assommé(e).");
+        System.out.println(nomme(false) + " est assommé(e).");
     }
     
     /**
@@ -916,28 +1296,30 @@ public class Monstre {
         if (est_mort()) {
             return;
         }
-        switch (competence) {
+        switch (getCompetence()) {
             case GOLEM_ACIER, GOLEM_MITHRIL -> {
-                System.out.println(nom + " est trop solide pour être étourdi(e).");
+                System.out.println(nomme(false) + " est trop solide pour être étourdi.");
                 return;
             }
             case GOLEM_PIERRE, GOLEM_FER -> {
                 if (rand.nextBoolean()) {
-                    System.out.println(nom + " laisse tomber des fragments de son corps pour ne pas être désavantagé" + "(e).");
+                    System.out.println(nomme(false) + " laisse tomber des fragments de son corps pour ne pas être désavantagé.");
                     subit_dommage(rand.nextInt(5) + 1, true);
                     if (est_mort()) {
                         return;
                     }
                 }
             }
-            case CHRONOS -> {
-                System.out.println(nom + " n'a pas l'air prêt de perdre connaissance.");
-                return;
+            case CHRONOS, CHARYBDE -> {
+                if(rand.nextBoolean()) {
+                    System.out.println(nomme(false) + " n'a pas l'air prêt de perdre connaissance.");
+                    return;
+                }
             }
         }
         if (!assomme) {
             this.etourdi = true;
-            System.out.println(this.nom + " est étourdi(e).");
+            System.out.println(nomme(false) + " est étourdi(e).");
         }
     }
     
@@ -950,7 +1332,7 @@ public class Monstre {
             return;
         }
         this.assomme = false;
-        System.out.print(this.nom + " se réveille ");
+        System.out.print(nomme(false) + " se réveille ");
         Random rand = new Random();
         if (rand.nextBoolean()) {
             this.etourdi = true;
@@ -969,7 +1351,7 @@ public class Monstre {
             return;
         }
         this.etourdi = false;
-        System.out.println(this.nom + " n'est plus étourdi(e).");
+        System.out.println(nomme(false) + " n'est plus étourdi(e).");
     }
     
     /**
@@ -977,17 +1359,24 @@ public class Monstre {
      * @return si le monstre est mort
      */
     public boolean est_mort() {
-        if (est_pantin()) {
+        if(getVie() > 0){
             return false;
         }
-        if (competence == Competence.REVENANT) {
-            System.out.println("Une sombre brûme s'abat sur vous, vous perdez (tous) 1 point d'attaque pour la durée "
-                    + "du combat.");
-            System.out.println(this.nom + " se relève !");
-            this.vie = rand.nextInt(this.vie_max - 5) + 5;
-            this.competence = Competence.AUCUNE;
-        }
-        return vie <= 0;
+        return switch (getCompetence()) {
+            case DUMMY -> false;
+            case REVENANT -> {
+                System.out.println("Une sombre brûme s'abat sur vous, vous perdez (tous) 1 point d'attaque pour la durée " + "du combat.");
+                System.out.println(nomme(false) + " se relève !");
+                this.vie = rand.nextInt(getVieMax() - 5) + 5;
+                supprime_competence();
+                yield false;
+            }
+            case SCYLLA2, SCYLLA3, SCYLLA4, SCYLLA5, SCYLLA6 -> {
+                scylla_decapitation();
+                yield false;
+            }
+            default -> true;
+        };
     }
     
     /**
@@ -995,7 +1384,7 @@ public class Monstre {
      * @return true s'il est vaincu, false sinon
      */
     public boolean est_vaincu() {
-        return est_mort() || this.vie_max < 0;
+        return est_mort() || getVieMax() < 0;
     }
     
     /**
@@ -1004,27 +1393,31 @@ public class Monstre {
      * @throws IOException jsp mais sans ça, ça ne marche pas
      * @implNote On considère que le joueur qui utilise encaisser est en première ligne
      */
-    public void encaisser() throws IOException {
+    public void encaisser(Joueur j) throws IOException {
+        int attaque = j.puissance_attaque();
+        if (attaque <= 0) {
+            return;
+        }
         float modif;
         switch (Input.D6()) {
             case 1:
-                encaissement = 0.4F;
+                boostEncaissement(0.4F);
                 System.out.println("Vous vous préparer à encaisser en oubliant d'attaquer !");
                 modif = 0;
                 break;
             case 2, 3, 4:
                 modif = 0.1f;
-                encaissement = 0.4F;
+                boostEncaissement(0.4F);
                 System.out.println("Vous vous préparez à encaisser.");
                 break;
             case 5:
                 modif = 0.5f;
-                encaissement = 0.55F;
+                boostEncaissement(0.55F);
                 System.out.println("Vous vous préparez à encaisser.");
                 break;
             case 6, 7:
                 modif = 0.5f;
-                encaissement = 0.7F;
+                boostEncaissement(0.7F);
                 System.out.println("Vous vous préparez fermement à encaisser, solide comme un roc.");
                 break;
             default:
@@ -1032,10 +1425,6 @@ public class Monstre {
                 modif = 1;
         }
         if (modif > 0) {
-            int attaque = Input.atk();
-            if (attaque <= 0) {
-                return;
-            }
             attaque = Main.corriger(attaque * modif);
             dommage(attaque);
         }
@@ -1045,23 +1434,23 @@ public class Monstre {
         float modif;
         switch (Input.D4()) {
             case 1:
-                modif = 0;
-                encaissement = 0.3F;
+                modif = 0f;
+                boostEncaissement(0.3F);
                 System.out.println("Votre familier se prépare à encaisser en oubliant d'attaquer !");
                 break;
             case 2:
                 modif = 0.1f;
-                encaissement = 0.3F;
+                boostEncaissement(0.3F);
                 System.out.println("Votre familier se prépare à encaisser.");
                 break;
             case 3:
                 modif = 0.2f;
-                encaissement = 0.5F;
+                boostEncaissement(0.5F);
                 System.out.println("Votre familier se prépare à encaisser.");
                 break;
             case 4, 5:
                 modif = 0.4f;
-                encaissement = 0.7F;
+                boostEncaissement(0.7F);
                 System.out.println("Votre familier se prépare solidement à encaisser.");
                 break;
             default:
@@ -1078,14 +1467,6 @@ public class Monstre {
         }
     }
     
-    
-    /**
-     * Remet à zéro l'encaissement de l'ennemi
-     */
-    public void reset_encaisser() {
-        encaissement = 0;
-    }
-    
     /**
      * Renvoie la quantité de soin appliqué par la compétence "guérison"
      * @param premiere_ligne si le lanceur ou la cible est en première ligne
@@ -1098,28 +1479,28 @@ public class Monstre {
                 System.out.println("Vous soignez la cible de 9.");
                 if (premiere_ligne) {
                     System.out.println("Vous vous exposez légèrement.");
-                    part_soin += 0.1F;
+                    add_part_soin(0.1f);
                 }
             }
             case 5 -> {
                 System.out.println("Vous soignez la cible de 7.");
                 if (premiere_ligne) {
                     System.out.println("Vous vous exposez légèrement.");
-                    part_soin += 0.1F;
+                    add_part_soin(0.1f);
                 }
             }
             case 4, 3, 2 -> {
                 System.out.println("Vous soignez la cible de " + (2 + soin) + ".");
                 if (premiere_ligne) {
                     System.out.println("Vous vous exposez.");
-                    part_soin += 0.5F;
+                    add_part_soin(0.5f);
                 }
             }
             case 1 -> {
                 System.out.println("Vous soignez la cible de 2.");
                 if (premiere_ligne) {
                     System.out.println("Vous vous exposez lourdement.");
-                    part_soin += 1F;
+                    add_part_soin(1f);
                 }
             }
             default -> {
@@ -1136,54 +1517,54 @@ public class Monstre {
      * @throws IOException jsp mais sans ça, ça ne marche pas
      */
     public Boolean domestiquer(int bonus) throws IOException {
-        int ratio = (this.vie * 100 / this.vie_max);
-        switch (competence) {
+        if(est_nomme()) {
+            System.out.println(nomme(false) + " est une force de la nature, une puissance indomptable.");
+            return false;
+        }
+        int ratio = (getVie() * 100 / getVieMax());
+        switch (getCompetence()) {
             case COLERE, VIOLENT -> {
-                if (Input.D8() + bonus <= this.vie) {
-                    System.out.println(this.nom + " réagit très agressivement.");
+                if (Input.D8() + bonus <= getVie()) {
+                    System.out.println(nomme(false) + " réagit très agressivement.");
                     return false;
                 }
             }
             case SAUVAGE -> {
-                System.out.println(this.nom + " est trop sauvage pour être domestiqué.");
-                return false;
-            }
-            case PRUDENT, SUSPICIEUX, MEFIANT, CHRONOS -> {  //monstre nommé
-                System.out.println(this.nom + " est une force de la nature, une puissance indomptable.");
+                System.out.println(nomme(false) + " est trop sauvage pour être domestiqué.");
                 return false;
             }
             case GOLEM_PIERRE, GOLEM_FER -> {
-                if (Input.D8() <= this.vie * 2) {
-                    System.out.println(this.nom + " n'est pas très réceptif à votre tentative.");
+                if (Input.D8() <= getVie() * 2) {
+                    System.out.println(nomme(false) + " n'est pas très réceptif à votre tentative.");
                     return false;
                 }
             }
             case GOLEM_ACIER -> {
-                if (Input.D6() <= this.vie * 2) {
-                    System.out.println(this.nom + " n'est pas très réceptif à votre tentative.");
+                if (Input.D6() * 2 <= getVie()) {
+                    System.out.println(nomme(false) + " n'est pas très réceptif à votre tentative.");
                     return false;
                 }
             }
             case GOLEM_MITHRIL -> {
-                if (Input.D8() <= this.vie * 2) {
-                    System.out.println(this.nom + " ne remarque même pas votre présence.");
+                if (Input.D8() * 2 <= getVie()) {
+                    System.out.println(nomme(false) + " ne remarque même pas votre présence.");
                     return false;
                 } else {
-                    System.out.println(this.nom + " vous remarque.");
-                    if (Input.D20() <= this.vie) {
-                        System.out.println(this.nom + " ne vous accorde aucune importance.");
+                    System.out.println(nomme(false) + " vous remarque.");
+                    if (Input.D20() <= getVie()) {
+                        System.out.println(nomme(false) + " ne vous accorde aucune importance.");
                         return false;
                     } else {
-                        System.out.println(this.nom + " vous accorde son attention.");
+                        System.out.println(nomme(false) + " vous accorde son attention.");
                     }
                 }
             }
             case ILLU_AURAI, ILLU_CYCLOPE, ILLU_DULLA, ILLU_GOLEM, ILLU_ROCHE, ILLU_SIRENE, ILLU_TRITON, ILLU_VENTI -> {
-                System.out.println(this.nom + " réagit très étrangement à votre tentative.");
+                System.out.println(nomme(false) + " réagit très étrangement à votre tentative.");
                 return false;
             }
             case DUMMY -> {
-                System.out.println("Simulation d'une interraction avec un monstre aléatoire.");
+                System.out.println("Simulation d'une intéraction avec un monstre aléatoire.");
                 int pvm, pv;
                 pvm = rand.nextInt(41) + 10; //10~50
                 pv = rand.nextInt(pvm - 9) + 5; //5~pvm-5
@@ -1192,33 +1573,33 @@ public class Monstre {
             }
         }
         if (ratio >= 85) {
-            System.out.println(this.nom + " réagit agressivement.");
+            System.out.println(nomme(false) + " réagit agressivement.");
             return false;
         }
         Random rand = new Random();
         if (ratio >= 75 && rand.nextInt(100) > ratio) {
-            System.out.println(this.nom + " semble intrigué(e) par votre comportement.");
+            System.out.println(nomme(false) + " semble intrigué(e) par votre comportement.");
             ratio -= 100 - ratio;
         }
         if (ratio >= 50 && rand.nextInt(100) > ratio) {
             int temp = Input.D4();
             if (temp > 2) {
-                System.out.println(this.nom + " semble réagir positivement à votre approche.");
+                System.out.println(nomme(false) + " semble réagir positivement à votre approche.");
                 ratio = min(50, ratio - 10 * temp);
             } else {
                 
-                System.out.println(this.nom + " réagit agressivement.");
+                System.out.println(nomme(false) + " réagit agressivement.");
                 return false;
             }
         }
         if (ratio - Input.D6() * 10 < 0) {
-            System.out.println(this.nom + " vous accorde sa confiance.");
+            System.out.println(nomme(false) + " vous accorde sa confiance.");
             if (!est_pantin()) {
                 this.vie_max = -1; //valeur spéciale pour indiquer la défaite du monstre
             }
             return true;
         }
-        System.out.println(this.nom + " réagit agressivement.");
+        System.out.println(nomme(false) + " réagit agressivement.");
         return false;
     }
     
@@ -1227,96 +1608,127 @@ public class Monstre {
      * Demande aux joueurs les informations nécessaires
      * @throws IOException jsp mais sans ça, ça ne marche pas
      */
-    public void assommer(float bonus) throws IOException {
+    public void assommer(Joueur j) throws IOException {
         // compétence ennemie
         switch (getCompetence()) {
-            case VOL -> {
-                System.out.println("L'attaque n'atteint pas " + nom + ".");
-                competence = Competence.VOL_OFF;
-                System.out.println(nom + " se pose à terre.");
-                return;
-            }
-            case VOLAGE -> {
-                System.out.println("L'attaque n'atteint pas " + nom + ".");
-                competence = Competence.AUCUNE;
-                System.out.println(nom + " se pose à terre.");
+            case VOL, VOLAGE, CAUCASE -> {
+                Texte.esquive_vol(nomme(false));
+                cycle_vol();
                 return;
             }
             case FURTIF -> {
-                System.out.println("Vous ne parvenez plus à identifier où se trouve " + nom + " et renoncez à " +
+                System.out.println("Vous ne parvenez plus à identifier où se trouve " + nomme(false) + " et renoncez à " +
                         "attaquer.");
-                competence = Competence.AUCUNE;
+                supprime_competence();
                 return;
-            }
-            default -> {
             }
             
         }
+        
+        int attaque = j.puissance_attaque();
+        if(attaque <= 0){
+            return;
+        }
+        
         //action
-        int attaque = Input.atk();
-        int jet = Input.D6() + (int) bonus;
-        if (jet > 7) {
+        float multi;
+        int bonus = Main.corriger(j.getBerserk(), 0);
+        int jet;
+        if(bonus < 6){
+            jet = Input.D6() + bonus;
+            if (jet > 7) {
+                jet = 7;
+            }
+        } else {
             jet = 7;
         }
         switch (jet) {
             case 1:
                 System.out.println("Vous manquez votre cible.");
-                attaque = 0;
+                multi = 0f;
                 break;
             case 2:
                 System.out.println("Vous frappez de justesse votre cible, au moins, vous l'avez touchée.");
-                attaque = 0;
+                multi = 0.1f;
                 affecte();
                 break;
             case 3, 4:
-                attaque = Main.corriger((float) attaque / 2);
+                multi = 0.5f;
                 affecte();
                 break;
             case 5:
-                attaque = Main.corriger((float) attaque / 2);
+                multi = 0.5f;
                 do_assomme();
                 break;
             case 6:
+                multi = 1f;
                 System.out.println("Vous frappez avec force !");
                 do_assomme();
                 break;
             case 7:
                 System.out.println("Vous frappez à vous en blesser les bras !");
                 if (rand.nextBoolean()) {
-                    System.out.println("Vous subissez 1 point de dommage");
+                    System.out.println("Vous subissez 1 point de dommage.");
                 }
                 do_assomme();
-                attaque = Main.corriger(attaque * bonus);
-            
+                multi = 1f + bonus;
+                break;
             default:
                 System.out.println("Le résultat n'a pas été comprit, attaque classique appliquée.");
+                multi = 1f;
         }
+        if(multi <= 0) {
+            return;
+        }
+        attaque = Main.corriger(attaque * multi);
         dommage(attaque);
-    }
-    
-    /**
-     * Regarde si le monstre est nommé
-     * @return true s'il est nommé, false sinon
-     */
-    public boolean est_nomme() {
-        return (EnumSet.of(Competence.PRUDENT, Competence.MEFIANT, Competence.SUSPICIEUX, Competence.CHRONOS).contains(this.competence));
-    }
-    
-    /**
-     * Regarde si le monstre est un pantin d'entrainement
-     * @return True s'il s'agit d'un pantin d'entrainement, false sinon
-     */
-    public boolean est_pantin() {
-        return competence == Competence.DUMMY;
     }
     
     /**
      * Affiche les statistiques de base du monstre
      */
     public void presente_familier() {
-        System.out.println("nouveau familier : " + this.nom);
+        System.out.println("nouveau familier : " + getNom());
         System.out.println("attaque : " + this.attaque_base);
         System.out.println("vie : " + this.vie_base);
         System.out.println("armure : " + this.armure_base + "\n");
+    }
+    
+    public void gere_nomme() throws IOException {
+        if (est_nomme()) {
+            Output.dismiss_race(getNom());
+            Race.delete_monstre(getNom());
+            SaveManager.sauvegarder(true);
+        }
+    }
+    
+    public void presente_analyse(int jet) {
+        int pv, pvm, arm, atk;
+        Monstre modele = switch (getCompetence()) {
+            case ILLU_AURAI -> new Monstre(Race.aurai_malefique);
+            case ILLU_CYCLOPE -> new Monstre(Race.cyclope);
+            case ILLU_DULLA -> new Monstre(Race.dullahan);
+            case ILLU_GOLEM -> new Monstre(Race.golem);
+            case ILLU_ROCHE -> new Monstre(Race.roche_maudite);
+            case ILLU_SIRENE -> new Monstre(Race.sirene);
+            case ILLU_TRITON -> new Monstre(Race.triton);
+            case ILLU_VENTI -> new Monstre(Race.venti);
+            default -> this;
+        };
+        
+        pvm = modele.getVieMax();
+        pv = pvm - (getVieMax() - getVie());
+        arm = modele.getArmure();
+        atk = modele.getAtk();
+        
+        System.out.println(getNom() + " :");
+        if (est_pantin()) {
+            System.out.println("vie : " + (jet >= 5 ? "∞" : "???") + "/" + (jet >= 2 ? "∞" : "???"));
+        } else {
+            System.out.println("vie : " + (jet >= 5 ? pv : "???") + "/" + (jet >= 2 ? pvm : "???"));
+        }
+        System.out.println("attaque : " + (jet >= 3 ? atk : "???"));
+        System.out.println("armure : " + (jet >= 7 ? arm : "???"));
+        System.out.println();
     }
 }
