@@ -8,7 +8,7 @@ import main.Main;
 import java.io.IOException;
 
 public class Ranger extends Joueur {
-    Metier metier = Metier.RANGER;
+    final Metier metier = Metier.RANGER;
     
     public Ranger(String nom, Position position, int ob_f, Dieux parent, int xp, Grade grade) {
         super(nom, position, ob_f, parent, xp, grade);

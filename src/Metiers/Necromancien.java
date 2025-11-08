@@ -9,7 +9,7 @@ import Monstre.Monstre;
 import java.io.IOException;
 
 public class Necromancien extends Joueur {
-    Metier metier = Metier.NECROMANCIEN;
+    final Metier metier = Metier.NECROMANCIEN;
     private boolean a_maudit;
     private int nb_piece;
     private int nb_item;

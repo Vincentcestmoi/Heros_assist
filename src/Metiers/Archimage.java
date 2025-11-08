@@ -9,7 +9,7 @@ import main.Main;
 import java.io.IOException;
 
 public class Archimage extends Joueur {
-    Metier metier = Metier.ARCHIMAGE;
+    final Metier metier = Metier.ARCHIMAGE;
     int purge_cout;
     
     public Archimage(String nom, Position position, int ob_f, Dieux parent, int xp, Grade grade) {
