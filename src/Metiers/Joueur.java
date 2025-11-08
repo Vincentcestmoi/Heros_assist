@@ -1319,11 +1319,11 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
             case 1, 3, 5 -> {
                 text =
                 "Un monstre se trouve sur le chemin de %s, il ne semble pas encore l'avoir aperçu...".formatted(this.nom);
-                m = Lieu.true_monstre(pos, rand.nextBoolean());
+                m = Lieu.true_monstre(pos, rand.nextBoolean(), false);
                 attaquant = true;
             }
             case 2, 4 -> {
-                m = Lieu.true_monstre(pos, rand.nextBoolean());
+                m = Lieu.true_monstre(pos, rand.nextBoolean(), false);
                 text = "%s est attaqué par %s !".formatted(this.nom, m.nomme(true));
                 attaquant = false;
             }

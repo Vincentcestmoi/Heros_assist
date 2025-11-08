@@ -28,6 +28,7 @@ public class Main {
     static public int nbj;
     public static int Path = -1; //-1 = vide
     static public Joueur[] joueurs;
+    private static int j;
     
     public static class Version {
         //public static final String CURRENT_MAIN = "beta";
@@ -90,7 +91,7 @@ public class Main {
         while (run) {
             
             //tour de jeu
-            for (int j = 0; j < nbj && run; j++) {
+            for (j = 0; j < nbj && run; j++) {
                 int i = t[j];
                 MainGarde.checkMain();
                 Joueur joueur = joueurs[i];
@@ -111,32 +112,53 @@ public class Main {
                     case ATTENDRE -> System.out.println(joueur.getNom() + " passe son tour.");
                     case STAT -> {
                         joueur.presente_detail();
-                        i--;
+                        rejouer();
                     }
                     
                     // action caché
-                    case SUICIDE -> joueur.mort_def();
+                    case SUICIDE -> {
+                        joueur.mort_def();
+                        rejouer();
+                    }
                     case QUITTER -> run = false;
                     case FAMILIER_PLUS -> {
                         joueur.ajouter_familier();
-                        i -= 1; //n'utilise pas le tour
+                        rejouer();
                     }
                     case FAMILIER_MOINS -> {
                         joueur.perdre_familier();
-                        i -= 1;
+                        rejouer();
                     }
                     case ITEM_PLUS -> {
                         ajouter_item(choisir_joueur());
-                        i -= 1;
+                        rejouer();
                     }
                     case ITEM_MOINS -> {
                         retirer_item(choisir_joueur());
-                        i -= 1;
+                        rejouer();
                     }
-                    case RETOUR -> i = i == 0 ? nbj - 2 : i - 2;
+                    case RETOUR -> retour();
                 }
                 System.out.println();
             }
+        }
+    }
+    
+    /**
+     * Fait rejouer le joueur actif
+     */
+    private static void rejouer(){
+        j -= 1;
+    }
+    
+    /**
+     * Reviens au dernier joueur actif
+     */
+    private static void retour(){
+        if(j == 0){
+            j = nbj - 2;
+        } else {
+            j = j - 2;
         }
     }
     
@@ -566,7 +588,7 @@ public class Main {
     }
     
     static void expedition_olympe(int meneur) throws IOException {
-        Monstre monstre = Lieu.olympe();
+        Monstre monstre = Lieu.olympe(true);
         int jet = Input.D20() + joueurs[meneur].bonus_exploration();
         if (jet > 21) {
             jet = 21;

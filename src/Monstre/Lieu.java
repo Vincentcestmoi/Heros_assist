@@ -12,7 +12,7 @@ public class Lieu {
     
     static Random random = new Random();
     static int proba_inf = 5; // 5%
-    static int proba_sup = 95; // 4%
+    static int proba_sup = 96; // 4%
     
     /**
      * Recherche un monstre des enfers
@@ -20,10 +20,10 @@ public class Lieu {
      * @return un monstre
      */
     public static Monstre enfers() {
-        if (random.nextInt(100) > proba_sup) {
-            return true_prairie();
+        if (random.nextInt(100) >= proba_sup) {
+            return true_prairie(false);
         } else {
-            return true_enfers();
+            return true_enfers(true);
         }
     }
     
@@ -35,11 +35,11 @@ public class Lieu {
     public static Monstre prairie() {
         int tirage = random.nextInt(100);
         if (tirage < proba_inf) {
-            return true_enfers();
-        } else if (tirage > proba_sup) {
-            return true_vigne();
+            return true_enfers(false);
+        } else if (tirage >= proba_sup) {
+            return true_vigne(false);
         } else {
-            return true_prairie();
+            return true_prairie(false);
         }
     }
     
@@ -51,11 +51,11 @@ public class Lieu {
     public static Monstre vigne() {
         int tirage = random.nextInt(100);
         if (tirage < proba_inf) {
-            return true_prairie();
-        } else if (tirage > proba_sup) {
-            return true_temple();
+            return true_prairie(false);
+        } else if (tirage >= proba_sup) {
+            return true_temple(false);
         } else {
-            return true_vigne();
+            return true_vigne(true);
         }
     }
     
@@ -67,11 +67,11 @@ public class Lieu {
     public static Monstre temple() {
         int tirage = random.nextInt(100);
         if (tirage < proba_inf) {
-            return true_vigne();
-        } else if (tirage > proba_sup) {
-            return true_mer();
+            return true_vigne(false);
+        } else if (tirage >= proba_sup) {
+            return true_mer(false);
         } else {
-            return true_temple();
+            return true_temple(true);
         }
     }
     
@@ -83,11 +83,11 @@ public class Lieu {
     public static Monstre mer() {
         int tirage = random.nextInt(100);
         if (tirage < proba_inf) {
-            return true_temple();
-        } else if (tirage > proba_sup) {
-            return true_mont();
+            return true_temple(false);
+        } else if (tirage >= proba_sup) {
+            return true_mont(false);
         } else {
-            return true_mer();
+            return true_mer(true);
         }
     }
     
@@ -98,9 +98,9 @@ public class Lieu {
      */
     public static Monstre mont() {
         if (random.nextInt(100) < proba_inf) {
-            return true_mer();
+            return true_mer(false);
         } else {
-            return true_mont();
+            return true_mont(true);
         }
     }
     
@@ -108,56 +108,56 @@ public class Lieu {
      * Prélève un monstre dans les enfers
      * @return un monstre
      */
-    public static Monstre true_enfers() {
-        return get_monstre(Race.enfers);
+    public static Monstre true_enfers(boolean nomme_acceptes) {
+        return get_monstre(Race.enfers, nomme_acceptes);
     }
     
     /**
      * Prélève un monstre dans la prairie
      * @return un monstre
      */
-    public static Monstre true_prairie() {
-        return get_monstre(Race.prairie);
+    public static Monstre true_prairie(boolean nomme_acceptes) {
+        return get_monstre(Race.prairie, nomme_acceptes);
     }
     
     /**
      * Prélève un monstre dans la vigne
      * @return un monstre
      */
-    public static Monstre true_vigne() {
-        return get_monstre(Race.vigne);
+    public static Monstre true_vigne(boolean nomme_acceptes) {
+        return get_monstre(Race.vigne, nomme_acceptes);
     }
     
     /**
      * Prélève un monstre dans le temple
      * @return un monstre
      */
-    public static Monstre true_temple() {
-        return get_monstre(Race.temple);
+    public static Monstre true_temple(boolean nomme_acceptes) {
+        return get_monstre(Race.temple, nomme_acceptes);
     }
     
     /**
      * Prélève un monstre dans la mer
      * @return un monstre
      */
-    public static Monstre true_mer() {
-        return get_monstre(Race.mer);
+    public static Monstre true_mer(boolean nomme_acceptes) {
+        return get_monstre(Race.mer, nomme_acceptes);
     }
     
     /**
      * Prélève un monstre dans les monts
      * @return un monstre
      */
-    public static Monstre true_mont() {
-        return get_monstre(Race.mont);
+    public static Monstre true_mont(boolean nomme_acceptes) {
+        return get_monstre(Race.mont, nomme_acceptes);
     }
     
     /**
      * Prélève un monstre dans l'Olympe
      * @return un monstre
      */
-    public static Monstre olympe() {
-        return get_monstre(Race.olympe);
+    public static Monstre olympe(boolean nomme_acceptes) {
+        return get_monstre(Race.olympe, nomme_acceptes);
     }
     
     /**
@@ -165,14 +165,20 @@ public class Lieu {
      * @param list la liste des monstres potentiels
      * @return un monstre parmi la liste
      */
-    public static Monstre get_monstre(Race[] list) {
+    public static Monstre get_monstre(Race[] list, boolean nomme_acceptes) {
         int total = 0;
         for (Race r : list) {
-            total += r.get_proba();
+            if(nomme_acceptes || !r.est_nomme())
+            {
+                total += r.get_proba();
+            }
         }
         int t = random.nextInt(total);
         Utilitaire.LoopGuard garde = new Utilitaire.LoopGuard();
         for (Race race : list) {
+            if(race.est_nomme() && !nomme_acceptes){
+                continue;
+            }
             t -= race.get_proba();
             if (t <= 0) {
                 return new Monstre(race);
@@ -191,18 +197,18 @@ public class Lieu {
      * @param pos la position dont on veut le monstre
      * @return un Monstre
      */
-    public static Monstre true_monstre(Position pos) {
+    public static Monstre true_monstre(Position pos, boolean nomme_acceptes) {
         return switch (pos) {
-            case ENFERS -> true_enfers();
-            case PRAIRIE -> true_prairie();
-            case VIGNES -> true_vigne();
-            case TEMPLE -> true_temple();
-            case MER -> true_mer();
-            case MONTS -> true_mont();
-            case OLYMPE -> olympe();
+            case ENFERS -> true_enfers(nomme_acceptes);
+            case PRAIRIE -> true_prairie(nomme_acceptes);
+            case VIGNES -> true_vigne(nomme_acceptes);
+            case TEMPLE -> true_temple(nomme_acceptes);
+            case MER -> true_mer(nomme_acceptes);
+            case MONTS -> true_mont(nomme_acceptes);
+            case OLYMPE -> olympe(nomme_acceptes);
             case ASCENDANT -> {
                 System.out.println("ERROR : DONOT");
-                yield true_enfers();
+                yield true_enfers(nomme_acceptes);
             }
         };
     }
@@ -212,20 +218,20 @@ public class Lieu {
      * @param pos la position dont on veut le monstre
      * @return un Monstre
      */
-    public static Monstre true_monstre(Position pos, boolean next_pos) {
+    public static Monstre true_monstre(Position pos, boolean next_pos, boolean nomme_acceptes) {
         if (!next_pos) {
-            return true_monstre(pos);
+            return true_monstre(pos, nomme_acceptes);
         }
         return switch (pos) {
-            case ENFERS -> true_prairie();
-            case PRAIRIE -> true_vigne();
-            case VIGNES -> true_temple();
-            case TEMPLE -> true_mer();
-            case MER -> true_mont();
-            case MONTS, OLYMPE -> olympe();
+            case ENFERS -> true_prairie(nomme_acceptes);
+            case PRAIRIE -> true_vigne(nomme_acceptes);
+            case VIGNES -> true_temple(nomme_acceptes);
+            case TEMPLE -> true_mer(nomme_acceptes);
+            case MER -> true_mont(nomme_acceptes);
+            case MONTS, OLYMPE -> olympe(nomme_acceptes);
             case ASCENDANT -> {
                 System.out.println("ERROR : DONOT");
-                yield true_enfers();
+                yield true_enfers(nomme_acceptes);
             }
         };
     }
