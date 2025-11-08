@@ -69,12 +69,12 @@ public class Agareh {
      * @return une liste d'int correspondant aux niveaux {forge, archerie, armurerie, marchand_bouclier, styliste, bijouterie, mage, ecurie}
      */
     private int[] init_prairie() {
-        int forge = 1;
+        int forge = 0;
         int archerie = 1;
         int armurerie = 1;
-        int marchand_bouclier = 1;
+        int marchand_bouclier = 0;
         int styliste = 1;
-        int bijouterie = 0;
+        int bijouterie = 1;
         int mage = 0;
         int ecurie = 0;
         return new int[] {forge, archerie, armurerie, marchand_bouclier, styliste, bijouterie, mage, ecurie};
@@ -86,11 +86,11 @@ public class Agareh {
      */
     private int[] init_vigne() {
         int forge = 3;
-        int archerie = 1;
+        int archerie = 0;
         int armurerie = 2;
         int marchand_bouclier = 1;
-        int styliste = 1;
-        int bijouterie = 1;
+        int styliste = 0;
+        int bijouterie = 0;
         int mage = 0;
         int ecurie = 1;
         return new int[] {forge, archerie, armurerie, marchand_bouclier, styliste, bijouterie, mage, ecurie};
@@ -101,13 +101,13 @@ public class Agareh {
      * @return une liste d'int correspondant aux niveaux {forge, archerie, armurerie, marchand_bouclier, styliste, bijouterie, mage, ecurie}
      */
     private int[] init_temple() {
-        int forge = 1;
-        int archerie = 2;
-        int armurerie = 1;
-        int marchand_bouclier = 1;
+        int forge = 0;
+        int archerie = 3;
+        int armurerie = 0;
+        int marchand_bouclier = 2;
         int styliste = 2;
-        int bijouterie = 1;
-        int mage = 0;
+        int bijouterie = 0;
+        int mage = 1;
         int ecurie = 2;
         return new int[] {forge, archerie, armurerie, marchand_bouclier, styliste, bijouterie, mage, ecurie};
     }
@@ -117,11 +117,11 @@ public class Agareh {
      * @return une liste d'int correspondant aux niveaux {forge, archerie, armurerie, marchand_bouclier, styliste, bijouterie, mage, ecurie}
      */
     private int[] init_mer() {
-        int forge = 0;
+        int forge = 2;
         int archerie = 0;
         int armurerie = 3;
         int marchand_bouclier = 3;
-        int styliste = 1;
+        int styliste = 0;
         int bijouterie = 2;
         int mage = 0;
         int ecurie = 0;
@@ -133,11 +133,11 @@ public class Agareh {
      * @return une liste d'int correspondant aux niveaux {forge, archerie, armurerie, marchand_bouclier, styliste, bijouterie, mage, écurie}
      */
     private int[] init_mont() {
-        int forge = 1;
-        int archerie = 3;
-        int armurerie = 1;
-        int marchand_bouclier = 1;
-        int styliste = 0;
+        int forge = 0;
+        int archerie = 1;
+        int armurerie = 0;
+        int marchand_bouclier = 0;
+        int styliste = 3;
         int bijouterie = 0;
         int mage = 3;
         int ecurie = 2;
