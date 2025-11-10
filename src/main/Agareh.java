@@ -220,7 +220,7 @@ public class Agareh {
         for(int i = 0; i < grade; i++){
             System.out.printf("%d : %s\n", i, Main.texte_pos(Position.values()[i]));
         }
-        System.out.println("grade : annuler");
+        System.out.printf("%d : annuler\n", grade);
         
         int choix = Input.readInt();
         

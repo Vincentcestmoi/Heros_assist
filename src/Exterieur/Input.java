@@ -633,10 +633,10 @@ public class Input {
             if(Agareh.peut_promouvoir(joueur)){
                 text += "\n\tDemander une (pr)omotion de rang";
             }
-            text += "\n\t(v)endre des équipements\n\tvendre un (c)adavre\n\taller au (m)arché\n\t(f)rapper un mannequin";
+            text += "\n\t(v)endre des équipements\n\tvendre un (c)adavre\n\taller au (m)arché\n\t(f)rapper un mannequin\n\tDemander un (t)ransport";
             text += agareh.text_artisans();
         }
-        text += "\n\tDemander un (t)ransport\n\t(P)artir ?";
+        text += "\n\t(P)artir ?";
         System.out.println(text);
         String readed = read();
         switch (readed.toLowerCase()) {
