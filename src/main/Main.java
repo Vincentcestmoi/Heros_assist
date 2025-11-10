@@ -26,6 +26,7 @@ public class Main {
     public static int Path = -1; //-1 = vide
     static public Joueur[] joueurs;
     private static int j;
+    private static boolean va_agareh;
     
     public static class Version {
         //public static final String CURRENT_MAIN = "beta";
@@ -90,6 +91,7 @@ public class Main {
             //tour de jeu
             for (j = 0; j < nbj && run; j++) {
                 int i = t[j];
+                va_agareh = true;
                 MainGarde.checkMain();
                 Joueur joueur = joueurs[i];
                 System.out.println(joueur.getNom() + " c'est votre tour, vous êtes " + texte_pos(joueur.getPosition()) + ".");
@@ -137,7 +139,7 @@ public class Main {
                         continue; //évite l'Agareh
                     }
                 }
-                if(run) {
+                if(va_agareh && run) {
                     Agareh.visiter(joueur);
                 }
                 System.out.println();
@@ -149,6 +151,7 @@ public class Main {
      * Fait rejouer le joueur actif
      */
     private static void rejouer(){
+        va_agareh = false;
         j -= 1;
     }
     
@@ -161,6 +164,7 @@ public class Main {
         } else {
             j = j - 2;
         }
+        va_agareh = false;
     }
     
     private static Joueur choisir_joueur() {
