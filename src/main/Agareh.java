@@ -193,6 +193,9 @@ public class Agareh {
      * @param joueur le joueur dont il faut augmenter le rang
      */
     private void promeut(Joueur joueur) {
+        if(!peut_promouvoir(joueur)){
+            System.out.println("Vous n'avez pas le niveau pour réaliser cette action, revenez quand vous serez plus fort.");
+        }
         if(joueur.getGrade() == Grade.AUCUN){
             System.out.println("Si vous souhaitez devenir membre de l'AGAREH, vous devez verser 5PO.");
         } else {
@@ -872,8 +875,7 @@ public class Agareh {
         System.out.println("Quel est l'état de votre cadavre ?");
         int prix = Input.readInt();
         switch(joueur.getGrade()){
-            case AUCUN -> System.out.println("Vous ne devriez pas être ici avec un grade si faible !");
-            case FER -> prix -= 1;
+            case AUCUN, FER -> prix -= 1;
             case ACIER -> {}
             case ARGENT -> prix += 1;
             case OR -> prix += 2;
@@ -882,7 +884,7 @@ public class Agareh {
             case DRAGON -> prix += 5;
         }
         switch (this.pos){
-            case ENFERS, OLYMPE, ASCENDANT -> throw new IllegalStateException("ERREUR : l'AGAREH n'est pas accessible de puis %s !".formatted(pos.name()));
+            case ENFERS, OLYMPE, ASCENDANT -> throw new IllegalStateException("ERREUR : l'AGAREH n'est pas accessible depuis %s !".formatted(pos.name()));
             case TEMPLE, MER -> prix += 1;
             case MONTS -> prix += 2;
             case VIGNES, PRAIRIE -> {}
@@ -907,7 +909,8 @@ public class Agareh {
     public static boolean peut_promouvoir(Joueur joueur){
         int value_grade = joueur.getGrade().ordinal();
         int value_pos = joueur.getPosition().ordinal();
-        return value_grade < value_pos;
+        int value_force = joueur.getNiveau() / 5;
+        return value_grade + value_force < value_pos;
     }
     
     /**

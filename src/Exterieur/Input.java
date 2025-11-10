@@ -41,8 +41,7 @@ public class Input {
         Main.Path = reponse;
         
         // charger ou nouvelle partie
-        if (!sauvegardeExiste || (!yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la " +
-                "suppression"))) {
+        if (!sauvegardeExiste || (!yn("Sauvegarde détectée, charger cette sauvegarde ?") && yn("Confirmez la " + "suppression"))) {
             Output.viderSauvegarde(reponse);
             System.out.println("lancement du jeu.\n\n");
             return false;
@@ -152,7 +151,6 @@ public class Input {
             }
         }
     }
-    
     
     
     /**
@@ -478,8 +476,7 @@ public class Input {
     }
     
     public static Action_extra extra(Joueur joueur, Action action) {
-        Set<Action> actionsSansExtra = EnumSet.of(Action.AUCUNE, Action.END, Action.CONCOCTION, Action.DOMESTIQUER,
-                Action.DEXTERITE, Action.LIEN, Action.MEDITATION, Action.FUIR, Action.OFF, Action.TP);
+        Set<Action> actionsSansExtra = EnumSet.of(Action.AUCUNE, Action.END, Action.CONCOCTION, Action.DOMESTIQUER, Action.DEXTERITE, Action.LIEN, Action.MEDITATION, Action.FUIR, Action.OFF, Action.TP);
         if (actionsSansExtra.contains(action)) {
             return Action_extra.AUCUNE;
         }
@@ -535,8 +532,7 @@ public class Input {
         while (true) {
             garde.check();
             String text = "Que voulez-vous faire : (E)xplorer";
-            boolean peut_descendre =
-                    position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
+            boolean peut_descendre = position != Position.PRAIRIE && position != Position.ENFERS && position != Position.OLYMPE;
             boolean peut_monter = position != Position.OLYMPE;
             boolean peut_entrainer = joueur.a_familier() && !joueur.familier_loyalmax();
             text += joueur.text_tour();
@@ -626,73 +622,98 @@ public class Input {
     }
     
     public static Choix_Agareh agareh(Agareh agareh, Joueur joueur) {
-        String text = "Que voulez vous-vous faire : ";
-        if(joueur.getGrade() == Grade.AUCUN) {
+        boolean nouveau = joueur.getGrade() == Grade.AUCUN;
+        String text = "Que voulez vous-vous faire : \n\tvendre un (c)adavre";
+        if (nouveau) {
             text += "\n\ts'(i)nscrire";
         } else {
-            if(Agareh.peut_promouvoir(joueur)){
+            if (Agareh.peut_promouvoir(joueur)) {
                 text += "\n\tDemander une (pr)omotion de rang";
             }
-            text += "\n\t(v)endre des équipements\n\tvendre un (c)adavre\n\taller au (m)arché\n\t(f)rapper un mannequin\n\tDemander un (t)ransport";
+            text += "\n\t(v)endre des équipements\n\taller au (m)arché\n\t(f)rapper un mannequin\n\tDemander un (t)ransport";
             text += agareh.text_artisans();
         }
         text += "\n\t(P)artir ?";
         System.out.println(text);
         String readed = read();
         switch (readed.toLowerCase()) {
-            case "i", "inscrire", "s'inscrire",
-                 "pr", "promotion", "demander une promotion de rang", "promotion de rang" -> {
+            case "i", "inscrire", "s'inscrire", "pr", "promotion", "demander une promotion de rang",
+                 "promotion de rang" -> {
                 return Choix_Agareh.PROMOTION;
             }
-            case "v", "vendre des équipements", "vendre des équipement","vendre des equipements", "vendre des equipement" -> {
-                return Choix_Agareh.VENDRE_ITEM;
+            case "v", "vendre des équipements", "vendre des équipement", "vendre des equipements",
+                 "vendre des equipement" -> {
+                if (!nouveau) {
+                    return Choix_Agareh.VENDRE_ITEM;
+                }
             }
             case "c", "vendre un cadavre" -> {
                 return Choix_Agareh.VENDRE_CADAVRE;
             }
             case "m", "marche", "marché", "aller au marche", "aller au marché" -> {
-                return Choix_Agareh.MARCHE;
+                if (!nouveau) {
+                    return Choix_Agareh.MARCHE;
+                }
             }
             case "f", "frapper", "mannequin", "frapper un mannequin" -> {
-                return Choix_Agareh.MANNEQUIN;
+                if (!nouveau) {
+                    return Choix_Agareh.MANNEQUIN;
+                }
             }
             case "t", "transport" -> {
-                return Choix_Agareh.TRANSPORT;
+                if (!nouveau) {
+                    return Choix_Agareh.TRANSPORT;
+                }
             }
             case "p", "", "\n", "partir" -> {
                 return Choix_Agareh.PARTIR;
             }
             
             case "fo", "forge", "aller à la forge", "aller a la forge" -> {
-                return Choix_Agareh.FORGE;
+                if (!nouveau) {
+                    return Choix_Agareh.FORGE;
+                }
             }
             
             case "aller voir le marchant d'arc", "marchant d'arc", "arc" -> {
-                return Choix_Agareh.MAGASIN_ARC;
+                if (!nouveau) {
+                    return Choix_Agareh.MAGASIN_ARC;
+                }
             }
             
             case "aller à l'armurerie", "aller a l'armurerie", "armurerie" -> {
-                return Choix_Agareh.ARMURERIE;
+                if (!nouveau) {
+                    return Choix_Agareh.ARMURERIE;
+                }
             }
             
-            case "bo", "aller voir le marchand de bouclier", "marchand de bouclier", "marchand bouclier", "bouclier" -> {
-                return Choix_Agareh.MARCHAND_BOUCLIER;
+            case "bo", "aller voir le marchand de bouclier", "marchand de bouclier", "marchand bouclier",
+                 "bouclier" -> {
+                if (!nouveau) {
+                    return Choix_Agareh.MARCHAND_BOUCLIER;
+                }
             }
             
             case "ta", "aller voir le tanneur", "tanneur" -> {
-                return Choix_Agareh.TANNEUR;
+                if (!nouveau) {
+                    return Choix_Agareh.TANNEUR;
+                }
             }
             
             case "bi", "aller à la bijouterie", "aller a la bijouterie", "bijouterie/" -> {
-                return Choix_Agareh.BIJOUTERIE;
+                if (!nouveau) {
+                    return Choix_Agareh.BIJOUTERIE;
+                }
             }
             
-            case "ec", "éc", "aller à l'écurie", "aller a l'écurie", "aller à l'ecurie", "aller a l'ecurie", "écurie", "ecurie" -> {
-                return Choix_Agareh.ECURIE;
+            case "ec", "éc", "aller à l'écurie", "aller a l'écurie", "aller à l'ecurie", "aller a l'ecurie", "écurie",
+                 "ecurie" -> {
+                if (!nouveau) {
+                    return Choix_Agareh.ECURIE;
+                }
             }
-            
-            default -> System.out.println("Input unknown");
         }
+        System.out.println("Input unknown");
         return agareh(agareh, joueur);
     }
 }

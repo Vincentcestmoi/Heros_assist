@@ -529,6 +529,10 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
         return position;
     }
     
+    public int getNiveau(){
+        return niveau;
+    }
+    
     public String getNom() {
         return nom;
     }
