@@ -735,13 +735,11 @@ public class Equipement {
         for (Equipement mater : materiaux) {
             total += mater.proba();
         }
-        System.out.println(total);
         int t = rand.nextInt(total);
         for (Equipement mater : materiaux) {
             t -= mater.proba();
             if (t <= 0) {
                 mater.presente();
-                System.out.println(mater.proba());
                 return;
             }
         }
@@ -756,14 +754,14 @@ public class Equipement {
             return 0;
         }
         int value = switch (rang) {
-            case O -> 40;
-            case I -> 20;
+            case O -> 50;
+            case I -> 25;
             case II -> 10;
             case III -> 5;
             case IV, PROMOTION -> 1;
         };
         if (effet.contains("0")) {
-            value += 10;
+            value += 25;
         } else if (effet.contains("1")) {
             value -= 2;
         }else if (effet.contains("2")) {
