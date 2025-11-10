@@ -860,7 +860,7 @@ public class Monstre {
                 System.out.println("Vous (tous ceux présent) perdez définitivement 1 point de résistance.");
                 return;
             }
-            case PERLE -> System.out.println("Vous avez trouvé une perle (5PO) dans le corps " + text_de() + " !");
+            case PERLE -> System.out.println("Vous avez trouvé une perle (15PO) dans le corps " + text_de() + " !");
             case DETESTE -> {
                 System.out.println("Vous avez tué " + nomme(true) + ", haïe des dieux, gloire à vous !");
                 System.out.println("Vous (tous ceux présent) gagnez définitivement 1 point de résistance.");
