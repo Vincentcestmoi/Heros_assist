@@ -44,8 +44,7 @@ public class Utilitaire {
         public void check() {
             counter++;
             if (counter > maxIterations) {
-                throw new MaxLoopExceededException("Boucle infinie suspectée : plus de " + maxIterations + " " +
-                        "itérations.");
+                throw new MaxLoopExceededException("Boucle infinie suspectée : plus de %d itérations effectuées.".formatted(counter));
             }
         }
         
