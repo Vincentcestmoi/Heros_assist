@@ -335,13 +335,13 @@ public class Archimage extends Joueur {
     @Override
     public void essaie_reveil() throws IOException {
         // l'archimage peut se réveiller via un sort
-        if (est_assomme()) {
-            if (this.niveau >= 2 && Input.yn("Utiliser purge (%d mana) pour reprendre conscience ?".formatted(rune_arca ? purge_cout - 1 : purge_cout))) {
-                purge();
-            }
-        } else {
-            super.essaie_reveil();
+        if (est_assomme() && this.niveau >= 2 &&
+                Input.yn("Utiliser purge (%d mana) pour reprendre conscience ?".formatted(rune_arca ? purge_cout - 1 : purge_cout))) {
+            purge();
         }
+        
+        super.essaie_reveil();
+        
         // maître du mana
         if (est_assomme()) {
             if (this.niveau < 4) {
