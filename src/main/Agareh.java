@@ -318,21 +318,11 @@ public class Agareh {
             return;
         }
         
-        int[] bonus = analyse();
-        
         System.out.println("Le forgeron améliore votre arme.");
-        
-        int atk = type_equipement + bonus[0];
-        int res = bonus[1];
-        if(atk > 0) {
-            System.out.printf("L'attaque de votre arme augmente de %d.\n", atk);
-        } else if (atk < 0) {
-            System.out.printf("L'attaque de votre arme diminue de %d.\n", -atk);
-        }
-        if(res > 0) {
-            System.out.printf("Votre arme vous fournit désormais %d points de resistance additionnels.\n", res);
-        } else if (res < 0) {
-            System.out.printf("Les modification de votre arme lui font réduire de %d points votre résistance.\n", -res);
+        if(type_equipement == 1){
+            forge_1_main(niveau_materiau);
+        } else {
+            forge_2_main(niveau_materiau);
         }
         System.out.printf("Votre arme est à présent de niveau +%d.\n", niveau_equipement + 1);
     }
@@ -423,7 +413,12 @@ public class Agareh {
         
         System.out.println("Le marchand d'arc améliore votre équipement.");
         
-        int atk = 1 + bonus[0];
+        int atk = bonus[0] + 1;
+        if(type_equipement == 1){
+            atk  += niveau_materiau;
+        } else {
+            atk += niveau_materiau / 2;
+        }
         if(atk > 0) {
             System.out.printf("La puissance de vos tir augmente de %d.\n", atk);
         } else if (atk < 0) {
@@ -502,20 +497,9 @@ public class Agareh {
             return;
         }
         
-        int[] bonus = analyse();
-        
         System.out.println("L'artisan améliore votre bouclier.");
         
-        int atk = bonus[0];
-        int res = bonus[1] + 1;
-        int def = bonus[2];
-        Random r = new Random();
-        if(r.nextInt(3) == 0){
-            atk += 1;
-        } else {
-            res += 1;
-        }
-        presenterModif(atk, res, def);
+        forge_bouclier(niveau_materiau);
         System.out.printf("Votre bouclier est à présent de niveau +%d.\n", niveau_equipement + 1);
     }
     
@@ -601,22 +585,13 @@ public class Agareh {
             return;
         }
         
-        int[] bonus = analyse();
-        
         System.out.println("L'armurier améliore votre équipement.");
         
-        int res = bonus[1];
-        int def = bonus[2];
-        if(type_equipement == 1 ){ //casque
-            res += 1;
-        } else { //armure
-            res += 2;
-            if(niveau_materiau >= 3){
-                def += 1;
-            }
+        if(type_equipement == 1) {
+            forge_casque(niveau_materiau);
+        } else {
+            forge_armure(niveau_materiau);
         }
-        
-        presenterModif(0, res, def);
         System.out.printf("Votre équipement est à présent de niveau +%d.\n", niveau_equipement + 1);
     }
     
@@ -699,27 +674,11 @@ public class Agareh {
             return;
         }
         
-        int[] bonus = analyse();
-        
         System.out.println("Le tanneur améliore votre équipement.");
-        
-        Random r = new Random();
-        
-        int atk = 0;
-        int res = bonus[1];
-        if(type_equipement == 1 ){ //sac
-            res += 1;
-            if(niveau_materiau >= 3){
-                System.out.println("Votre sac peut stocker un objet ou 1 main de plus.");
-            }
-            presenterModif(0, res, 0);
-        } else { //ceinture
-            if(r.nextBoolean()) {
-                res += 2;
-            } else {
-                atk += 1;
-            }
-            presenterModif(atk, res, 0);
+        if(type_equipement == 1) {
+            forge_sac(niveau_materiau);
+        } else {
+            forge_ceinture(niveau_materiau);
         }
         System.out.printf("Votre équipement est à présent de niveau +%d.\n", niveau_equipement + 1);
     }
@@ -799,36 +758,7 @@ public class Agareh {
         
         System.out.println("Le bijoutier améliore votre équipement.");
         
-        Random r = new Random();
-        
-        int atk = 0;
-        int res = 1;
-        int def = 0;
-        int proba_res = 5;
-        int proba_atk = 2;
-        int proba_def = 0;
-        switch(niveau_materiau){
-            case 1 -> proba_res += 1;
-            case 2 -> {
-                proba_res += 1;
-                proba_atk += 1;
-                proba_def += 1;
-            }
-            case 3 -> {
-                proba_res -= 2;
-                proba_def += 2;
-            }
-        }
-        int t = r.nextInt(proba_res + proba_def + proba_atk);
-        if(t < proba_res){
-            res += 1;
-        } else if (t - proba_res < proba_atk){
-            atk += 1;
-        } else {
-            def += 1;
-        }
-        
-        presenterModif(atk, res, def);
+        forge_bracelet(niveau_materiau);
         System.out.printf("Votre bracelet est à présent de niveau +%d.\n", niveau_equipement + 1);
     }
     
@@ -878,10 +808,11 @@ public class Agareh {
             case AUCUN, FER -> prix -= 1;
             case ACIER -> {}
             case ARGENT -> prix += 1;
-            case OR -> prix += 2;
-            case DIAMANT -> prix += 3;
-            case MITHRIL -> prix += 4;
+            case OR, DIAMANT -> prix += 2;
+            case MITHRIL, ADAMANT -> prix += 3;
+            case PHOENIX -> prix += 4;
             case DRAGON -> prix += 5;
+            case DIVIN -> prix += 7;
         }
         switch (this.pos){
             case ENFERS, OLYMPE, ASCENDANT -> throw new IllegalStateException("ERREUR : l'AGAREH n'est pas accessible depuis %s !".formatted(pos.name()));
@@ -908,6 +839,9 @@ public class Agareh {
      */
     public static boolean peut_promouvoir(Joueur joueur){
         int value_grade = joueur.getGrade().ordinal();
+        if (value_grade == Grade.MAX.ordinal()){
+            return false;
+        }
         int value_pos = joueur.getPosition().ordinal();
         int value_force = joueur.getNiveau() / 5;
         return value_grade + value_force < value_pos;
@@ -1064,7 +998,6 @@ public class Agareh {
         return new int[] {atk, res, def};
     }
     
-    
     private void presenterModif(int atk, int res, int def) {
         if(atk > 0) {
             System.out.printf("Votre attaque augmente de %d.\n", atk);
@@ -1083,6 +1016,146 @@ public class Agareh {
         }
     }
     
+    private void forge_bouclier(int niveau_materiau) {
+        int[] bonus = analyse();
+        
+        int atk = bonus[0];
+        int res = bonus[1] + 1;
+        int def = bonus[2];
+        Random r = new Random();
+        if(r.nextInt(3) == 0){
+            atk += 1;
+        } else {
+            res += 1;
+        }
+        if(niveau_materiau >= 2){
+            atk += 1;
+        }
+        if (niveau_materiau == 2){
+            res += 1;
+        }
+        if (niveau_materiau == 3){
+            if(r.nextBoolean()){
+                def += 1;
+            } else{
+                res += 1;
+            }
+        }
+        presenterModif(atk, res, def);
+    }
+    
+    private void forge_bracelet(int niveau_materiau) {
+        Random r = new Random();
+        
+        int atk = 0;
+        int res = 1;
+        int def = 0;
+        int proba_res = 5;
+        int proba_atk = 2;
+        int proba_def = 0;
+        switch(niveau_materiau){
+            case 1 -> proba_res += 1;
+            case 2 -> {
+                proba_res += 1;
+                proba_atk += 1;
+                proba_def += 1;
+            }
+            case 3 -> {
+                proba_res -= 2;
+                proba_def += 2;
+            }
+        }
+        int t = r.nextInt(proba_res + proba_def + proba_atk);
+        if(t < proba_res){
+            res += 1;
+        } else if (t - proba_res < proba_atk){
+            atk += 1;
+        } else {
+            def += 1;
+        }
+        
+        presenterModif(atk, res, def);
+    }
+    
+    private void forge_1_main(int niveau_materiau) {
+        int[] bonus = analyse();
+        int atk = 1 + bonus[0] + Main.corriger(niveau_materiau * 0.6f, 0);
+        int res = bonus[1];
+        presenterModif(atk, res, 0);
+    }
+    
+    private void forge_2_main(int niveau_materiau) {
+        int[] bonus = analyse();
+        int atk = 1 + bonus[0] + Main.corriger(niveau_materiau * 1.4f, 0);
+        int res = bonus[1];
+        presenterModif(atk, res, 0);
+    }
+    
+    private void forge_casque(int niveau_materiau) {
+        int[] bonus = analyse();
+        int atk = bonus[0];
+        int res = 1 + bonus[1];
+        int def = bonus[2];
+        res += (niveau_materiau + 1) / 2;
+        if(atk > 0){
+            atk = 0;
+        }
+        presenterModif(atk, res, def);
+    }
+    
+    private void forge_armure(int niveau_materiau) {
+        int[] bonus = analyse();
+        int atk = bonus[0];
+        int res = 1 + bonus[1];
+        int def = bonus[2];
+        res += niveau_materiau;
+        if(niveau_materiau >= 3){
+            def += 1;
+        }
+        if(atk > 0){
+            atk = 0;
+        }
+        presenterModif(atk, res, def);
+    }
+    
+    
+    private void forge_sac(int niveau_materiau) {
+        int[] bonus = analyse();
+        int atk = bonus[0];
+        int res = bonus[1] + 1;
+        if(niveau_materiau >= 2){
+            res += 1;
+        }
+        if (niveau_materiau >= 3) {
+            System.out.println("Votre sac peut stocker un objet ou 1 main de plus.");
+        }
+        if(atk > 0 ){
+            atk = 0;
+        }
+        presenterModif(atk, res, 0);
+    }
+    
+    private void forge_ceinture(int niveau_materiau) {
+        Random r = new Random();
+        int[] bonus = analyse();
+        int atk = bonus[0];
+        int res = bonus[1];
+        if(atk > 0){
+            atk = 0;
+        }
+        if (r.nextBoolean()) {
+            res += 2;
+        } else {
+            atk += 1;
+        }
+        if (niveau_materiau >= 2) {
+            res += 1;
+        }
+        if (niveau_materiau >= 3) {
+            atk += 1;
+        }
+        presenterModif(atk, res, 0);
+    }
     
     private void frapper_pantin() throws IOException {
         Monstre pantin = Lieu.get_dummy();

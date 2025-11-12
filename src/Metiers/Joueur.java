@@ -546,6 +546,9 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
     }
     
     public void upgradeGrade(){
+        if(getGrade() == Grade.MAX){
+            System.out.println("Vous avez déjà atteint le plus haut grade.");
+        }
         this.grade = Grade.values()[getGrade().ordinal() + 1];
     }
     
