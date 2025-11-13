@@ -25,7 +25,7 @@ public abstract class Joueur {
     protected int ob_f;
     private final Dieux parent;
     private int xp;
-    protected int xp_palier = 5;
+    protected int xp_palier = 4;
     protected int niveau;
     protected Grade grade; //AGAREH
     
@@ -474,7 +474,7 @@ this.GetXpTotal()).add("parent", this.parent.name()).add("effets", save_effet_st
         while (experience >= this.xp_palier * (niveau + 1)) {
             garde.check();
             niveau++;
-            experience -= niveau * 5;
+            experience -= niveau * this.xp_palier;
         }
         this.niveau = niveau;
         this.xp = experience;
